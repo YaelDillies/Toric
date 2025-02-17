@@ -18,9 +18,9 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Cambridge combinatorics in Lean
+title: Toric varieties in Lean
 #email: your-email@example.com
-description: Formalisation of the Cambridge combinatorics courses
+description: Formalisation of toric varieties in Lean 4
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://yaeldillies.github.io/Toric/" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
