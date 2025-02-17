@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo
 -/
 import Mathlib.AlgebraicGeometry.Morphisms.Proper
+import Mathlib.CategoryTheory.Monoidal.Category
 
 /-!
 # Varieties
@@ -35,5 +36,7 @@ end IsVarietyHom
 variable (R) in
 /-- A variety over a ring `R` is a scheme `X` along with a separated, integral, finite type morphism `f : X ⟶ Spec R`. -/
 abbrev Variety := FullSubcategory fun X : Over (Spec R) ↦ IsVarietyHom X.hom
+
+instance : MonoidalCategory (Variety R) := sorry
 
 end AlgebraicGeometry
