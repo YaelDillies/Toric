@@ -1,0 +1,23 @@
+# This is run when starting a Gitpod workspace on this repository
+
+image: leanprovercommunity/gitpod4
+
+vscode:
+  extensions:
+    - leanprover.lean4 # install the Lean 4 VS Code extension
+
+tasks:
+  - init: |
+      elan self update
+      lake exe cache get
+      lake build
+      sudo apt-get update
+      sudo apt install ruby ruby-dev -y
+      sudo gem install bundler
+      cp README.md website/index.md
+      mkdir -p website/_includes
+      python3 scripts/upstreaming_dashboard.py
+      python3 scripts/import_graph.py
+      cd website
+      bundle install
+      cd ..
