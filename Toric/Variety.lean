@@ -22,12 +22,12 @@ variable {R : CommRingCat} {X Y Z : Scheme}
 class IsVarietyHom ⦃X Y : Scheme⦄ (f : X ⟶ Y) : Prop where
   [isSeparated : IsSeparated f]
   [isIntegralHom : IsIntegralHom f]
-  -- TODO: Should be finite type, not merely locally of finite type
   [locallyOfFiniteType : LocallyOfFiniteType f]
+  [quasiCompact : QuasiCompact f]
 
 namespace IsVarietyHom
 
-attribute [instance] isSeparated isIntegralHom locallyOfFiniteType
+attribute [instance] isSeparated isIntegralHom locallyOfFiniteType quasiCompact
 
 @[simp] protected lemma id : IsVarietyHom (𝟙 X) where
 
