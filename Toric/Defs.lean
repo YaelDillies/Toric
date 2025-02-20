@@ -5,6 +5,8 @@ Authors: Yaël Dillies, Patrick Luo
 -/
 import Mathlib.Data.Complex.Basic
 import Toric.Variety
+import Mathlib.GroupTheory.FreeAbelianGroup
+import Mathlib
 
 open AlgebraicGeometry CategoryTheory Topology
 open scoped MonoidalCategory
@@ -12,7 +14,12 @@ open scoped MonoidalCategory
 variable {R : CommRingCat} {X Y : Scheme}
 
 variable (R) in
-abbrev Torus (n : ℕ) : Variety R := sorry
+noncomputable abbrev Torus (n : ℕ) : Variety R :=
+  ⟨.mk <| AlgebraicGeometry.Spec.map <| CommRingCat.ofHom <| algebraMap R <|
+      AddMonoidAlgebra R <| FreeAbelianGroup <| Fin n, sorry⟩
+
+variable (R) (n : ℕ) in
+def TorusSelfAction : Torus R n ⊗ Torus R n ⟶ Torus R n := sorry
 
 variable (R) in
 abbrev ToricVariety := FullSubcategory fun X :
