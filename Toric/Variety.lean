@@ -4,63 +4,53 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo
 -/
 import Mathlib.AlgebraicGeometry.Morphisms.Proper
-import Mathlib.CategoryTheory.Monoidal.Category
-import Mathlib
+import Mathlib.CategoryTheory.Monoidal.Subcategory
+import Toric.SchemeOver
 
 /-!
 # Varieties
 
-This files defines algebraic geometric varieties over a ring `R` as separated, integral, finite type
+This file defines algebraic geometric varieties over a ring `R` as separated, integral, finite type
 morphisms from a scheme to `Spec R`.
 -/
 
-open CategoryTheory
+open CategoryTheory MonoidalCategory
 
 namespace AlgebraicGeometry
-variable {R : CommRingCat} {X Y Z : Scheme}
+variable {R : CommRingCat} {k : Type} [Field k] {S X Y Z : Scheme}
 
-/-- A morphism of schemes is a variety hom if it is separated, integral and of finite type. -/
-class IsVarietyHom ⦃X Y : Scheme⦄ (f : X ⟶ Y) : Prop where
-  [isSeparated : IsSeparated f]
-  [isIntegralHom : IsIntegralHom f]
-  [locallyOfFiniteType : LocallyOfFiniteType f]
-  [quasiCompact : QuasiCompact f]
+class IsVariety (X : Over S) : Prop where
+  [isSeparated : IsSeparated X.hom]
+  [isIntegral : IsIntegral X.left]
+  [locallyOfFiniteType : LocallyOfFiniteType X.hom]
+  [quasiCompact : QuasiCompact X.hom]
 
-namespace IsVarietyHom
+namespace IsVariety
 
-attribute [instance] isSeparated isIntegralHom locallyOfFiniteType quasiCompact
+attribute [instance] isSeparated isIntegral locallyOfFiniteType quasiCompact
 
-@[simp] protected lemma id : IsVarietyHom (𝟙 X) where
+end IsVariety
 
-end IsVarietyHom
+namespace IsVariety
+
+instance : MonoidalPredicate (IsVariety (S := Spec R)) where
+  prop_id.isSeparated := isSeparated_of_injective (𝟙_ (Over _)).hom fun ⦃a₁ a₂⦄ a ↦ a
+  prop_id.isIntegral := by simp [instIsIntegralSpecOfIsDomainCarrier]; sorry
+  prop_id.locallyOfFiniteType := sorry
+  prop_id.quasiCompact := (quasiCompact_iff (𝟙_ (Over _)).hom).mpr (by simp)
+  prop_tensor hX hY := {
+    isSeparated := sorry
+    isIntegral := sorry
+    locallyOfFiniteType := sorry
+    quasiCompact := sorry
+  }
+
+end IsVariety
 
 variable (R) in
 /-- A variety over a ring `R` is a scheme `X` along with a separated, integral, finite type morphism `f : X ⟶ Spec R`. -/
-abbrev Variety := FullSubcategory fun X : Over (Spec R) ↦ IsVarietyHom X.hom
+abbrev Variety := FullSubcategory fun X : Over (Spec R) ↦ IsVariety X
 
-noncomputable instance : MonoidalCategory (Variety R) where
-  tensorObj := fun X Y ↦ ⟨.mk (Limits.pullback.fst X.obj.hom Y.obj.hom ≫ X.obj.hom), sorry⟩
-  whiskerLeft := by
-    rintro X Y₁ Y₂ f
-    refine Over.homMk (CategoryTheory.Limits.pullback.lift
-      (Limits.pullback.fst X.obj.hom Y₁.obj.hom)
-      (Limits.pullback.snd X.obj.hom Y₁.obj.hom ≫ f.left) (by simp only [Functor.id_obj,
-        Functor.const_obj_obj, Over.mk_left, Over.mk_hom, Limits.pullback.condition, Category.assoc,
-        Over.w])) (by simp only [Functor.id_obj, Functor.const_obj_obj, Over.mk_left, Over.mk_hom,
-          Limits.limit.lift_π_assoc, Limits.PullbackCone.mk_pt, Limits.cospan_left,
-          Limits.PullbackCone.mk_π_app])
-  whiskerRight := by
-    rintro X₁ X₂ f Y
-    refine Over.homMk (CategoryTheory.Limits.pullback.lift
-      (Limits.pullback.fst X₁.obj.hom Y.obj.hom ≫ f.left)
-      (Limits.pullback.snd X₁.obj.hom Y.obj.hom) (by simp [Limits.pullback.condition])) (by simp)
-  tensorUnit := {
-    obj := .mk (𝟙 Spec R)
-    property := by simp only [Pi.id_apply, Over.mk_left, Functor.id_obj, Functor.const_obj_obj,
-      Over.mk_hom, IsVarietyHom.id]
-  }
-  associator := sorry
-  leftUnitor := sorry
-  rightUnitor := sorry
+noncomputable instance : MonoidalCategory (Variety R) := inferInstance
 
 end AlgebraicGeometry
