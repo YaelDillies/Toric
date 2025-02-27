@@ -32,7 +32,7 @@ sed -i s/TOOLCHAIN/`grep -oP 'v4\..*' lean-toolchain`/ docbuild/lakefile.toml
 # Fetch the docs cache if it exists
 mkdir -p website/docs
 mkdir -p docbuild/.lake/build/doc
-mv website/docs docbuild/.lake/build/doc
+mv website/docs/* docbuild/.lake/build/doc
 
 # Initialise docbuild as a Lean project
 cd docbuild
@@ -46,7 +46,7 @@ MATHLIB_NO_CACHE_ON_UPDATE=1 # Disable an error message due to a non-blocking bu
 # Move them out of docbuild
 cd ../
 mkdir -p docs/build
-mv docbuild/.lake/build/doc docs/build
+mv docbuild/.lake/build/doc/* docs/build
 
 # Clean up after ourselves
 rm -rf docbuild
