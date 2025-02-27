@@ -91,7 +91,7 @@ jobs:
             cp -r blueprint/web docs/blueprint
 
       - name: Copy documentation to `website/docs`
-        run: docs/build/* website/docs
+        run: mv docs/build/* website/docs
 
       - name: Bundle dependencies
         uses: ruby/setup-ruby@v1
