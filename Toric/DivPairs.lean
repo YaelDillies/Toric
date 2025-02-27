@@ -11,8 +11,9 @@ import Mathlib.GroupTheory.MonoidLocalization.Basic
 This file defines the submonoid of pairs whose quotient lies in a submonoid of the localization.
 -/
 
-variable {M G : Type*} [CommMonoid M] [CommGroup G]
-  {f : (⊤ : Submonoid M).LocalizationMap G} {s : Submonoid G} {x : M × M}
+variable {M G H : Type*} [CommMonoid M] [CommGroup G] [CommGroup H]
+  {f : (⊤ : Submonoid M).LocalizationMap G} {g : (⊤ : Submonoid M).LocalizationMap H}
+  {s : Submonoid G} {x : M × M}
 
 namespace Submonoid
 
@@ -23,5 +24,16 @@ def divPairs : Submonoid (M × M) := s.comap <| divMonoidHom.comp <| f.toMap.pro
 
 @[to_additive (attr := simp)]
 lemma mem_divPairs : x ∈ divPairs f s ↔ f.toMap x.1 / f.toMap x.2 ∈ s := .rfl
+
+--TODO(Yael): make simp
+variable (f g s) in
+@[to_additive]
+lemma divPairs_comap :
+    divPairs g (.comap (g.mulEquivOfLocalizations f).toMonoidHom s) = divPairs f s := by
+  unfold divPairs
+  rw [comap_comap]
+  congr!
+  ext ⟨a, b⟩
+  simp
 
 end Submonoid
