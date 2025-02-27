@@ -3,9 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.Algebra.MonoidAlgebra.Defs
-import Mathlib.RingTheory.Ideal.Prime
-import Mathlib.RingTheory.Ideal.Span
+import Mathlib
 import Toric.DivPairs
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 
@@ -16,8 +14,11 @@ This file defines toric ideals.
 -/
 
 namespace AddMonoidAlgebra
-variable {M G R : Type*} [AddCommMonoid M] [AddCommGroup G] [CommRing R]
-  {f : (⊤ : AddSubmonoid M).LocalizationMap G} {s : AddSubmonoid G} {x : M × M} {I : Ideal R[M]}
+variable {M G R k : Type*} [AddCommMonoid M] [AddCommGroup G]
+  {f : (⊤ : AddSubmonoid M).LocalizationMap G} {s : AddSubmonoid G} {x : M × M}
+
+section CommRing
+variable [CommRing R] {I : Ideal R[M]}
 
 variable (f s) in
 /-- The monoid ideal corresponding to a submonoid `s` of the Grothendieck group of a monoid is an
@@ -40,4 +41,17 @@ namespace IsToricIdeal
 alias ⟨exists_monoidIdeal_eq, of_exists_monoidIdeal_eq⟩ := isToricIdeal_iff_exists_monoidIdeal_eq
 
 end IsToricIdeal
+end CommRing
+
+section
+variable [Field k] [IsAlgClosed k] {I : Ideal k[M]}
+
+lemma isToricIdeal_iff_exists_span_single_sub_single :
+    IsToricIdeal I
+      ↔ I.IsPrime ∧ ∃ s : Set (M × M), .span ((fun (a, b) ↦ single a 1 - single b 1) '' s) = I where
+    mp := by rintro ⟨s, rfl⟩; exact ⟨inferInstance, _, rfl⟩
+    mpr := sorry
+
+end
+
 end AddMonoidAlgebra
