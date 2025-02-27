@@ -3,6 +3,8 @@ import Mathlib.GroupTheory.MonoidLocalization.Basic
 namespace Localization
 variable {α : Type*} [CommMonoid α]
 
+-- grab from https://github.com/leanprover-community/mathlib3/tree/alexjbest/grothendieck-group
+
 @[to_additive]
 instance : Inv (Localization (⊤ : Submonoid α)) where
   inv := rec (fun m s ↦ (.mk s ⟨m, Submonoid.mem_top m⟩ : Localization (⊤ : Submonoid α))) <| by
@@ -21,3 +23,5 @@ instance : CommGroup (Localization (⊤ : Submonoid α)) where
     rw [mk_inv, mk_eq_monoidOf_mk', ←Submonoid.LocalizationMap.mk'_mul]
     convert Submonoid.LocalizationMap.mk'_self' _ _
     rw [mul_comm, Submonoid.coe_mul]
+
+-- TODO yael: refactor AddLocalization.mk_zero_eq_addMonoidOf_mk 🤮
