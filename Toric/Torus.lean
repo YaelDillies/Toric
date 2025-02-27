@@ -55,6 +55,7 @@ noncomputable instance torusOver.instMonClass : Mon_Class (torusOver R n) where
     rw [← Category.assoc, pullbackSpecIso_inv_snd]
     change _ ≫ Spec.map _ = _ ≫ Spec.map _
     simp [← Spec.map_comp, ← ofHom_comp]
-  one_mul' := sorry
+  one_mul' := by
+    sorry
   mul_one' := sorry
   mul_assoc' := sorry
