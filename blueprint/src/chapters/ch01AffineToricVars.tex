@@ -1,0 +1,164 @@
+\section{Affine Toric Varieties}
+
+\subsection{Introduction to Affine Toric Varieties}
+
+\begin{definition}
+  \label{torusOver}
+  \lean{torusOver}
+  \leanok
+  Torus
+\end{definition}
+
+\begin{definition}
+  \label{char}
+  Character
+\end{definition}
+
+\begin{definition}
+  \label{one_ps}
+  One-parameter subgroup
+\end{definition}
+
+\begin{definition}
+  \label{char_lattice}
+  \uses{char}
+  Character lattice
+\end{definition}
+
+\begin{definition}
+  \label{ops_lattice}
+  \uses{one_ps}
+  One-parameter subgroup lattice
+\end{definition}
+
+\begin{proposition}
+  \label{prop:1.1.1.a}
+  \uses{torusOver}
+  Proposition 1.1.1(a)
+\end{proposition}
+
+\begin{proposition}
+  \label{prop:1.1.1.b}
+  \uses{torusOver}
+  Proposition 1.1.1(b)
+\end{proposition}
+
+\begin{definition}
+  \label{char_eigenspace}
+  \uses{char}
+  Character eigenspace
+\end{definition}
+
+\begin{proposition}
+  \label{prop:1.1.2}
+  \uses{char_eigenspace}
+  \uses{torusOver}
+  Proposition 1.1.2
+\end{proposition}
+
+\begin{definition}
+  \label{char_ops_pairing}
+  Character lattice and one-parameter subgroup pairing
+\end{definition}
+
+\begin{definition}
+  \label{ToricVariety}
+  \lean{ToricVariety}
+  \leanok
+  \uses{torusOver}
+  Toric variety
+\end{definition}
+
+\begin{definition}
+  \label{phiA}
+  \uses{torusOver}
+  \uses{char}
+  $\Phi_\mathcal{A}$
+\end{definition}
+
+\begin{definition}
+  \label{YA}
+  \uses{phiA}
+  $Y_\mathcal{A}$
+\end{definition}
+
+\begin{proposition}
+  \label{prop:1.1.8}
+  \uses{YA}
+  \uses{char_lattice}
+  Proposition 1.1.8
+\end{proposition}
+\begin{proof}
+  \uses{prop:1.1.1.a}
+\end{proof}
+
+\begin{proposition}
+  \label{prop:1.1.9}
+  \uses{YA}
+  Proposition 1.1.9
+\end{proposition}
+
+\begin{definition}
+  \label{AddMonoidAlgebra.IsToricIdeal}
+  \lean{AddMonoidAlgebra.IsToricIdeal}
+  \leanok
+  Toric ideal
+\end{definition}
+
+\begin{proposition}
+  \label{AddMonoidAlgebra.isToricIdeal_iff_exists_span_single_sub_single}
+  \lean{AddMonoidAlgebra.isToricIdeal_iff_exists_span_single_sub_single}
+  Proposition 1.1.11
+\end{proposition}
+\begin{proof}
+  \uses{prop:1.1.1.b}
+  \uses{prop:1.1.9}
+\end{proof}
+
+\begin{definition}
+  \label{affSemi}
+  \uses{AddCommMonoid}
+  \uses{AddMonoid.FG}
+  \uses{AddMonoid.IsTorsionFree}
+  Affine semigroup
+\end{definition}
+
+\begin{proposition}
+  \label{prop:1.1.14}
+  \uses{affSemi}
+  \uses{ToricVariety}
+  \uses{char_lattice}
+  \uses{YA}
+\end{proposition}
+\begin{proof}
+  \uses{prop:1.1.8}
+\end{proof}
+
+\begin{definition}
+  \label{torActOnAlg}
+  \uses{Torus}
+  Torus action on semigroup algebra
+\end{definition}
+
+\begin{lemma}
+  \label{lmm:1.1.16}
+  \uses{torActOnAlg}
+\end{lemma}
+\begin{proof}
+  \uses{prop:1.1.2}
+\end{proof}
+
+\begin{theorem}
+  \label{thm:1.1.17}
+  \uses{ToricVariety}
+  \uses{YA}
+  \uses{AddMonoidAlgebra.IsToricIdeal}
+  \uses{affSemi}
+\end{theorem}
+\begin{proof}
+  \uses{torActOnAlg}
+  \uses{prop:1.1.8}
+  \uses{prop:1.1.9}
+  \uses{prop:1.1.14}
+  \uses{lmm:1.1.16}
+\end{proof}
