@@ -71,6 +71,7 @@ instance Hom.instMul : Mul (M ⟶ N) where
     mul_hom := by
       apply yoneda.map_injective
       ext
+      simp
       sorry
     /-
       rw [← Category.assoc G.mul]
