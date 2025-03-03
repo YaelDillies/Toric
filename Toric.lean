@@ -1,10 +1,12 @@
 import Toric.AffineMonoid
 import Toric.Character
 import Toric.DivPairs
+import Toric.GroupHom
 import Toric.GroupScheme
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
 import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
+import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.MvLaurentPolynomial
 import Toric.SchemeOver

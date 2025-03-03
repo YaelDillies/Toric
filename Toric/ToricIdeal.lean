@@ -3,16 +3,19 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+import Mathlib
 import Toric.DivPairs
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
+import Toric.Torus
 
 /-!
 # Toric ideals
 
 This file defines toric ideals.
 -/
+
+open AlgebraicGeometry CategoryTheory.Limits
 
 namespace AddMonoidAlgebra
 variable {M G R k H : Type*} [AddCommMonoid M] [AddCommGroup G] [AddCommGroup H]
@@ -67,7 +70,12 @@ lemma isToricIdeal_iff_exists_span_single_sub_single :
       ↔ I.IsPrime ∧ ∃ s : Set (M × M), .span ((fun (a, b) ↦ single a 1 - single b 1) '' s) = I where
   mp := by rintro ⟨s, rfl⟩; exact ⟨inferInstance, _, rfl⟩
   mpr := by
+    let G := AddLocalization (⊤ : AddSubmonoid M)
     rintro ⟨_, s, hsI⟩
+    letI V := Spec (.of  <| k[M] ⧸ I)
+    let _ : V.Over (Spec (.of k[M])) := sorry
+    let _ : (Spec (.of k[G])).Over (Spec (.of k[M])) := sorry
+    let VinterT := pullback (V ↘ Spec (.of k[M])) (Spec (.of k[G]) ↘ Spec (.of k[M]))
     refine ⟨?_⟩
     sorry
 
