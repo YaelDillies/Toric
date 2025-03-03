@@ -55,9 +55,18 @@ lemma Mon_Class.one_eq_one {M : C} [Mon_Class M] :
   show _ = _ ≫ _
   rw [toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
 
+lemma Mon_Class.mul_eq_mul {M : C} [Mon_Class M] :
+    μ = fst M M * snd _ _ := by
+  show _ = _ ≫ _
+  rw [lift_fst_snd, Category.id_comp]
+
 lemma Mon_.one_eq_one {M : Mon_ C} :
     M.one = 1 :=
   Mon_Class.one_eq_one (M := M.X)
+
+lemma Mon_.mul_eq_mul {M : Mon_ C} :
+    M.mul = (fst _ _ * snd _ _) :=
+  Mon_Class.mul_eq_mul (M := M.X)
 
 @[reassoc]
 lemma Mon_Class.mul_comp {M N O : C} (f g : M ⟶ N) (h : N ⟶ O) [Mon_Class N] [Mon_Class O]
@@ -193,13 +202,7 @@ instance Hom.instMul : Mul (M ⟶ N) where
   mul f g :=
   { hom := f.hom * g.hom
     one_hom := by simp [Mon_.one_eq_one, Mon_Class.comp_mul, Mon_Class.one_comp]
-    mul_hom := by
-      rw [← lift_fst_comp_snd_comp]
-      trans (lift (fst _ _) (snd _ _) ≫ M.mul) ≫ (f.hom * g.hom)
-      · simp
-      · show (fst _ _ * snd _ _) ≫ (f.hom * g.hom) =
-          (fst M.X M.X ≫ (f.hom * g.hom)) * (snd M.X M.X ≫ (f.hom * g.hom))
-        simp only [Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm] }
+    mul_hom := by simp [Mon_.mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm] }
 
     /-
       rw [← Category.assoc G.mul]
