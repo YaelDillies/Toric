@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała
 
 import Mathlib.CategoryTheory.ChosenFiniteProducts
 import Mathlib.CategoryTheory.Monoidal.Mon_
+import Mathlib.CategoryTheory.Monoidal.Yoneda
 import Mathlib.Combinatorics.Quiver.ReflQuiver
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 
@@ -27,6 +28,57 @@ end CommMon_Class
 
 end
 
+
+section
+
+variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
+
+instance {M N : Mon_ C} (f : M ⟶ N) : IsMon_Hom f.hom := ⟨f.2, f.3⟩
+
+def Mon_.homMk {M N : C} [Mon_Class M] [Mon_Class N] (f : M ⟶ N) [IsMon_Hom f] :
+    Mon_.mk' M ⟶ Mon_.mk' N := ⟨f, IsMon_Hom.one_hom, IsMon_Hom.mul_hom⟩
+
+end
+section
+
+attribute [instance] monoidOfMon_Class
+
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}  [CommMon_Class N.X]
+
+@[reassoc]
+lemma Mon_Class.comp_mul {M N O : C} (f g : M ⟶ N) (h : O ⟶ M) [Mon_Class N] :
+    h ≫ (f * g) = h ≫ f * h ≫ g :=
+  (((yonedaMon.obj (.mk' N)).map (h.op)).hom.map_mul f g)
+
+lemma Mon_Class.one_eq_one {M : C} [Mon_Class M] :
+    η = (1 : _ ⟶ M) := by
+  show _ = _ ≫ _
+  rw [toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
+
+lemma Mon_.one_eq_one {M : Mon_ C} :
+    M.one = 1 :=
+  Mon_Class.one_eq_one (M := M.X)
+
+@[reassoc]
+lemma Mon_Class.mul_comp {M N O : C} (f g : M ⟶ N) (h : N ⟶ O) [Mon_Class N] [Mon_Class O]
+    [IsMon_Hom h] :
+    (f * g) ≫ h = (f ≫ h) * g ≫ h :=
+  (((yonedaMon.map (Mon_.homMk h)).app (.op M)).hom.map_mul f g)
+
+@[reassoc]
+lemma Mon_Class.one_comp {M N O : C} (h : N ⟶ O) [Mon_Class N] [Mon_Class O]
+    [IsMon_Hom h] : (1 : M ⟶ N) ≫ h = 1 :=
+  ((yonedaMon.map (Mon_.homMk h)).app (.op M)).hom.map_one
+
+instance {M N : C} [Mon_Class N] [CommMon_Class N] : CommMonoid (M ⟶ N) where
+  mul_comm f g := by
+    show lift _ _ ≫ _ = lift _ _ ≫ _
+    conv_lhs => rw [← CommMon_Class.mul_comm N]
+    rw [← Category.assoc]
+    congr 1
+    ext <;> simp
+
+end
 
 namespace Mon_
 
@@ -136,23 +188,19 @@ lemma gigaOmegaDiagram :
   nth_rewrite 1 [← gigaDiagram, ← gigaDiagram2, ← gigaDiagram3, gigaDiagram4]
   simp
 
-
-
 @[simps]
 instance Hom.instMul : Mul (M ⟶ N) where
-  mul f g := {
-    hom := lift f.hom g.hom ≫ N.mul
-    one_hom := by
-      rw [← Category.assoc]
-      simp
-      have : lift N.one N.one = lift (𝟙 (𝟙_ C)) (𝟙 (𝟙_ C)) ≫ (N.one ⊗ N.one) := by simp
-      rw [this]
-      rw [Category.assoc]
-      simp
+  mul f g :=
+  { hom := f.hom * g.hom
+    one_hom := by simp [Mon_.one_eq_one, Mon_Class.comp_mul, Mon_Class.one_comp]
     mul_hom := by
-      apply yoneda.map_injective
-      ext
-      sorry
+      rw [← lift_fst_comp_snd_comp]
+      trans (lift (fst _ _) (snd _ _) ≫ M.mul) ≫ (f.hom * g.hom)
+      · simp
+      · show (fst _ _ * snd _ _) ≫ (f.hom * g.hom) =
+          (fst M.X M.X ≫ (f.hom * g.hom)) * (snd M.X M.X ≫ (f.hom * g.hom))
+        simp only [Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm] }
+
     /-
       rw [← Category.assoc G.mul]
       simp
@@ -171,7 +219,6 @@ instance Hom.instMul : Mul (M ⟶ N) where
       _ = e.hom ≫ e.inv ≫ (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
       _ = (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
     -/
-  }
 
 end  Mon_
 
