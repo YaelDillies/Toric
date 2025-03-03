@@ -97,7 +97,18 @@ end
 
 namespace Mon_
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N K : Mon_ C} [CommMon_Class N.X]
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}
+
+instance Hom.instOne : One (M ⟶ N) where
+  one := {
+    hom := 1
+    one_hom := by simp [Mon_.one_eq_one]
+    mul_hom := by simp [Mon_.mul_eq_mul, Mon_Class.comp_mul]
+  }
+
+lemma Hom.one_mul : (1 : (M ⟶ N)) = 1 := rfl
+
+variable [CommMon_Class N.X]
 
 lemma gigaDiagram :
     (α_ _ _ _).hom
@@ -212,15 +223,15 @@ instance Hom.instMul : Mul (M ⟶ N) where
 @[simp]
 lemma Hom.hom_mul (f g : M ⟶ N) : (f * g).hom = f.hom * g.hom := rfl
 
-instance Hom.instOne : One (M ⟶ K) where
-  one := {
-    hom := 1
-    one_hom := by simp [Mon_.one_eq_one]
-    mul_hom := by
-      rw [← lift_fst_comp_snd_comp]
-      change _ = (fst M.X M.X ≫ (1: M.X ⟶ K.X)) * _
-      sorry
+-- TODO powers
+instance Hom.instPow : Pow (M ⟶ N) ℕ where
+  pow f n :=
+  { hom := f.hom ^ n
+    one_hom := by sorry -- simp [Mon_.one_eq_one, Mon_Class.comp_mul, Mon_Class.one_comp]
+    mul_hom := by sorry -- simp [Mon_.mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm] }
   }
+instance : CommMonoid (M ⟶ N) :=
+  Function.Injective.commMonoid Hom.hom (fun _ _ ↦ Hom.ext) rfl (fun _ _ ↦ rfl) (fun _ _ ↦ rfl)
 
 end  Mon_
 
