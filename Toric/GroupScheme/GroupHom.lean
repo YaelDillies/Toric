@@ -200,26 +200,6 @@ instance Hom.instMul : Mul (M ⟶ N) where
       · show (fst _ _ * snd _ _) ≫ (f.hom * g.hom) =
           (fst M.X M.X ≫ (f.hom * g.hom)) * (snd M.X M.X ≫ (f.hom * g.hom))
         simp only [Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm] }
-
-    /-
-      rw [← Category.assoc G.mul]
-      simp
-      let e := calc
-        (H.X ⊗ H.X) ⊗ (H.X ⊗ H.X)
-        _ ≅ H.X ⊗ (H.X ⊗ (H.X ⊗ H.X)) := α_ _ _ _
-        _ ≅ H.X ⊗ ((H.X ⊗ H.X) ⊗ H.X) := H.X ◁ (α_ _ _ _).symm
-        _ ≅ H.X ⊗ ((H.X ⊗ H.X) ⊗ H.X) := H.X ◁ β_ H.X H.X ▷ H.X
-        _ ≅ H.X ⊗ (H.X ⊗ (H.X ⊗ H.X)) := H.X ◁ α_ _ _ _
-        _ ≅ (H.X ⊗ H.X) ⊗ (H.X ⊗ H.X) := (α_ _ _ _).symm
-      calc lift ((f.hom ⊗ f.hom) ≫ H.mul) ((g.hom ⊗ g.hom) ≫ H.mul) ≫ H.mul
-      _ = (lift f.hom f.hom ⊗ lift g.hom g.hom) ≫ e.inv ≫ (tensorHom H.mul H.mul) ≫ H.mul := sorry
-      _ = ((lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ e.hom) ≫ e.inv ≫ (tensorHom H.mul H.mul) ≫ H.mul := by
-        congr!
-        sorry
-      _ = e.hom ≫ e.inv ≫ (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
-      _ = (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
-    -/
-
 end  Mon_
 
 #exit
