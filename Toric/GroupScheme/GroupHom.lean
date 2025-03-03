@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
 
+import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.CategoryTheory.ChosenFiniteProducts
 import Mathlib.CategoryTheory.Monoidal.Mon_
 import Mathlib.CategoryTheory.Monoidal.Yoneda
@@ -74,10 +75,15 @@ lemma Mon_Class.mul_comp {M N O : C} (f g : M ⟶ N) (h : N ⟶ O) [Mon_Class N]
     (f * g) ≫ h = (f ≫ h) * g ≫ h :=
   (((yonedaMon.map (Mon_.homMk h)).app (.op M)).hom.map_mul f g)
 
-@[reassoc]
+@[reassoc (attr := simp)]
 lemma Mon_Class.one_comp {M N O : C} (h : N ⟶ O) [Mon_Class N] [Mon_Class O]
     [IsMon_Hom h] : (1 : M ⟶ N) ≫ h = 1 :=
   ((yonedaMon.map (Mon_.homMk h)).app (.op M)).hom.map_one
+
+@[reassoc (attr := simp)]
+lemma Mon_Class.comp_one {M N O : C} (h : N ⟶ O) [Mon_Class M] :
+    h ≫ (1 : O ⟶ M) = 1 :=
+  (((yonedaMon.obj (.mk' M)).map (h.op)).hom.map_one)
 
 instance {M N : C} [Mon_Class N] [CommMon_Class N] : CommMonoid (M ⟶ N) where
   mul_comm f g := by
@@ -91,7 +97,7 @@ end
 
 namespace Mon_
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}  [CommMon_Class N.X]
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N K : Mon_ C} [CommMon_Class N.X]
 
 lemma gigaDiagram :
     (α_ _ _ _).hom
@@ -197,36 +203,28 @@ lemma gigaOmegaDiagram :
   nth_rewrite 1 [← gigaDiagram, ← gigaDiagram2, ← gigaDiagram3, gigaDiagram4]
   simp
 
-@[simps]
 instance Hom.instMul : Mul (M ⟶ N) where
   mul f g :=
   { hom := f.hom * g.hom
     one_hom := by simp [Mon_.one_eq_one, Mon_Class.comp_mul, Mon_Class.one_comp]
     mul_hom := by simp [Mon_.mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm] }
 
-    /-
-      rw [← Category.assoc G.mul]
-      simp
-      let e := calc
-        (H.X ⊗ H.X) ⊗ (H.X ⊗ H.X)
-        _ ≅ H.X ⊗ (H.X ⊗ (H.X ⊗ H.X)) := α_ _ _ _
-        _ ≅ H.X ⊗ ((H.X ⊗ H.X) ⊗ H.X) := H.X ◁ (α_ _ _ _).symm
-        _ ≅ H.X ⊗ ((H.X ⊗ H.X) ⊗ H.X) := H.X ◁ β_ H.X H.X ▷ H.X
-        _ ≅ H.X ⊗ (H.X ⊗ (H.X ⊗ H.X)) := H.X ◁ α_ _ _ _
-        _ ≅ (H.X ⊗ H.X) ⊗ (H.X ⊗ H.X) := (α_ _ _ _).symm
-      calc lift ((f.hom ⊗ f.hom) ≫ H.mul) ((g.hom ⊗ g.hom) ≫ H.mul) ≫ H.mul
-      _ = (lift f.hom f.hom ⊗ lift g.hom g.hom) ≫ e.inv ≫ (tensorHom H.mul H.mul) ≫ H.mul := sorry
-      _ = ((lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ e.hom) ≫ e.inv ≫ (tensorHom H.mul H.mul) ≫ H.mul := by
-        congr!
-        sorry
-      _ = e.hom ≫ e.inv ≫ (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
-      _ = (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
-    -/
+@[simp]
+lemma Hom.hom_mul (f g : M ⟶ N) : (f * g).hom = f.hom * g.hom := rfl
+
+instance Hom.instOne : One (M ⟶ K) where
+  one := {
+    hom := 1
+    one_hom := by simp [Mon_.one_eq_one]
+    mul_hom := by
+      rw [← lift_fst_comp_snd_comp]
+      change _ = (fst M.X M.X ≫ (1: M.X ⟶ K.X)) * _
+      sorry
+  }
 
 end  Mon_
 
 #exit
-
 namespace Grp_
 
 section
@@ -237,7 +235,7 @@ variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Mon_ C} [CommM
 
 
 instance instCommGroup_HomToComm (G H : Grp_ C) [CommMon_Class H.X] : CommGroup (G ⟶ H) where
-  mul_assoc f g h := sorry
+  mul_assoc f g h := by simp
   one := sorry
   one_mul := sorry
   mul_one := sorry
