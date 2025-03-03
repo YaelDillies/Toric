@@ -28,7 +28,7 @@ end
 
 namespace Mon_
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M : Mon_ C}
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}  [CommMon_Class N.X]
 
 lemma gigaDiagram :
     (α_ _ _ _).hom
@@ -57,30 +57,22 @@ lemma gigaDiagram :
     rw [tensorHom_def']
     simp
 
-end  Mon_
-
-#exit
-
-namespace Grp_
-
-section
-
-open ChosenFiniteProducts MonoidalCategory
-
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Mon_ C} [CommMon_Class H.X]
-
 @[simps]
-instance Hom.instMul : Mul (G ⟶ H) where
+instance Hom.instMul : Mul (M ⟶ N) where
   mul f g := {
-    hom := lift f.hom g.hom ≫ H.mul
+    hom := lift f.hom g.hom ≫ N.mul
     one_hom := by
       rw [← Category.assoc]
       simp
-      have : lift H.one H.one = lift (𝟙 (𝟙_ C)) (𝟙 (𝟙_ C)) ≫ (H.one ⊗ H.one) := by simp
+      have : lift N.one N.one = lift (𝟙 (𝟙_ C)) (𝟙 (𝟙_ C)) ≫ (N.one ⊗ N.one) := by simp
       rw [this]
       rw [Category.assoc]
       simp
     mul_hom := by
+      apply yoneda.map_injective
+      ext
+      sorry
+    /-
       rw [← Category.assoc G.mul]
       simp
       let e := calc
@@ -97,7 +89,22 @@ instance Hom.instMul : Mul (G ⟶ H) where
         sorry
       _ = e.hom ≫ e.inv ≫ (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
       _ = (lift f.hom g.hom ⊗ lift f.hom g.hom) ≫ (tensorHom H.mul H.mul) ≫ H.mul := by simp
+    -/
   }
+
+end  Mon_
+
+#exit
+
+namespace Grp_
+
+section
+
+open ChosenFiniteProducts MonoidalCategory
+
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Mon_ C} [CommMon_Class H.X]
+
+
 
 instance instCommGroup_HomToComm (G H : Grp_ C) [CommMon_Class H.X] : CommGroup (G ⟶ H) where
   mul_assoc f g h := sorry
