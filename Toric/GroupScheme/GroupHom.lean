@@ -136,8 +136,7 @@ def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f]
 
 @[reassoc]
 lemma Grp_Class.comp_inv {G H K : C} (f : G ⟶ H) (h : K ⟶ G) [Grp_Class H] :
-    h ≫ f⁻¹ = (h ≫ f)⁻¹ :=
-  (((yonedaGrp.obj (.mk' H)).map (h.op)).hom.map_inv f)
+    h ≫ f⁻¹ = (h ≫ f)⁻¹ := ((yonedaGrp.obj (.mk' H)).map (h.op)).hom.map_inv f
 
 @[reassoc]
 lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H] :
@@ -148,6 +147,19 @@ lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H]
 lemma Grp_Class.div_comp {G H K : C} (f g : G ⟶ H) (h : H ⟶ K) [Grp_Class H] [Grp_Class K]
     [IsMon_Hom h] : (f / g) ≫ h =  (f ≫ h) / (g ≫ h) :=
     (((yonedaGrp.map (Grp_.homMk h)).app (.op G)).hom.map_div f g)
+
+lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι = f⁻¹ := rfl
+
+lemma Grp_Class.mul_eq_comp_mul {G H : C} {f g : G ⟶ H} [Grp_Class H] : f * g = lift f g ≫ μ := rfl
+
+lemma Grp_Class.mul_inv_rev {G : C} [Grp_Class G] :
+    μ ≫ ι = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by
+  calc
+    _ = ((fst G G) * (snd G G)) ≫ ι := by rw [mul_eq_mul]
+    _ = (snd G G)⁻¹ * (fst G G)⁻¹ := by rw [Grp_Class.inv_eq_comp_inv]; simp
+    _ = lift (snd G G ≫ ι) (fst G G ≫ ι) ≫ μ := rfl
+    _ = lift (fst G G ≫ ι) (snd G G ≫ ι) ≫ (β_ G G).hom ≫ μ := by simp
+    _ = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by simp
 
 instance Hom.instCommGroup {G H : C} [Grp_Class H] [IsCommMon H] :
     CommGroup (G ⟶ H) where
@@ -178,16 +190,17 @@ instance instPow : Pow (G ⟶ H) ℕ := inferInstanceAs <| Pow (G.toMon_ ⟶ H.t
 @[simp]
 lemma hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
 
---TODO
 instance {G : C} [Grp_Class G] [IsCommMon G] : IsMon_Hom (ι : G ⟶ G) where
-  one_hom := sorry
-  mul_hom := sorry
+  one_hom := by simp only [one_eq_one]; exact inv_one
+  mul_hom := by
+    simp [Grp_Class.mul_inv_rev]
 
 instance {f : G ⟶ H} [IsCommMon H.X] : IsMon_Hom f.hom⁻¹ where
   one_hom := by
     change _ ≫ _ ≫ _ = _
     simp [Mon_Class.one_eq_one, one_comp]
-  mul_hom := sorry
+  mul_hom := by
+    simp [← Grp_Class.inv_eq_comp_inv]
 
 instance instInv : Inv (G ⟶ H) where
   inv f := {
@@ -221,10 +234,9 @@ instance instPowInt : Pow (G ⟶ H) ℤ where
 @[simp]
 lemma hom_zpow (f : G ⟶ H) (n : ℤ) : (f ^ n).hom = f.hom ^ n := rfl
 
-instance : CommGroup (G ⟶ H) :=
+instance instCommGroup : CommGroup (G ⟶ H) :=
   Function.Injective.commGroup Mon_.Hom.hom (fun _ _ ↦ Mon_.Hom.ext)
     hom_one hom_mul hom_inv hom_div hom_pow hom_zpow
-
 
 end Grp_.Hom
 end

@@ -1,3 +1,4 @@
+import Mathlib.CategoryTheory.Monoidal.CommMon_
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 
