@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yaël Dillies, Michał Mrugała
+Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 
 import Mathlib.CategoryTheory.Monoidal.Grp_
@@ -42,7 +42,7 @@ def Mon_.homMk {M N : C} [Mon_Class M] [Mon_Class N] (f : M ⟶ N) [IsMon_Hom f]
 end
 section
 
-attribute [instance] monoidOfMon_Class
+attribute [local instance] monoidOfMon_Class
 
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}  [CommMon_Class N.X]
 
@@ -81,9 +81,9 @@ lemma Mon_Class.one_comp {M N O : C} (h : N ⟶ O) [Mon_Class N] [Mon_Class O]
   ((yonedaMon.map (Mon_.homMk h)).app (.op M)).hom.map_one
 
 @[reassoc (attr := simp)]
-lemma Mon_Class.comp_one {M N O : C} (h : N ⟶ O) [Mon_Class M] :
-    h ≫ (1 : O ⟶ M) = 1 :=
-  (((yonedaMon.obj (.mk' M)).map (h.op)).hom.map_one)
+lemma Mon_Class.comp_one {M N O : C} (h : M ⟶ N) [Mon_Class O] :
+    h ≫ (1 : N ⟶ O) = 1 :=
+  (((yonedaMon.obj (.mk' O)).map (h.op)).hom.map_one)
 
 instance {M N : C} [Mon_Class N] [CommMon_Class N] : CommMonoid (M ⟶ N) where
   mul_comm f g := by
@@ -93,11 +93,20 @@ instance {M N : C} [Mon_Class N] [CommMon_Class N] : CommMonoid (M ⟶ N) where
     congr 1
     ext <;> simp
 
+@[reassoc]
+lemma Mon_Class.comp_pow {M N O : C} (f : M ⟶ N) (n : ℕ) (h : O ⟶ M) [Mon_Class N] :
+    h ≫ f ^ n = (h ≫ f) ^ n := by
+  induction' n with n hn
+  · simp
+  simp only [pow_succ, Mon_Class.comp_mul, hn]
+
 end
 
 namespace Mon_
 
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}
+
+attribute [local instance] monoidOfMon_Class
 
 instance Hom.instOne : One (M ⟶ N) where
   one := {
@@ -110,110 +119,6 @@ lemma Hom.one_mul : (1 : (M ⟶ N)) = 1 := rfl
 
 variable [CommMon_Class N.X]
 
-lemma gigaDiagram :
-    (α_ _ _ _).hom
-    ≫ M.X ◁ (α_ _ _ _).inv
-    ≫ M.X ◁ (M.mul ▷ M.X)
-    ≫ M.X ◁ M.mul
-    ≫ M.mul
-      = (M.mul ⊗ M.mul)
-        ≫ M.mul := calc
-  _ = (α_ _ _ _).hom
-        ≫ M.X ◁ ((α_ _ _ _).inv ≫ M.mul ▷ M.X ≫ M.mul)
-        ≫ M.mul := by simp [-Mon_.mul_assoc]
-  _ = (α_ _ _ _).hom
-        ≫ M.X ◁ M.X ◁ M.mul
-        ≫ M.X ◁ M.mul
-        ≫ M.mul := by
-    simp [M.mul_assoc]
-  _ = (M.X ⊗ M.X) ◁ M.mul
-        ≫ (α_ _ _ _).hom
-        ≫ M.X ◁ M.mul
-        ≫ M.mul := by simp
-  _ = (M.X ⊗ M.X) ◁ M.mul
-        ≫ M.mul ▷ M.X
-        ≫ M.mul := by simp
-  _ = (M.mul ⊗ M.mul) ≫ M.mul := by
-    rw [tensorHom_def']
-    simp
-
-lemma gigaDiagram2 :
-    (α_ _ _ _).hom
-    ≫ N.X ◁ (α_ _ _ _).inv
-    ≫ N.X ◁ ((β_ _ _).hom ▷ N.X)
-    ≫ N.X ◁ (N.mul ▷ N.X)
-    ≫ N.X ◁ N.mul
-    ≫ N.mul
-      = (α_ _ _ _).hom
-        ≫ N.X ◁ (α_ _ _ _).inv
-        ≫ N.X ◁ (N.mul ▷ N.X)
-        ≫ N.X ◁ N.mul
-        ≫ N.mul := calc
-  _ = (α_ _ _ _).hom
-    ≫ N.X ◁ (α_ _ _ _).inv
-    ≫ N.X ◁ (((β_ _ _).hom ≫ N.mul) ▷ N.X)
-    ≫ N.X ◁ N.mul
-    ≫ N.mul := by simp
-  _ = (α_ _ _ _).hom
-        ≫ N.X ◁ (α_ _ _ _).inv
-        ≫ N.X ◁ (N.mul ▷ N.X)
-        ≫ N.X ◁ N.mul
-        ≫ N.mul := by
-    have : N.mul = μ := rfl
-    rw [this]
-    rw [CommMon_Class.mul_comm N.X]
-
-lemma gigaDiagram3 :
-    (α_ _ _ _).hom
-    ≫ M.X ◁ (α_ _ _ _).inv
-    ≫ M.X ◁ ((β_ _ _).hom ▷ M.X)
-    ≫ M.X ◁ (α_ _ _ _).hom
-    ≫ (α_ _ _ _).inv
-    ≫ (α_ _ _ _).hom
-    ≫ M.X ◁ (α_ _ _ _).inv
-    ≫ M.X ◁ (M.mul ▷ M.X)
-    ≫ M.X ◁ M.mul
-    ≫ M.mul
-      = (α_ _ _ _).hom
-        ≫ M.X ◁ (α_ _ _ _).inv
-        ≫ M.X ◁ ((β_ _ _).hom ▷ M.X)
-        ≫ M.X ◁ (M.mul ▷ M.X)
-        ≫ M.X ◁ M.mul
-        ≫ M.mul  := by simp
-
-lemma gigaDiagram4 :
-    (α_ _ _ _).hom
-    ≫ M.X ◁ (α_ _ _ _).inv
-    ≫ M.X ◁ ((β_ _ _).hom ▷ M.X)
-    ≫ M.X ◁ (α_ _ _ _).hom
-    ≫ (α_ _ _ _).inv
-    ≫ (α_ _ _ _).hom
-    ≫ M.X ◁ (α_ _ _ _).inv
-    ≫ M.X ◁ (M.mul ▷ M.X)
-    ≫ M.X ◁ M.mul
-    ≫ M.mul
-      = (α_ _ _ _).hom
-        ≫ M.X ◁ (α_ _ _ _).inv
-        ≫ M.X ◁ ((β_ _ _).hom ▷ M.X)
-        ≫ M.X ◁ (α_ _ _ _).hom
-        ≫ (α_ _ _ _).inv
-        ≫ (M.mul ⊗ M.mul)
-        ≫ M.mul := by
-  rw [gigaDiagram]
-
-lemma gigaOmegaDiagram :
-    (N.mul ⊗ N.mul)
-    ≫ N.mul
-      = (α_ _ _ _).hom
-        ≫ N.X ◁ (α_ _ _ _).inv
-        ≫ N.X ◁ ((β_ _ _).hom ▷ N.X)
-        ≫ N.X ◁ (α_ _ _ _).hom
-        ≫ (α_ _ _ _).inv
-        ≫ (N.mul ⊗ N.mul)
-        ≫ N.mul := by
-  nth_rewrite 1 [← gigaDiagram, ← gigaDiagram2, ← gigaDiagram3, gigaDiagram4]
-  simp
-
 instance Hom.instMul : Mul (M ⟶ N) where
   mul f g :=
   { hom := f.hom * g.hom
@@ -223,35 +128,49 @@ instance Hom.instMul : Mul (M ⟶ N) where
 @[simp]
 lemma Hom.hom_mul (f g : M ⟶ N) : (f * g).hom = f.hom * g.hom := rfl
 
--- TODO powers
 instance Hom.instPow : Pow (M ⟶ N) ℕ where
   pow f n :=
   { hom := f.hom ^ n
-    one_hom := by sorry -- simp [Mon_.one_eq_one, Mon_Class.comp_mul, Mon_Class.one_comp]
-    mul_hom := by sorry -- simp [Mon_.mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm] }
+    one_hom := by simp [Mon_.one_eq_one, Mon_Class.one_comp, Mon_Class.comp_pow]
+    mul_hom := by
+      simp [Mon_.mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, mul_mul_mul_comm,
+      Mon_Class.comp_pow, mul_pow]
   }
+
+@[simp]
+lemma Hom.hom_pow (f : M ⟶ N) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
+
 instance : CommMonoid (M ⟶ N) :=
   Function.Injective.commMonoid Hom.hom (fun _ _ ↦ Hom.ext) rfl (fun _ _ ↦ rfl) (fun _ _ ↦ rfl)
 
 end  Mon_
 
-#exit
 namespace Grp_
 
 section
 
 open ChosenFiniteProducts MonoidalCategory
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Mon_ C} [CommMon_Class H.X]
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Grp_ C}
+
+instance Hom.instOne : One (G ⟶ H) := inferInstanceAs <| One (G.toMon_ ⟶ H.toMon_)
+
+lemma Hom.one_mul : (1 : (G ⟶ H)) = 1 := rfl
+
+variable [CommMon_Class H.X]
+
+instance Hom.instMul : Mul (G ⟶ H) := inferInstanceAs <| Mul (G.toMon_ ⟶ H.toMon_)
+
+@[simp]
+lemma Hom.hom_mul (f g : G ⟶ H) : (f * g).hom = f.hom * g.hom := rfl
+
+instance Hom.instPow : Pow (G ⟶ H) ℕ := inferInstanceAs <| Pow (G.toMon_ ⟶ H.toMon_) ℕ
+
+@[simp]
+lemma Hom.hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
 
 
-instance instCommGroup_HomToComm (G H : Grp_ C) [CommMon_Class H.X] : CommGroup (G ⟶ H) where
-  mul_assoc f g h := by simp
-  one := sorry
-  one_mul := sorry
-  mul_one := sorry
-  inv := sorry
-  inv_mul_cancel := sorry
-  mul_comm := sorry
+instance : CommGroup (G ⟶ H) := sorry
+  -- Function.Injective.commGroup Mon_.Hom.hom (fun _ _ ↦ Mon_.Hom.ext) rfl (fun _ _ ↦ rfl) (fun _ _ ↦ rfl) _
 
 end
