@@ -86,9 +86,9 @@ jobs:
             pip install leanblueprint
             leanblueprint pdf
             mkdir -p docs
-            cp blueprint/print/print.pdf docs/blueprint.pdf
+            cp blueprint/print/print.pdf website/blueprint.pdf
             leanblueprint web
-            cp -r blueprint/web docs/blueprint
+            cp -r blueprint/web website/blueprint
 
       - name: Copy documentation to `website/docs`
         run: mv docs/build/* website/docs
