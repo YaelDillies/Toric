@@ -3,11 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib
+import Mathlib.AlgebraicGeometry.Pullbacks
+import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Toric.DivPairs
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
-import Toric.Torus
 
 /-!
 # Toric ideals

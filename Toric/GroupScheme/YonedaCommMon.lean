@@ -15,6 +15,7 @@ variable (X : C)
 
 section CommGrp_
 
+--TODO: get rid of erw
 /-- If `X` represents a presheaf of commutative groups, then `X` is a commutative group object. -/
 def IsCommMon.ofRepresentableBy (F : Cᵒᵖ ⥤ CommMonCat.{w})
     (α : (F ⋙ forget _).RepresentableBy X) :

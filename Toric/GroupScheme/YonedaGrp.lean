@@ -54,7 +54,7 @@ def Grp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ Grp.{w}) (α : (F ⋙ forget _)
 
 attribute [local instance] monoidOfMon_Class
 
-local instance [Grp_Class X] (Y : C) : Inv (Y ⟶ X) where
+instance Grp_Class.instInv [Grp_Class X] (Y : C) : Inv (Y ⟶ X) where
   inv := (· ≫ ι)
 
 /-- If `X` is a group object, then `Hom(Y, X)` has a group structure. -/

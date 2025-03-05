@@ -11,7 +11,7 @@ namespace Mon_
 
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}
 
-variable [CommMon_Class N.X]
+variable [IsCommMon N.X]
 
 lemma gigaDiagram :
     (α_ _ _ _).hom
@@ -64,7 +64,7 @@ lemma gigaDiagram2 :
         ≫ N.mul := by
     have : N.mul = μ := rfl
     rw [this]
-    rw [CommMon_Class.mul_comm N.X]
+    rw [IsCommMon.mul_comm N.X]
 
 lemma gigaDiagram3 :
     (α_ _ _ _).hom
