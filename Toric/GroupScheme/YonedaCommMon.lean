@@ -15,7 +15,6 @@ variable (X : C)
 
 section CommGrp_
 
--- TODO: rename Mon_ClassOfRepresentableBy to Mon_Class.ofRepresentableBy
 /-- If `X` represents a presheaf of commutative groups, then `X` is a commutative group object. -/
 def IsCommMon.ofRepresentableBy (F : Cᵒᵖ ⥤ CommMonCat.{w})
     (α : (F ⋙ forget _).RepresentableBy X) :
@@ -27,10 +26,10 @@ def IsCommMon.ofRepresentableBy (F : Cᵒᵖ ⥤ CommMonCat.{w})
   apply α.homEquiv.injective
   simp only [α.homEquiv_comp, Equiv.apply_symm_apply]
   simp only [Functor.comp_map, ConcreteCategory.forget_map_eq_coe, map_mul]
+  simp only [← ConcreteCategory.forget_map_eq_coe, ← Functor.comp_map]
+  erw [← α.homEquiv_comp, ← α.homEquiv_comp]
   rw [_root_.mul_comm]
-  simp only [← Functor.comp_map, ← ConcreteCategory.forget_map_eq_coe, ← Functor.comp_obj,
-        ← α.homEquiv_comp]
   simp
-  sorry
+  rfl
 
 end CommGrp_

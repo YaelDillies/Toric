@@ -40,8 +40,7 @@ def Grp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ Grp.{w}) (α : (F ⋙ forget _)
     apply α.homEquiv.injective
     simp only [α.homEquiv_comp, Equiv.apply_symm_apply]
     simp only [Functor.comp_map, ConcreteCategory.forget_map_eq_coe, map_one, map_mul]
-    simp only [← Functor.comp_map, ← ConcreteCategory.forget_map_eq_coe, ← Functor.comp_obj,
-        ← α.homEquiv_comp]
+    simp only [← ConcreteCategory.forget_map_eq_coe, ← Functor.comp_map, ← α.homEquiv_comp]
     simp [← Functor.comp_obj]
   right_inv' := by
     change lift (𝟙 X) (α.homEquiv.symm (α.homEquiv (𝟙 X))⁻¹) ≫
@@ -50,8 +49,7 @@ def Grp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ Grp.{w}) (α : (F ⋙ forget _)
     apply α.homEquiv.injective
     simp only [α.homEquiv_comp, Equiv.apply_symm_apply]
     simp only [Functor.comp_map, ConcreteCategory.forget_map_eq_coe, map_one, map_mul]
-    simp only [← Functor.comp_map, ← ConcreteCategory.forget_map_eq_coe, ← Functor.comp_obj,
-        ← α.homEquiv_comp]
+    simp only [← ConcreteCategory.forget_map_eq_coe, ← Functor.comp_map, ← α.homEquiv_comp]
     simp [← Functor.comp_obj]
 
 attribute [local instance] monoidOfMon_Class
