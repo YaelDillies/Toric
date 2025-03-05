@@ -38,10 +38,11 @@ linter.style.setOption = true
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-
+rev = "v4.17.0"
 
 [[require]]
 name = "checkdecls"
 git = "https://github.com/PatrickMassot/checkdecls.git"
+
 [[lean_lib]]
 name = "Toric"

@@ -8,8 +8,6 @@ import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.MvLaurentPolynomial
 import Toric.SchemeOver
-import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
-import Mathlib.CategoryTheory.Iso
 
 /-!
 # The standard algebraic torus

@@ -7,7 +7,6 @@ import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.YonedaCommMon
 import Toric.GroupScheme.YonedaGrp
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
-import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Category

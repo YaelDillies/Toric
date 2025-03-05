@@ -15,8 +15,6 @@ variable (X : C)
 
 section CommGrp_
 
-variable (F : Cᵒᵖ ⥤ Grp)
-
 -- TODO: rename Mon_ClassOfRepresentableBy to Mon_Class.ofRepresentableBy
 /-- If `X` represents a presheaf of commutative groups, then `X` is a commutative group object. -/
 def IsCommMon.ofRepresentableBy (F : Cᵒᵖ ⥤ CommMonCat.{w})
