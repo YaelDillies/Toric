@@ -50,7 +50,8 @@ namespace Localization
 
 /-- The localization of a finitely generated monoid at a finitely generated submonoid
 is finitely generated. -/
-@[to_additive "The localization of a finitely generated monoid at a finitely generated submonoid is finitely generated."]
+@[to_additive "The localization of a finitely generated monoid at a finitely generated submonoid is
+finitely generated."]
 instance FG_loc_of_FG {M} [CommMonoid M] [hM : Monoid.FG M] {N : Submonoid M} (hN : N.FG) :
     Monoid.FG <| Localization N := by
   let antidiagonal : (M × N) →* Localization N := {
@@ -82,13 +83,14 @@ instance torsionFree_of_torsionFree {M} [CommMonoid M] {hM : IsMultFree M} {N : 
   simp at hc
   refine Function.not_injective_iff.mpr ⟨c * x, c * y, ?_, fun hxy ↦ hg ?_⟩ <| hM n
   cases n
-  . simp
-  . rw [mul_pow, mul_pow, pow_add, pow_one, mul_assoc, hc, ← mul_assoc]
+  · simp
+  · rw [mul_pow, mul_pow, pow_add, pow_one, mul_assoc, hc, ← mul_assoc]
   rw [← mk_one, Localization.mk_eq_mk_iff, Localization.r_iff_exists]
   exact ⟨c, by simpa⟩
 
 /-- The natural map from a cancellative monoid into its localization is injective.-/
-@[to_additive mk_inj_of_cancelAdd "The natural map from a cancellative monoid into its localization is injective."]
+@[to_additive mk_inj_of_cancelAdd "The natural map from a cancellative monoid into its localization
+is injective."]
 lemma mk_inj_of_cancelMul {M} [CommMonoid M] [hM : IsCancelMul M] {N : Submonoid M} :
     Function.Injective <| (monoidOf N).toFun := fun x y hxy ↦ by
   obtain ⟨_, hc⟩ := r_iff_exists.mp <| mk_eq_mk_iff.mp hxy
@@ -109,7 +111,8 @@ instance affine_monoid_imp_lattice_embedding {hS : IsAddFree S} :
   intro n g hng
   by_contra h
   obtain ⟨hn, hg⟩ := not_or.mp h
-  exact AddLocalization.torsionFree_of_torsionFree (hM := hS) g hg <| isOfFinAddOrder_iff_zsmul_eq_zero.mpr ⟨n, hn, hng⟩
+  exact AddLocalization.torsionFree_of_torsionFree (hM := hS) g hg <|
+    isOfFinAddOrder_iff_zsmul_eq_zero.mpr ⟨n, hn, hng⟩
 -- lemma affine_monoid_imp_lattice_embedding {hS : IsAddFree S} :
 --     ∃ (n : ℕ) (f : S →+ FreeAbelianGroup (Fin n)), Function.Injective f := by
 --   let G := AddLocalization (⊤ : AddSubmonoid S)

@@ -3,7 +3,6 @@ Copyright (c) 2025 Michał Mrugała, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Mrugała, Andrew Yang
 -/
-
 import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Yoneda
 import Mathlib.Combinatorics.Quiver.ReflQuiver
@@ -35,7 +34,8 @@ def Grp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ Grp.{w}) (α : (F ⋙ forget _)
   __ := Mon_ClassOfRepresentableBy X (F ⋙ (forget₂ Grp MonCat)) α
   inv := α.homEquiv.symm (α.homEquiv (𝟙 _))⁻¹
   left_inv' := by
-    change lift (α.homEquiv.symm (α.homEquiv (𝟙 X))⁻¹) (𝟙 X) ≫ α.homEquiv.symm (α.homEquiv (fst X X) * α.homEquiv (snd X X)) =
+    change lift (α.homEquiv.symm (α.homEquiv (𝟙 X))⁻¹) (𝟙 X) ≫
+      α.homEquiv.symm (α.homEquiv (fst X X) * α.homEquiv (snd X X)) =
         toUnit X ≫ α.homEquiv.symm 1
     apply α.homEquiv.injective
     simp only [α.homEquiv_comp, Equiv.apply_symm_apply]
@@ -44,7 +44,8 @@ def Grp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ Grp.{w}) (α : (F ⋙ forget _)
         ← α.homEquiv_comp]
     simp [← Functor.comp_obj]
   right_inv' := by
-    change lift (𝟙 X) (α.homEquiv.symm (α.homEquiv (𝟙 X))⁻¹)  ≫ α.homEquiv.symm (α.homEquiv (fst X X) * α.homEquiv (snd X X)) =
+    change lift (𝟙 X) (α.homEquiv.symm (α.homEquiv (𝟙 X))⁻¹) ≫
+      α.homEquiv.symm (α.homEquiv (fst X X) * α.homEquiv (snd X X)) =
         toUnit X ≫ α.homEquiv.symm 1
     apply α.homEquiv.injective
     simp only [α.homEquiv_comp, Equiv.apply_symm_apply]

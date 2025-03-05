@@ -43,3 +43,5 @@ class ToricVariety (X : Scheme) extends X.Over (Spec R) where
 noncomputable instance : ToricVariety R n (Torus R n) where
   torusEmb := 𝟙 (Torus R n)
   torusAct := torusMul
+
+end AlgebraicGeometry

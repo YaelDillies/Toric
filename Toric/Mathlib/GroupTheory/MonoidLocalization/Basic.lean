@@ -25,3 +25,5 @@ instance : CommGroup (Localization (⊤ : Submonoid α)) where
     rw [mul_comm, Submonoid.coe_mul]
 
 -- TODO yael: refactor AddLocalization.mk_zero_eq_addMonoidOf_mk 🤮
+
+end Localization

@@ -7,3 +7,5 @@ scoped infixr:81 " ◁ " => whiskerLeftIso
 
 /-- Notation for the `whiskerRight` operator of monoidal categories -/
 scoped infixl:81 " ▷ " => whiskerRightIso
+
+end CategoryTheory.MonoidalCategory

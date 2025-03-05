@@ -8,8 +8,8 @@ import Toric.Torus
 /-!
 # Spherical varieties
 
-This file defines a spherical variety over a ring `R` as a scheme `X` with a structure morphism to
-`Spec R`.
+This file defines a spherical variety over `B` over a ring `R` as a scheme `X` over `Spec R`
+equipped with an action `B × X → X` with an open orbit.
 -/
 
 open CategoryTheory Limits
@@ -18,7 +18,9 @@ namespace AlgebraicGeometry
 variable {R : CommRingCat} {n : ℕ} {X Y : Scheme}
 
 variable (R n)
-/-- A spherical variety of dimension over `B` over a ring `R` is a scheme `X` equipped with an
-action `T × B → B` with an open orbit. -/
+/-- A spherical variety over `B` over a ring `R` is a scheme `X` equipped with an action `B × X → X`
+with an open orbit. -/
 class SphericalVariety (B X : Scheme) [B.Over (Spec R)] extends X.Over (Spec R) where
-  qct : pullback (B ↘ Spec R) (X ↘ Spec R) ⟶ X
+  act : pullback (B ↘ Spec R) (X ↘ Spec R) ⟶ X
+
+end AlgebraicGeometry

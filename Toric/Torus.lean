@@ -3,11 +3,10 @@ Copyright (c) 2025 Yaël Dillies, Patrick Luo, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo, Andrew Yang
 -/
-import Mathlib.AlgebraicGeometry.Pullbacks
-import Mathlib.GroupTheory.FreeAbelianGroup
-import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
-import Toric.MvLaurentPolynomial
 import Mathlib.CategoryTheory.Monoidal.Mon_
+import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.MvLaurentPolynomial
 import Toric.SchemeOver
 import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Mathlib.CategoryTheory.Iso

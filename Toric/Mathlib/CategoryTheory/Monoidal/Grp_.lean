@@ -119,3 +119,5 @@ lemma _root_.Grp_Class.toMon_Class_injective {X : C} :
 lemma _root_.Grp_Class.ext {X : C} (h₁ h₂ : Grp_Class X)
     (H : h₁.toMon_Class = h₂.toMon_Class) : h₁ = h₂ :=
   Grp_Class.toMon_Class_injective H
+
+end Grp_

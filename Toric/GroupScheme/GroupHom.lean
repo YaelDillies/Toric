@@ -3,14 +3,9 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.CategoryTheory.ChosenFiniteProducts
-import Mathlib.CategoryTheory.Monoidal.Mon_
 import Mathlib.CategoryTheory.Monoidal.Yoneda
 import Mathlib.Combinatorics.Quiver.ReflQuiver
-import Toric.Mathlib.CategoryTheory.Monoidal.Category
-
 
 open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts
 
@@ -147,8 +142,6 @@ end  Mon_
 
 namespace Grp_
 
-section
-
 open ChosenFiniteProducts MonoidalCategory
 
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Grp_ C}
@@ -169,8 +162,8 @@ instance Hom.instPow : Pow (G ⟶ H) ℕ := inferInstanceAs <| Pow (G.toMon_ ⟶
 @[simp]
 lemma Hom.hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
 
-
 instance : CommGroup (G ⟶ H) := sorry
-  -- Function.Injective.commGroup Mon_.Hom.hom (fun _ _ ↦ Mon_.Hom.ext) rfl (fun _ _ ↦ rfl) (fun _ _ ↦ rfl) _
+  -- Function.Injective.commGroup Mon_.Hom.hom (fun _ _ ↦ Mon_.Hom.ext) rfl (fun _ _ ↦ rfl)
+  --   (fun _ _ ↦ rfl) _
 
-end
+end Grp_

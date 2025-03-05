@@ -1,5 +1,4 @@
 import Mathlib.CategoryTheory.Monoidal.CommMon_
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 
 universe v₁ v₂ u₁ u₂ u
 open CategoryTheory MonoidalCategory Mon_Class
@@ -34,3 +33,5 @@ def mk' (X : C)  [Mon_Class X] [IsCommMon X] : CommMon_ C where
 
 instance (X : CommMon_ C) : IsCommMon X.X where
   mul_comm' := X.mul_comm
+
+end CommMon_

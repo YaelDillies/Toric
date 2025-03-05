@@ -3,9 +3,7 @@ Copyright (c) 2025 Michał Mrugała, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Mrugała, Andrew Yang
 -/
-
-import Mathlib
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
+import Mathlib.CategoryTheory.Monoidal.Yoneda
 import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 
 open CategoryTheory ChosenFiniteProducts MonoidalCategory Mon_Class Opposite
@@ -36,3 +34,5 @@ def IsCommMon.ofRepresentableBy (F : Cᵒᵖ ⥤ CommMonCat.{w})
         ← α.homEquiv_comp]
   simp
   sorry
+
+end CommGrp_
