@@ -12,6 +12,7 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
+import Toric.MonoidObjectAction.Basic
 import Toric.MvLaurentPolynomial
 import Toric.SchemeOver
 import Toric.SphericalVariety
