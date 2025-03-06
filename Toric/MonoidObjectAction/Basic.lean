@@ -18,8 +18,8 @@ An action of a monoid object `M` on an object `S` is the data of map
 -/
 class Action where
   smul : M.X ⊗ S ⟶ S
-  isMulCompatible : (𝟙 M.X ⊗ smul) ≫ smul
+  mul_smul : (𝟙 M.X ⊗ smul) ≫ smul
     = (α_ M.X M.X S).inv ≫ (M.mul ⊗ (𝟙 S)) ≫ smul
-  idApply : (λ_ S).inv ≫ M.one ▷ S ≫ smul = 𝟙 S
+  one_smul : (λ_ S).inv ≫ M.one ▷ S ≫ smul = 𝟙 S
 
 end Mon_
