@@ -1,31 +1,15 @@
 import Mathlib.CategoryTheory.Monoidal.CommMon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Mathlib.CategoryTheory.Monoidal.Yoneda
 
 universe v₁ v₂ u₁ u₂ u
-open CategoryTheory MonoidalCategory Mon_Class
+open CategoryTheory ChosenFiniteProducts MonoidalCategory Mon_Class Opposite
 
-variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C] [BraidedCategory.{v₁} C]
-
-section
-
-variable {C}
-
-class IsCommMon (X : C) [Mon_Class X] where
-  mul_comm' : (β_ X X).hom ≫ μ = μ := by aesop_cat
-
-open scoped Mon_Class
-
-namespace IsCommMon
-
-@[reassoc (attr := simp)]
-theorem mul_comm (X : C) [Mon_Class X] [IsCommMon X] : (β_ X X).hom ≫ μ = μ := mul_comm'
-
-end IsCommMon
-
-end
+variable {C : Type*} [Category C]
 
 namespace CommMon_
 
-variable {C}
+variable [MonoidalCategory C] [BraidedCategory C]
 
 def mk' (X : C)  [Mon_Class X] [IsCommMon X] : CommMon_ C where
   __ := Mon_.mk' X
@@ -33,5 +17,27 @@ def mk' (X : C)  [Mon_Class X] [IsCommMon X] : CommMon_ C where
 
 instance (X : CommMon_ C) : IsCommMon X.X where
   mul_comm' := X.mul_comm
+
+end CommMon_
+
+section CommMon_
+
+variable (X : C) [ChosenFiniteProducts C]
+
+/-- If `X` represents a presheaf of commutative groups, then `X` is a commutative group object. -/
+def IsCommMon.ofRepresentableBy (F : Cᵒᵖ ⥤ CommMonCat)
+    (α : (F ⋙ forget _).RepresentableBy X) :
+    letI := Mon_ClassOfRepresentableBy X (F ⋙ (forget₂ CommMonCat MonCat)) α
+    IsCommMon X := by
+  letI := Mon_ClassOfRepresentableBy X (F ⋙ (forget₂ CommMonCat MonCat)) α
+  refine ⟨?_⟩
+  change (β_ X X).hom ≫ α.homEquiv.symm (α.homEquiv (fst X X) * α.homEquiv (snd X X))
+      = α.homEquiv.symm (α.homEquiv (fst X X) * α.homEquiv (snd X X))
+  apply α.homEquiv.injective
+  simp only [α.homEquiv_comp, Equiv.apply_symm_apply]
+  simp only [Functor.comp_map, ConcreteCategory.forget_map_eq_coe, map_mul]
+  simp only [← ConcreteCategory.forget_map_eq_coe, ← Functor.comp_map, ← α.homEquiv_comp]
+  rw [_root_.mul_comm]
+  simp
 
 end CommMon_
