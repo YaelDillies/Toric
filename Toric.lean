@@ -3,8 +3,6 @@ import Toric.Character
 import Toric.DivPairs
 import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
-import Toric.GroupScheme.YonedaCommMon
-import Toric.GroupScheme.YonedaGrp
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
@@ -19,4 +17,5 @@ import Toric.SchemeOver
 import Toric.SphericalVariety
 import Toric.ToricIdeal
 import Toric.ToricVariety
+import Toric.ToricVarietyFromMonoid
 import Toric.Torus
