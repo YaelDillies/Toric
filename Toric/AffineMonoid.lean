@@ -5,10 +5,14 @@ import Mathlib.GroupTheory.FreeAbelianGroup
 import Mathlib.GroupTheory.Torsion
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
+import Mathlib.GroupTheory.MonoidLocalization.Basic
 
 -- TODO: wrong torsion-free definition? move?
-@[to_additive IsAddFree]
-def IsMultFree (M) [Monoid M] := ∀ (n : ℕ), Function.Injective (fun (x : M) ↦ x^n)
+class IsAddFree (M) [AddMonoid M] where
+  mul : ∀ (n : ℕ), Function.Injective (fun (x : M) ↦ n • x)
+@[to_additive]
+class IsMulFree (M) [Monoid M] where
+  pow : ∀ (n : ℕ), Function.Injective (fun (x : M) ↦ x^n)
 
 /-- The product of finitely generated monoids is finitely generated. -/
 @[to_additive "The product of finitely generated monoids is finitely generated."]
@@ -71,7 +75,7 @@ lemma mk_of {M} [CommMonoid M] {N : Submonoid M} (g : Localization N) : ∃ x y,
 
 /-- The localization of a torsion-free monoid is torsion-free. -/
 @[to_additive "The localization of a torsion-free monoid is torsion-free."]
-instance torsionFree_of_torsionFree {M} [CommMonoid M] {hM : IsMultFree M} {N : Submonoid M} :
+instance torsionFree_of_torsionFree {M} [CommMonoid M] [hM : IsMulFree M] {N : Submonoid M} :
     Monoid.IsTorsionFree <| Localization N := by
   rintro g hg
   rw [isOfFinOrder_iff_pow_eq_one]
@@ -81,7 +85,7 @@ instance torsionFree_of_torsionFree {M} [CommMonoid M] {hM : IsMultFree M} {N : 
   rw [mk_pow, ← mk_one, mk_eq_mk_iff, r_iff_exists] at hgn
   obtain ⟨c, hc⟩ := hgn
   simp at hc
-  refine Function.not_injective_iff.mpr ⟨c * x, c * y, ?_, fun hxy ↦ hg ?_⟩ <| hM n
+  refine Function.not_injective_iff.mpr ⟨c * x, c * y, ?_, fun hxy ↦ hg ?_⟩ <| hM.pow n
   cases n
   · simp
   · rw [mul_pow, mul_pow, pow_add, pow_one, mul_assoc, hc, ← mul_assoc]
@@ -100,9 +104,25 @@ end Localization
 
 --
 
-variable {S : Type*} [AddCommMonoid S] [hFG : AddMonoid.FG S] [IsCancelAdd S]
+open AddLocalization
 
-instance affine_monoid_imp_lattice_embedding {hS : IsAddFree S} :
+def FG_free_Zmod_iso (M) [AddCommMonoid M] [Module ℤ M] [Module.Free ℤ M] [Module.Finite ℤ M] :
+    M ≃ₗ[ℤ] FreeAbelianGroup (Fin <| Module.finrank ℤ M) := by
+  sorry
+
+-- /-- An affine monoid is a commutative (additive) monoid which is finitely generated, cancellative
+-- and torsion-free (in the sense that `fun x ↦ n * x` is injective); equivalently if it's
+-- finitely generated and a submonoid of `ℤ^n` for some `n`. -/
+-- class AffineMonoid (S) extends AddCommMonoid S, AddMonoid.FG S, IsCancelAdd S where
+--   TF : IsAddFree S
+
+variable (S : Type*) [AddCommMonoid S] [hFG : AddMonoid.FG S] [IsCancelAdd S] [hTF : IsAddFree S]
+
+instance : Module.Finite ℤ (AddLocalization (⊤ : AddSubmonoid S)) :=
+  Module.Finite.iff_addGroup_fg.mpr <| AddGroup.fg_iff_addMonoid_fg.mpr <|
+    FG_loc_of_FG (AddMonoid.FG.out : (⊤ : AddSubmonoid S).FG)
+
+instance affine_monoid_imp_free_grothendieck_group :
     Module.Free ℤ <| AddLocalization (⊤ : AddSubmonoid S) := by
   have : AddMonoid.FG <| AddLocalization (⊤ : AddSubmonoid S) :=
     AddLocalization.FG_loc_of_FG <| AddMonoid.fg_def.mp hFG
@@ -111,42 +131,14 @@ instance affine_monoid_imp_lattice_embedding {hS : IsAddFree S} :
   intro n g hng
   by_contra h
   obtain ⟨hn, hg⟩ := not_or.mp h
-  exact AddLocalization.torsionFree_of_torsionFree (hM := hS) g hg <|
+  exact AddLocalization.torsionFree_of_torsionFree (hM := hTF) g hg <|
     isOfFinAddOrder_iff_zsmul_eq_zero.mpr ⟨n, hn, hng⟩
--- lemma affine_monoid_imp_lattice_embedding {hS : IsAddFree S} :
---     ∃ (n : ℕ) (f : S →+ FreeAbelianGroup (Fin n)), Function.Injective f := by
---   let G := AddLocalization (⊤ : AddSubmonoid S)
---   set locmap : S →+ G := {
---     toFun x := AddLocalization.mk x 0
---     map_zero' := AddLocalization.mk_zero
---     map_add' x y := by rw [AddLocalization.mk_add x y 0 0, add_zero]
---   }
 
---   have hGemb : Function.Injective locmap.toFun := by
---     intros m m' hm
---     rw [AddLocalization.mk_eq_mk_iff, AddLocalization.r_iff_exists] at hm
---     obtain ⟨c, hc⟩ := hm
---     simpa only [ZeroMemClass.coe_zero, zero_add, add_right_inj] using hc
+noncomputable abbrev dim := Module.finrank ℤ <| AddLocalization (⊤ : AddSubmonoid S)
 
---   have hGfg : AddGroup.FG G := AddGroup.fg_iff_addMonoid_fg.mpr <| by
---     let antidiagonal : (S × S) →+ G := {
---       toFun x := AddLocalization.mk x.1 ⟨x.2, trivial⟩
---       map_zero' := AddLocalization.mk_zero
---       map_add' x y := by rw [AddLocalization.mk_add x.1 y.1 ⟨x.2, _⟩ ⟨y.2, _⟩]; rfl
---     }
---     refine AddMonoid.fg_of_surjective antidiagonal ?_
---     rintro ⟨x, y⟩; exact ⟨⟨x, y⟩, rfl⟩
-
---   have hGtf : AddMonoid.IsTorsionFree G := by
---     rintro ⟨x, y⟩ hg ⟨n, hnpos, hn⟩
---     refine hg ?_
---     sorry
-
---   have hGfree : Module.Free ℤ G := by -- structure theorem + torsion free
---     have _ := Module.Finite.iff_addGroup_fg.mpr hGfg
---     refine Module.free_iff_noZeroSMulDivisors.mpr <| (noZeroSMulDivisors_iff _ _).mpr ?_
---     intro n g hg
---     by_contra h
---     obtain ⟨hn, hg₂⟩ := not_or.mp h
---     exact hGtf g hg₂ <| isOfFinAddOrder_iff_zsmul_eq_zero.mpr ⟨n, hn, hg⟩
---   sorry
+lemma affine_monoid_imp_lattice_embedding :
+    ∃ (f : S →+ FreeAbelianGroup (Fin <| dim S)), Function.Injective f := by
+  -- have _ := Module.Finite.iff_addGroup_fg.mpr <| AddGroup.fg_iff_addMonoid_fg.mpr <|
+  --           FG_loc_of_FG (AddMonoid.FG.out : (⊤ : AddSubmonoid S).FG)
+  let i := FG_free_Zmod_iso <| AddLocalization (⊤ : AddSubmonoid S)
+  exact ⟨.comp i.toAddMonoidHom (addMonoidOf ⊤).toAddMonoidHom, by simpa using mk_inj_of_cancelAdd⟩
