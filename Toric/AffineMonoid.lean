@@ -136,9 +136,11 @@ instance affine_monoid_imp_free_grothendieck_group :
 
 noncomputable abbrev dim := Module.finrank ℤ <| AddLocalization (⊤ : AddSubmonoid S)
 
+abbrev AffineLatticeHom :=
+  AddMonoidHom.comp (FG_free_Zmod_iso <| AddLocalization (⊤ : AddSubmonoid S)).toAddMonoidHom
+                    (addMonoidOf ⊤).toAddMonoidHom
 lemma affine_monoid_imp_lattice_embedding :
     ∃ (f : S →+ FreeAbelianGroup (Fin <| dim S)), Function.Injective f := by
   -- have _ := Module.Finite.iff_addGroup_fg.mpr <| AddGroup.fg_iff_addMonoid_fg.mpr <|
   --           FG_loc_of_FG (AddMonoid.FG.out : (⊤ : AddSubmonoid S).FG)
-  let i := FG_free_Zmod_iso <| AddLocalization (⊤ : AddSubmonoid S)
-  exact ⟨.comp i.toAddMonoidHom (addMonoidOf ⊤).toAddMonoidHom, by simpa using mk_inj_of_cancelAdd⟩
+  exact ⟨AffineLatticeHom S, by simpa using mk_inj_of_cancelAdd⟩
