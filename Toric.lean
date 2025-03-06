@@ -11,7 +11,6 @@ import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.MvLaurentPolynomial

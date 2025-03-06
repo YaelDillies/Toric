@@ -19,6 +19,8 @@ open CategoryTheory Limits
 namespace AlgebraicGeometry
 variable {R : CommRingCat} {n : ℕ}
 
+--TODO: add group action axioms
+--TODO: make a general definition of a group object action
 variable (R n)
 /-- A toric variety of dimension `n` over a ring `R` is a scheme `X` equipped with a dense embedding
 `Tⁿ → X` and an action `T × X → X` extending the standard action `T × T → T`. -/

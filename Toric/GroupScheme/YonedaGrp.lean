@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Limits
+import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.CategoryTheory.Monoidal.Yoneda
-import Mathlib.Combinatorics.Quiver.ReflQuiver
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
+import Mathlib.CategoryTheory.Monoidal.CommMon_
+import Mathlib.CategoryTheory.Monoidal.Grp_
 
 /-!
 # Yoneda embedding of `Grp_ C`
@@ -81,10 +82,8 @@ def yonedaGrpObjRepresentableBy [Grp_Class X] : (yonedaGrpObj X ⋙ forget _).Re
 lemma Grp_ClassOfRepresentableBy_yonedaGrpObjRepresentableBy [Grp_Class X] :
     Grp_Class.ofRepresentableBy X _ (yonedaGrpObjRepresentableBy X) = ‹_› := by
   ext
-  · show toUnit _ ≫ η = η
-    rw [toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
-  · show lift (fst X X) (snd X X) ≫ μ = μ
-    rw [lift_fst_snd, Category.id_comp]
+  show lift (fst X X) (snd X X) ≫ μ = μ
+  rw [lift_fst_snd, Category.id_comp]
 
 /-- If `X` represents a presheaf of groups `F`, then `Hom(-, X)` is isomorphic to `F` as
 a presheaf of groups. -/

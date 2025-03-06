@@ -3,11 +3,8 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.CategoryTheory.Monoidal.Yoneda
-import Mathlib.Combinatorics.Quiver.ReflQuiver
 import Toric.GroupScheme.YonedaGrp
+import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 
 open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts
