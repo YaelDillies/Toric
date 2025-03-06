@@ -13,5 +13,7 @@ This file defines Laurent polynomial rings over a base ring (or even semiring),
 with variables from a general type `σ` (which could be infinite).
 -/
 
-abbrev MvLaurentPolynomial (σ : Type*) (R : Type*) [CommSemiring R] :=
-  AddMonoidAlgebra R <| FreeAbelianGroup σ
+variable (σ : Type*) (R : Type*) [CommSemiring R]
+abbrev MvLaurentPolynomial := AddMonoidAlgebra R <| FreeAbelianGroup σ
+
+instance : IsDomain (MvLaurentPolynomial σ R) := sorry
