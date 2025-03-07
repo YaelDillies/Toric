@@ -1,24 +1,11 @@
 import Mathlib.CategoryTheory.Monoidal.CommMon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Mathlib.CategoryTheory.Monoidal.Mon_
 import Mathlib.CategoryTheory.Monoidal.Yoneda
 
 universe v₁ v₂ u₁ u₂ u
 open CategoryTheory ChosenFiniteProducts MonoidalCategory Mon_Class Opposite
 
 variable {C : Type*} [Category C]
-
-namespace CommMon_
-
-variable [MonoidalCategory C] [BraidedCategory C]
-
-def mk' (X : C)  [Mon_Class X] [IsCommMon X] : CommMon_ C where
-  __ := Mon_.mk' X
-  mul_comm := IsCommMon.mul_comm X
-
-instance (X : CommMon_ C) : IsCommMon X.X where
-  mul_comm' := X.mul_comm
-
-end CommMon_
 
 section CommMon_
 

@@ -3,14 +3,13 @@ import Toric.Character
 import Toric.DivPairs
 import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
+import Toric.GroupScheme.TorusCommGrp
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.MonoidObjectAction.Basic
 import Toric.MvLaurentPolynomial
