@@ -1,19 +1,82 @@
 \subsection{Group schemes}
 
+\begin{definition}
+  \label{grp_like}
+  A \emph{group-like} element for a Hopf algebra $A$ is
+  an $a\in A^*$ such that $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
+\end{definition}
+
+\begin{lemma}
+  \label{grp_like_li}
+  \uses{grp_like}
+  The group-like elements in $A$ are linearly independent.
+\end{lemma}
+\begin{proof}
+  See Lemma 4.23 in \cite{Milne_2017}.
+\end{proof}
+
+\begin{definition}
+  \label{grp_alg_sch}
+  For a commutative group $M$ we define $D(M)$ as the spectrum of the group algebra $\Spec R[M]$.
+\end{definition}
+
+\begin{proposition}
+  \label{DM_func}
+  \uses{grp_alg_sch}
+  For every finitely generated commutative group $M$, the algebraic group $D(M)$
+  represents the functor $R rightsquigarrow \Hom_{\mathsf{Grp}}(M,R^*)$.
+\end{proposition}
+\begin{proof}
+  See Proposition 12.3 in \cite{Milne_2017}.
+\end{proof}
+
+\begin{proposition}
+  \label{DM_struct}
+  The choice of a basis for $M$ determines an isomorphism of $D(M)$
+  with a finite product of copies of $\Gm$ and various $\mu_n$.
+\end{proposition}
+\begin{proof}
+  See Proposition 12.3 in \cite{Milne_2017}.
+\end{proof}
+
+\begin{lemma}
+  \label{grp_like_in_kM}
+  \uses{grp_like}
+  The group-like elements of $k[M]$ are exactly the image of $M$.
+\end{lemma}
+\begin{proof}
+  \uses{grp_like_li}
+  See Lemma 12.4 in \cite{Milne}.
+\end{proof}
+
+\begin{definition}
+  \label{diag}
+  \uses{grp_like}
+  An algebraic group $G$ is \emph{diagonalizable}
+  if the group-like elements in $\Gamma(G)$ span it as a $k$-vector space.
+\end{definition}
+
 \begin{theorem}
   \label{diag_iff_D}
+  \uses{grp_alg_sch}
+  \uses{diag}
   An algebraic group $G$ is diagonalizable
   if and only if it is isomorphic to $D(M)$ for some commutative group $M$.
 \end{theorem}
+\begin{proof}
+  \uses{grp_like_li}
+  See Theorem 12.8 in \cite{Milne_2017}.
+\end{proof}
 
 \begin{theorem}
   \label{congr_fggrp_diag}
   \uses{char_lattice}
+  \uses{diag}
   The functor $M\rightsquigarrow D(M)$ is a contravariant equivalence
   from the category of finitely generated commutative groups to the category of
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).
 \end{theorem}
 \begin{proof}
   \uses{diag_iff_D}
-  See Theorem 12.9(a) in \cite{Milne_2017}.
+  See Theorem 12.9(a) in \cite{Milne_2017}. Case work required.
 \end{proof}
