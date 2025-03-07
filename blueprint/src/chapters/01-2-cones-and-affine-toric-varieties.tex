@@ -337,3 +337,38 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
   Classic. See \cite{Oda_1988} maybe.
 \end{proof}
+
+
+\subsection{Strong Convexity}
+
+
+\begin{definition}[Salient cones]
+  \label{1-2-12-salient-cone}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  A cone $\sigma$ is {\bf salient}, aka {\bf pointed} or {\bf strongly convex}, if $\sigma \cap (-\sigma) = \{0\}$.
+\end{definition}
+
+
+\begin{proposition}[Alternative definitions of salient cones]
+  \label{1-2-12-salient-cone-tfae}
+  \uses{1-2-12-salient-cone}
+  % \lean{}
+  % \leanok
+
+  The following are equivalent
+  \begin{enumerate}
+    \item $\sigma$ is strongly convex
+    \item $\{0\} \preceq \sigma$
+    \item $\sigma$ contains no positive dimensional subspace
+    \item $\dim \sigma^\wedge = \dim N$
+  \end{enumerate}
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Classic. See \cite{Oda_1988} maybe.
+\end{proof}
