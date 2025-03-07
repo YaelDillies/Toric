@@ -1,9 +1,8 @@
+import Mathlib.CategoryTheory.Limits.Constructions.Over.Basic
 import Toric.GroupScheme.GroupScheme
-import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
-import Mathlib
 
 open CategoryTheory AlgebraicGeometry Opposite Limits
 
@@ -75,3 +74,5 @@ def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
           CommMonCat.units ⋙ forget CommGrp) (opOpYoneda.app _)))
+
+#min_imports
