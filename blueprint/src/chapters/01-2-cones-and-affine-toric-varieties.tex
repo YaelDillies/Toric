@@ -33,7 +33,7 @@ Fix a pair of dual real vector spaces $M$ and $N$.
   \leanok
 
   For a set $S \subseteq N$, the {\bf convex hull of $S$} is
-  $$\Cone(S) := \left\{\sum_{u \in S} \lambda_u | \lambda_u \ge 0, \sum_u \lambda_u = 1\right\}$$
+  $$\Conv(S) := \left\{\sum_{u \in S} \lambda_u | \lambda_u \ge 0, \sum_u \lambda_u = 1\right\}$$
 \end{definition}
 
 
@@ -96,7 +96,7 @@ Fix a pair of dual real vector spaces $M$ and $N$.
 Given $m \ne 0$ in $M$, we get the hyperplane
 $$H_m = \{u \in N | \langle m, u\rangle = 0\} \subseteq N$$
 and the closed half-space
-$$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0} \subseteq N.$$
+$$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 
 \begin{definition}[Face of a cone]
@@ -284,6 +284,53 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0} \subseteq N.$$
   If $\tau \preceq \sigma$, then
   $$\dim \tau + \dim \tau^* = \dim N.$$
 \end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Classic. See \cite{Oda_1988} maybe.
+\end{proof}
+
+
+\subsection{Relative Interiors}
+
+
+\begin{definition}[Relative interior]
+  \label{1-2-rel-interior}
+  \uses{}
+  \lean{intrinsicInterior}
+  \leanok
+
+  The {\bf relative interior}, aka {\bf intrinsic interior}, of a cone $\sigma$ is the interior of $\sigma$ as a subset of its span.
+\end{definition}
+
+
+\begin{lemma}[The relative interior in terms of the inner product]
+  \label{1-2-rel-interior-inner}
+  \uses{1-2-rel-interior}
+  % \lean{}
+  % \leanok
+
+  For a cone $\sigma$,
+  $$u \in \Relint(\sigma) \iff \forall m \in \sigma^\wedge \setminus \sigma^\perp, \langle m, u\rangle > 0$$
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Classic. See \cite{Oda_1988} maybe.
+\end{proof}
+
+
+\begin{lemma}[Relative interior of a dual face]
+  \label{1-2-rel-interior-dual-face}
+  \uses{1-2-10-dual-face, 1-2-rel-interior}
+  % \lean{}
+  % \leanok
+
+  If $\tau \preceq \sigma$ and $m \in \sigma^\wedge$, then
+  $$m \in \Relint(\tau^*) \iff \tau = H_m \cap \sigma$$
+\end{lemma}
 \begin{proof}
   \uses{}
   % \leanok
