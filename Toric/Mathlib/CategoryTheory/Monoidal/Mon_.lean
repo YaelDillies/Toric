@@ -9,24 +9,6 @@ open CategoryTheory ChosenFiniteProducts Mon_Class MonoidalCategory
 
 section
 
-variable {C} [Category C] [MonoidalCategory C] [BraidedCategory C]
-
-class IsCommMon (X : C) [Mon_Class X] where
-  mul_comm' : (β_ X X).hom ≫ μ = μ := by aesop_cat
-
-open scoped Mon_Class
-
-namespace IsCommMon
-
-@[reassoc (attr := simp)]
-theorem mul_comm (X : C) [Mon_Class X] [IsCommMon X] : (β_ X X).hom ≫ μ = μ := mul_comm'
-
-end IsCommMon
-
-end
-
-section
-
 variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
 
 instance {M N : Mon_ C} (f : M ⟶ N) : IsMon_Hom f.hom := ⟨f.2, f.3⟩
