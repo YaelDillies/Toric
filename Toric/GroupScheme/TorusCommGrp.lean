@@ -1,7 +1,7 @@
 import Toric.GroupScheme.GroupScheme
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
 
 open CategoryTheory AlgebraicGeometry Opposite
 
