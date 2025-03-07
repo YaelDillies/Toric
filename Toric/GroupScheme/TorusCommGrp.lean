@@ -3,7 +3,6 @@ import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
-import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 import Mathlib
 
 open CategoryTheory AlgebraicGeometry Opposite Limits
@@ -51,21 +50,21 @@ def CommGrp_Torus (S : Scheme) (σ : Type*) : CommGrp_ (Over S) :=
       (.mk' (AlgebraicGeometry.TorusInt σ))
 
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
-def Torus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
+def SplitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
 
-example (S : Scheme) (σ : Type*) : Torus S σ =
+example (S : Scheme) (σ : Type*) : SplitTorus S σ =
   pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
 
-instance (S : Scheme) (σ : Type*) : (Torus S σ).CanonicallyOver S where
+instance (S : Scheme) (σ : Type*) : (SplitTorus S σ).CanonicallyOver S where
   hom := (CommGrp_Torus S σ).X.hom
 
-instance (S : Scheme) (σ : Type*) : CommGrp_Class (Over.mk (Torus S σ ↘ S)) :=
+instance (S : Scheme) (σ : Type*) : CommGrp_Class (Over.mk (SplitTorus S σ ↘ S)) :=
   inferInstanceAs (CommGrp_Class (CommGrp_Torus S σ).X)
 
-def Torus.representableBy (S : Scheme) (σ : Type*) :
+def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
     ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
       CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
-      (Over.mk (Torus S σ ↘ S)) :=
+      (Over.mk (SplitTorus S σ ↘ S)) :=
   ((((Over.mapPullbackAdj (terminal.from S)).comp
     (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
     (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
