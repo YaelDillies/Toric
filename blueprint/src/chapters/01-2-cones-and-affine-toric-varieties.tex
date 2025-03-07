@@ -17,7 +17,7 @@ Fix a pair of dual real vector spaces $M$ and $N$.
 
 
 \begin{definition}[Convex polyhedral cone]
-  \label{1-2-1-polyhedral-cone}
+  \label{1-2-1-polyhedral-cone, }
   \uses{1-2-1-cone-hull}
   % \lean{}
   % \leanok
@@ -68,6 +68,23 @@ Fix a pair of dual real vector spaces $M$ and $N$.
   % \leanok
 
   If $\sigma$ is polyhedral, then its dual $\sigma^\wedge$ is polyhedral too.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Classic. See \cite{Oda_1988} maybe.
+\end{proof}
+
+
+\begin{proposition}[Dual of a sumset]
+  \label{1-2-dual-cone-add}
+  \uses{1-2-2-dual-cone}
+  % \lean{}
+  % \leanok
+
+  If $\sigma_1, \sigma_2$ are two cones, then
+  $$(\sigma_1 + \sigma_2)^\wedge = \sigma_1^\wedge \cap \sigma_2^\wedge.$$
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -190,7 +207,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \lean{}
   % \leanok
 
-  If $\sigma$ is a full dimensional cone, then facets of $\sigma$ are of the form $H_m \inter \sigma$.
+  If $\sigma$ is a full dimensional cone, then facets of $\sigma$ are of the form $H_m \cap \sigma$.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -339,6 +356,23 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 \end{proof}
 
 
+\begin{lemma}[Minimal face of a cone]
+  \label{1-2-minimal-face}
+  \uses{1-2-5-face, 1-2-rel-interior}
+  % \lean{}
+  % \leanok
+
+  If $\sigma$ is a cone, then $W := \sigma \cap (-\sigma)$ is a subspace. Furthermore,
+  $W = H_m \cap \sigma$ whenever $m \in \Relint(\sigma^\wedge)$.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Classic. See \cite{Oda_1988} maybe.
+\end{proof}
+
+
 \subsection{Strong Convexity}
 
 
@@ -372,3 +406,24 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
   Classic. See \cite{Oda_1988} maybe.
 \end{proof}
+
+
+\subsection{Separation}
+
+
+\begin{lemma}[Separation lemma]
+  \label{1-2-13-separation-lemma}
+  \uses{1-2-1-polyhedral-cone, 1-2-5-face}
+  % \lean{}
+  % \leanok
+
+  Let $\sigma_1, \sigma_2$ be polyhedral cones meeting along a common face $\tau$. Then
+  $$\tau = H_m \cap \sigma_1 = H_m \cap \sigma_2$$
+  for any $m \in \Relint(\sigma_1^\wedge \inter (-\sigma_2)^\wedge)$.
+\end{lemma}
+\begin{proof}
+  \uses{1-2-dual-cone-add, 1-2-minimal-face}
+  % \leanok
+
+  See \cite{Cox_2011}.
+\end{proof}}
