@@ -379,11 +379,10 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 \begin{definition}[Salient cones]
   \label{1-2-12-salient-cone}
   \uses{}
-  % \lean{}
-  % \leanok
+  \lean{ConvexCone.Salient}
+  \leanok
 
-  A cone $\sigma$ is {\bf salient}, aka {\bf pointed} or {
-    \bf salient}, if $\sigma \cap (-\sigma) = \{0\}$.
+  A cone $\sigma$ is {\bf salient}, aka {\bf pointed} or {\bf strongly convex}, if $\sigma \cap (-\sigma) = \{0\}$.
 \end{definition}
 
 
@@ -395,8 +394,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
   The following are equivalent
   \begin{enumerate}
-    \item $\sigma$
-     is salient
+    \item $\sigma$ is salient
     \item $\{0\} \preceq \sigma$
     \item $\sigma$ contains no positive dimensional subspace
     \item $\dim \sigma^\vee = \dim N$
