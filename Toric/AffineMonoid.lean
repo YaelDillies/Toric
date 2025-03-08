@@ -6,6 +6,8 @@ import Mathlib.GroupTheory.Torsion
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Mathlib.GroupTheory.MonoidLocalization.Basic
+import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
+import Mathlib.GroupTheory.FreeAbelianGroupFinsupp
 
 -- TODO: wrong torsion-free definition? move?
 class IsAddFree (M) [AddMonoid M] where
@@ -106,9 +108,13 @@ end Localization
 
 open AddLocalization
 
-def FG_free_Zmod_iso (M) [AddCommMonoid M] [Module ℤ M] [Module.Free ℤ M] [Module.Finite ℤ M] :
-    M ≃ₗ[ℤ] FreeAbelianGroup (Fin <| Module.finrank ℤ M) := by
-  sorry
+noncomputable def FG_free_Zmod_iso (M : Type*)
+    [AddCommMonoid M] [Module ℤ M] [Module.Free ℤ M] [Module.Finite ℤ M] :
+    M ≃ₗ[ℤ] FreeAbelianGroup (Fin <| Module.finrank ℤ M) :=
+  .trans (Module.Free.repr ℤ M) <| .trans
+    (Finsupp.domLCongr <| .trans (.refl _) <| Finite.equivFinOfCardEq
+      (Module.finrank_eq_nat_card_basis <| Module.Free.chooseBasis ℤ M).symm)
+    (FreeAbelianGroup.basis <| Fin <| Module.finrank ℤ M).repr.symm
 
 -- /-- An affine monoid is a commutative (additive) monoid which is finitely generated, cancellative
 -- and torsion-free (in the sense that `fun x ↦ n * x` is injective); equivalently if it's
