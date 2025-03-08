@@ -1,141 +1,263 @@
 \section{Introduction to Affine Toric Varieties}
 
+
+\subsection{The Torus}
+
+
 \begin{definition}
-  \label{torusOver}
-  \lean{torusOver}
+  \label{1-1-torus}
+  \lean{SplitTorus, SplitTorus.instCanonicallyOver}
   \leanok
+
   The (algebraic) torus $\Gm^n = \Spec(R[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}])$ over $\Spec R$.
 \end{definition}
 
+
 \begin{definition}
-  \label{char}
+  \label{1-1-char}
+  \uses{1-1-torus}
+  % \lean{}
+  % \leanok
+
   Character: a group morphism $\chi : \Gm^n \to \Gm$.
 \end{definition}
 
+
 \begin{definition}
-  \label{one_ps}
+  \label{1-1-cochar}
+  \uses{1-1-torus}
+  % \lean{}
+  % \leanok
+
   One-parameter subgroup: a group morphism $\lambda : \Gm \to \Gm^n$.
 \end{definition}
 
+
 \begin{definition}
-  \label{char_lattice}
-  \uses{char}
+  \label{1-1-char-lat}
+  \uses{1-1-char}
+  % \lean{}
+  % \leanok
+
   Character lattice $M = X(\Gm^n) := \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm)$.
 \end{definition}
 
+
 \begin{proposition}
-  \label{charTor}
-  \uses{char}
+  \label{1-1-char-lat-torus}
+  \uses{1-1-char-lat}
+  % \lean{}
+  % \leanok
+
   $M = X(\Gm^n) \cong \Z^n$. For $m \in M$ we write $\chi^m$ for the corresponding character.
 \end{proposition}
 \begin{proof}
   \uses{congr_fggrp_diag}
 \end{proof}
 
+
 \begin{definition}
-  \label{ops_lattice}
-  \uses{one_ps}
+  \label{1-1-cochar-lat}
+  \uses{1-1-cochar}
+  % \lean{}
+  % \leanok
+
   One-parameter subgroup/cocharacter lattice $N := \Hom(\Gm, \Gm^n)$.
 \end{definition}
 
-\begin{proposition}
-  \label{prop:1.1.1.a}
-  \uses{torusOver}
-  Proposition 1.1.1(a): if $T_1, T_2$ are tori and $\Phi : T_1 \to T_2$ is a morphism which is a group homomorphism, then $\im \Phi$ is a closed subvariety which is a torus.
-\end{proposition}
 
-\begin{proposition}
-  \label{prop:1.1.1.b}
-  \uses{torusOver}
-  Proposition 1.1.1(b): if $H \subseteq T$ is an irreducible subvariety which is a subgroup, then $H$ is a torus.
+\begin{proposition}[Proposition 1.1.1(a)]
+  \label{1-1-1-group-hom-subtorus}
+  \uses{1-1-torus}
+  % \lean{}
+  % \leanok
+
+  If $T_1, T_2$ are tori and $\Phi : T_1 \to T_2$ is a morphism which is a group homomorphism, then $\im \Phi$ is a closed subvariety which is a torus.
 \end{proposition}
+\begin{proof}
+  \uses{congr_fggrp_diag}
+  % \leanok
+
+
+\end{proof}
+
+
+\begin{proposition}[Proposition 1.1.1(b)]
+  \label{1-1-1-subgroup-subtorus}
+  \uses{1-1-torus}
+  % \lean{}
+  % \leanok
+
+  If $H \subseteq T$ is an irreducible subvariety which is a subgroup, then $H$ is a torus.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  TODO
+\end{proof}
+
 
 \begin{definition}
-  \label{char_eigenspace}
-  \uses{char}
-  Character eigenspace
+  \label{1-1-char-eigenspace}
+  \uses{1-1-char}
+  % \lean{}
+  % \leanok
+
+  For a finite dimensional representation of a torus $T$ on $W$, the {\bf character eigenspace} of a character $\chi \in X(T)$ is
+  \[
+    W_m = \{w\in W : t\cdot w = \chi(t)\text{ for all } t\in T \}.
+  \]
 \end{definition}
 
-\begin{proposition}
-  \label{prop:1.1.2}
-  \uses{char_eigenspace, torusOver}
-  Proposition 1.1.2
+
+\begin{proposition}[Decomposition into character eigenspaces]
+  \label{1-1-2-char-eigenspace-direct-sum}
+  \uses{1-1-char-eigenspace, 1-1-torus}
+
+  The space decomposes into the direct sum of the character eigenspaces.
 \end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  TODO
+\end{proof}
+
 
 \begin{definition}
-  \label{char_ops_pairing}
+  \label{1-1-char-cochar-pairing}
   Character lattice and one-parameter subgroup pairing
 \end{definition}
 
+
 \begin{proposition}
-  \label{cocharTor}
-  \uses{ops_lattice}
+  \label{co1-1-char-lat-torus}
+  \uses{1-1-cochar-lat}
+  % \lean{}
+  % \leanok
+
   $N = \Hom(M, \Z) \cong  \Z^n$. For $u \in N$ we write $\lambda^u$ for the corresponding cocharacter.
 \end{proposition}
 \begin{proof}
-  \uses{charTor}
-  \uses{char_ops_pairing}
+  \uses{1-1-char-lat-torus, 1-1-char-cochar-pairing}
+  % \leanok
+
 \end{proof}
 
+
+\subsection{The Definition of Affine Toric Variety}
+
+
 \begin{definition}
-  \label{ToricVariety}
+  \label{1-1-3-aff-tor-var}
+  \uses{1-1-torus}
   \lean{ToricVariety}
   \leanok
-  \uses{torusOver}
-  A toric variety is a variety $X$ with
+
+  A {\bf toric variety} is a variety $X$ with
   \begin{itemize}
     \item an open embedding $T := (\C^\times)^n \hookrightarrow X$ with dense image
     \item such that the natural action $T \times T \to T$ of the torus on itself extends to an (algebraic) action $T \times X \to X$.
   \end{itemize}
 \end{definition}
 
-\begin{definition}
-  \label{phiA}
-  \uses{torusOver}
-  \uses{char}
-  Given a finite set $\mathcal A = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi_{\mathcal{A}} : T \to \mathbb A^s$ given by $\Phi_{\mathcal A} (t) = (\chi^{a_1} (t), \dotsc, \chi^{a_s} (t))$.
-\end{definition}
+
+\subsection{Lattice Points}
+
 
 \begin{definition}
-  \label{YA}
-  \uses{phiA}
-  $Y_{\mathcal{A}}$ is the (Zariski) closure of $\im \Phi_{\mathcal A}$ in $\mathbb A^s$.
+  \label{1-1-phiA}
+  \uses{1-1-char}
+  % \lean{}
+  % \leanok
+
+  Given a finite set $\mathcal A = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi_\MCA : T \to \mathbb A^s$ given by $\Phi_{\mathcal A} (t) = (\chi^{a_1} (t), \dotsc, \chi^{a_s} (t))$.
 \end{definition}
+
+
+\begin{definition}
+  \label{1-1-7-YA}
+  \uses{1-1-phiA}
+  % \lean{}
+  % \leanok
+
+  $Y_\MCA$ is the (Zariski) closure of $\im \Phi_{\mathcal A}$ in $\mathbb A^s$.
+\end{definition}
+
 
 \begin{proposition}
-  \label{prop:1.1.8}
-  \uses{YA}
-  \uses{char_lattice}
+  \label{1-1-8-YA-aff-tor-var}
+  \uses{1-1-7-YA}
+  \uses{1-1-char-lat}
+
   Proposition 1.1.8
 \end{proposition}
 \begin{proof}
-  \uses{prop:1.1.1.a}
+  \uses{1-1-1-group-hom-subtorus}
+  % \leanok
+
+  TODO
 \end{proof}
 
+
+\subsection{Toric Ideals}
+
+
 \begin{proposition}
-  \label{prop:1.1.9}
-  \uses{YA}
-  Proposition 1.1.9
+  \label{1-1-9-ideal-YA}
+  \uses{1-1-7-YA}
+  % \lean{}
+  % \leanok
+
+  The ideal of the affine toric variety $Y_\MCA$ is
+  \[
+  $$I(Y_\MCA) = \langle x^{\ell_+} - x^{\ell_-} | \ell \in L\rangle$$
+  \]
 \end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  See \cite{Cox_2011}.
+\end{proof}
+
 
 \begin{definition}
-  \label{AddMonoidAlgebra.IsToricIdeal}
-  \lean{AddMonoidAlgebra.IsToricIdeal}
+  \label{1-1-10-lattice-ideal}
+  \uses{}
+  \lean{AddMonoidAlgebra.monoidIdeal}
   \leanok
-  A lattice ideal $I_L = \langle x^\alpha - x^\beta |  \alpha, \beta \in \N^s \text{ and } \alpha - \beta \in L\rangle$, for some lattice $L \subseteq \Z^s$.
+
+  The ideal $I_L = \langle x^\alpha - x^\beta |  \alpha, \beta \in \N^s \text{ and } \alpha - \beta \in L\rangle$ is called the {\bf lattice ideal} of the lattice $L \subseteq \Z^s$.
 
   A toric ideal is a prime lattice ideal.
 \end{definition}
 
+
+\begin{definition}
+  \label{1-1-10-toric-ideal}
+  \uses{1-1-10-lattice-ideal}
+  \lean{AddMonoidAlgebra.IsToricIdeal}
+  \leanok
+  A {\bf toric ideal} is a prime lattice ideal.
+\end{definition}
+
+
 \begin{proposition}
-  \label{AddMonoidAlgebra.isToricIdeal_iff_exists_span_single_sub_single}
-  \uses{AddMonoidAlgebra.IsToricIdeal}
+  \label{1-1-11-toric-ideal-gen-binomial}
+  \uses{1-1-10-toric-ideal}
   \lean{AddMonoidAlgebra.isToricIdeal_iff_exists_span_single_sub_single}
+  % \leanok
+
   Proposition 1.1.11: an ideal is toric if and only if it's prime and generated by binomials $x^\alpha - x^\beta$.
 \end{proposition}
 \begin{proof}
-  \uses{prop:1.1.1.b, prop:1.1.9}
+  \uses{1-1-1-subgroup-subtorus, 1-1-9-ideal-YA}
+  % \leanok
+
 \end{proof}
+
 
 \begin{definition}
   \label{affSemi}
@@ -149,12 +271,13 @@
   \end{itemize}
 \end{definition}
 
+
 \begin{proposition}
   \label{prop:1.1.14}
   \uses{affSemi}
-  \uses{ToricVariety}
-  \uses{char_lattice}
-  \uses{YA}
+  \uses{1-1-3-aff-tor-var}
+  \uses{1-1-char-lat}
+  \uses{1-1-7-YA}
   If $S$ is an affine monoid, then
   \begin{enumerate}
     \item $\Bbbk[S]$ is an integral domain and is a finitely generated $\Bbbk$-algebra.
@@ -163,7 +286,7 @@
   \end{enumerate}
 \end{proposition}
 \begin{proof}
-  \uses{prop:1.1.8}
+  \uses{1-1-8-YA-aff-tor-var}
   $i : \Bbbk[S] \hookrightarrow \Bbbk[\Z S]$ injects into an integral domain so is an integral domain. It's finitely generated by $\chi^{a_i}$ where $\mathcal A = \{a_1, \dotsc, a_s\}$ is a finite generating set for $S$.
 
   $i$ induces a morphism $T \to \Spec(\Bbbk[S])$. It's an open embedding as $i$ gives the localization of $\Bbbk[S]$ at $\chi^{a_i}$, so $\im i$ is an affine open. It's dominant as $\Spec(\Bbbk[S])$ is integral and so is irreducible, and $\im i$ is open and nonempty, so dense. The torus action is given by the natural restriction of comultiplication on $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$.
@@ -171,23 +294,31 @@
   We get a $\Bbbk$-algebra homomorphism $\pi : \Bbbk[x_1, \dotsc, x_s] \to \Bbbk[\Z S]$ given by $\mathcal A$; this induces a morphism $\Phi_{\mathcal A} : T \to \Bbbk^s$. The kernel of $\pi$ is the toric ideal of $Y_{\mathcal A}$ and $\pi$ is clearly surjective, so $Y_{\mathcal A} = \mathbb V(\ker(\pi)) = \Spec(\Bbbk[x_1, \dotsc, x_s] / \ker(\pi)) = \Spec(\C[S])$.
 \end{proof}
 
+
 \begin{definition}
   \label{torActOnAlg}
   \uses{Torus}
   Torus action on semigroup algebra
 \end{definition}
 
+
+\subsection{Equivalence of Constructions}
+
+
 \begin{lemma}
   \label{lmm:1.1.16}
   \uses{torActOnAlg}
 \end{lemma}
 \begin{proof}
-  \uses{prop:1.1.2}
+  \uses{1-1-1-char-eigenspace-direct-sum}
+  % \leanok
+
 \end{proof}
+
 
 \begin{theorem}
   \label{thm:1.1.17}
-  \uses{ToricVariety, YA, AddMonoidAlgebra.IsToricIdeal, affSemi}
+  \uses{1-1-3-aff-tor-var, 1-1-7-YA, 1-1-10-lattice-ideal, affSemi}
   TFAE:
   \begin{enumerate}
     \item $V$ is an affine toric variety.
@@ -197,5 +328,7 @@
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-  \uses{torActOnAlg, prop:1.1.8, prop:1.1.9, prop:1.1.14, lmm:1.1.16}
+  \uses{torActOnAlg, 1-1-8-YA-aff-tor-var, 1-1-9-ideal-YA, prop:1.1.14, lmm:1.1.16}
+  % \leanok
+
 \end{proof}

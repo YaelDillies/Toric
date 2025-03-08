@@ -57,17 +57,17 @@ Fix a pair of dual real vector spaces $M$ and $N$.
   \leanok
 
   Given a polyhedral cone $\sigma \subseteq N$, its {\bf dual cone} is defined by
-  $$\sigma^\wedge = \{m \in M | \forall u \in \sigma, \langle m, u\rangle \ge 0\}$$.
+  $$\sigma^\vee = \{m \in M | \forall u \in \sigma, \langle m, u\rangle \ge 0\}$$.
 \end{definition}
 
 
 \begin{proposition}[Dual of a polyhedral cone]
   \label{1-2-4-dual-polyhedral-cone}
-  \uses{1-2-1-polyhedral-cone, 1-2-2-dual-cone}
+  \uses{1-2-1-polyhedral-cone, 1-2-3-dual-cone}
   % \lean{}
   % \leanok
 
-  If $\sigma$ is polyhedral, then its dual $\sigma^\wedge$ is polyhedral too.
+  If $\sigma$ is polyhedral, then its dual $\sigma^\vee$ is polyhedral too.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -79,12 +79,12 @@ Fix a pair of dual real vector spaces $M$ and $N$.
 
 \begin{proposition}[Dual of a sumset]
   \label{1-2-dual-cone-add}
-  \uses{1-2-2-dual-cone}
+  \uses{1-2-3-dual-cone}
   % \lean{}
   % \leanok
 
   If $\sigma_1, \sigma_2$ are two cones, then
-  $$(\sigma_1 + \sigma_2)^\wedge = \sigma_1^\wedge \cap \sigma_2^\wedge.$$
+  $$(\sigma_1 + \sigma_2)^\vee = \sigma_1^\vee \cap \sigma_2^\vee.$$
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -96,11 +96,11 @@ Fix a pair of dual real vector spaces $M$ and $N$.
 
 \begin{proposition}[Double dual of a polyhedral cone]
   \label{1-2-4-double-dual-polyhedral-cone}
-  \uses{1-2-1-polyhedral-cone, 1-2-2-dual-cone}
+  \uses{1-2-1-polyhedral-cone, 1-2-3-dual-cone}
   % \lean{}
   % \leanok
 
-  If $\sigma$ is polyhedral, then $\sigma^{\wedge\wedge} = \sigma$.
+  If $\sigma$ is polyhedral, then $\sigma^{\vee\vee} = \sigma$.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -191,7 +191,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \leanok
 
   If $\sigma = H_{m_1}^+ \cap \dots \cap H_{m_s}^+$, then
-  $$\sigma^\wedge = \Cone(m_1, \dots, m_s).$$
+  $$\sigma^\vee = \Cone(m_1, \dots, m_s).$$
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -240,7 +240,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \leanok
 
   Given a cone $\sigma$ and a face $\tau \preceq \sigma$, the {\bf dual face} to $\tau$ is
-  $$\tau^* := \sigma^\wedge \cap \tau^\perp$$
+  $$\tau^* := \sigma^\vee \cap \tau^\perp$$
 \end{definition}
 
 
@@ -250,7 +250,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \lean{}
   % \leanok
 
-  If $\tau \preceq \sigma$, then $\tau^* \preceq \sigma^\wedge$.
+  If $\tau \preceq \sigma$, then $\tau^* \preceq \sigma^\vee$.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -329,7 +329,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \leanok
 
   For a cone $\sigma$,
-  $$u \in \Relint(\sigma) \iff \forall m \in \sigma^\wedge \setminus \sigma^\perp, \langle m, u\rangle > 0$$
+  $$u \in \Relint(\sigma) \iff \forall m \in \sigma^\vee \setminus \sigma^\perp, \langle m, u\rangle > 0$$
 \end{lemma}
 \begin{proof}
   \uses{}
@@ -345,7 +345,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \lean{}
   % \leanok
 
-  If $\tau \preceq \sigma$ and $m \in \sigma^\wedge$, then
+  If $\tau \preceq \sigma$ and $m \in \sigma^\vee$, then
   $$m \in \Relint(\tau^*) \iff \tau = H_m \cap \sigma$$
 \end{lemma}
 \begin{proof}
@@ -363,7 +363,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \leanok
 
   If $\sigma$ is a cone, then $W := \sigma \cap (-\sigma)$ is a subspace. Furthermore,
-  $W = H_m \cap \sigma$ whenever $m \in \Relint(\sigma^\wedge)$.
+  $W = H_m \cap \sigma$ whenever $m \in \Relint(\sigma^\vee)$.
 \end{lemma}
 \begin{proof}
   \uses{}
@@ -382,7 +382,8 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   % \lean{}
   % \leanok
 
-  A cone $\sigma$ is {\bf salient}, aka {\bf pointed} or {\bf strongly convex}, if $\sigma \cap (-\sigma) = \{0\}$.
+  A cone $\sigma$ is {\bf salient}, aka {\bf pointed} or {
+    \bf salient}, if $\sigma \cap (-\sigma) = \{0\}$.
 \end{definition}
 
 
@@ -394,10 +395,11 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
   The following are equivalent
   \begin{enumerate}
-    \item $\sigma$ is strongly convex
+    \item $\sigma$
+     is salient
     \item $\{0\} \preceq \sigma$
     \item $\sigma$ contains no positive dimensional subspace
-    \item $\dim \sigma^\wedge = \dim N$
+    \item $\dim \sigma^\vee = \dim N$
   \end{enumerate}
 \end{proposition}
 \begin{proof}
@@ -419,7 +421,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
   Let $\sigma_1, \sigma_2$ be polyhedral cones meeting along a common face $\tau$. Then
   $$\tau = H_m \cap \sigma_1 = H_m \cap \sigma_2$$
-  for any $m \in \Relint(\sigma_1^\wedge \cap (-\sigma_2)^\wedge)$.
+  for any $m \in \Relint(\sigma_1^\vee \cap (-\sigma_2)^\vee)$.
 \end{lemma}
 \begin{proof}
   \uses{1-2-dual-cone-add, 1-2-minimal-face}
@@ -486,7 +488,8 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
   \uses{1-2-min-gen}
   % \lean{}
   % \leanok
-  A strongly convex rational polyhedral cone $\sigma$ is {\bf regular}, aka {\bf smooth}, if its minimal generators form part of a $\Z$-basis of $N$.
+
+  A salient rational polyhedral cone $\sigma$ is {\bf regular}, aka {\bf smooth}, if its minimal generators form part of a $\Z$-basis of $N$.
 \end{definition}
 
 
@@ -495,5 +498,19 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
   \uses{1-2-min-gen}
   % \lean{}
   % \leanok
-  A strongly convex rational polyhedral cone $\sigma$ is {\bf simplicial} if its minimal generators are $\R$-linearly independent.
+
+  A salient rational polyhedral cone $\sigma$ is {\bf simplicial} if its minimal generators are $\R$-linearly independent.
 \end{definition}
+
+
+\subsection{Semigroup Algebras and Affine Toric Varieties}
+
+
+\begin{proposition}[Gordan's lemma]
+  \label{1-2-17-gordan-lemma}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  $S_\sigma := \sigma^\vee \cap M$ is a finitely generated monoid.
+\end{proposition}

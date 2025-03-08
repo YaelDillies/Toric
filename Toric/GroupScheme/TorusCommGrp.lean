@@ -54,7 +54,8 @@ def SplitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
 example (S : Scheme) (σ : Type*) : SplitTorus S σ =
   pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
 
-instance (S : Scheme) (σ : Type*) : (SplitTorus S σ).CanonicallyOver S where
+instance SplitTorus.instCanonicallyOver (S : Scheme) (σ : Type*) :
+    (SplitTorus S σ).CanonicallyOver S where
   hom := (CommGrp_Torus S σ).X.hom
 
 instance (S : Scheme) (σ : Type*) : CommGrp_Class (Over.mk (SplitTorus S σ ↘ S)) :=
