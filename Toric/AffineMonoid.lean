@@ -142,7 +142,7 @@ instance affine_monoid_imp_free_grothendieck_group :
 
 noncomputable abbrev dim := Module.finrank ℤ <| AddLocalization (⊤ : AddSubmonoid S)
 
-abbrev AffineLatticeHom :=
+noncomputable abbrev AffineLatticeHom :=
   AddMonoidHom.comp (FG_free_Zmod_iso <| AddLocalization (⊤ : AddSubmonoid S)).toAddMonoidHom
                     (addMonoidOf ⊤).toAddMonoidHom
 lemma affine_monoid_imp_lattice_embedding :
