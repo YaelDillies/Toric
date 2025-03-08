@@ -3,6 +3,7 @@ import Toric.Character
 import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.TorusCommGrp
+import Toric.Hopf.GroupLike
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Category

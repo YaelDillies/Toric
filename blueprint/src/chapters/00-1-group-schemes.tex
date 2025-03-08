@@ -1,14 +1,49 @@
 \section{Group schemes}
 
-\begin{definition}
-  \label{grp_like}
-  A \emph{group-like} element for a Hopf algebra $A$ is
-  an $a\in A^*$ such that $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
+
+\begin{definition}[Group-like elements]
+  \label{0-grp-like}
+  \uses{}
+  \lean{Bialgebra.IsGroupLikeElem}
+  \leanok
+
+  An element $a$ of a Hopf algebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
 \end{definition}
 
+
+\begin{lemma}[Bialgebra homs preserve group-like elements]
+  \label{0-grp-like-map}
+  \uses{0-grp-like}
+  \lean{Bialgebra.IsGroupLikeElem.map}
+  \leanok
+
+  Let $f : A \to B$ be a bi-algebra hom. If $a \in A$ is group-like, then $f(a)$ is group-like too.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  $a$ is a unit, so $f(a)$ is a unit too. Then
+  \[
+    f(a) \ox f(a) = (f \ox f)(\Delta_A(a)) = \Delta_B(f(a))
+  \]
+  so $f(a)$ is group-like.
+\end{proof}
+
+
+\begin{definition}
+  \label{0-grp-like}
+  \uses{}
+  \lean{Bialgebra.IsGroupLikeElem}
+  \leanok
+
+  A \emph{group-like} element for a Hopf algebra $A$ is an $a\in A^*$ such that $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
+\end{definition}
+
+
 \begin{lemma}
-  \label{grp_like_li}
-  \uses{grp_like}
+  \label{0-grp-like_li}
+  \uses{0-grp-like}
   The group-like elements in $A$ are linearly independent.
 \end{lemma}
 \begin{proof}
@@ -40,18 +75,18 @@
 \end{proof}
 
 \begin{lemma}
-  \label{grp_like_in_kM}
-  \uses{grp_like}
+  \label{0-grp-like_in_kM}
+  \uses{0-grp-like}
   The group-like elements of $k[M]$ are exactly the image of $M$.
 \end{lemma}
 \begin{proof}
-  \uses{grp_like_li}
+  \uses{0-grp-like_li}
   See Lemma 12.4 in \cite{Milne}.
 \end{proof}
 
 \begin{definition}
   \label{diag}
-  \uses{grp_like}
+  \uses{0-grp-like}
   An algebraic group $G$ is \emph{diagonalizable}
   if the group-like elements in $\Gamma(G)$ span it as a $k$-vector space.
 \end{definition}
@@ -64,7 +99,7 @@
   if and only if it is isomorphic to $D(M)$ for some commutative group $M$.
 \end{theorem}
 \begin{proof}
-  \uses{grp_like_li}
+  \uses{0-grp-like_li}
   See Theorem 12.8 in \cite{Milne_2017}.
 \end{proof}
 
