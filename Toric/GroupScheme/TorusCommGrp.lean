@@ -75,5 +75,3 @@ def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
           CommMonCat.units ⋙ forget CommGrp) (opOpYoneda.app _)))
-
-#min_imports
