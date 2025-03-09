@@ -15,11 +15,11 @@ instance {C : Type*} [Category C] [ChosenFiniteProducts C] (X : CommGrp_ C) :
     CommGrp_Class X.X where
 
 noncomputable instance (σ : Type*) : Grp_Class (AlgebraicGeometry.TorusInt σ) :=
-  Grp_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
+  .ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
       CommGrp.coyonedaRight.obj (op σ) ⋙ forget₂ _ Grp) (TorusInt.representableBy σ)
 
 instance (σ : Type*) : IsCommMon (TorusInt σ) :=
-  IsCommMon.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
+  .ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
       CommGrp.coyonedaRight.obj (op σ) ⋙ forget₂ _ CommMonCat) (TorusInt.representableBy σ)
 
 /-- If `X : C` is initial, then the under category of `X` is equivalent to `C`. -/

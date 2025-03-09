@@ -5,6 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
+import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
@@ -68,7 +69,7 @@ attribute [local instance] groupOfGrp_Class
 /- If `X` is a group object, then `Hom(-, X)` is a presheaf of groups. -/
 @[simps]
 def yonedaGrpObj [Grp_Class X] : Cᵒᵖ ⥤ Grp.{v} where
-  obj Y := Grp.of (unop Y ⟶ X)
+  obj Y := .of (unop Y ⟶ X)
   map φ := Grp.ofHom ((yonedaMonObj X).map φ).hom
 
 /-- If `X` is a group object, then `Hom(-, X)` as a presheaf of group is represented by `X`. -/
@@ -127,6 +128,26 @@ lemma essImage_yonedaGrp :
   · rintro ⟨X, ⟨e⟩⟩
     letI := Grp_Class.ofRepresentableBy X F e
     exact ⟨Grp_.mk' X, ⟨yonedaGrpObjGrp_ClassOfRepresentableBy X F e⟩⟩
+
+variable {X} {G : C} [Grp_Class G]
+
+-- TODO (Michał): doc string
+def yonedaOverMkSndRepresentableBy :
+    ((Over.forget X).op ⋙ yonedaGrpObj G ⋙ forget Grp).RepresentableBy (.mk (snd G X)) where
+  homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
+      toFun f := f.left ≫ fst _ _
+      invFun f := Over.homMk (lift f Y.hom)
+      left_inv f := by ext; simp; ext <;> simp; simpa using f.w.symm
+      right_inv f := by simp
+    }
+  homEquiv_comp {Y Z} f g := by dsimp; erw [Equiv.coe_fn_mk, Equiv.coe_fn_mk]; simp
+
+variable [Limits.HasPullbacks C]
+
+attribute [local instance] Over.chosenFiniteProducts
+
+noncomputable instance : Grp_Class <| Over.mk <| snd G X :=
+  .ofRepresentableBy _ ((Over.forget _).op ⋙ yonedaGrpObj G) yonedaOverMkSndRepresentableBy
 
 end Yoneda
 

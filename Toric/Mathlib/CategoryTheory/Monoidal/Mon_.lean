@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Yoneda
+import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 
 open CategoryTheory ChosenFiniteProducts Mon_Class MonoidalCategory
 
@@ -118,3 +119,28 @@ instance : CommMonoid (M ⟶ N) :=
   Function.Injective.commMonoid hom (fun _ _ ↦ ext) hom_one hom_mul hom_pow
 
 end  Mon_.Hom
+
+section Yoneda
+variable {C : Type*} [Category C] [ChosenFiniteProducts C]
+
+variable {X G : C} [Mon_Class G]
+
+-- TODO (Michał): doc string
+def yonedaOverMkSndRepresentableBy :
+    ((Over.forget X).op ⋙ yonedaMonObj G ⋙ forget MonCat).RepresentableBy (.mk (snd G X)) where
+  homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
+      toFun f := f.left ≫ fst _ _
+      invFun f := Over.homMk (lift f Y.hom)
+      left_inv f := by ext; simp; ext <;> simp; simpa using f.w.symm
+      right_inv f := by simp
+    }
+  homEquiv_comp {Y Z} f g := by dsimp; erw [Equiv.coe_fn_mk, Equiv.coe_fn_mk]; simp
+
+variable [Limits.HasPullbacks C]
+
+attribute [local instance] Over.chosenFiniteProducts
+
+noncomputable instance : Mon_Class <| Over.mk <| snd G X :=
+  Mon_ClassOfRepresentableBy _ ((Over.forget _).op ⋙ yonedaMonObj G) yonedaOverMkSndRepresentableBy
+
+  end Yoneda
