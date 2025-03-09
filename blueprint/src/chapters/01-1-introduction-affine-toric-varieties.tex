@@ -259,25 +259,12 @@
 \end{proof}
 
 
-\begin{definition}
-  \label{affSemi}
-  \uses{AddCommMonoid}
-  \uses{AddMonoid.FG}
-  \uses{AddMonoid.IsTorsionFree}
-  An affine monoid is a finitely generated submonoid of $(\Z^n, +)$. Equivalently it's a finitely generated commutative monoid which is:
-  \begin{itemize}
-    \item cancellative: if $a + c = b + c$ then $a = b$, and
-    \item torsion-free: if $n a = n b$ then $a = b$ (for $n \geq 1$).
-  \end{itemize}
-\end{definition}
-
-
 \begin{proposition}
-  \label{prop:1.1.14}
-  \uses{affSemi}
-  \uses{1-1-3-aff-tor-var}
-  \uses{1-1-char-lat}
-  \uses{1-1-7-YA}
+  \label{1-1-14-aff-tor-var-spec-group-alg}
+  \uses{0-affine-monoid, 1-1-3-aff-tor-var, 1-1-char-lat, 1-1-7-YA}
+  % \lean{}
+  % \leanok
+
   If $S$ is an affine monoid, then
   \begin{enumerate}
     \item $\Bbbk[S]$ is an integral domain and is a finitely generated $\Bbbk$-algebra.
@@ -318,7 +305,7 @@
 
 \begin{theorem}
   \label{thm:1.1.17}
-  \uses{1-1-3-aff-tor-var, 1-1-7-YA, 1-1-10-lattice-ideal, affSemi}
+  \uses{1-1-3-aff-tor-var, 1-1-7-YA, 1-1-10-lattice-ideal, 0-affine-monoid}
   TFAE:
   \begin{enumerate}
     \item $V$ is an affine toric variety.
@@ -328,7 +315,7 @@
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-  \uses{torActOnAlg, 1-1-8-YA-aff-tor-var, 1-1-9-ideal-YA, prop:1.1.14, lmm:1.1.16}
+  \uses{torActOnAlg, 1-1-8-YA-aff-tor-var, 1-1-9-ideal-YA, 1-1-14-aff-tor-var-spec-group-alg, lmm:1.1.16}
   % \leanok
 
 \end{proof}

@@ -1,4 +1,4 @@
-\section{Group schemes}
+\section{Group Schemes}
 
 
 \begin{definition}[Group-like elements]
@@ -47,9 +47,24 @@
 \end{proof}
 
 
+\begin{lemma}
+  \label{0-grp-like-group-alg}
+  \uses{0-grp-like}
+  % \leanok
+
+  The group-like elements of $k[M]$ are exactly the image of $M$.
+\end{lemma}
+\begin{proof}
+  \uses{0-grp-like-lin-indep}
+  % \leanok
+
+  See Lemma 12.4 in \cite{Milne}.
+\end{proof}
+
+
 \begin{definition}
   \label{grp_alg_sch}
-  For a commutative group $M$ we define $D(M)$ as the spectrum of the group algebra $\Spec R[M]$.
+  For a commutative group $M$ we define $D(M)$ as the spectrum $\Spec R[M]$ of the group algebra $R[M]$.
 \end{definition}
 
 
@@ -71,17 +86,6 @@
 \end{proposition}
 \begin{proof}
   See Proposition 12.3 in \cite{Milne_2017}.
-\end{proof}
-
-
-\begin{lemma}
-  \label{0-grp-like_in_kM}
-  \uses{0-grp-like}
-  The group-like elements of $k[M]$ are exactly the image of $M$.
-\end{lemma}
-\begin{proof}
-  \uses{0-grp-like-lin-indep}
-  See Lemma 12.4 in \cite{Milne}.
 \end{proof}
 
 
