@@ -41,14 +41,11 @@ variable {F K A B : Type*} [Field K] [Ring A] [Algebra K A] [Coalgebra K A] [Non
 open Submodule in
 /-- Group-like elements over an integral domain are linearly independent. -/
 lemma linearIndepOn_isGroupLikeElem : LinearIndepOn K id {a : A | IsGroupLikeElem K a} := by
-  refine iSupIndep.linearIndependent (fun a ↦ span K {a.val}) (fun ⟨a, ha⟩ ↦ ?_)
-    (fun a ↦ subset_span rfl) fun a ↦ a.prop.ne_zero
-  simp only [← span_iUnion, Set.iUnion_subtype, ne_eq, Subtype.mk.injEq, Set.mem_setOf_eq]
-  refine .symm <| disjoint_span_singleton_of_not_mem fun h ↦ ?_
-  obtain ⟨s, hs, hsspan, hsindep⟩ := exists_linearIndependent K
-    (⋃ b, ⋃ (_ : IsGroupLikeElem K b), ⋃ (_ : ¬b = a), {b})
-  simp only [Set.subset_def, Set.mem_iUnion, Set.mem_singleton_iff, exists_prop, exists_and_left,
-    exists_eq_right_right'] at hs
+  rw [linearIndepOn_iff_not_mem_span]
+  simp only [Set.mem_setOf_eq, id_eq, Set.image_id']
+  rintro a ha h
+  obtain ⟨s, hs, hsspan, hsindep⟩ := exists_linearIndependent K ({b | IsGroupLikeElem K b} \ {a})
+  simp only [Set.subset_def, Set.mem_diff, Set.mem_setOf_eq, Set.mem_singleton_iff] at hs
   rw [← hsspan, mem_span_set'] at h
   obtain ⟨n, c, e, hcea⟩ := h
   have goddamnit_mem_span_set'_didnt_give_me_this : e.Injective := sorry
