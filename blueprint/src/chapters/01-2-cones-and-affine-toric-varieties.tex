@@ -357,7 +357,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 
 \begin{lemma}[Minimal face of a cone]
-  \label{1-2-minimal-face}
+  \label{1-2-min-face}
   \uses{1-2-5-face, 1-2-rel-interior}
   % \lean{}
   % \leanok
@@ -388,7 +388,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 \begin{proposition}[Alternative definitions of salient cones]
   \label{1-2-12-salient-cone-tfae}
-  \uses{1-2-12-salient-cone}
+  \uses{1-2-3-dual-cone, 1-2-12-salient-cone}
   % \lean{}
   % \leanok
 
@@ -422,7 +422,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   for any $m \in \Relint(\sigma_1^\vee \cap (-\sigma_2)^\vee)$.
 \end{lemma}
 \begin{proof}
-  \uses{1-2-dual-cone-add, 1-2-minimal-face}
+  \uses{1-2-dual-cone-add, 1-2-min-face}
   % \leanok
 
   See \cite{Cox_2011}.
@@ -443,6 +443,38 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
 
   A cone $\sigma \subseteq N_\R$ is {\bf rational} if $\sigma = \Cone(S)$ for some finite set $S \subseteq N$.
 \end{definition}
+
+
+\begin{lemma}[Faces of a rational cone]
+  \label{1-2-14-face-rat-cone}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  If $\tau \preceq \sigma$ is a face of a rational cone, then $\tau$ itself is rational.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Classic. See \cite{Oda_1988} maybe.
+\end{proof}
+
+
+\begin{lemma}[The dual of a rational cone]
+  \label{1-2-14-dual-rat-cone}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  $\sigma^\vee$ is a rational cone iff $\sigma$ is.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Classic. See \cite{Oda_1988} maybe.
+\end{proof}
 
 
 \begin{definition}[Ray generator]
@@ -504,11 +536,75 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
 \subsection{Semigroup Algebras and Affine Toric Varieties}
 
 
-\begin{proposition}[Gordan's lemma]
-  \label{1-2-17-gordan-lemma}
-  \uses{}
+\begin{definition}[Dual lattice of a cone]
+  \label{1-2-17-dual-lat-cone}
+  \uses{1-2-3-dual-cone}
   % \lean{}
   % \leanok
 
-  $S_\sigma := \sigma^\vee \cap M$ is a finitely generated monoid.
+  If $\sigma \subseteq N_\R$ is a polyhedral cone, then the lattice points
+  \[
+    S_\sigma := \sigma^\vee \cap M
+  \]
+  form a monoid.
 \end{proposition}
+
+
+\begin{proposition}[Gordan's lemma]
+  \label{1-2-17-gordan-lemma}
+  \uses{1-2-17-dual-lat-cone}
+  % \lean{}
+  % \leanok
+
+  $S_\sigma$ is finitely generated as a monoid.
+\end{proposition}
+\begin{proof}
+  \uses{1-2-14-dual-rat-cone}
+  % \leanok
+
+  See \cite{Cox_2011}.
+\end{proof}
+
+
+\begin{definition}[Affine toric variety of a rational polyhedral cone]
+  \label{1-2-18-aff-tor-var-rat-polyhedral-cone}
+  \uses{1-1-3-aff-tor-var, 1-2-17-dual-lat-cone}
+  % \lean{}
+  % \leanok
+
+  $U_\sigma := \Spec \C[S_\sigma]$ is an affine toric variety.
+\end{definition}
+
+
+\begin{theorem}[Dimension of the affine toric variety of a rational polyhedral cone]
+  \label{1-2-18-dim-aff-tor-var-rat-polyhedral-cone}
+  \uses{1-2-12-salient-cone, 1-2-18-aff-tor-var-rat-polyhedral-cone}
+  % \lean{}
+  % \leanok
+
+  \[
+    \dim U_\sigma = \dim N \iff \text{ the torus of $U_\sigma$ is } T_N = N \ox_[\Z] \C^* \iff \sigma \text{ is salient}
+  \]
+\end{theorem}
+\begin{proof}
+  \uses{1-1-14-aff-tor-var-spec-group-alg, 1-2-12-salient-cone-tfae, 1-2-17-gordan-lemma}
+  % \leanok
+
+  See \cite{Cox_2011}.
+\end{proof}
+
+
+\begin{proposition}[The Hilbert basis of the dual lattice of a cone]
+  \label{1-2-22-hilbert-basis}
+  \uses{0-hilbert-basis, 1-2-min-gen, 1-2-12-salient-cone, 1-2-17-dual-lat-cone}
+  % \lean{}
+  % \leanok
+
+  If $\sigma \subseteq N_\R$ is salient of maximal dimension, then the Hilbert basis $\mathcal H_{S_\sigma}$ contains the minimal generators of $\sigma^\vee$.
+\end{proposition)
+\begin{proof}
+  \uses{0-hilbert-basis-finite}
+  % \leanok
+
+  See \cite{Cox_2011}.
+\end{proof}
