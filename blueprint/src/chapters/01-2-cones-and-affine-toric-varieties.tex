@@ -122,7 +122,27 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
   \lean{IsExposed}
   \leanok
 
-  If $\sigma$ is a polyhedral cone, then a subset of $\sigma$ is a {\bf face} iff it is the intersection of $\sigma$ with some halfspace. We write this $\tau \preceq \sigma$. If furthermore $\tau \ne \sigma$, we call $\tau$ a proper face and write $\tau \prec \sigma$.
+  If $\sigma$ is a cone, then a subset of $\sigma$ is a {\bf face} iff it is the intersection of $\sigma$ with some halfspace. We write this $\tau \preceq \sigma$. If furthermore $\tau \ne \sigma$, we call $\tau$ a proper face and write $\tau \prec \sigma$.
+\end{definition}
+
+
+\begin{definition}[Edge of a cone]
+  \label{1-2-5-edge}
+  \uses{1-2-5-face}
+  % \lean{}
+  % \leanok
+
+  A dimension 1 face of a cone is called an \emph{edge}.
+\end{definition}
+
+
+\begin{definition}[Facet of a cone]
+  \label{1-2-5-facet}
+  \uses{1-2-5-face}
+  % \lean{}
+  % \leanok
+
+  A codimension 1 face of a cone is called a \emph{facet}.
 \end{definition}
 
 
@@ -203,7 +223,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 \begin{proposition}[Facets of a full dimensional cone]
   \label{1-2-8-facet-full-dim-cone}
-  \uses{1-2-1-cone-hull, 1-2-5-face}
+  \uses{1-2-1-cone-hull, 1-2-5-facet}
   % \lean{}
   % \leanok
 
@@ -219,7 +239,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 \begin{proposition}[Intersection of facets containing a face]
   \label{1-2-8-inter-facet}
-  \uses{1-2-5-face}
+  \uses{1-2-5-facet}
   % \lean{}
   % \leanok
 
@@ -479,7 +499,7 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
 
 \begin{definition}[Ray generator]
   \label{1-2-ray-gen}
-  \uses{1-2-14-rat-cone}
+  \uses{1-2-5-edge, 1-2-14-rat-cone}
   % \lean{}
   % \leanok
 
