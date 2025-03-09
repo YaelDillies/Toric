@@ -48,15 +48,16 @@
 
 
 \begin{lemma}
-  \label{0-grp-like-group-alg}
+  \label{0-grp-like-grp-alg}
   \uses{0-grp-like}
-  % \leanok
+  \lean{MonoidAlgebra.isGroupLikeElem_iff_mem_range_of}
+  \leanok
 
   The group-like elements of $k[M]$ are exactly the image of $M$.
 \end{lemma}
 \begin{proof}
   \uses{0-grp-like-lin-indep}
-  % \leanok
+  \leanok
 
   See Lemma 12.4 in \cite{Milne_2017}.
 \end{proof}
@@ -127,7 +128,8 @@
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).
 \end{theorem}
 \begin{proof}
-  \uses{diag_iff_D}
-  \uses{0-spec-grp-alg-basis}
+  \uses{diag_iff_D, 0-spec-grp-alg-basis, 0-grp-like-grp-alg}
+  % \leanok
+
   See Theorem 12.9(a) in \cite{Milne_2017}. Case work required.
 \end{proof}
