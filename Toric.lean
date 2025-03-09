@@ -3,6 +3,7 @@ import Toric.Character
 import Toric.ConvexAnalysis.Polytope
 import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
+import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
 import Toric.Hopf.GroupLike
 import Toric.Hopf.MonoidAlgebra
@@ -19,7 +20,6 @@ import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.MonoidObjectAction.Basic
 import Toric.MvLaurentPolynomial
-import Toric.SchemeOver
 import Toric.SphericalVariety
 import Toric.ToricIdeal
 import Toric.ToricVariety
