@@ -63,14 +63,20 @@
 
 
 \begin{definition}
-  \label{grp_alg_sch}
+  \label{0-spec-grp-alg}
+  \lean{AlgebraicGeometry.Spec, MonoidAlgebra}
+  \leanok
+
   For a commutative group $M$ we define $D(M)$ as the spectrum $\Spec R[M]$ of the group algebra $R[M]$.
 \end{definition}
 
 
 \begin{proposition}
   \label{DM_func}
-  \uses{grp_alg_sch}
+  \uses{0-spec-grp-alg}
+  % \lean{}
+  % \leanok
+
   For every finitely generated commutative group $M$, the algebraic group $D(M)$
   represents the functor $R \rightsquigarrow \Hom_{\mathsf{Grp}}(M,R^*)$.
 \end{proposition}
@@ -80,7 +86,11 @@
 
 
 \begin{proposition}
-  \label{DM_struct}
+  \label{0-spec-grp-alg-basis}
+  \uses{spec-grp-alg}
+  % \lean{}
+  % \leanok
+
   The choice of a basis for $M$ determines an isomorphism of $D(M)$
   with a finite product of copies of $\Gm$ and various $\mu_n$.
 \end{proposition}
@@ -98,7 +108,7 @@
 
 \begin{theorem}
   \label{diag_iff_D}
-  \uses{grp_alg_sch}
+  \uses{0-spec-grp-alg}
   \uses{diag}
   An algebraic group $G$ is diagonalizable
   if and only if it is isomorphic to $D(M)$ for some commutative group $M$.
@@ -118,6 +128,6 @@
 \end{theorem}
 \begin{proof}
   \uses{diag_iff_D}
-  \uses{DM_struct}
+  \uses{0-spec-grp-alg-basis}
   See Theorem 12.9(a) in \cite{Milne_2017}. Case work required.
 \end{proof}
