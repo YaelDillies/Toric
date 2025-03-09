@@ -132,7 +132,7 @@ lemma essImage_yonedaGrp :
 variable {X} {G : C} [Grp_Class G]
 
 -- TODO (Michał): doc string
-def yonedaOverMkSndRepresentableBy :
+def Grp_Class.yonedaOverMkSndRepresentableBy :
     ((Over.forget X).op ⋙ yonedaGrpObj G ⋙ forget Grp).RepresentableBy (.mk (snd G X)) where
   homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
       toFun f := f.left ≫ fst _ _

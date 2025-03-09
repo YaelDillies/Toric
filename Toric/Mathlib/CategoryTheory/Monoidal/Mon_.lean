@@ -126,7 +126,7 @@ variable {C : Type*} [Category C] [ChosenFiniteProducts C]
 variable {X G : C} [Mon_Class G]
 
 -- TODO (Michał): doc string
-def yonedaOverMkSndRepresentableBy :
+def Mon_Class.yonedaOverMkSndRepresentableBy :
     ((Over.forget X).op ⋙ yonedaMonObj G ⋙ forget MonCat).RepresentableBy (.mk (snd G X)) where
   homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
       toFun f := f.left ≫ fst _ _
@@ -143,4 +143,4 @@ attribute [local instance] Over.chosenFiniteProducts
 noncomputable instance : Mon_Class <| Over.mk <| snd G X :=
   Mon_ClassOfRepresentableBy _ ((Over.forget _).op ⋙ yonedaMonObj G) yonedaOverMkSndRepresentableBy
 
-  end Yoneda
+end Yoneda
