@@ -14,7 +14,6 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
 import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs

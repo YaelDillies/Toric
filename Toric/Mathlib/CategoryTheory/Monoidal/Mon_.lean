@@ -141,6 +141,6 @@ variable [Limits.HasPullbacks C]
 attribute [local instance] Over.chosenFiniteProducts
 
 noncomputable instance : Mon_Class <| Over.mk <| snd G X :=
-  Mon_ClassOfRepresentableBy _ ((Over.forget _).op ⋙ yonedaMonObj G) yonedaOverMkSndRepresentableBy
+  Mon_Class.ofRepresentableBy _ ((Over.forget _).op ⋙ yonedaMonObj G) yonedaOverMkSndRepresentableBy
 
 end Yoneda
