@@ -4,17 +4,17 @@
 \begin{definition}[Group-like elements]
   \label{0-grp-like}
   \uses{}
-  \lean{Bialgebra.IsGroupLikeElem}
+  \lean{Coalgebra.IsGroupLikeElem}
   \leanok
 
-  An element $a$ of a Hopf algebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
+  An element $a$ of a coalgebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
 \end{definition}
 
 
 \begin{lemma}[Bialgebra homs preserve group-like elements]
   \label{0-grp-like-map}
   \uses{0-grp-like}
-  \lean{Bialgebra.IsGroupLikeElem.map}
+  \lean{Coalgebra.IsGroupLikeElem.map}
   \leanok
 
   Let $f : A \to B$ be a bi-algebra hom. If $a \in A$ is group-like, then $f(a)$ is group-like too.
@@ -31,29 +31,27 @@
 \end{proof}
 
 
-\begin{definition}
-  \label{0-grp-like}
-  \uses{}
-  \lean{Bialgebra.IsGroupLikeElem}
+\begin{lemma}[Independence of group-like elements]
+  \label{0-grp-like-lin-indep}
+  \uses{0-grp-like}
+  \lean{Coalgebra.linearIndepOn_isGroupLikeElem}
   \leanok
 
-  A \emph{group-like} element for a Hopf algebra $A$ is an $a\in A^*$ such that $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
-\end{definition}
-
-
-\begin{lemma}
-  \label{0-grp-like_li}
-  \uses{0-grp-like}
   The group-like elements in $A$ are linearly independent.
 \end{lemma}
 \begin{proof}
+  \uses{0-tensor-lin-indep}
+  \leanok
+
   See Lemma 4.23 in \cite{Milne_2017}.
 \end{proof}
+
 
 \begin{definition}
   \label{grp_alg_sch}
   For a commutative group $M$ we define $D(M)$ as the spectrum of the group algebra $\Spec R[M]$.
 \end{definition}
+
 
 \begin{proposition}
   \label{DM_func}
@@ -65,6 +63,7 @@
   See Proposition 12.3 in \cite{Milne_2017}.
 \end{proof}
 
+
 \begin{proposition}
   \label{DM_struct}
   The choice of a basis for $M$ determines an isomorphism of $D(M)$
@@ -74,15 +73,17 @@
   See Proposition 12.3 in \cite{Milne_2017}.
 \end{proof}
 
+
 \begin{lemma}
   \label{0-grp-like_in_kM}
   \uses{0-grp-like}
   The group-like elements of $k[M]$ are exactly the image of $M$.
 \end{lemma}
 \begin{proof}
-  \uses{0-grp-like_li}
+  \uses{0-grp-like-lin-indep}
   See Lemma 12.4 in \cite{Milne}.
 \end{proof}
+
 
 \begin{definition}
   \label{diag}
@@ -99,7 +100,7 @@
   if and only if it is isomorphic to $D(M)$ for some commutative group $M$.
 \end{theorem}
 \begin{proof}
-  \uses{0-grp-like_li}
+  \uses{0-grp-like-lin-indep}
   See Theorem 12.8 in \cite{Milne_2017}.
 \end{proof}
 
