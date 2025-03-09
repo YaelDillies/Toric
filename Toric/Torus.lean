@@ -7,7 +7,7 @@ import Mathlib.CategoryTheory.Monoidal.Mon_
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.MvLaurentPolynomial
-import Toric.SchemeOver
+import Toric.GroupScheme.SchemeOver
 
 /-!
 # The standard algebraic torus
