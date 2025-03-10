@@ -2,7 +2,6 @@ import Mathlib.CategoryTheory.Limits.Constructions.Over.Basic
 import Toric.GroupScheme.GroupScheme
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Yoneda
 
 open CategoryTheory AlgebraicGeometry Opposite Limits
 

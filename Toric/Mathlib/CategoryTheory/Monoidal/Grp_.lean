@@ -7,6 +7,7 @@ import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Mathlib.CategoryTheory.Monoidal.Yoneda
 
 open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
 
@@ -29,7 +30,7 @@ variable (X : C)
 /-- If `X` represents a presheaf of groups, then `X` is a group object. -/
 def Grp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ Grp.{w}) (α : (F ⋙ forget _).RepresentableBy X) :
     Grp_Class X where
-  __ := Mon_ClassOfRepresentableBy X (F ⋙ (forget₂ Grp MonCat)) α
+  __ := Mon_Class.ofRepresentableBy X (F ⋙ (forget₂ Grp MonCat)) α
   inv := α.homEquiv.symm (α.homEquiv (𝟙 _))⁻¹
   left_inv' := by
     change lift (α.homEquiv.symm (α.homEquiv (𝟙 X))⁻¹) (𝟙 X) ≫
@@ -93,7 +94,7 @@ def yonedaGrpObjGrp_ClassOfRepresentableBy
   NatIso.ofComponents (fun Y ↦ MulEquiv.toGrpIso
     { toEquiv := α.homEquiv
       map_mul' :=
-  ((yonedaMonObjMon_ClassOfRepresentableBy X (F ⋙ forget₂ Grp MonCat) α).hom.app Y).hom.map_mul})
+  ((yonedaMonObjMon_Class.ofRepresentableBy X (F ⋙ forget₂ Grp MonCat) α).hom.app Y).hom.map_mul})
       (fun φ ↦ Grp.hom_ext (MonoidHom.ext (α.homEquiv_comp φ.unop)))
 
 /-- The yoneda embedding of `Grp_C` into presheaves of groups. -/
@@ -132,7 +133,7 @@ lemma essImage_yonedaGrp :
 variable {X} {G : C} [Grp_Class G]
 
 -- TODO (Michał): doc string
-def yonedaOverMkSndRepresentableBy :
+def Grp_Class.yonedaOverMkSndRepresentableBy :
     ((Over.forget X).op ⋙ yonedaGrpObj G ⋙ forget Grp).RepresentableBy (.mk (snd G X)) where
   homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
       toFun f := f.left ≫ fst _ _

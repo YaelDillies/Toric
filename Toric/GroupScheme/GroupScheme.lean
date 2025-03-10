@@ -66,7 +66,7 @@ def DiagInt.representableBy (G : Type*) [CommMonoid G] :
     (op (.of G))).ofIso e'
 
 instance (G : Type*) [CommMonoid G] : Mon_Class (DiagInt G) :=
-  Mon_ClassOfRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
+  Mon_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
     CommMonCat.coyoneda.obj (op (.of G)) ⋙ forget₂ _ _) (DiagInt.representableBy G)
 
 def TorusInt (σ : Type*) : Scheme := DiagInt (Multiplicative (FreeAbelianGroup σ))
@@ -82,7 +82,7 @@ def TorusInt.representableBy (σ : Type*) :
       (opOpYoneda.app _))
 
 instance (σ : Type*) : Mon_Class (TorusInt σ) :=
-  Mon_ClassOfRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
+  Mon_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
       CommGrp.coyonedaRight.obj (op σ) ⋙ forget₂ _ Grp ⋙ forget₂ _ _) (TorusInt.representableBy σ)
 
 end
