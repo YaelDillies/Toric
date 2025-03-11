@@ -1,6 +1,7 @@
 import Toric.AffineMonoid
 import Toric.Character
 import Toric.ConvexAnalysis.Polytope
+import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
