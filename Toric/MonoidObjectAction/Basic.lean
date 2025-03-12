@@ -10,7 +10,7 @@ import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.CategoryTheory.Adjunction.Opposites
 import Mathlib.CategoryTheory.Monoidal.Yoneda
 
-open CategoryTheory Mon_Class MonoidalCategory --Category
+open CategoryTheory Mon_Class MonoidalCategory
 
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] (M : C) [Mon_Class M]
 /--
@@ -18,8 +18,8 @@ An action of a monoid object `M` on an object `S` is the data of map
 `smul : M ⊗ S ⟶ S` that satisfies "the right commutative diagrams":
 -/
 class Action_Class (S : C) where
-  /--The action map-/
-  smul : M ⊗ S ⟶ S-/
+  /-- The action map -/
+  smul : M ⊗ S ⟶ S
   mul_smul' : (𝟙 M ⊗ smul) ≫ smul
     = (α_ M M S).inv ≫ (μ ⊗ (𝟙 S)) ≫ smul := by aesop_cat
   one_smul' : (λ_ S).inv ≫ η ▷ S ≫ smul = 𝟙 S := by aesop_cat
@@ -64,10 +64,10 @@ def trivialAction (S : C) : Action_Class M S where
   smul := (ChosenFiniteProducts.toUnit M ▷ S) ≫ (λ_ S).hom
   mul_smul' := by
     --This is painful
-    rw [← Category.assoc, ←Category.assoc (α_ M M S).inv, ←Category.assoc ((α_ M M S).inv ≫ (μ ⊗ 𝟙 S : (M ⊗ M) ⊗ S ⟶ M ⊗ S)), Iso.cancel_iso_hom_right, assoc, tensorHom_id,
-      ←comp_whiskerRight, ChosenFiniteProducts.comp_toUnit, associator_inv_naturality_right]
-    have : μ ▷ S = (μ[M] ⊗ 𝟙 S)  := rfl
-    rw [←this, ←assoc]
+    -- rw [← Category.assoc, ←Category.assoc (α_ M M S).inv, ←Category.assoc ((α_ M M S).inv ≫ (μ ⊗ 𝟙 S : (M ⊗ M) ⊗ S ⟶ M ⊗ S)), Iso.cancel_iso_hom_right, assoc, tensorHom_id,
+    --   ←comp_whiskerRight, ChosenFiniteProducts.comp_toUnit, associator_inv_naturality_right]
+    -- have : μ ▷ S = (μ[M] ⊗ 𝟙 S)  := rfl
+    -- rw [←this, ←assoc]
     sorry
   one_smul' := by
     --In an ideal world `aesop_cat` would already solve this
@@ -75,8 +75,6 @@ def trivialAction (S : C) : Action_Class M S where
     aesop_cat
 
 def selfAction : Action_Class M M where
-  smul := γ
-  mul_smul' := sorry --This is probably aesop_cat
-  one_smul' := sorry --same
+  smul := μ
 
-end Mon_
+end Action_Class
