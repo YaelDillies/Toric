@@ -101,10 +101,10 @@
 
 
 \begin{definition}
-  \label{diag}
+  \label{0-diag}
   \uses{0-spec-grp-alg}
   \lean{AlgebraicGeometry.Scheme.IsDiagonalisable}
-  \leanok
+  % \leanok
 
   An algebraic group $G$ over $\Spec R$ is {\bf diagonalisable}
   if it is isomorphic to $D_R(M)$ for some commutative group $M$.
@@ -113,7 +113,7 @@
 \begin{theorem}
   \label{0-diag-iff-grp-like-span}
   \uses{0-spec-grp-alg}
-  \uses{diag}
+  \uses{0-diag}
   An algebraic group $G$ over a field $k$ is diagonalizable
   if and only if group-like elements span $\Gamma(G)$.
 \end{theorem}
@@ -125,7 +125,7 @@
 \begin{theorem}
   \label{congr_fggrp_diag}
   \uses{char_lattice}
-  \uses{diag}
+  \uses{0-diag}
   The functor $M\rightsquigarrow D(M)$ is a contravariant equivalence
   from the category of finitely generated commutative groups to the category of
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).

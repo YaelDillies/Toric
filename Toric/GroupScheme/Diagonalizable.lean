@@ -14,7 +14,9 @@ section
 variable {C A : Type*} [Category C] [ChosenFiniteProducts C]
     {R : CommRingCat} [CommGroup A]
 
-instance : Grp_Class <| Over.mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A := sorry
+instance :
+    Grp_Class <| Over.mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A :=
+  sorry
 
 end
 
@@ -24,12 +26,13 @@ variable  {R : CommRingCat.{u}} {G : Over (Spec R)} [Grp_Class G]
 
 variable (G) in
 class IsDiagonalisable : Prop where
-  existsIso : ∃ (A : Type u) (_ : CommGroup A) (_ : Monoid.FG A),
-    Nonempty (Grp_.mk' G ≅ Grp_.mk' <| .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A)
-
+  existsIso :
+    ∃ (A : Type u) (_ : CommGroup A) (_ : Monoid.FG A),
+      Nonempty <| Grp_.mk' G ≅ sorry
+      -- Grp_.mk' <| .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A
 
 instance :
     IsDiagonalisable <| .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A :=
-  ⟨⟨A, _, ‹_›, ⟨.refl _⟩⟩⟩
+  ⟨⟨A, _, ‹_›, sorry⟩⟩
 
 end AlgebraicGeometry.Scheme
