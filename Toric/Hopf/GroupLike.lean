@@ -39,7 +39,7 @@ section Field
 variable {F K A B : Type*} [Field K] [Ring A] [Algebra K A] [Coalgebra K A] [Nontrivial A]
 
 open Submodule in
-/-- Group-like elements over an integral domain are linearly independent. -/
+/-- Group-like elements over a field are linearly independent. -/
 lemma linearIndepOn_isGroupLikeElem : LinearIndepOn K id {a : A | IsGroupLikeElem K a} := by
   rw [linearIndepOn_iff_not_mem_span]
   simp only [Set.mem_setOf_eq, id_eq, Set.image_id']

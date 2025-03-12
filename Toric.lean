@@ -7,6 +7,7 @@ import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
 import Toric.Hopf.GroupLike
+import Toric.Hopf.GroupOp
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
