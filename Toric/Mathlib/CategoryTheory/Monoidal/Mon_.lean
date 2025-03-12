@@ -145,3 +145,10 @@ noncomputable instance : Mon_Class <| Over.mk <| snd G X :=
       yonedaMonObjMon_ClassOfRepresentableBy
 
 end Yoneda
+
+section
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G : C}
+
+instance [Mon_Class G] [IsCommMon G] : IsCommMon (Mon_.mk' G).X := ‹_›
+
+end

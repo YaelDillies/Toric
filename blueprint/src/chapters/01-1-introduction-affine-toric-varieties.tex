@@ -14,16 +14,6 @@
 
 
 \begin{definition}
-  \label{1-1-char}
-  \uses{1-1-torus}
-  % \lean{}
-  % \leanok
-
-  Character: a group morphism $\chi : \Gm^n \to \Gm$.
-\end{definition}
-
-
-\begin{definition}
   \label{1-1-cochar}
   \uses{1-1-torus}
   % \lean{}
@@ -35,11 +25,11 @@
 
 \begin{definition}
   \label{1-1-char-lat}
-  \uses{1-1-char}
-  % \lean{}
-  % \leanok
+  \lean{SchemeOver.characterGroup}
+  \leanok
 
-  Character lattice $M = X(\Gm^n) := \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm)$.
+  The {\bf character lattice} $M = X(\Gm^n) := \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm)$.
+  An element is (unsurprisingly) called a {\bf character}.
 \end{definition}
 
 
@@ -100,7 +90,7 @@
 
 \begin{definition}
   \label{1-1-char-eigenspace}
-  \uses{1-1-char}
+  \uses{1-1-char-lat}
   % \lean{}
   % \leanok
 

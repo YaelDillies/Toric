@@ -268,4 +268,13 @@ instance instCommGroup : CommGroup (G ⟶ H) :=
     hom_one hom_mul hom_inv hom_div hom_pow hom_zpow
 
 end Grp_.Hom
+
+section
+
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G : C}
+
+instance [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
+
+end
+
 end
