@@ -58,13 +58,13 @@ instance (A : ActedBy M) : Action_Class M A := A.action
 
 attribute [instance] ActedBy.action
 
-initialize_simps_projections SemiRingCat (-action)
-
 def trivialAction (S : C) : Action_Class M S where
   smul := (ChosenFiniteProducts.toUnit M ▷ S) ≫ (λ_ S).hom
   mul_smul' := by
     --This is painful
-    -- rw [← Category.assoc, ←Category.assoc (α_ M M S).inv, ←Category.assoc ((α_ M M S).inv ≫ (μ ⊗ 𝟙 S : (M ⊗ M) ⊗ S ⟶ M ⊗ S)), Iso.cancel_iso_hom_right, assoc, tensorHom_id,
+    -- rw [← Category.assoc, ←Category.assoc (α_ M M S).inv, ←Category.assoc
+      --((α_ M M S).inv ≫ (μ ⊗ 𝟙 S : (M ⊗ M) ⊗ S ⟶ M ⊗ S)), Iso.cancel_iso_hom_right,
+      --assoc, tensorHom_id,
     --   ←comp_whiskerRight, ChosenFiniteProducts.comp_toUnit, associator_inv_naturality_right]
     -- have : μ ▷ S = (μ[M] ⊗ 𝟙 S)  := rfl
     -- rw [←this, ←assoc]
