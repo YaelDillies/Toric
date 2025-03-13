@@ -5,9 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Mathlib.CategoryTheory.Monoidal.Yoneda
 
 open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
 

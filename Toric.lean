@@ -3,6 +3,7 @@ import Toric.ConvexAnalysis.Polytope
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.Diagrams
+import Toric.GroupScheme.Fuckingshjkfskjdfajkhaf
 import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
