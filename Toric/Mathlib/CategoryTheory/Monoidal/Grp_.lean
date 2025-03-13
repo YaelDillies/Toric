@@ -133,7 +133,7 @@ lemma essImage_yonedaGrp :
 variable {X} {G : C} [Grp_Class G]
 
 -- TODO (Michał): doc string
-def Grp_Class.yonedaOverMkSndRepresentableBy :
+def yonedaGrpObjRepresentableByOverMkSnd :
     ((Over.forget X).op ⋙ yonedaGrpObj G ⋙ forget Grp).RepresentableBy (.mk (snd G X)) where
   homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
       toFun f := f.left ≫ fst _ _
@@ -148,7 +148,7 @@ variable [Limits.HasPullbacks C]
 attribute [local instance] Over.chosenFiniteProducts
 
 noncomputable instance : Grp_Class <| Over.mk <| snd G X :=
-  .ofRepresentableBy _ ((Over.forget _).op ⋙ yonedaGrpObj G) yonedaOverMkSndRepresentableBy
+  .ofRepresentableBy _ ((Over.forget _).op ⋙ yonedaGrpObj G) yonedaGrpObjRepresentableByOverMkSnd
 
 end Yoneda
 
@@ -268,4 +268,13 @@ instance instCommGroup : CommGroup (G ⟶ H) :=
     hom_one hom_mul hom_inv hom_div hom_pow hom_zpow
 
 end Grp_.Hom
+
+section
+
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G : C}
+
+instance [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
+
+end
+
 end

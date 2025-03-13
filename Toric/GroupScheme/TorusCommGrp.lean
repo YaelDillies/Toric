@@ -50,6 +50,8 @@ def CommGrp_Torus (S : Scheme) (σ : Type*) : CommGrp_ (Over S) :=
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
 def SplitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
 
+notation "𝔾ₘ["S"]" => SplitTorus S PUnit
+
 example (S : Scheme) (σ : Type*) : SplitTorus S σ =
   pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
 

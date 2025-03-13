@@ -1,12 +1,14 @@
 import Toric.AffineMonoid
-import Toric.Character
 import Toric.ConvexAnalysis.PolyhedralCone
 import Toric.ConvexAnalysis.Polytope
+import Toric.GroupScheme.Character
+import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
 import Toric.Hopf.GroupLike
+import Toric.Hopf.GroupOp
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.Subgroup.Map
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
