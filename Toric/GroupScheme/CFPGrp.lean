@@ -7,7 +7,7 @@ import Mathlib.Algebra.Category.Grp.ChosenFiniteProducts
 import Mathlib.CategoryTheory.Monoidal.FunctorCategory
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
-open CategoryTheory MonoidalCategory  Limits ChosenFiniteProducts Mon_Class
+open CategoryTheory MonoidalCategory Limits ChosenFiniteProducts Mon_Class
 
 namespace CategoryTheory
 
@@ -29,11 +29,7 @@ noncomputable def tensorObjComp (F G : D ⥤ C) (H : C ⥤ E) [PreservesFinitePr
     (F ⊗ G) ⋙ H ≅ (F ⋙ H) ⊗ (G ⋙ H) :=
   NatIso.ofComponents (fun X ↦ prodComparisonIso H (F.obj X) (G.obj X)) fun {X Y} f ↦ by
     dsimp
-    ext
-    · simp
-      sorry
-    · simp
-      sorry
+    ext <;> simp [← Functor.map_comp]
 
 protected def RepresentableBy.tensorObj {F : Cᵒᵖ ⥤ Type v} {G : Cᵒᵖ ⥤ Type v} {X Y : C}
     (h₁ : F.RepresentableBy X) (h₂ : G.RepresentableBy Y) : (F ⊗ G).RepresentableBy (X ⊗ Y) where
@@ -64,15 +60,49 @@ instance : Grp_Class <| 𝟙_ C where
   mul := toUnit _
   inv := 𝟙 _
 
+/- noncomputable instance : Grp_Class <| X ⊗ Y where
+  inv := ι ⊗ ι
+  left_inv' := by
+    ext
+    · simp
+  right_inv' := _ -/
+
 noncomputable instance : Grp_Class <| X ⊗ Y :=
   .ofRepresentableBy _ (yonedaGrpObj X ⊗ yonedaGrpObj Y) <| by
     refine .ofIso ((yonedaGrpObjRepresentableBy _).tensorObj (yonedaGrpObjRepresentableBy _))
       (Functor.tensorObjComp _ _ _).symm
 
+@[simp]
+lemma prodObj : (Grp_.mk' (X ⊗ Y)).X = X ⊗ Y := rfl
+
+-- TODO: complain on Zulip
+@[ext]
+lemma prodExt {Z : C} {f g : Z ⟶ (Grp_.mk' (X ⊗ Y)).X} (h₁ : f ≫ fst _ _ = g ≫ fst _ _)
+    (h₂ : f ≫ snd _ _ = g ≫ snd _ _) : f = g := by
+    simp at f g
+    sorry
+
+lemma prodOne : η[X ⊗ Y] = lift η η := by
+  have := toUnit_unique (toUnit (𝟙_ C)) (𝟙 (𝟙_ C))
+  ext <;> simp [this]
+
+lemma prodInv : ι[X ⊗ Y] = (ι[X] ⊗ ι[Y]) := by
+  ext
+  · simp
+  sorry
+
 noncomputable instance : ChosenFiniteProducts <| Grp_ C where
   product X Y := {
     cone.pt := .mk' (X.X ⊗ Y.X)
-    cone.π := sorry
+    cone.π := {
+      app := by
+        rintro (_|_)
+        · refine ⟨fst X.X Y.X, ?_, ?_⟩
+          · simp [Grp_.mk']
+          simp [Grp_.mk']
+        sorry
+      naturality := sorry
+    }
     isLimit.lift s := {
       hom := by
         dsimp

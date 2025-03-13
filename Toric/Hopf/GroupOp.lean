@@ -7,40 +7,55 @@ section
 
 variable {C : Type*} [Category C] {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z}
 
-def pushoutCoconeEquivBinaryCofan : PushoutCocone f g ≌ BinaryCofan (Under.mk f) (Under.mk g) where
-  functor := {
-    obj c := BinaryCofan.mk (Under.homMk (U := Under.mk f) c.inl rfl)
-        (Under.homMk (U := Under.mk g) (V := Under.mk (f ≫ c.inl)) c.inr c.condition.symm)
-    map {c1 c2} a := {
-      hom := Under.homMk a.hom
-      w := by
-        rintro ⟨(_|_)⟩
-        repeat
-          ext
-          exact a.w _
-    }
+@[simp]
+def pushoutCocone.toBinaryCofan : PushoutCocone f g ⥤ BinaryCofan (Under.mk f) (Under.mk g) where
+  obj c := BinaryCofan.mk (Under.homMk (U := Under.mk f) c.inl rfl)
+      (Under.homMk (U := Under.mk g) (V := Under.mk (f ≫ c.inl)) c.inr c.condition.symm)
+  map {c1 c2} a := {
+    hom := Under.homMk a.hom
+    w := by
+      rintro (_|_)
+      repeat
+        ext
+        exact a.w _
   }
-  inverse := {
-    obj c := PushoutCocone.mk c.inl.right c.inr.right (c.inl.w.symm.trans c.inr.w)
-    map {c1 c2} a := {
-      hom := a.hom.right
-      w := by rintro (_|_|_) <;> simp [← Under.comp_right]
-    }
+
+@[simp]
+def binaryCofanUnder.toPushoutCocone :
+    BinaryCofan (Under.mk f) (Under.mk g) ⥤ PushoutCocone f g where
+  obj c := PushoutCocone.mk c.inl.right c.inr.right (c.inl.w.symm.trans c.inr.w)
+  map {c1 c2} a := {
+    hom := a.hom.right
+    w := by rintro (_|_|_) <;> simp [← Under.comp_right]
   }
-  unitIso := {
+
+lemma aux_left (c : BinaryCofan (Under.mk f) (Under.mk g)) {w : f ≫ c.inl.right = c.pt.hom} :
+    (Under.homMk c.inl.right w) = c.inl := by
+  ext
+  simp
+
+lemma aux_right {c : BinaryCofan (Under.mk f) (Under.mk g)} {w : g ≫ c.inr.right = c.pt.hom} :
+    (Under.homMk c.inr.right w) = c.inr := by
+  ext
+  simp
+
+def pushoutCoconeEquivBinaryCofan : PushoutCocone f g ≌ BinaryCofan (Under.mk f) (Under.mk g) :=
+  .mk pushoutCocone.toBinaryCofan binaryCofanUnder.toPushoutCocone {
+    hom.app c := c.eta.hom
+    inv.app c := c.eta.inv
+    inv.naturality {c1 c2} a := by ext; simp
+  } {
     hom := {
-      app c := c.eta.hom
-      naturality {c1 c2} a := sorry --by ext; simp -- removable
+      app c := (by
+        dsimp
+        sorry -- erw [aux_left c]
+        ) ≫ (isoBinaryCofanMk c).inv
+      naturality := sorry
     }
-    inv := {
-      app c := c.eta.inv
-      naturality {c1 c2} a := sorry  -- by ext; simp
-    }
+    inv := sorry
     hom_inv_id := sorry
     inv_hom_id := sorry
   }
-  counitIso := sorry
-  functor_unitIso_comp := sorry
 
 def name (c : PushoutCocone f g)  (hc : IsColimit c) : IsColimit <|
     BinaryCofan.mk (Under.homMk (U := Under.mk f) c.inl rfl)
