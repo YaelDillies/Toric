@@ -7,8 +7,6 @@ import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
-open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
-
 /-!
 # Yoneda embedding of `Grp_ C`
 
@@ -17,6 +15,8 @@ by constructing the yoneda embedding `Grp_ C ⥤ Cᵒᵖ ⥤ GrpCat.{v}` and
 showing that it is fully faithful and its (essential) image is the representable functors.
 
 -/
+
+open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
 
 section Yoneda
 

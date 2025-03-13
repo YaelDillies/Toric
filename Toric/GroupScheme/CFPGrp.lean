@@ -1,4 +1,10 @@
-import Mathlib
+/-
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Michał Mrugała
+-/
+import Mathlib.Algebra.Category.Grp.ChosenFiniteProducts
+import Mathlib.CategoryTheory.Monoidal.FunctorCategory
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
 open CategoryTheory MonoidalCategory  Limits ChosenFiniteProducts Mon_Class
@@ -16,16 +22,18 @@ def homToProd {X Y Z : C} : (Z ⟶ X ⊗ Y) ≃ (Z ⟶ X) × (Z ⟶ Y) where
   left_inv _ := by simp
   right_inv _ := by simp
 
-
-def foo {α β : Type u} : α × β ≃ α ⊗ β := .refl _
-
 namespace Functor
 variable {D E : Type*} [Category D] [Category E] [ChosenFiniteProducts E]
 
-def tensorObjComp (F G : D ⥤ C) (H : C ⥤ E) [PreservesFiniteProducts H] :
+noncomputable def tensorObjComp (F G : D ⥤ C) (H : C ⥤ E) [PreservesFiniteProducts H] :
     (F ⊗ G) ⋙ H ≅ (F ⋙ H) ⊗ (G ⋙ H) :=
-  NatIso.ofComponents sorry
-
+  NatIso.ofComponents (fun X ↦ prodComparisonIso H (F.obj X) (G.obj X)) fun {X Y} f ↦ by
+    dsimp
+    ext
+    · simp
+      sorry
+    · simp
+      sorry
 
 protected def RepresentableBy.tensorObj {F : Cᵒᵖ ⥤ Type v} {G : Cᵒᵖ ⥤ Type v} {X Y : C}
     (h₁ : F.RepresentableBy X) (h₂ : G.RepresentableBy Y) : (F ⊗ G).RepresentableBy (X ⊗ Y) where
@@ -50,7 +58,6 @@ section
 variable {C : Type*} [Category C] [ChosenFiniteProducts C]
     {X Y : C} [Grp_Class X] [Grp_Class Y]
 
-
 @[simps]
 instance : Grp_Class <| 𝟙_ C where
   one := 𝟙 _
@@ -62,9 +69,20 @@ noncomputable instance : Grp_Class <| X ⊗ Y :=
     refine .ofIso ((yonedaGrpObjRepresentableBy _).tensorObj (yonedaGrpObjRepresentableBy _))
       (Functor.tensorObjComp _ _ _).symm
 
-
-instance : ChosenFiniteProducts <| Grp_ C where
-  product X Y := sorry --Grp_.mk' (X.X ⊗ Y.X)
+noncomputable instance : ChosenFiniteProducts <| Grp_ C where
+  product X Y := {
+    cone.pt := .mk' (X.X ⊗ Y.X)
+    cone.π := sorry
+    isLimit.lift s := {
+      hom := by
+        dsimp
+        sorry
+      one_hom := sorry
+      mul_hom := sorry
+    }
+    isLimit.fac := sorry
+    isLimit.uniq := sorry
+  }
   terminal.cone.pt := Grp_.mk' (𝟙_ C)
   terminal.cone.π.app := isEmptyElim
   terminal.cone.π.naturality := isEmptyElim
