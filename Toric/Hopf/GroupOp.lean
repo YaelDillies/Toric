@@ -14,10 +14,7 @@ def pushoutCocone.toBinaryCofan : PushoutCocone f g ⥤ BinaryCofan (Under.mk f)
   map {c1 c2} a := {
     hom := Under.homMk a.hom
     w := by
-      rintro (_|_)
-      repeat
-        ext
-        exact a.w _
+      rintro (_|_) <;> aesop_cat
   }
 
 @[simp]
@@ -29,38 +26,24 @@ def binaryCofanUnder.toPushoutCocone :
     w := by rintro (_|_|_) <;> simp [← Under.comp_right]
   }
 
-lemma aux_left (c : BinaryCofan (Under.mk f) (Under.mk g)) {w : f ≫ c.inl.right = c.pt.hom} :
-    (Under.homMk c.inl.right w) = c.inl := by
-  ext
-  simp
+def aux_unit :
+    𝟭 (PushoutCocone f g) ≅ pushoutCocone.toBinaryCofan ⋙ binaryCofanUnder.toPushoutCocone :=
+  NatIso.ofComponents (fun c ↦ c.eta) (by aesop_cat)
 
-lemma aux_right {c : BinaryCofan (Under.mk f) (Under.mk g)} {w : g ≫ c.inr.right = c.pt.hom} :
-    (Under.homMk c.inr.right w) = c.inr := by
-  ext
-  simp
+def aux_counit :
+    binaryCofanUnder.toPushoutCocone ⋙ pushoutCocone.toBinaryCofan
+    ≅ 𝟭 (BinaryCofan (Under.mk f) (Under.mk g)) :=
+  NatIso.ofComponents (fun X ↦ Limits.BinaryCofan.ext (Under.isoMk (Iso.refl _)
+    (by simpa using X.inl.w.symm)) (by aesop_cat) (by aesop_cat))
+    (by intros; ext; simp [BinaryCofan.ext])
 
+@[simp]
 def pushoutCoconeEquivBinaryCofan : PushoutCocone f g ≌ BinaryCofan (Under.mk f) (Under.mk g) :=
-  .mk pushoutCocone.toBinaryCofan binaryCofanUnder.toPushoutCocone {
-    hom.app c := c.eta.hom
-    inv.app c := c.eta.inv
-    inv.naturality {c1 c2} a := by ext; simp
-  } {
-    hom := {
-      app c := (by
-        dsimp
-        sorry -- erw [aux_left c]
-        ) ≫ (isoBinaryCofanMk c).inv
-      naturality := sorry
-    }
-    inv := sorry
-    hom_inv_id := sorry
-    inv_hom_id := sorry
-  }
+  .mk pushoutCocone.toBinaryCofan binaryCofanUnder.toPushoutCocone aux_unit aux_counit
 
-def name (c : PushoutCocone f g)  (hc : IsColimit c) : IsColimit <|
-    BinaryCofan.mk (Under.homMk (U := Under.mk f) c.inl rfl)
-        (Under.homMk (U := Under.mk g) (V := Under.mk (f ≫ c.inl)) c.inr c.condition.symm) := sorry
-  --BinaryCofan.isColimitMk _ _ _ _
+def pushoutCocone.IsColimit.toBinaryCofanIsColimit (c : PushoutCocone f g)  (hc : IsColimit c) :
+    IsColimit <| pushoutCocone.toBinaryCofan.obj c :=
+  .ofCoconeEquiv pushoutCoconeEquivBinaryCofan.symm (.ofIsoColimit hc (by simp; exact c.eta))
 
 end
 
@@ -72,6 +55,8 @@ variable {R : Type u} [CommRing R]
 noncomputable instance : ChosenFiniteProducts (Under <| CommRingCat.of R)ᵒᵖ where
   product X Y := sorry
   terminal := ⟨_, terminalOpOfInitial Under.mkIdInitial⟩
+
+
 variable (R)
 def HopfAlgebra.equivGrp : HopfAlgebraCat.{u} R ≌ Grp_ <| (Under <| CommRingCat.of R)ᵒᵖ := sorry
 

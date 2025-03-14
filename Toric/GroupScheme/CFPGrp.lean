@@ -86,10 +86,7 @@ lemma prodOne : η[X ⊗ Y] = lift η η := by
   have := toUnit_unique (toUnit (𝟙_ C)) (𝟙 (𝟙_ C))
   ext <;> simp [this]
 
-lemma prodInv : ι[X ⊗ Y] = (ι[X] ⊗ ι[Y]) := by
-  ext
-  · simp
-  sorry
+lemma prodInv : ι[X ⊗ Y] = (ι[X] ⊗ ι[Y]) := sorry
 
 noncomputable instance : ChosenFiniteProducts <| Grp_ C where
   product X Y := {
@@ -99,7 +96,9 @@ noncomputable instance : ChosenFiniteProducts <| Grp_ C where
         rintro (_|_)
         · refine ⟨fst X.X Y.X, ?_, ?_⟩
           · simp [Grp_.mk']
+            sorry
           simp [Grp_.mk']
+          sorry
         sorry
       naturality := sorry
     }

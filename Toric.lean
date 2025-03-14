@@ -7,6 +7,7 @@ import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
+import Toric.Hopf.GroupInstance
 import Toric.Hopf.GroupLike
 import Toric.Hopf.GroupOp
 import Toric.Hopf.MonoidAlgebra
