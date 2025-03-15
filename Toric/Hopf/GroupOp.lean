@@ -43,21 +43,62 @@ def pushoutCoconeEquivBinaryCofan : PushoutCocone f g ≌ BinaryCofan (Under.mk 
 
 def pushoutCocone.IsColimit.toBinaryCofanIsColimit (c : PushoutCocone f g)  (hc : IsColimit c) :
     IsColimit <| pushoutCocone.toBinaryCofan.obj c :=
-  .ofCoconeEquiv pushoutCoconeEquivBinaryCofan.symm (.ofIsoColimit hc (by simp; exact c.eta))
+  (IsColimit.ofCoconeEquiv pushoutCoconeEquivBinaryCofan).symm hc
 
 end
 
+namespace CategoryTheory.Limits
+
+variable {C : Type*} [Category C] {X Y P : C}
+
+@[simp]
+def BinaryCofan.op (c : BinaryCofan X Y) : BinaryFan (.op X : Cᵒᵖ) (.op Y) :=
+  BinaryFan.mk (.op c.inl) (.op c.inr)
+
+@[simp]
+def BinaryFan.unop (c : BinaryFan (.op X : Cᵒᵖ) (.op Y)) : BinaryCofan X Y :=
+  BinaryCofan.mk c.fst.unop c.snd.unop
+
+@[simp]
+lemma BinaryCofan.op_mk  (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) :
+    BinaryCofan.op (.mk ι₁ ι₂) = .mk ι₁.op ι₂.op := rfl
+
+lemma aux {D : Type*} [Category D] {F G : C ⥤ D} (α : F ⟶ G) :
+    (NatTrans.op α).app (.op X) = (α.app X).op := rfl
+
+def BinaryCofan.IsColimit.op {c : BinaryCofan X Y} (hc : IsColimit c) : IsLimit <| c.op where
+  lift s := .op <| hc.desc (BinaryFan.unop s)
+  fac s := by rintro (_|_) <;> simp [← CategoryTheory.op_comp, hc.fac]
+  uniq s m h := by
+    have := hc.uniq (BinaryFan.unop s) m.unop fun j ↦ by
+      refine Quiver.Hom.op_inj ?_
+      simp
+      have := h j
+      --simpa [← NatTrans.op_app, ← aux] using this
+      sorry
+    sorry
+
+
+end CategoryTheory.Limits
 section
 universe u v
 
 variable {R : Type u} [CommRing R]
 
+--TODO
 noncomputable instance : ChosenFiniteProducts (Under <| CommRingCat.of R)ᵒᵖ where
-  product X Y := sorry
+  product X Y := {
+    cone :=
+      let _ : Algebra R (unop X).right := X.1.hom.hom.toAlgebra
+      let _ : Algebra R (unop Y).right := Y.1.hom.hom.toAlgebra
+      BinaryCofan.op <| pushoutCocone.toBinaryCofan.obj <| CommRingCat.pushoutCocone R
+        (unop X).right (unop Y).right
+    isLimit := sorry
+  }
   terminal := ⟨_, terminalOpOfInitial Under.mkIdInitial⟩
 
 
 variable (R)
-def HopfAlgebra.equivGrp : HopfAlgebraCat.{u} R ≌ Grp_ <| (Under <| CommRingCat.of R)ᵒᵖ := sorry
+def HopfAlgebra.equivGrp : (HopfAlgebraCat.{u} R)ᵒᵖ ≌ Grp_ <| (Under <| CommRingCat.of R)ᵒᵖ := sorry
 
 end

@@ -72,34 +72,6 @@
 \end{definition}
 
 
-\begin{proposition}
-  \label{DM_func}
-  \uses{0-spec-grp-alg}
-  % \lean{}
-  % \leanok
-
-  For every finitely generated commutative group $M$, the algebraic group $D(M)$
-  represents the functor $R \rightsquigarrow \Hom_{\mathsf{Grp}}(M,R^*)$.
-\end{proposition}
-\begin{proof}
-  See Proposition 12.3 in \cite{Milne_2017}.
-\end{proof}
-
-
-\begin{proposition}
-  \label{0-spec-grp-alg-basis}
-  \uses{0-spec-grp-alg}
-  % \lean{}
-  % \leanok
-
-  The choice of a basis for $M$ determines an isomorphism of $D(M)$
-  with a finite product of copies of $\Gm$ and various $\mu_n$.
-\end{proposition}
-\begin{proof}
-  See Proposition 12.3 in \cite{Milne_2017}.
-\end{proof}
-
-
 \begin{definition}
   \label{0-diag}
   \uses{0-spec-grp-alg}
@@ -122,17 +94,59 @@
   See Theorem 12.8 in \cite{Milne_2017}.
 \end{proof}
 
+\begin{proposition}
+  \label{0-full-grp-hopf}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  The functor $G \rightsquigarrow R[G]$
+  from the category of groups
+  to the category of Hopf algebras over R
+  is fully faithful.
+\end{proposition}
+\begin{proof}
+  \uses{0-diag-iff-grp-like-span, 0-grp-like-grp-alg, 0-grp-like-map}
+  % \leanok
+
+\end{proof}
+
+\begin{proposition}
+  \label{0-hopf-cogrp}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  The category of Hopf alebras over $R$ is equivalent to the category of cogroup objects
+  in the category of $R$-algebras.
+\end{proposition}
+
+\begin{theorem}
+  \label{0-congr_hopf_affgrpsch}
+  \uses{0-hopf-cogrp}
+  %\lean{}
+  %\leanok
+
+  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence
+  from the category of Hopf algebras over $R$
+  to the category of affine group schemes over $\Spec R$.
+\end{theorem}
+
 \begin{theorem}
   \label{congr_fggrp_diag}
-  \uses{char_lattice}
+  \uses{1-1-char-lat}
   \uses{0-diag}
   The functor $M\rightsquigarrow D(M)$ is a contravariant equivalence
   from the category of finitely generated commutative groups to the category of
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).
 \end{theorem}
 \begin{proof}
-  \uses{0-diag-iff-grp-like-span, 0-spec-grp-alg-basis, 0-grp-like-grp-alg}
+  \uses{0-congr_hopf_affgrpsch, 0-full-grp-hopf}
   % \leanok
 
-  See Theorem 12.9(a) in \cite{Milne_2017}. Case work required.
+  The functor is essentially surjective by definition.
+  It's faithfull since, $M\rightsquigarrow k[M]$ and $\Spec$ are.
+  It's full by \ref{congr_hopf_affgrpsch} and \ref{0-full-grp-hopf}.
+
+  Also, see Theorem 12.9(a) in \cite{Milne_2017}.
 \end{proof}
