@@ -1,4 +1,5 @@
-import Toric.AffineMonoid
+import Toric.AffineMonoid.Embedding
+import Toric.AffineMonoid.Irreducible
 import Toric.ConvexAnalysis.Polytope
 import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
@@ -11,6 +12,7 @@ import Toric.Hopf.GroupInstance
 import Toric.Hopf.GroupLike
 import Toric.Hopf.GroupOp
 import Toric.Hopf.MonoidAlgebra
+import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Submonoid.Operations
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain

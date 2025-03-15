@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Luo
 -/
 import Mathlib.AlgebraicGeometry.Properties
-import Toric.AffineMonoid
+import Toric.AffineMonoid.Embedding
 import Toric.ToricVariety
 
 /-!
