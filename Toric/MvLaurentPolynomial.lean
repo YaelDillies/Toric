@@ -39,6 +39,3 @@ instance instIsDomain : IsDomain (MvLaurentPolynomial σ R) :=
   NoZeroDivisors.to_isDomain (MvLaurentPolynomial σ R)
 
 end MvLaurentPolynomial
-
-
-#min_imports
