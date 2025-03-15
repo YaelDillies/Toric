@@ -7,3 +7,4 @@
 web/
 lean_decls
 print/
+*.paux
