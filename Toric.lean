@@ -13,6 +13,7 @@ import Toric.Hopf.GroupOp
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.Submonoid.Operations
 import Toric.Mathlib.Algebra.Group.Torsion
+import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass

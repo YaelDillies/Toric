@@ -16,4 +16,8 @@ with variables from a general type `σ` (which could be infinite).
 variable (σ : Type*) (R : Type*) [CommSemiring R]
 abbrev MvLaurentPolynomial := AddMonoidAlgebra R <| FreeAbelianGroup σ
 
-instance : IsDomain (MvLaurentPolynomial σ R) := sorry
+namespace MvLaurentPolynomial
+
+instance instIsDomain : IsDomain (MvLaurentPolynomial σ R) := sorry
+
+end MvLaurentPolynomial
