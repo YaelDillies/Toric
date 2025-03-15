@@ -36,7 +36,7 @@ def aux_counit :
 def pushoutCoconeEquivBinaryCofan : PushoutCocone f g ≌ BinaryCofan (Under.mk f) (Under.mk g) :=
   .mk pushoutCocone.toBinaryCofan binaryCofanUnder.toPushoutCocone aux_unit aux_counit
 
-def pushoutCocone.IsColimit.toBinaryCofanIsColimit (c : PushoutCocone f g)  (hc : IsColimit c) :
+def pushoutCocone.IsColimit.toBinaryCofanIsColimit {c : PushoutCocone f g}  (hc : IsColimit c) :
     IsColimit <| pushoutCocone.toBinaryCofan.obj c :=
   (IsColimit.ofCoconeEquiv pushoutCoconeEquivBinaryCofan).symm hc
 

@@ -17,7 +17,6 @@ open CategoryTheory Opposite Limits
 
 variable {R : Type*} [CommRing R]
 
---TODO
 noncomputable instance : ChosenFiniteProducts (Under <| CommRingCat.of R)ᵒᵖ where
   product X Y := {
     cone :=
@@ -25,7 +24,11 @@ noncomputable instance : ChosenFiniteProducts (Under <| CommRingCat.of R)ᵒᵖ 
       let _ : Algebra R (unop Y).right := Y.1.hom.hom.toAlgebra
       BinaryCofan.op <| pushoutCocone.toBinaryCofan.obj <| CommRingCat.pushoutCocone R
         (unop X).right (unop Y).right
-    isLimit := sorry
+    isLimit :=
+      let _ : Algebra R (unop X).right := X.1.hom.hom.toAlgebra
+      let _ : Algebra R (unop Y).right := Y.1.hom.hom.toAlgebra
+      BinaryCofan.IsColimit.op <| pushoutCocone.IsColimit.toBinaryCofanIsColimit <|
+        CommRingCat.pushoutCoconeIsColimit R _ _
   }
   terminal := ⟨_, terminalOpOfInitial Under.mkIdInitial⟩
 
