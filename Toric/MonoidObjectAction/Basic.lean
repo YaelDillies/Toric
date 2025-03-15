@@ -10,6 +10,13 @@ import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.CategoryTheory.Adjunction.Opposites
 import Mathlib.CategoryTheory.Monoidal.Yoneda
 
+
+/-
+TODO(Paul-Lez):
+- Do Yoneda stuff.
+- Start upstreaming to Mathlib.
+-/
+
 open CategoryTheory Mon_Class MonoidalCategory
 
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] (M : C) [Mon_Class M]
