@@ -32,5 +32,7 @@ noncomputable instance : ChosenFiniteProducts (Under <| CommRingCat.of R)ᵒᵖ 
   }
   terminal := ⟨_, terminalOpOfInitial Under.mkIdInitial⟩
 
-variable (R) in
-def hopfAlgebraCatEquivGrp : (HopfAlgebraCat R)ᵒᵖ ≌ Grp_ (Under <| CommRingCat.of R)ᵒᵖ := sorry
+
+/- variable (R) in
+def hopfAlgebraCatEquivGrp :
+    (Hopf_ <| Under <| CommRingCat.of R)ᵒᵖ ≌ Grp_ (Under <| CommRingCat.of R)ᵒᵖ := sorry -/
