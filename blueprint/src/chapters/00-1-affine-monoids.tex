@@ -133,16 +133,16 @@
   We distinguish three cases
   \begin{itemize}
     \item $m_r + n_r = 0$. Then
-    \[r = \sum_{s \in S \setminus \{r\}\} (m_s + n_s) s \in \langle S \setminus \{r\}\rangle\]
+    \[r = \sum_{s \in S \setminus \{r\}} (m_s + n_s) s \in \langle S \setminus \{r\}\rangle\]
     contradicting the minimality of $S$.
     \item $m_r + n_r = 1$. Then
     \begin{align*}
-      & 0 = \sum_{s \in S \setminus \{r\}\} (m_s + n_s) s
+      & 0 = \sum_{s \in S \setminus \{r\}} (m_s + n_s) s
       & \implies \forall s \in S \setminus \{r\}, m_s s = n_s s = 0
     \end{align*}
     Furthermore, either $m_r = 0$ or $n_r = 0$, so $a = 0$ or $b = 0$, contradicting the fact that $a$ and $b$ are non-units.
     \item $m_r + n_r \ge 2$. Then
-    \[0 = r + \sum_{s \in S \setminus \{r\}\} (m_s + n_s) s\]
+    \[0 = r + \sum_{s \in S \setminus \{r\}} (m_s + n_s) s\]
     and $r = 0$, contradicting the minimality of $S$ once again.
   \end{itemize}
 \end{proof}
