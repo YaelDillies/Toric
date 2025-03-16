@@ -20,9 +20,14 @@ import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.Algebra.Order.Nonneg.Module
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
+import Toric.Mathlib.CategoryTheory.Monoidal.Bimon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Bimon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Hopf_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Comon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Hopf_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
