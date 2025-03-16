@@ -19,12 +19,14 @@ variable {R : CommRingCat} [IsDomain R] {S : Type*} [AddCancelCommMonoid S] [Add
 variable (R S) in
 noncomputable abbrev AffineToricVarietyFromMonoid := Spec <| CommRingCat.of <| AddMonoidAlgebra R S
 
+namespace AffineToricVarietyFromMonoid
+
 noncomputable instance : (AffineToricVarietyFromMonoid R S).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap R _
 
-noncomputable instance : ToricVariety R (dim S) (AffineToricVarietyFromMonoid R S) where
-  torusEmb :=
-    Spec.map <| CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S)
+noncomputable instance instToricVariety :
+    ToricVariety R (dim S) (AffineToricVarietyFromMonoid R S) where
+  torusEmb := Spec.map <| CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S)
   torusEmb_comp_overHom := by
     change Spec.map _ ≫ Spec.map _ = Spec.map _
     simp [← Spec.map_comp, ← CommRingCat.ofHom_comp]
@@ -50,3 +52,5 @@ noncomputable instance : ToricVariety R (dim S) (AffineToricVarietyFromMonoid R 
   torusMul_comp_torusEmb := by
     simp [← Spec.map_comp, ← CommRingCat.ofHom_comp, pullback.condition]
     sorry
+
+end AffineToricVarietyFromMonoid
