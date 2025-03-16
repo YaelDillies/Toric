@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathlib.CategoryTheory.ChosenFiniteProducts
+import Mathlib.CategoryTheory.Closed.Ideal
+import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 
 /-!
 # This is https://github.com/leanprover-community/mathlib4/pull/21399
@@ -19,18 +21,19 @@ variable {C : Type*} [Category C] [HasPullbacks C]
 @[reducible]
 noncomputable
 def chosenFiniteProducts (X : C) : ChosenFiniteProducts (Over X) where
-  product Y Z := ⟨BinaryFan.mk (P := Over.mk (pullback.snd Y.hom Z.hom ≫ Z.hom))
+  product Y Z := {
+    cone := BinaryFan.mk (P := Over.mk (pullback.snd Y.hom Z.hom ≫ Z.hom))
       (Over.homMk (pullback.fst Y.hom Z.hom) pullback.condition)
-      (Over.homMk (pullback.snd Y.hom Z.hom) rfl),
-    BinaryFan.isLimitMk
-      (fun s ↦ Over.homMk (pullback.lift s.fst.left s.snd.left (s.fst.w.trans s.snd.w.symm))
-        ((pullback.lift_snd_assoc _ _ _ _).trans (s.snd.w.trans (Category.comp_id _))))
+      (Over.homMk (pullback.snd Y.hom Z.hom) rfl)
+    isLimit := BinaryFan.isLimitMk
+      (fun s ↦ Over.homMk (pullback.lift s.fst.left s.snd.left <| by simp) <| by simp)
       (fun s ↦ Over.OverMorphism.ext (pullback.lift_fst _ _ _))
       (fun s ↦ Over.OverMorphism.ext (pullback.lift_snd _ _ _)) fun s m e₁ e₂ ↦ by
       ext1
       apply pullback.hom_ext
       · simpa using congr(($e₁).left)
-      · simpa using congr(($e₂).left)⟩
+      · simpa using congr(($e₂).left)
+  }
   terminal := ⟨asEmptyCone (Over.mk (𝟙 X)), IsTerminal.ofUniqueHom (fun Y ↦ Over.homMk Y.hom)
     fun Y m ↦ Over.OverMorphism.ext (by simpa using m.w)⟩
 
@@ -175,12 +178,29 @@ namespace CategoryTheory.Under
 
 open Limits
 
-variable {C : Type*} [Category C] [HasPullbacks C]
+variable {C : Type*} [Category C] [HasPushouts C]
 
-/-- A choice of finite products of `(Under X)ᵒᵖ` given by `Limits.pullback`. -/
+/-- A choice of finite products of `(Under X)ᵒᵖ` given by `Limits.pushout`. -/
 @[reducible]
 noncomputable
-def chosenFiniteProducts (X : C) : ChosenFiniteProducts (Under X)ᵒᵖ := sorry
+def chosenFiniteProducts (X : C) : ChosenFiniteProducts (Under X)ᵒᵖ where
+  product Y Z := {
+    cone := BinaryFan.mk (P := .op <| Under.mk <| Z.unop.hom ≫ pushout.inr Y.unop.hom Z.unop.hom)
+      (.op <| Under.homMk (pushout.inl Y.unop.hom Z.unop.hom) pushout.condition)
+      (.op <| Under.homMk (pushout.inr Y.unop.hom Z.unop.hom))
+    isLimit := BinaryFan.isLimitMk
+      (fun s ↦ .op <| Under.homMk
+        (pushout.desc s.fst.unop.right s.snd.unop.right <| by simp) <| by simp)
+      (fun s ↦ Quiver.Hom.unop_inj <| Under.UnderMorphism.ext (pushout.inl_desc _ _ _))
+      (fun s ↦ Quiver.Hom.unop_inj <| Under.UnderMorphism.ext (pushout.inr_desc _ _ _))
+        fun s m e₁ e₂ ↦ by
+      refine  Quiver.Hom.unop_inj ?_
+      ext1
+      apply pushout.hom_ext
+      · simpa using congr(($e₁).unop.right)
+      · simpa using congr(($e₂).unop.right)
+  }
+  terminal.isLimit := terminalOpOfInitial Under.mkIdInitial
 
 instance (X : C) : PreservesFiniteProducts (Under.opToOverOp X) := sorry
 
