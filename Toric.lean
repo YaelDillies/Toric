@@ -8,9 +8,9 @@ import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
+import Toric.Hopf.AffineGroupScheme
 import Toric.Hopf.GroupInstance
 import Toric.Hopf.GroupLike
-import Toric.Hopf.GroupOp
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Submonoid.Operations
@@ -22,6 +22,7 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
+import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
 import Toric.Mathlib.CategoryTheory.Monoidal.Category

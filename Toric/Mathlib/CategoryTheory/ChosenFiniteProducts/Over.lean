@@ -170,3 +170,18 @@ lemma braiding_inv_left {R S : Over X} :
     (β_ R S).inv.left = (pullbackSymmetry _ _).hom := rfl
 
 end CategoryTheory.Over
+
+namespace CategoryTheory.Under
+
+open Limits
+
+variable {C : Type*} [Category C] [HasPullbacks C]
+
+/-- A choice of finite products of `(Under X)ᵒᵖ` given by `Limits.pullback`. -/
+@[reducible]
+noncomputable
+def chosenFiniteProducts (X : C) : ChosenFiniteProducts (Under X)ᵒᵖ := sorry
+
+instance (X : C) : PreservesFiniteProducts (Under.opToOverOp X) := sorry
+
+end CategoryTheory.Under

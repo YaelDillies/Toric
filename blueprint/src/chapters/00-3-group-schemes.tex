@@ -113,27 +113,28 @@
 
 \end{proof}
 
-\begin{proposition}
-  \label{0-hopf-cogrp}
+
+\begin{proposition}[Finite-limit-preserving functors lift to over categories]
+  \label{0-over-fin-lim}
   \uses{}
-  \lean{hopfAlgebraCatEquivGrp}
+  \lean{CategoryTheory.Limits.PreservesFiniteProducts.overPost}
   \leanok
 
-  The category of Hopf algebras over $R$ is equivalent to the category of cogroup objects in the category of $R$-algebras.
+  If $F : C \to D$ is a functor preserving finite limits, then so is the obvious functor $C / x \to D / F(X)$.
 \end{proposition}
 \begin{proof}
   \uses{}
   % \leanok
 
-  TODO(Michal)
+  Hopefully easy.
 \end{proof}
 
 
-\begin{theorem}
-  \label{0-congr_hopf_affgrpsch}
-  \uses{0-hopf-cogrp}
-  %\lean{}
-  %\leanok
+\begin{theorem}[Hopf algebras correspond to affine group schemes]
+  \label{0-hopf-equiv-aff-grp-sch}
+  \uses{0-over-fin-lim}
+  \lean{specAsWeWantIt.instFull, specAsWeWantIt.instFaithful, essImage_hopfSpec}
+  \leanok
 
   The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence
   from the category of Hopf algebras over $R$
@@ -149,7 +150,7 @@
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).
 \end{theorem}
 \begin{proof}
-  \uses{0-congr_hopf_affgrpsch, 0-full-grp-hopf}
+  \uses{0-hopf-equiv-aff-grp-sch, 0-full-grp-hopf}
   % \leanok
 
   The functor is essentially surjective by definition.
