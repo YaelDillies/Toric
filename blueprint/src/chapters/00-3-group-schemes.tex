@@ -99,8 +99,8 @@
 \end{proof}
 
 
-\begin{proposition}
-  \label{0-full-grp-hopf}
+\begin{proposition}[The group algebra functor is fully faithful]
+  \label{0-full-grp-hopf-alg}
   \uses{}
   % \lean{}
   % \leanok
@@ -140,9 +140,16 @@
   from the category of Hopf algebras over $R$
   to the category of affine group schemes over $\Spec R$.
 \end{theorem}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Most of this is abstract nonsense. TODO(Michał): Expand.
+\end{proof}}
+
 
 \begin{theorem}
-  \label{congr_fggrp_diag}
+  \label{0-fg-comm-grp-equiv-diag-grp-sch}
   \uses{1-1-char-lat}
   \uses{0-diag}
   The functor $M\rightsquigarrow D(M)$ is a contravariant equivalence
@@ -150,12 +157,12 @@
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).
 \end{theorem}
 \begin{proof}
-  \uses{0-hopf-equiv-aff-grp-sch, 0-full-grp-hopf}
+  \uses{0-hopf-equiv-aff-grp-sch, 0-full-grp-hopf-alg}
   % \leanok
 
   The functor is essentially surjective by definition.
   It's faithfull since, $M\rightsquigarrow k[M]$ and $\Spec$ are.
-  It's full by \ref{congr_hopf_affgrpsch} and \ref{0-full-grp-hopf}.
+  It's full by \ref{congr_hopf_affgrpsch} and \ref{0-full-grp-hopf-alg}.
 
   Also, see Theorem 12.9(a) in \cite{Milne_2017}.
 \end{proof}
