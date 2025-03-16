@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo
 -/
 import Mathlib.Algebra.EuclideanDomain.Int
-import Mathlib.GroupTheory.FreeAbelianGroupFinsupp
 import Mathlib.LinearAlgebra.FreeModule.PID
+import Toric.Mathlib.Algebra.Group.UniqueProds.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
+import Toric.Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.RingTheory.Finiteness.Defs
-import Toric.MvLaurentPolynomial
 
 /-!
 # Affine monoids embed into `ℤⁿ`
@@ -48,6 +48,12 @@ end AffineMonoid
 
 open AffineMonoid
 
-instance AddMonoidAlgebra.instIsDomainOfFG {R : Type*} [CommRing R] :
-    IsDomain (AddMonoidAlgebra R M) :=
+variable {R : Type*} [CommRing R]
+
+instance AddMonoidAlgebra.instNoZeroDivisorsOfFG [NoZeroDivisors R] :
+    NoZeroDivisors (AddMonoidAlgebra R M) :=
+  (mapDomain_injective embedding_injective).noZeroDivisors (mapDomainRingHom R <| embedding M)
+    (map_zero _) (map_mul _)
+
+instance AddMonoidAlgebra.instIsDomainOfFG [IsDomain R] : IsDomain (AddMonoidAlgebra R M) :=
   (mapDomain_injective embedding_injective).isDomain <| mapDomainRingHom R <| embedding M

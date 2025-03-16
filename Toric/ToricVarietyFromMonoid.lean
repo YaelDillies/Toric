@@ -13,7 +13,8 @@ import Toric.ToricVariety
 
 open AlgebraicGeometry CategoryTheory Limits AddMonoidAlgebra AddLocalization AffineMonoid
 
-variable {R : CommRingCat} {S} [AddCancelCommMonoid S] [AddMonoid.FG S] [IsAddTorsionFree S]
+variable {R : CommRingCat} [IsDomain R] {S : Type*} [AddCancelCommMonoid S] [AddMonoid.FG S]
+  [IsAddTorsionFree S]
 
 variable (R S) in
 noncomputable abbrev AffineToricVarietyFromMonoid := Spec <| CommRingCat.of <| AddMonoidAlgebra R S
