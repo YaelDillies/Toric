@@ -20,6 +20,7 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
+import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
