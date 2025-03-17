@@ -39,10 +39,11 @@ instance hopfSpec.instFaithful : (hopfSpec R).Faithful := inferInstance
 
 /-! ### Gamma direction -/
 
-instance Gamma.instAlgebra (G : Scheme) [OverClass G (Spec R)] : Algebra R Γ(G, ⊤) := sorry
+noncomputable instance Gamma.instAlgebra (G : Scheme) [OverClass G (Spec R)] : Algebra R Γ(G, ⊤) :=
+  RingHom.toAlgebra <| CommRingCat.Hom.hom <| (Scheme.ΓSpecIso R).inv ≫ Scheme.Γ.map (G ↘ Spec R).op
 
 /-- For an `R`-algebraic group `G`, this is the global sections `Γ(G)` as a `R`-algebra. -/
-abbrev algebraGamma (G : Over <| Spec R) [Grp_Class G] : Under R :=
+noncomputable abbrev algebraGamma (G : Over <| Spec R) [Grp_Class G] : Under R :=
   .mk <| CommRingCat.ofHom <| algebraMap R Γ(G.left, ⊤)
 
 instance (G : Over <| Spec R) [Grp_Class G] : Grp_Class (op <| algebraGamma G) := sorry
