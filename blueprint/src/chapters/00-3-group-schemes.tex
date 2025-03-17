@@ -130,21 +130,41 @@
 \end{proof}
 
 
-\begin{theorem}[Hopf algebras correspond to affine group schemes]
-  \label{0-hopf-equiv-aff-grp-sch}
-  \uses{0-over-lim}
-  \lean{specAsWeWantIt.instFull, specAsWeWantIt.instFaithful, essImage_hopfSpec}
-  \leanok
+\begin{proposition}[Fully faithful monoidal functors lift to group objects]
+  \label{0-full-faithful-grp}
+  \uses{}
+  % \lean{}
+  % \leanok
 
-  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence
-  from the category of Hopf algebras over $R$
-  to the category of affine group schemes over $\Spec R$.
-\end{theorem}
+  If a monoidal functor $F : C \to D$ is fully faithful, then so is $\Grp(F) : \Grp C \to \Grp D$.
+\end{proposition}
 \begin{proof}
   \uses{}
   % \leanok
 
-  Most of this is abstract nonsense. TODO(Michał): Expand.
+  Faithfulness is immediate.
+
+  For fullness, assume $f : F(G) \to F(H)$ is a morphism. By fullness of $F$, find $g : G \to H$ such that $F(g) = f$. $g$ is a morphism because we can pull back each diagram from $D$ to $C$ along $F$ which is faithful.
+\end{proof}
+
+
+\begin{theorem}[Hopf algebras correspond to affine group schemes]
+  \label{0-hopf-equiv-aff-grp-sch}
+  \uses{}
+  \lean{hopfSpec.instFull, hopfSpec.instFaithful, essImage_hopfSpec}
+  \leanok
+
+  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
+\end{theorem}
+\begin{proof}
+  \uses{0-over-lim, 0-full-faithful-grp}
+  % \leanok
+
+  $\Spec : \Ring \to \Scheme$ preserves finite limits, therefore so does $\Spec : \Ring / R \to \Scheme / \Spec R$ according to Proposition \ref{0-over-lim}. Hence we get a corresponding functor $\Spec : \Hopf_R \to \GrpSch_R$ on group objects.
+
+  $\Spec : \Ring \to \Scheme$ is fully faithful, therefore so is $\Spec : \Ring / R \to \Scheme / \Spec R$ (this is known to mathlib), therefore so is $\Spec : \Hopf_R \to \GrpSch_R$ according to Proposition \ref{0-full-faithful-grp}.
+
+  Finally, for an affine group scheme $G$ over $\Spec R$, one can build an Hopf algebra structure on $\Gamma(G)$ by moving all the diagrams along the $\Gamma$-$\Spec$ adjunction.
 \end{proof}
 
 
