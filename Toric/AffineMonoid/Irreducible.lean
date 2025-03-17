@@ -13,11 +13,22 @@ import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 variable {M : Type*} {S : Set M}
 
 section AddCommMonoid
-variable [AddCommMonoid M]
+variable [AddCommMonoid M] [Subsingleton (AddUnits M)]
 
 /-- Irreducible elements lie in all sets generating a salient monoid. -/
 lemma addIrreducible_subset_of_addSubmonoidClosure_eq_top (hS : AddSubmonoid.closure S = ⊤) :
-    {p | AddIrreducible p} ⊆ S := sorry
+    {p | AddIrreducible p} ⊆ S := by
+  have : ∀ {x : M} (hx : x ∈ AddSubmonoid.closure S), AddIrreducible x → x ∈ S :=
+      AddSubmonoid.closure_induction (s := S) (p := fun x _ ↦ (AddIrreducible x → x ∈ S))
+      (fun _ hx _ ↦ hx) (by simp) (fun a b _ _ ha hb h ↦ ?_)
+  · exact fun x ↦ this (by rw [hS]; trivial)
+  · obtain h₀ | h₀ := h.isAddUnit_or_isAddUnit rfl
+    · obtain rfl := isAddUnit_iff_eq_zero.mp h₀
+      rw [zero_add] at h ⊢
+      exact hb h
+    · obtain rfl := isAddUnit_iff_eq_zero.mp h₀
+      rw [add_zero] at h ⊢
+      exact ha h
 
 variable [AddMonoid.FG M]
 
@@ -32,6 +43,49 @@ section AddCancelCommMonoid
 variable [AddCancelCommMonoid M] [AddMonoid.FG M] [Subsingleton (AddUnits M)] {S : Set M}
 
 @[simp] lemma AddSubmonoid.closure_addIrreducible :
-    AddSubmonoid.closure {p : M | AddIrreducible p} = ⊤ := sorry
+    AddSubmonoid.closure {p : M | AddIrreducible p} = ⊤ := by
+  -- book proof is better?
+  have mingen: ∃ S, closure S = ⊤ ∧ ∀ (T : Set M), closure T = closure S → T ⊆ S → T = S := by
+    sorry
+  obtain ⟨S, hSgen, hSmax⟩ := mingen
+  have _ : Fintype S := sorry
+  suffices h : {x | AddIrreducible x} = S by rwa [h]
+  by_contra h
+  obtain ⟨-, r, hrS, hrirred⟩ := Set.ssubset_iff_exists.mp <| ssubset_of_subset_of_ne
+    (addIrreducible_subset_of_addSubmonoidClosure_eq_top hSgen) h
+  simp_rw [addIrreducible_iff] at hrirred
+  simp only [Set.mem_setOf_eq, not_and, not_forall, Classical.not_imp, not_or] at hrirred
+  obtain rfl | hr₀ := eq_or_ne r 0
+  · specialize hSmax (S \ {0}) ?_ Set.diff_subset
+    · sorry
+    have := Set.diff_singleton_sSubset.mpr hrS
+    rw [hSmax] at this
+    exact (and_not_self_iff (S ⊆ S)).mp this
+  obtain ⟨a, b, hr, ha, hb⟩ := hrirred <| fun h ↦ hr₀ <| isAddUnit_iff_eq_zero.mp h
+  have equation : ∀ r ∈ closure S, ∃ (m : S → ℕ), r = ∑ s : S, (m s) • (s : M) := sorry
+  obtain ⟨m, hm⟩ := equation a (by rw [hSgen]; trivial)
+  obtain ⟨n, hn⟩ := equation b (by rw [hSgen]; trivial)
+  have hr : r = ∑ s : S, (m s + n s) • (s : M) := sorry
+  have : (fun x ↦ m x + n x = 0 ∨ m x + n x = 1 ∨ m x + n x ≥ 2) ⟨r, hrS⟩ := by sorry
+  obtain h | h | h := this
+  · specialize hSmax (S \ {r}) ?_ Set.diff_subset
+    · sorry
+    have := Set.diff_singleton_sSubset.mpr hrS
+    rw [hSmax] at this
+    exact (and_not_self_iff (S ⊆ S)).mp this
+  · sorry
+  · classical
+    let i : S → ℕ := fun s ↦ (if s.1 = r then m s + n s - 2 else m s + n s)
+    let rinv := ∑ s : S, i s • (s : M)
+    have hi : r + rinv = 0 := by sorry
+    have : IsAddUnit r := by
+      let runit : AddUnits M := {
+        val := r
+        neg := rinv
+        val_neg := hi
+        neg_val := by rwa [add_comm] at hi
+      }
+      exact ⟨runit, rfl⟩
+    exact hr₀ <| isAddUnit_iff_eq_zero.mp this
 
 end AddCancelCommMonoid
