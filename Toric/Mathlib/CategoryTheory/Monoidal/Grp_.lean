@@ -276,3 +276,21 @@ instance [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
 end
 
 end
+
+open Limits
+
+namespace CategoryTheory.Functor
+universe v₁ v₂ u₁ u₂
+variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts.{v₁} C]
+variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts.{v₂} D]
+variable (F : C ⥤ D) [PreservesFiniteProducts F]
+
+attribute [local instance] monoidalOfChosenFiniteProducts
+
+protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
+  map_injective {_X _Y} _f _g hfg := F.mapMon.map_injective hfg
+
+protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
+  map_surjective := F.mapMon.map_surjective
+
+end CategoryTheory.Functor

@@ -7,6 +7,7 @@ import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
+import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -28,10 +29,10 @@ noncomputable abbrev hopfSpec : Grp_ (Under R)ᵒᵖ ⥤ Grp_ (Over <| Spec R) :
   (((Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec).mapGrp:)
 
 /-- `Spec` is full on `R`-Hopf algebras. -/
-instance hopfSpec.instFull : (hopfSpec R).Full := sorry
+instance hopfSpec.instFull : (hopfSpec R).Full := inferInstance
 
 /-- `Spec` is faithful on `R`-Hopf algebras. -/
-instance hopfSpec.instFaithful : (hopfSpec R).Faithful := sorry
+instance hopfSpec.instFaithful : (hopfSpec R).Faithful := inferInstance
 
 /-- The essential image of `R`-Hopf algebras under `Spec` is precisely affine group schemes over
 `Spec R`. -/

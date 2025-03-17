@@ -152,3 +152,27 @@ variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G : C}
 instance [Mon_Class G] [IsCommMon G] : IsCommMon (Mon_.mk' G).X := ‹_›
 
 end
+
+open Limits
+
+namespace CategoryTheory.Functor
+universe v₁ v₂ u₁ u₂
+variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts.{v₁} C]
+variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts.{v₂} D]
+variable (F : C ⥤ D) [PreservesFiniteProducts F]
+
+attribute [local instance] monoidalOfChosenFiniteProducts
+
+protected instance Faithful.mapMon [F.Faithful] : F.mapMon.Faithful where
+  map_injective {_X _Y} _f _g hfg := Mon_.Hom.ext <| map_injective congr(($hfg).hom)
+
+protected instance Full.mapMon [F.Full] [F.Faithful] : F.mapMon.Full where
+  map_surjective {X Y} f :=
+    let ⟨g, hg⟩ := F.map_surjective f.hom
+    ⟨{
+      hom := g
+      one_hom := F.map_injective <| by simpa [← hg, cancel_epi] using f.one_hom
+      mul_hom := F.map_injective <| by simpa [← hg, cancel_epi] using f.mul_hom
+    }, Mon_.Hom.ext hg⟩
+
+end CategoryTheory.Functor

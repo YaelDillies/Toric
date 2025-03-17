@@ -133,14 +133,14 @@
 \begin{proposition}[Fully faithful monoidal functors lift to group objects]
   \label{0-full-faithful-grp}
   \uses{}
-  % \lean{}
-  % \leanok
+  \lean{CategoryTheory.Functor.Faithful.mapGrp, CategoryTheory.Functor.Full.mapGrp}
+  \leanok
 
   If a monoidal functor $F : C \to D$ is fully faithful, then so is $\Grp(F) : \Grp C \to \Grp D$.
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
 
   Faithfulness is immediate.
 
@@ -160,9 +160,9 @@
   \uses{0-over-lim, 0-full-faithful-grp}
   % \leanok
 
-  $\Spec : \Ring \to \Scheme$ preserves finite limits, therefore so does $\Spec : \Ring / R \to \Scheme / \Spec R$ according to Proposition \ref{0-over-lim}. Hence we get a corresponding functor $\Spec : \Hopf_R \to \GrpSch_R$ on group objects.
+  $\Spec : \Ring \to \Sch$ preserves finite limits, therefore so does $\Spec : \Ring / R \to \Sch / \Spec R$ according to Proposition \ref{0-over-lim}. Hence we get a corresponding functor $\Spec : \Hopf_R \to \GrpSch_R$ on group objects.
 
-  $\Spec : \Ring \to \Scheme$ is fully faithful, therefore so is $\Spec : \Ring / R \to \Scheme / \Spec R$ (this is known to mathlib), therefore so is $\Spec : \Hopf_R \to \GrpSch_R$ according to Proposition \ref{0-full-faithful-grp}.
+  $\Spec : \Ring \to \Sch$ is fully faithful, therefore so is $\Spec : \Ring / R \to \Sch / \Spec R$ (this is known to mathlib), therefore so is $\Spec : \Hopf_R \to \GrpSch_R$ according to Proposition \ref{0-full-faithful-grp}.
 
   Finally, for an affine group scheme $G$ over $\Spec R$, one can build an Hopf algebra structure on $\Gamma(G)$ by moving all the diagrams along the $\Gamma$-$\Spec$ adjunction.
 \end{proof}
