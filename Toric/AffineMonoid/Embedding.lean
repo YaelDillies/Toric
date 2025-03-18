@@ -10,7 +10,6 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
-import Toric.Mathlib.RingTheory.Finiteness.Defs
 
 /-!
 # Affine monoids embed into `ℤⁿ`

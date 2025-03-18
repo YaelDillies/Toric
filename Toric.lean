@@ -44,7 +44,6 @@ import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
-import Toric.Mathlib.RingTheory.Finiteness.Defs
 import Toric.MonoidObjectAction.Basic
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
