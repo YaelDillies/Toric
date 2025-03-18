@@ -1,6 +1,95 @@
 \section{Group Schemes}
 
 
+\subsection{Hopf algebras}
+
+
+We want to show that Hopf algebras correspond to affine group schemes. This can easily be done
+categorically assuming both categories on either side are defined thoughtfully. However, the
+categorical version will not be workable with if we do not also have links to the non-categorical
+notions. Therefore, we want to build the left, top and right edges of the following diagram so that
+the bottom edge can be obtained by composing the three.
+
+   Cogrp Mod_R ->     Grp Sch_{Spec R}
+        |                    |
+R-Hopf algebra -> Group scheme over Spec R
+
+
+\begin{proposition}[Limit-preserving functors lift to over categories]
+  \label{0-over-lim}
+  \uses{}
+  \lean{CategoryTheory.Limits.PreservesLimitsOfShape.overPost, CategoryTheory.Limits.PreservesLimitsOfSize.overPost, CategoryTheory.Limits.PreservesFiniteProducts.overPost}
+  \leanok
+
+  If $F : C \to D$ is a functor preserving limits of shape $J$, then so is the obvious functor $C / X \to D / F(X)$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Hopefully easy.
+\end{proof}
+
+
+\begin{proposition}[Fully faithful monoidal functors lift to group objects]
+  \label{0-full-faithful-grp}
+  \uses{}
+  \lean{CategoryTheory.Functor.Faithful.mapGrp, CategoryTheory.Functor.Full.mapGrp}
+  \leanok
+
+  If a monoidal functor $F : C \to D$ is fully faithful, then so is $\Grp(F) : \Grp C \to \Grp D$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Faithfulness is immediate.
+
+  For fullness, assume $f : F(G) \to F(H)$ is a morphism. By fullness of $F$, find $g : G \to H$ such that $F(g) = f$. $g$ is a morphism because we can pull back each diagram from $D$ to $C$ along $F$ which is faithful.
+\end{proof}
+
+
+\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
+  \label{0-hopf-cogrp-alg}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  From a $R$-Hopf algebra, one can build a cogroup object in the category of $R$-algebras.
+
+  From a cogroup object in the category of $R$-algebras, one can build a $R$-Hopf algebra.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Turn the arrows around.
+\end{proof}
+
+
+\begin{theorem}[Hopf algebras correspond to affine group schemes]
+  \label{0-hopf-equiv-aff-grp-sch}
+  \uses{}
+  \lean{hopfSpec.instFull, hopfSpec.instFaithful, essImage_hopfSpec}
+  \leanok
+
+  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
+\end{theorem}
+\begin{proof}
+  \uses{0-over-lim, 0-full-faithful-grp}
+  % \leanok
+
+  $\Spec : \Ring \to \Sch$ preserves finite limits, therefore so does $\Spec : \Ring / R \to \Sch / \Spec R$ according to Proposition \ref{0-over-lim}. Hence we get a corresponding functor $\Spec : \Hopf_R \to \GrpSch_R$ on group objects.
+
+  $\Spec : \Ring \to \Sch$ is fully faithful, therefore so is $\Spec : \Ring / R \to \Sch / \Spec R$ (this is known to mathlib), therefore so is $\Spec : \Hopf_R \to \GrpSch_R$ according to Proposition \ref{0-full-faithful-grp}.
+
+  Finally, for an affine group scheme $G$ over $\Spec R$, one can build an Hopf algebra structure on $\Gamma(G)$ by moving all the diagrams along the $\Gamma$-$\Spec$ adjunction.
+\end{proof}
+
+
+\subsection{Diagonalisable groups}
+
+
 \begin{definition}[Group-like elements]
   \label{0-grp-like}
   \uses{}
@@ -111,60 +200,6 @@
   \uses{0-diag-iff-grp-like-span, 0-grp-like-grp-alg, 0-grp-like-map}
   % \leanok
 
-\end{proof}
-
-
-\begin{proposition}[Limit-preserving functors lift to over categories]
-  \label{0-over-lim}
-  \uses{}
-  \lean{CategoryTheory.Limits.PreservesLimitsOfShape.overPost, CategoryTheory.Limits.PreservesLimitsOfSize.overPost, CategoryTheory.Limits.PreservesFiniteProducts.overPost}
-  \leanok
-
-  If $F : C \to D$ is a functor preserving limits of shape $J$, then so is the obvious functor $C / x \to D / F(X)$.
-\end{proposition}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  Hopefully easy.
-\end{proof}
-
-
-\begin{proposition}[Fully faithful monoidal functors lift to group objects]
-  \label{0-full-faithful-grp}
-  \uses{}
-  \lean{CategoryTheory.Functor.Faithful.mapGrp, CategoryTheory.Functor.Full.mapGrp}
-  \leanok
-
-  If a monoidal functor $F : C \to D$ is fully faithful, then so is $\Grp(F) : \Grp C \to \Grp D$.
-\end{proposition}
-\begin{proof}
-  \uses{}
-  \leanok
-
-  Faithfulness is immediate.
-
-  For fullness, assume $f : F(G) \to F(H)$ is a morphism. By fullness of $F$, find $g : G \to H$ such that $F(g) = f$. $g$ is a morphism because we can pull back each diagram from $D$ to $C$ along $F$ which is faithful.
-\end{proof}
-
-
-\begin{theorem}[Hopf algebras correspond to affine group schemes]
-  \label{0-hopf-equiv-aff-grp-sch}
-  \uses{}
-  \lean{hopfSpec.instFull, hopfSpec.instFaithful, essImage_hopfSpec}
-  \leanok
-
-  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
-\end{theorem}
-\begin{proof}
-  \uses{0-over-lim, 0-full-faithful-grp}
-  % \leanok
-
-  $\Spec : \Ring \to \Sch$ preserves finite limits, therefore so does $\Spec : \Ring / R \to \Sch / \Spec R$ according to Proposition \ref{0-over-lim}. Hence we get a corresponding functor $\Spec : \Hopf_R \to \GrpSch_R$ on group objects.
-
-  $\Spec : \Ring \to \Sch$ is fully faithful, therefore so is $\Spec : \Ring / R \to \Sch / \Spec R$ (this is known to mathlib), therefore so is $\Spec : \Hopf_R \to \GrpSch_R$ according to Proposition \ref{0-full-faithful-grp}.
-
-  Finally, for an affine group scheme $G$ over $\Spec R$, one can build an Hopf algebra structure on $\Gamma(G)$ by moving all the diagrams along the $\Gamma$-$\Spec$ adjunction.
 \end{proof}
 
 
