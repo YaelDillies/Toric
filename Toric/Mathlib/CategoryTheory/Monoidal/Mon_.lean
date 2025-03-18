@@ -176,3 +176,18 @@ protected instance Full.mapMon [F.Full] [F.Faithful] : F.mapMon.Full where
     }, Mon_.Hom.ext hg⟩
 
 end CategoryTheory.Functor
+
+universe v₁ v₂ u₁ u₂
+
+namespace CategoryTheory.Equivalence
+variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
+variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory D]
+
+def mapMon (e : C ≌ D) [e.functor.LaxMonoidal] [e.inverse.LaxMonoidal] : Mon_ C ≌ Mon_ D where
+  functor := e.functor.mapMon
+  inverse := e.inverse.mapMon
+  unitIso := sorry
+  counitIso := sorry
+  functor_unitIso_comp := sorry
+
+end CategoryTheory.Equivalence

@@ -294,3 +294,19 @@ protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
   map_surjective := F.mapMon.map_surjective
 
 end CategoryTheory.Functor
+
+universe v₁ v₂ u₁ u₂
+
+namespace CategoryTheory.Equivalence
+variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
+variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
+
+noncomputable def mapGrp (e : C ≌ D) [e.functor.LaxMonoidal] [e.inverse.LaxMonoidal] :
+    Grp_ C ≌ Grp_ D where
+  functor := e.functor.mapGrp
+  inverse := e.inverse.mapGrp
+  unitIso := sorry
+  counitIso := sorry
+  functor_unitIso_comp := sorry
+
+end CategoryTheory.Equivalence

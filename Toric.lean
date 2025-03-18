@@ -9,7 +9,6 @@ import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
 import Toric.Hopf.AffineGroupScheme
-import Toric.Hopf.GroupInstance
 import Toric.Hopf.GroupLike
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.BigOperators.Group.Finset.Basic
