@@ -11,7 +11,7 @@ lemma Submonoid.FG.prod (hP : P.FG) (hQ : Q.FG) : (P.prod Q).FG := by
   obtain ⟨bN, hbN⟩ := hQ
   refine ⟨bM ×ˢ singleton 1 ∪ singleton 1 ×ˢ bN, ?_⟩
   push_cast
-  simp [Submonoid.closure_union, hbM, hbN, -Set.prod_singleton, -Set.singleton_prod]
+  simp [Submonoid.closure_union, hbM, hbN]
 
 namespace Prod
 variable [Monoid N]
