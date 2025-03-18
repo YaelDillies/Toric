@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.RingTheory.Bialgebra.Hom
+import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 
 /-!

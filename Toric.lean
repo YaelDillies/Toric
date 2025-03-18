@@ -12,10 +12,14 @@ import Toric.Hopf.AffineGroupScheme
 import Toric.Hopf.GroupInstance
 import Toric.Hopf.GroupLike
 import Toric.Hopf.MonoidAlgebra
+import Toric.Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
+import Toric.Mathlib.Algebra.Group.Submonoid.Basic
+import Toric.Mathlib.Algebra.Group.Submonoid.BigOperators
 import Toric.Mathlib.Algebra.Group.Submonoid.Operations
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.UniqueProds.Basic
+import Toric.Mathlib.Algebra.Group.Units.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
@@ -31,6 +35,8 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.Data.Finset.Powerset
+import Toric.Mathlib.Data.Fintype.EquivFin
 import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
