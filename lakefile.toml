@@ -4,6 +4,8 @@ defaultTargets = ["Toric"]
 [leanOptions]
 autoImplicit = false        # Prevent typos to be interpreted as new free variables
 relaxedAutoImplicit = false
+weak.autoImplicit = false        # Prevent typos to be interpreted as new free variables
+weak.relaxedAutoImplicit = false
 pp.unicode.fun = true       # Pretty-print lambdas as `fun a ↦ b`
 pp.proofs.withType = false  # Elide the types of proofs in terms
 weak.linter.docPrime = false

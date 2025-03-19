@@ -4,3 +4,7 @@
 /.lake
 /doc-gen
 /build
+web/
+lean_decls
+print/
+*.paux

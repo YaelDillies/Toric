@@ -1,6 +1,95 @@
 \section{Group Schemes}
 
 
+\subsection{Hopf algebras}
+
+
+We want to show that Hopf algebras correspond to affine group schemes. This can easily be done
+categorically assuming both categories on either side are defined thoughtfully. However, the
+categorical version will not be workable with if we do not also have links to the non-categorical
+notions. Therefore, we want to build the left, top and right edges of the following diagram so that
+the bottom edge can be obtained by composing the three.
+
+%    Cogrp Mod_R ->     Grp Sch_{Spec R}
+%         |                    |
+% R-Hopf algebra -> Group scheme over Spec R
+
+
+\begin{proposition}[Limit-preserving functors lift to over categories]
+  \label{0-over-lim}
+  \uses{}
+  \lean{CategoryTheory.Limits.PreservesLimitsOfShape.overPost, CategoryTheory.Limits.PreservesLimitsOfSize.overPost, CategoryTheory.Limits.PreservesFiniteProducts.overPost}
+  \leanok
+
+  If $F : C \to D$ is a functor preserving limits of shape $J$, then so is the obvious functor $C / X \to D / F(X)$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Hopefully easy.
+\end{proof}
+
+
+\begin{proposition}[Fully faithful monoidal functors lift to group objects]
+  \label{0-full-faithful-grp}
+  \uses{}
+  \lean{CategoryTheory.Functor.Faithful.mapGrp, CategoryTheory.Functor.Full.mapGrp}
+  \leanok
+
+  If a monoidal functor $F : C \to D$ is fully faithful, then so is $\Grp(F) : \Grp C \to \Grp D$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Faithfulness is immediate.
+
+  For fullness, assume $f : F(G) \to F(H)$ is a morphism. By fullness of $F$, find $g : G \to H$ such that $F(g) = f$. $g$ is a morphism because we can pull back each diagram from $D$ to $C$ along $F$ which is faithful.
+\end{proof}
+
+
+\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
+  \label{0-hopf-cogrp-alg}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  From a $R$-Hopf algebra, one can build a cogroup object in the category of $R$-algebras.
+
+  From a cogroup object in the category of $R$-algebras, one can build a $R$-Hopf algebra.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Turn the arrows around.
+\end{proof}
+
+
+\begin{theorem}[Hopf algebras correspond to affine group schemes]
+  \label{0-hopf-equiv-aff-grp-sch}
+  \uses{}
+  \lean{hopfSpec.instFull, hopfSpec.instFaithful, essImage_hopfSpec}
+  \leanok
+
+  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
+\end{theorem}
+\begin{proof}
+  \uses{0-over-lim, 0-full-faithful-grp}
+  % \leanok
+
+  $\Spec : \Ring \to \Sch$ preserves finite limits, therefore so does $\Spec : \Ring / R \to \Sch / \Spec R$ according to Proposition \ref{0-over-lim}. Hence we get a corresponding functor $\Spec : \Hopf_R \to \GrpSch_R$ on group objects.
+
+  $\Spec : \Ring \to \Sch$ is fully faithful, therefore so is $\Spec : \Ring / R \to \Sch / \Spec R$ (this is known to mathlib), therefore so is $\Spec : \Hopf_R \to \GrpSch_R$ according to Proposition \ref{0-full-faithful-grp}.
+
+  Finally, for an affine group scheme $G$ over $\Spec R$, one can build an Hopf algebra structure on $\Gamma(G)$ by moving all the diagrams along the $\Gamma$-$\Spec$ adjunction.
+\end{proof}
+
+
+\subsection{Diagonalisable groups}
+
+
 \begin{definition}[Group-like elements]
   \label{0-grp-like}
   \uses{}
@@ -72,34 +161,6 @@
 \end{definition}
 
 
-\begin{proposition}
-  \label{DM_func}
-  \uses{0-spec-grp-alg}
-  % \lean{}
-  % \leanok
-
-  For every finitely generated commutative group $M$, the algebraic group $D(M)$
-  represents the functor $R \rightsquigarrow \Hom_{\mathsf{Grp}}(M,R^*)$.
-\end{proposition}
-\begin{proof}
-  See Proposition 12.3 in \cite{Milne_2017}.
-\end{proof}
-
-
-\begin{proposition}
-  \label{0-spec-grp-alg-basis}
-  \uses{0-spec-grp-alg}
-  % \lean{}
-  % \leanok
-
-  The choice of a basis for $M$ determines an isomorphism of $D(M)$
-  with a finite product of copies of $\Gm$ and various $\mu_n$.
-\end{proposition}
-\begin{proof}
-  See Proposition 12.3 in \cite{Milne_2017}.
-\end{proof}
-
-
 \begin{definition}
   \label{0-diag}
   \uses{0-spec-grp-alg}
@@ -110,29 +171,53 @@
   if it is isomorphic to $D_R(M)$ for some commutative group $M$.
 \end{definition}
 
+
 \begin{theorem}
   \label{0-diag-iff-grp-like-span}
-  \uses{0-spec-grp-alg}
-  \uses{0-diag}
-  An algebraic group $G$ over a field $k$ is diagonalizable
-  if and only if group-like elements span $\Gamma(G)$.
+  \uses{0-spec-grp-alg, 0-diag}
+  \lean{AlgebraicGeometry.Scheme.isDiagonalisable_iff_span_isGroupLikeElem_eq_top}
+  \leanok
+
+  An algebraic group $G$ over a field $k$ is diagonalizable if and only if group-like elements span $\Gamma(G)$.
 \end{theorem}
 \begin{proof}
   \uses{0-grp-like-lin-indep}
+  % \leanok
+
   See Theorem 12.8 in \cite{Milne_2017}.
 \end{proof}
 
+
+\begin{proposition}[The group algebra functor is fully faithful]
+  \label{0-full-grp-hopf-alg}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  The functor $G \rightsquigarrow R[G]$ from the category of groups to the category of Hopf algebras over $R$ is fully faithful.
+\end{proposition}
+\begin{proof}
+  \uses{0-diag-iff-grp-like-span, 0-grp-like-grp-alg, 0-grp-like-map}
+  % \leanok
+
+\end{proof}
+
+
 \begin{theorem}
-  \label{congr_fggrp_diag}
-  \uses{char_lattice}
+  \label{0-fg-comm-grp-equiv-diag-grp-sch}
+  \uses{1-1-char-lat}
   \uses{0-diag}
   The functor $M\rightsquigarrow D(M)$ is a contravariant equivalence
   from the category of finitely generated commutative groups to the category of
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).
 \end{theorem}
 \begin{proof}
-  \uses{0-diag-iff-grp-like-span, 0-spec-grp-alg-basis, 0-grp-like-grp-alg}
+  \uses{0-hopf-equiv-aff-grp-sch, 0-full-grp-hopf-alg}
   % \leanok
 
-  See Theorem 12.9(a) in \cite{Milne_2017}. Case work required.
+  The functor is essentially surjective by definition.
+  It's faithfull since, $M\rightsquigarrow k[M]$ and $\Spec$ are.
+  It's full by \ref{congr_hopf_affgrpsch} and \ref{0-full-grp-hopf-alg}.
+
+  Also, see Theorem 12.9(a) in \cite{Milne_2017}.
 \end{proof}

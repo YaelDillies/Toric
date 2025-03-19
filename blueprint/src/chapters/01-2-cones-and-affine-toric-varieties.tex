@@ -77,7 +77,7 @@ Fix a pair of dual real vector spaces $M$ and $N$.
 \end{proof}
 
 
-\begin{proposition}[Dual of a sumset]
+\begin{proposition}[Dual cone of a sumset]
   \label{1-2-dual-cone-add}
   \uses{1-2-3-dual-cone}
   % \lean{}
@@ -592,7 +592,7 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
   % \lean{}
   % \leanok
 
-  $U_\sigma := \Spec \C[S_\sigma]$ is an affine toric variety.
+  $U_\sigma := \Spec \bbC[S_\sigma]$ is an affine toric variety.
 \end{definition}
 
 
@@ -603,27 +603,27 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
   % \leanok
 
   \[
-    \dim U_\sigma = \dim N \iff \text{ the torus of $U_\sigma$ is } T_N = N \ox_[\Z] \C^* \iff \sigma \text{ is salient}
+    \dim U_\sigma = \dim N \iff \text{ the torus of $U_\sigma$ is } T_N = N \ox_[\Z] \bbC^* \iff \sigma \text{ is salient}.
   \]
 \end{theorem}
 \begin{proof}
-  \uses{1-1-14-aff-tor-var-spec-grp-alg, 1-2-12-salient-cone-tfae, 1-2-17-gordan-lemma}
+  \uses{1-1-14-char-spec-aff-mon-alg, 1-2-12-salient-cone-tfae, 1-2-17-gordan-lemma}
   % \leanok
 
   See \cite{Cox_2011}.
 \end{proof}
 
 
-\begin{proposition}[The Hilbert basis of the dual lattice of a cone]
-  \label{1-2-22-hilbert-basis}
-  \uses{0-hilbert-basis, 1-2-min-gen, 1-2-12-salient-cone, 1-2-17-dual-lat-cone}
+\begin{proposition}[The irreducible elements of the dual lattice of a cone]
+  \label{1-2-22-irred-dual-lat}
+  \uses{0-irred, 1-2-min-gen, 1-2-12-salient-cone, 1-2-17-dual-lat-cone}
   % \lean{}
   % \leanok
 
-  If $\sigma \subseteq N_\R$ is salient of maximal dimension, then the Hilbert basis $\mathcal H_{S_\sigma}$ contains the minimal generators of $\sigma^\vee$.
+  If $\sigma \subseteq N_\R$ is salient of maximal dimension, then the irreducible elements of $S_\sigma$ are precisely the minimal generators of $\sigma^\vee$.
 \end{proposition}
 \begin{proof}
-  \uses{0-hilbert-basis-finite}
+  \uses{0-irred-subset-gen, 0-irred-gen}
   % \leanok
 
   See \cite{Cox_2011}.
