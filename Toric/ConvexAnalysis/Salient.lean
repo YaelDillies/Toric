@@ -18,7 +18,7 @@ variable {E : Type*} [NormedAddCommGroup E] [TopologicalSpace E]
 theorem PointedCone.salient_tfae :
   [
     S.toConvexCone.Salient,
-    IsExposed ℝ S {(0 : E)},
+    IsExposed ℝ {0} S,
     ∀ (s : Submodule ℝ E), s.restrictScalars NNReal ≤ S → s = 0,
     ∀ (s : Submodule ℝ E), S.dual ≤ s.restrictScalars NNReal → S = ⊤
   ].TFAE := sorry
