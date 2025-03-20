@@ -1,11 +1,13 @@
 /-
-Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
+Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yaël Dillies, Michał Mrugała
+Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
+import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
@@ -72,13 +74,16 @@ object under `R`, and vice versa.
 section Michal
 variable {R : CommRingCat} {A : Type*} [CommRing A] [HopfAlgebra R A]
 
-open CommRingCat
+open MonoidalCategory in
+example : (op (R.mkUnder A)) ⊗ (op (R.mkUnder A)) = op (R.mkUnder (TensorProduct R A A)) := rfl
 
 noncomputable instance : Grp_Class <| op <| CommRingCat.mkUnder R A where
-  one := op <| (Bialgebra.counitAlgHom R A).toUnder
+  one := op (Bialgebra.counitAlgHom R A).toUnder
   mul := op <| by
-    refine (Bialgebra.comulAlgHom R A).toUnder ≫ (Algebra.TensorProduct.map ?_ ?_).toUnder <;>
-      exact @AlgHom.mk _ _ _ _ _ _ _ (_) (.id _) fun _ ↦ rfl
+    refine (Bialgebra.comulAlgHom R A).toUnder ≫ ?_
+    change _ ⟶ Under.mk _
+    simp [pushout.inr, WalkingSpan.right, WalkingPair.right, span]
+    sorry -- (Bialgebra.comulAlgHom R A).toUnder
   one_mul' := sorry
   mul_one' := sorry
   mul_assoc' := sorry
