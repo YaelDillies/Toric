@@ -67,23 +67,41 @@ the bottom edge can be obtained by composing the three.
 \end{proof}
 
 
-\begin{theorem}[Hopf algebras correspond to affine group schemes]
+\begin{proposition}[The category of Hopf algebras is equivalent to the category of affine group schemes]
   \label{0-hopf-equiv-aff-grp-sch}
+  \uses{}
+  \lean{hopfAlgEquivAffGrpSch}
+  \leanok
+
+  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-over-lim}
+  % \leanok
+
+  $\Spec : \Ring \to \AffSch$ is a contravariant equivalence which preserves finite limits, hence so is
+  $\Spec : \Ring_R \to \AffSch_{\Spec R}$ by Proposition \ref{0-over-lim}. Therefore we get an equivalence $\Grp(\Spec) : \Hopf_R \to \AffGrpSch_{\Spec R}$.
+\end{proof}
+
+
+\begin{theorem}[Hopf algebras correspond to affine group schemes]
+  \label{0-hopf-aff-grp-sch}
   \uses{}
   \lean{hopfSpec.instFull, hopfSpec.instFaithful, essImage_hopfSpec}
   \leanok
 
-  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
+  If $A$ is a $R$-Hopf algebra, then $\Spec A$ is naturally an affine group scheme over $\Spec R$.
+
+  If $G$ is an affine group scheme over $\Spec R$, then $\Gamma(G)$ is naturally an $R$-Hopf algebra.
 \end{theorem}
 \begin{proof}
-  \uses{0-over-lim, 0-full-faithful-grp}
+  \uses{0-hopf-cogrp-alg, 0-hopf-equiv-aff-grp-sch}
   % \leanok
 
-  $\Spec : \Ring \to \Sch$ preserves finite limits, therefore so does $\Spec : \Ring / R \to \Sch / \Spec R$ according to Proposition \ref{0-over-lim}. Hence we get a corresponding functor $\Spec : \Hopf_R \to \GrpSch_R$ on group objects.
+  Turn an unbundled Hopf algebra into a bundled one using Proposition \ref{0-hopf-cogrp-alg}. Turn
+  the bundled Hopf algebra into an affine group scheme using Proposition \ref{0-hopf-equiv-aff-grp-sch}. By definition, an affine group scheme is a group scheme that is affine.
 
-  $\Spec : \Ring \to \Sch$ is fully faithful, therefore so is $\Spec : \Ring / R \to \Sch / \Spec R$ (this is known to mathlib), therefore so is $\Spec : \Hopf_R \to \GrpSch_R$ according to Proposition \ref{0-full-faithful-grp}.
-
-  Finally, for an affine group scheme $G$ over $\Spec R$, one can build an Hopf algebra structure on $\Gamma(G)$ by moving all the diagrams along the $\Gamma$-$\Spec$ adjunction.
+  For the other way around, follow the steps backwards.
 \end{proof}
 
 
@@ -212,7 +230,7 @@ the bottom edge can be obtained by composing the three.
   diagonalizable algebraic groups (with quasi-inverse $G \rightsquigarrow X(G)$).
 \end{theorem}
 \begin{proof}
-  \uses{0-hopf-equiv-aff-grp-sch, 0-full-grp-hopf-alg}
+  \uses{0-hopf-aff-grp-sch, 0-full-grp-hopf-alg}
   % \leanok
 
   The functor is essentially surjective by definition.

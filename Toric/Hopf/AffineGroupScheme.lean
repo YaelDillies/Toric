@@ -50,7 +50,7 @@ noncomputable def algEquivSch : (Under R)ᵒᵖ ≌ Over <| AffineScheme.Spec.ob
 instance : algEquivSch (R := R).functor.Monoidal := sorry
 instance : algEquivSch (R := R).inverse.Monoidal := sorry
 
-noncomputable def hopfAlgEquivGrpSch :
+noncomputable def hopfAlgEquivAffGrpSch :
     Grp_ (Under R)ᵒᵖ ≌ Grp_ (Over <| AffineScheme.Spec.obj <| .op R) :=
   .mapGrp algEquivSch
 
