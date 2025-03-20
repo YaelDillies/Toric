@@ -301,12 +301,30 @@ namespace CategoryTheory.Equivalence
 variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
 variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
 
-noncomputable def mapGrp (e : C ≌ D) [e.functor.LaxMonoidal] [e.inverse.LaxMonoidal] :
+noncomputable def mapGrp (e : C ≌ D) [e.functor.Monoidal] [e.inverse.Monoidal]
+    [NatTrans.IsMonoidal e.unit] [NatTrans.IsMonoidal e.counit] :
     Grp_ C ≌ Grp_ D where
   functor := e.functor.mapGrp
   inverse := e.inverse.mapGrp
-  unitIso := sorry
-  counitIso := sorry
-  functor_unitIso_comp := sorry
+  unitIso := by
+    refine NatIso.ofComponents (fun X ↦ Grp_.mkIso (e.unitIso.app _) ?_ ?_) fun {X Y} f ↦ ?_
+    · dsimp
+      simp
+      have := NatTrans.IsMonoidal.unit (τ := e.unit)
+      change X.one ≫ e.unit.app X.X = _
+      sorry
+    · simp
+      sorry
+    · ext
+      simp
+  counitIso := by
+    refine NatIso.ofComponents (fun X ↦ Grp_.mkIso (e.counitIso.app _) ?_ ?_) fun {X Y} f ↦ ?_
+    · simp
+      sorry
+    · simp
+      sorry
+    · ext
+      simp
+  functor_unitIso_comp X := by ext; simp
 
 end CategoryTheory.Equivalence
