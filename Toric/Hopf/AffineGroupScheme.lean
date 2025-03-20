@@ -5,6 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
@@ -74,19 +75,29 @@ object under `R`, and vice versa.
 
 section Michal
 
-attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
+--attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
 
-variable {R : CommRingCat} {A : Under R} [HopfAlgebra R A.right]
+variable {R : CommRingCat} {A : Type*} [CommRing A] [HopfAlgebra R A]
 
-instance : Grp_Class <| Over.mk <| Spec.map <| A.hom := sorry
-  /- one := Over.homMk _ _
-  mul := _
-  one_mul' := _
-  mul_one' := _
-  mul_assoc' := _
-  inv := _
-  left_inv' := _
-  right_inv' := _ -/
+open MonoidalCategory in
+example : (op (R.mkUnder A)) ⊗ (op (R.mkUnder A)) = op (R.mkUnder (TensorProduct R A A)) := rfl
+
+noncomputable instance : Grp_Class <| op <| CommRingCat.mkUnder R A where
+  one := op <| (Bialgebra.counitAlgHom R A).toUnder
+  mul := op <| (by
+    refine (Bialgebra.comulAlgHom R A).toUnder ≫ ?_
+    change _ ⟶ Under.mk _
+    simp [pushout.inr, WalkingSpan.right, WalkingPair.right, span]
+    sorry)--(Bialgebra.comulAlgHom R A).toUnder
+
+
+
+  one_mul' := sorry
+  mul_one' := sorry
+  mul_assoc' := sorry
+  inv := sorry
+  left_inv' := sorry
+  right_inv' := sorry
 
 end Michal
 
