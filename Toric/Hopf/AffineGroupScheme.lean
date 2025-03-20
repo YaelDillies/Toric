@@ -5,11 +5,9 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.Algebra.Category.Ring.Under.Basic
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
