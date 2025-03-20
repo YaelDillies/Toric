@@ -5,10 +5,11 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
+import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -32,7 +33,6 @@ R-Hopf algebra → Group scheme over Spec R
 open AlgebraicGeometry CategoryTheory Opposite Limits
 
 attribute [local instance] Over.chosenFiniteProducts -- From #21399
-attribute [local instance] Under.chosenFiniteProducts
 
 variable {R : CommRingCat}
 
@@ -73,20 +73,21 @@ object under `R`, and vice versa.
 -/
 
 section Michal
+variable {R : CommRingCat} {A : Type*} [CommRing A] [HopfAlgebra R A]
 
-attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
+open CommRingCat
 
-variable {R : CommRingCat} {A : Under R} [HopfAlgebra R A.right]
-
-instance : Grp_Class <| Over.mk <| Spec.map <| A.hom := sorry
-  /- one := Over.homMk _ _
-  mul := _
-  one_mul' := _
-  mul_one' := _
-  mul_assoc' := _
-  inv := _
-  left_inv' := _
-  right_inv' := _ -/
+noncomputable instance : Grp_Class <| op <| CommRingCat.mkUnder R A where
+  one := op <| (Bialgebra.counitAlgHom R A).toUnder
+  mul := op <| by
+    refine (Bialgebra.comulAlgHom R A).toUnder ≫ (Algebra.TensorProduct.map ?_ ?_).toUnder <;>
+      exact @AlgHom.mk _ _ _ _ _ _ _ (_) (.id _) fun _ ↦ rfl
+  one_mul' := sorry
+  mul_one' := sorry
+  mul_assoc' := sorry
+  inv := sorry
+  left_inv' := sorry
+  right_inv' := sorry
 
 end Michal
 
