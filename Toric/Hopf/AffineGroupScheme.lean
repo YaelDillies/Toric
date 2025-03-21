@@ -72,14 +72,61 @@ object under `R`, and vice versa.
 section Michal
 variable {R : CommRingCat} {A : Type*} [CommRing A] [HopfAlgebra R A]
 
-open CommRingCat
+namespace HopfAlgebra
+
+example (a b : A) : antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
+  sorry
+
+end HopfAlgebra
+
+open CommRingCat MonoidalCategory
+
+variable (A) in
+noncomputable def UnderOp.Unitor.ringHom := (Algebra.TensorProduct.lid R A).symm.toAlgHom
+
+-- (UnderOp.Unitor.ringHom A).toRingHom
+example : toAlgHom (unop (λ_ (op (R.mkUnder A))).hom) =
+    (Algebra.TensorProduct.map (.mk (R := R) (.id R) (fun _ ↦ rfl)) (.mk (R := R) (.id A) (fun _ ↦ rfl)))
+      ∘ (Algebra.TensorProduct.lid R A).symm.toAlgHom
+    := by
+  sorry
+
+noncomputable def UnderOp.Unitor.hom : 𝟙_ (Under R)ᵒᵖ ⊗ op (R.mkUnder A) ⟶ op (R.mkUnder A) := by
+  apply op
+  change R.mkUnder A ⟶ _
+  refine (Algebra.TensorProduct.lid R A).symm.toAlgHom.toUnder ≫
+      (Algebra.TensorProduct.map ?_ ?_).toUnder
+  · exact .mk (.id R) (fun _ ↦ rfl)
+  exact .mk (.id A) (fun _ ↦ rfl)
+
+lemma UnderOp.Unitor.hom_eq : (λ_ (op (R.mkUnder A))).hom = UnderOp.Unitor.hom := rfl
+
+noncomputable def UnderOp.RightWhisker.hom :
+  op { left := { as := PUnit.unit }, right := of ↑R, hom := ofHom (algebraMap ↑R ↑R) } ⊗ op (R.mkUnder A) ⟶
+  op { left := { as := PUnit.unit }, right := of A, hom := ofHom (algebraMap (↑R) A) } ⊗ op (R.mkUnder A) := by
+  apply op
+  change unop (op (R.mkUnder A) ⊗ _) ⟶ unop ((op (Under.mk (𝟙 R))) ⊗ _)
+  refine (Algebra.TensorProduct.map ?_ ?_).toUnder
+  · exact @AlgHom.mk _ _ _ _ _ _ _ (_) ((Bialgebra.counitAlgHom R A).toRingHom) (Bialgebra.counitAlgHom (↑R) A).commutes'
+  exact @AlgHom.mk _ _ _ _ _ _ _ (_) (.id _) fun _ ↦ rfl
+
+example : op (Bialgebra.counitAlgHom (↑R) A).toUnder ▷ op (R.mkUnder A) = UnderOp.RightWhisker.hom := by
+  simp [UnderOp.RightWhisker.hom]
+  ext
+  · simp
+    sorry
+  sorry
 
 noncomputable instance : Grp_Class <| op <| CommRingCat.mkUnder R A where
   one := op <| (Bialgebra.counitAlgHom R A).toUnder
   mul := op <| by
     refine (Bialgebra.comulAlgHom R A).toUnder ≫ (Algebra.TensorProduct.map ?_ ?_).toUnder <;>
       exact @AlgHom.mk _ _ _ _ _ _ _ (_) (.id _) fun _ ↦ rfl
-  one_mul' := sorry
+  one_mul' := by
+    rw [UnderOp.Unitor.hom_eq, UnderOp.Unitor.hom]
+    rw [← unop_inj_iff]
+    simp
+    sorry
   mul_one' := sorry
   mul_assoc' := sorry
   inv := sorry
