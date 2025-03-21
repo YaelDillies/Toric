@@ -81,6 +81,11 @@ variable [Semiring A] [HopfAlgebra R A]
 
 lemma antipode_anti_comm (a b : A) :
     antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
+section
+variable [Semiring A] [HopfAlgebra R A]
+
+lemma antipode_anti_comm (a b : A) :
+    antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
   sorry
 end
 
