@@ -70,14 +70,30 @@ object under `R`, and vice versa.
 -/
 
 section Michal
-variable {R : CommRingCat} {A : Type*} [CommRing A] [HopfAlgebra R A]
 
+variable {R : CommRingCat} {A : Type*}
 namespace HopfAlgebra
 
-example (a b : A) : antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
+section
+variable [Semiring A] [HopfAlgebra R A]
+
+lemma antipode_anti_comm (a b : A) :
+    antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
   sorry
+end
+
+section
+variable [CommRing A] [HopfAlgebra R A]
+
+lemma antipode_comm (a b : A) :
+    antipode (R := R) (a * b) = antipode (R := R) a * antipode (R := R) b := by
+  rw [antipode_anti_comm a b, mul_comm]
+
+end
 
 end HopfAlgebra
+
+variable [CommRing A] [HopfAlgebra R A]
 
 open CommRingCat MonoidalCategory
 
