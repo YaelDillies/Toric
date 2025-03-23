@@ -6,12 +6,10 @@ Authors: Paul Reichert
 import Mathlib
 
 /-!
-# Cone hull and pointed cone hull
+# Pointed cone hull and polyhedral cones
 
-We define the (pointed) cone hull and what it means for a pointed cone to be polyhedral.
+We define the pointed cone hull and what it means for a pointed cone to be polyhedral.
 -/
-
-open scoped Pointwise
 
 variable {𝕜 E : Type*} [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E]
 
