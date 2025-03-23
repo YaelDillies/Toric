@@ -31,12 +31,12 @@ def IsPolyhedral (c : PointedCone 𝕜 E) : Prop :=
   ∃ t : Finset E, c = PointedCone.span 𝕜 t
 
 protected def IsPolyhedral.span (s : Set E) (h : s.Finite) :
-    (PointedCone.span 𝕜 s).IsPolyhedral :=
+    (span 𝕜 s).IsPolyhedral :=
   ⟨h.toFinset, by simp⟩
 
 @[simp]
 theorem IsPolyhedral.bot :
-    (⊥ : PointedCone 𝕜 E).IsPolyhedral := by
-  refine ⟨{0}, by simp⟩
+    (⊥ : PointedCone 𝕜 E).IsPolyhedral :=
+  ⟨{0}, by simp⟩
 
 end PointedCone
