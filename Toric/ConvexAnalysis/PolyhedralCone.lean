@@ -30,7 +30,7 @@ theorem subset_span {S : Set E} :
 def IsPolyhedral (c : PointedCone 𝕜 E) : Prop :=
   ∃ t : Finset E, c = PointedCone.span 𝕜 t
 
-protected def IsPolyhedral.span (s : Set E) (h : s.Finite) :
+protected def IsPolyhedral.span {s : Set E} (h : s.Finite) :
     (span 𝕜 s).IsPolyhedral :=
   ⟨h.toFinset, by simp⟩
 
