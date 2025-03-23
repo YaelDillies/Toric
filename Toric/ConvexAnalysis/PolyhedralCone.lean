@@ -33,6 +33,14 @@ theorem PointedCone.span_eq_submoduleSpan {S : Set E} :
 def PointedCone.IsPolyhedral (c : PointedCone 𝕜 E) : Prop :=
   ∃ t : Finset E, c = PointedCone.span 𝕜 t
 
+def PointedCone.isPolyhedral_def {c : PointedCone 𝕜 E} :
+    c.IsPolyhedral ↔ ∃ s : Finset E, c = PointedCone.span 𝕜 s :=
+  Iff.rfl
+
+def PointedCone.isPolyhedral_span (s : Set E) [Fintype s] :
+    (PointedCone.span 𝕜 s).IsPolyhedral :=
+  ⟨s.toFinset, by simp⟩
+
 @[simp]
 theorem PointedCone.IsPolyhedral.bot :
     (⊥ : PointedCone 𝕜 E).IsPolyhedral := by
