@@ -1,5 +1,6 @@
 import Toric.AffineMonoid.Embedding
 import Toric.AffineMonoid.Irreducible
+import Toric.ConvexAnalysis.PolyhedralCone
 import Toric.ConvexAnalysis.Polytope
 import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
