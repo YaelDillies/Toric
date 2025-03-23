@@ -18,13 +18,16 @@ variable {𝕜 E : Type*} [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 
 variable (𝕜) in
 /-- The span of a set `S` is the smallest pointed cone that contains `S`.
 Pointed cones being defined as submodules over nonnegative scalars, this is exactly the
-submodule span of `S`. -/
+submodule span of `S` w.r.t. nonnegative scalars. -/
 def PointedCone.span (S : Set E) : PointedCone 𝕜 E :=
   Submodule.span _ S
 
 theorem PointedCone.subset_span {S : Set E} :
     S ⊆ PointedCone.span 𝕜 S :=
   Submodule.subset_span
+
+theorem PointedCone.span_eq_submoduleSpan {S : Set E} :
+    PointedCone.span 𝕜 S = Submodule.span _ S := rfl
 
 /-- A pointed cone is polyhedral if it is the convex hull of finitely many points. -/
 def PointedCone.IsPolyhedral (c : PointedCone 𝕜 E) : Prop :=
