@@ -3,7 +3,7 @@ Copyright (c) 2025 Paul Reichert. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Reichert
 -/
-import Mathlib
+import Mathlib.Analysis.Convex.Cone.Pointed
 
 /-!
 # Pointed cone hull and polyhedral cones
