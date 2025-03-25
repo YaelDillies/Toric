@@ -47,9 +47,6 @@ noncomputable def algEquivSch : (Under R)ᵒᵖ ≌ Over <| AffineScheme.Spec.ob
   (Over.opEquivOpUnder R).symm.trans <|
     Over.postEquiv (.op R) AffineScheme.equivCommRingCat.symm
 
-instance : algEquivSch (R := R).functor.Monoidal := sorry
-instance : algEquivSch (R := R).inverse.Monoidal := sorry
-
 noncomputable def hopfAlgEquivAffGrpSch :
     Grp_ (Under R)ᵒᵖ ≌ Grp_ (Over <| AffineScheme.Spec.obj <| .op R) :=
   .mapGrp algEquivSch

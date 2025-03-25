@@ -5,6 +5,8 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
+import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
+import Toric.Mathlib.CategoryTheory.Limits.ExactFunctor
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 /-!
@@ -280,10 +282,12 @@ end
 open Limits
 
 namespace CategoryTheory.Functor
-universe v₁ v₂ u₁ u₂
+universe v₁ v₂ v₃ u₁ u₂ u₃
 variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts.{v₁} C]
 variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts.{v₂} D]
-variable (F : C ⥤ D) [PreservesFiniteProducts F]
+variable {E : Type u₃} [Category.{v₃} E] [ChosenFiniteProducts E]
+variable (F F' : C ⥤ D) [PreservesFiniteProducts F] [PreservesFiniteProducts F']
+variable (G : D ⥤ E) [PreservesFiniteProducts G]
 
 attribute [local instance] monoidalOfChosenFiniteProducts
 
@@ -293,6 +297,27 @@ protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
 protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
   map_surjective := F.mapMon.map_surjective
 
+@[simps!]
+noncomputable def mapGrpIdIso : mapGrp (𝟭 C) ≅ 𝟭 (Grp_ C) :=
+  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
+    (by simp [μ_of_chosenFiniteProducts]))
+
+@[simps!]
+noncomputable def mapGrpCompIso : (F ⋙ G).mapGrp ≅ F.mapGrp ⋙ G.mapGrp :=
+  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
+    (by simp [μ_of_chosenFiniteProducts]))
+
+attribute [local instance] NatTrans.monoidal_of_preservesFiniteProducts
+
+variable {F F'} in
+@[simps!]
+noncomputable def mapGrpNatTrans (f : F ⟶ F') : F.mapGrp ⟶ F'.mapGrp where app X := .mk (f.app _)
+
+variable {F F'} in
+@[simps!]
+noncomputable def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp := by
+  refine NatIso.ofComponents (fun X ↦ Grp_.mkIso (e.app _)) fun {X Y} f ↦ by ext; simp
+
 end CategoryTheory.Functor
 
 universe v₁ v₂ u₁ u₂
@@ -301,12 +326,15 @@ namespace CategoryTheory.Equivalence
 variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
 variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
 
-noncomputable def mapGrp (e : C ≌ D) [e.functor.LaxMonoidal] [e.inverse.LaxMonoidal] :
-    Grp_ C ≌ Grp_ D where
+attribute [local instance] Functor.monoidalOfChosenFiniteProducts
+
+@[simps!]
+noncomputable def mapGrp (e : C ≌ D) : Grp_ C ≌ Grp_ D where
   functor := e.functor.mapGrp
   inverse := e.inverse.mapGrp
-  unitIso := sorry
-  counitIso := sorry
-  functor_unitIso_comp := sorry
+  unitIso :=
+    Functor.mapGrpIdIso.symm ≪≫ Functor.mapGrpNatIso e.unitIso ≪≫ Functor.mapGrpCompIso _ _
+  counitIso :=
+    (Functor.mapGrpCompIso _ _).symm ≪≫ Functor.mapGrpNatIso e.counitIso ≪≫ Functor.mapGrpIdIso
 
 end CategoryTheory.Equivalence
