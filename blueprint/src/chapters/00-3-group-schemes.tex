@@ -17,13 +17,13 @@ the bottom edge can be obtained by composing the three.
 First, let's do the left edge.
 
 
-\begin{proposition}[Antipodes are antihomomorphisms]
+\begin{proposition}[The antipode is a antihomomorphism]
   \label{0-hopf-antipode-antihom}
   \uses{}
-  % \lean{}
-  % \leanok
+  \lean{HopfAlgebra.antipode_mul_antidistrib, HopfAlgebra.antipode_mul_distrib}
+  \leanok
 
-  The antipode map is anti-commutative.
+  If $A$ is a $R$-Hopf algebra, then the antipode map $s : A \to A$ is anti-commutative, ie $s(a * b) = s(b) * s(a)$. If further $A$ is commutative, then $s(a * b) = s(a) * s(b)$.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -33,25 +33,9 @@ First, let's do the left edge.
 \end{proof}
 
 
-\begin{proposition}[Antipodes of commutative Hopf algebras are homomorphisms]
-  \label{0-commhopf-antipode-hom}
-  \uses{}
-  % \lean{}
-  % \leanok
-
-  If $A$ is a commutative Hopf $R$-algebra, then the antipode is an $R$-algebra homomorphism.
-\end{proposition}
-\begin{proof}
-  \uses{0-hopf-antipode-antihom}
-  % \leanok
-
-  Follows immediately from \ref{0-hopf-antipode-antihom} and commutativity.
-\end{proof}
-
-
 \begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
   \label{0-hopf-cogrp-alg}
-  \uses{0-hopf-antipode-antihom}
+  \uses{}
   % \lean{}
   % \leanok
 
@@ -60,7 +44,7 @@ First, let's do the left edge.
   From a cogroup object in the category of $R$-algebras, one can build a $R$-Hopf algebra.
 \end{proposition}
 \begin{proof}
-  \uses{}
+  \uses{0-hopf-antipode-antihom}
   % \leanok
 
   Turn the arrows around.
