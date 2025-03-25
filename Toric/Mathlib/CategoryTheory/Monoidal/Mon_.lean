@@ -191,3 +191,14 @@ def mapMon (e : C ≌ D) [e.functor.LaxMonoidal] [e.inverse.LaxMonoidal] : Mon_ 
   functor_unitIso_comp := sorry
 
 end CategoryTheory.Equivalence
+
+namespace CategoryTheory.Functor
+variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C] [BraidedCategory C]
+variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory D] [BraidedCategory D]
+
+open LaxMonoidal
+
+/-- Michał thinks this is not true. -/
+instance mapMon.instMonoidal (F : C ⥤ D) [F.Monoidal] : F.mapMon.Monoidal := sorry
+
+end CategoryTheory.Functor
