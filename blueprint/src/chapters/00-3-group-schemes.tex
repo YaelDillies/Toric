@@ -14,6 +14,61 @@ the bottom edge can be obtained by composing the three.
 %         |                    |
 % R-Hopf algebra -> Group scheme over Spec R
 
+First, let's do the left edge.
+
+
+\begin{proposition}[Antipodes are antihomomorphisms]
+  \label{0-hopf-antipode-antihom}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  The antipode map is anti-commutative.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Any standard reference will have a proof.
+\end{proof}
+
+
+\begin{proposition}[Antipodes of commutative Hopf algebras are homomorphisms]
+  \label{0-commhopf-antipode-hom}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  If $A$ is a commutative Hopf $R$-algebra, then the antipode is an $R$-algebra homomorphism.
+\end{proposition}
+\begin{proof}
+  \uses{0-hopf-antipode-antihom}
+  % \leanok
+
+  Follows immediately from \ref{0-hopf-antipode-antihom} and commutativity.
+\end{proof}
+
+
+\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
+  \label{0-hopf-cogrp-alg}
+  \uses{0-hopf-antipode-antihom}
+  % \lean{}
+  % \leanok
+
+  From a $R$-Hopf algebra, one can build a cogroup object in the category of $R$-algebras.
+
+  From a cogroup object in the category of $R$-algebras, one can build a $R$-Hopf algebra.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Turn the arrows around.
+\end{proof}
+
+
+Second, let's do the top edge.
+
 
 \begin{proposition}[Limit-preserving functors lift to over categories]
   \label{0-over-lim}
@@ -48,45 +103,20 @@ the bottom edge can be obtained by composing the three.
   For fullness, assume $f : F(G) \to F(H)$ is a morphism. By fullness of $F$, find $g : G \to H$ such that $F(g) = f$. $g$ is a morphism because we can pull back each diagram from $D$ to $C$ along $F$ which is faithful.
 \end{proof}
 
-\begin{proposition}[Antipodes are antihomomorphisms]
-  \label{0-hopf-antipode-antihom}
+
+\begin{proposition}[Equivalences lift to group object categories]
+  \label{0-grp-equiv}
   \uses{}
   % \lean{}
   % \leanok
 
-  The antipode map is anti-commutative.
-\end{proposition}
-
-\begin{proposition}[Antipodes of commutative Hopf algebras are homomorphisms]
-  \label{0-commhopf-antipode-hom}
-  \uses{}
-  % \lean{}
-  % \leanok
-
-  If $A$ is a commutative Hopf $R$-algebra, then the antipode is an $R$-algebra homomorphism.
-\end{proposition}
-\begin{proof}
-  \uses{0-hopf-antipode-antihom}
-  % \leanok
-
-  Follows immediately from \ref{0-hopf-antipode-antihom} and commutativity.
-\end{proof}
-
-\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
-  \label{0-hopf-cogrp-alg}
-  \uses{0-hopf-antipode-antihom}
-  % \lean{}
-  % \leanok
-
-  From a $R$-Hopf algebra, one can build a cogroup object in the category of $R$-algebras.
-
-  From a cogroup object in the category of $R$-algebras, one can build a $R$-Hopf algebra.
+  If $e : C \backsimeq D$ is an equivalence of cartesian-monoidal categories, then $\Grp(e) : \Grp(C) \backsimeq \Grp(D)$ too is an equivalence of categories.
 \end{proposition}
 \begin{proof}
   \uses{}
   % \leanok
 
-  Turn the arrows around.
+  Transfer all diagrams.
 \end{proof}
 
 
@@ -99,12 +129,15 @@ the bottom edge can be obtained by composing the three.
   The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
 \end{proposition}
 \begin{proof}
-  \uses{0-over-lim}
+  \uses{0-over-lim, 0-grp-equiv}
   % \leanok
 
   $\Spec : \Ring \to \AffSch$ is a contravariant equivalence which preserves finite limits, hence so is
   $\Spec : \Ring_R \to \AffSch_{\Spec R}$ by Proposition \ref{0-over-lim}. Therefore we get an equivalence $\Grp(\Spec) : \Hopf_R \to \AffGrpSch_{\Spec R}$.
 \end{proof}
+
+
+The right edge is trivial. Finally, we obtain the bottom edge by composing the other three.
 
 
 \begin{theorem}[Hopf algebras correspond to affine group schemes]
