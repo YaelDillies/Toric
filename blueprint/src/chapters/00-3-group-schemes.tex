@@ -36,8 +36,11 @@ First, let's do the left edge.
 \begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
   \label{0-hopf-cogrp-alg}
   \uses{}
-  % \lean{}
-  % \leanok
+  \lean{instGrp_ClassOppositeCommAlgCarrierOpOf,
+        instIsMon_HomOppositeCommAlgCarrierOpOfHomToAlgHomBialgHom,
+        instHopfAlgebraCarrierCarrierUnopCommAlg,
+        IsMon_Hom.toBialgHom}
+  \leanok
 
   From a $R$-Hopf algebra, one can build a cogroup object in the category of $R$-algebras.
 
@@ -45,7 +48,7 @@ First, let's do the left edge.
 \end{proposition}
 \begin{proof}
   \uses{0-hopf-antipode-antihom}
-  % \leanok
+  \leanok
 
   Turn the arrows around.
 \end{proof}
