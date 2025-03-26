@@ -10,6 +10,7 @@ import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
 import Toric.Hopf.AffineGroupScheme
+import Toric.Hopf.CommAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -28,6 +29,7 @@ import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
+import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.ExactFunctor
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
@@ -48,6 +50,7 @@ import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.MonoidObjectAction.Basic
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
