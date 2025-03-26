@@ -283,6 +283,17 @@ lemma associator_inv_unop_hom :
     rw [this]; rfl
   ext <;> simp <;> rfl
 
+variable {C} in
+lemma tensorHom_unop_hom {D : CommAlg R} (f : A ⟶ C) (g : B ⟶ D) :
+    (MonoidalCategoryStruct.tensorHom f.op g.op).unop.hom =
+      (Algebra.TensorProduct.map f.hom g.hom) := by
+  rw [MonoidalCategory.tensorHom_def]
+  ext
+  simp only [unop_comp, CommAlg.hom_comp, CommAlg.rightWhisker_hom, CommAlg.hom_ofHom,
+    CommAlg.leftWhisker_hom]
+  rw [← Algebra.TensorProduct.map_comp]
+  simp
+
 end Coprod
 
 end CommAlg

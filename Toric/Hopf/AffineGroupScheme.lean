@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Hopf.CommAlg
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
@@ -77,148 +78,9 @@ section leftEdge
 
 universe u
 
-variable {R : CommRingCat.{u}} {A B C : Type u}
-namespace HopfAlgebra
+section hopfToGrp
 
-section
-variable [Semiring A] [HopfAlgebra R A]
-
-lemma antipode_anti_comm (a b : A) :
-    antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
-section
-variable [Semiring A] [HopfAlgebra R A]
-
-lemma antipode_anti_comm (a b : A) :
-    antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
-  sorry
-end
-
-section
-variable [CommRing A] [HopfAlgebra R A]
-
-lemma antipode_comm (a b : A) :
-    antipode (R := R) (a * b) = antipode (R := R) a * antipode (R := R) b := by
-  rw [antipode_anti_comm a b, mul_comm]
-
-variable (R A) in
-def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap antipode antipode_one antipode_comm
-
-end
-
-end HopfAlgebra
-
-section Algebra
-
-variable [CommRing A] [Algebra R A] [CommRing B] [Algebra R B] [CommRing C] [Algebra R C]
-
-open CommRingCat MonoidalCategory Opposite TensorProduct
-
-lemma UnderOp.rightWhisker_hom (f : A →ₐ[R] B)  :
-    (f.toUnder.op ▷ op (R.mkUnder C)).unop.right.hom =
-      (Algebra.TensorProduct.map (toAlgHom f.toUnder) (.id _ _)).toRingHom := by
-  let F : op (R.mkUnder B) ⊗ op (R.mkUnder C) ⟶ op (R.mkUnder A) ⊗ op (R.mkUnder C) :=
-    (Algebra.TensorProduct.map (by exact ⟨f.toRingHom, f.commutes'⟩) (.id _ _)).toUnder.op
-  show _ = F.unop.right.hom
-  congr 3
-  ext
-  · simp
-    rfl
-  simp only [ChosenFiniteProducts.whiskerRight_snd]
-  apply Quiver.Hom.unop_inj
-  ext (x : R.mkUnder C)
-  trans ((1 : R.mkUnder B) ⊗ₜ[R] x:)
-  · rfl
-  trans (f 1) ⊗ₜ[R] x
-  · simp
-  · rfl
-
-lemma UnderOp.leftWhisker_hom (f : A →ₐ[R] B) :
-    (op (R.mkUnder C) ◁ f.toUnder.op).unop.right.hom =
-      (Algebra.TensorProduct.map (.id R (R.mkUnder C)) (toAlgHom f.toUnder)).toRingHom := by
-  let F : op (R.mkUnder C) ⊗ op (R.mkUnder B) ⟶ op (R.mkUnder C) ⊗ op (R.mkUnder A) :=
-    (Algebra.TensorProduct.map (.id _ _) (by exact ⟨f.toRingHom, f.commutes'⟩)).toUnder.op
-  show _ = F.unop.right.hom
-  congr 3
-  ext
-  · simp only [ChosenFiniteProducts.whiskerLeft_fst]
-    apply Quiver.Hom.unop_inj
-    ext (x : R.mkUnder C)
-    trans (x ⊗ₜ[R] (1 : R.mkUnder B):)
-    · rfl
-    trans x ⊗ₜ[R] f 1
-    · simp
-    · rfl
-  · simp
-    rfl
-
-end Algebra
-
-variable [CommRing A] [inst : HopfAlgebra R A]
-
-open CommRingCat MonoidalCategory
-
-variable (A) in
-noncomputable def UnderOp.Unitor.ringHom := (Algebra.TensorProduct.lid R A).symm.toAlgHom
-
--- (UnderOp.Unitor.ringHom A).toRingHom
-example :
-    toAlgHom (unop (λ_ (op (R.mkUnder A))).hom) =
-    (Algebra.TensorProduct.map (.mk (R := R) (.id R) (fun _ ↦ rfl)) (.mk (R := R) (.id A)
-      (fun _ ↦ rfl))) ∘ (Algebra.TensorProduct.lid R A).symm.toAlgHom := by
-  sorry
-
-noncomputable def UnderOp.Unitor.hom : 𝟙_ (Under R)ᵒᵖ ⊗ op (R.mkUnder A) ⟶ op (R.mkUnder A) := by
-  apply op
-  change R.mkUnder A ⟶ _
-  refine (Algebra.TensorProduct.lid R A).symm.toAlgHom.toUnder ≫
-      (Algebra.TensorProduct.map ?_ ?_).toUnder
-  · exact .mk (.id R) (fun _ ↦ rfl)
-  exact .mk (.id A) (fun _ ↦ rfl)
-
-lemma UnderOp.Unitor.hom_eq : (λ_ (op (R.mkUnder A))).hom = UnderOp.Unitor.hom := rfl
-
--- def UnderOp.rightWhiskerHom {}
-
--- noncomputable def UnderOp.RightWhisker.hom :
---   op (R.mkUnder R) ⊗ op (R.mkUnder A) ⟶
---   op (R.mkUnder A) ⊗ op (R.mkUnder A) := by
---   apply op
---   change unop (op (R.mkUnder A) ⊗ _) ⟶ unop ((op (Under.mk (𝟙 R))) ⊗ _)
---   refine (Algebra.TensorProduct.map ?_ ?_).toUnder
---   · exact @AlgHom.mk _ _ _ _ _ _ _ (_) ((Bialgebra.counitAlgHom R A).toRingHom)
---       (Bialgebra.counitAlgHom (↑R) A).commutes'
---   exact @AlgHom.mk _ _ _ _ _ _ _ (_) (.id _) fun _ ↦ rfl
-
-open TensorProduct
-
-def mkUnderRightEquiv (R : CommRingCat) (A : Type*) [CommRing A] [Algebra R A] :
-    (R.mkUnder A).right ≃ₐ[R] A where
-  __ := RingEquiv.refl _
-  commutes' _ := rfl
-
-variable (R A) in
-noncomputable
-def tensorProductMkUnder : A ⊗[R] A →ₐ[R] (R.mkUnder A).right ⊗[R] (R.mkUnder A).right :=
-  Algebra.TensorProduct.map (mkUnderRightEquiv R A).symm (mkUnderRightEquiv R A).symm
-
--- noncomputable
--- def HopfAlgebra.Grp_one := (Bialgebra.counitAlgHom R A)
-
-lemma foo : (Bialgebra.counitAlgHom R A).toUnder.op ▷ op (R.mkUnder A) ≫
-      ((tensorProductMkUnder R A).comp (Bialgebra.comulAlgHom R A)).toUnder.op =
-        (λ_ (op (R.mkUnder A))).hom := by
-  apply Quiver.Hom.unop_inj
-  ext x
-  simp only [AlgHom.toUnder_comp, op_comp, unop_comp, Quiver.Hom.unop_op, Category.assoc,
-    Under.comp_right, CommRingCat.hom_comp, UnderOp.rightWhisker_hom, AlgHom.toRingHom_eq_coe,
-    RingHom.coe_comp, Function.comp_apply, AlgHom.toUnder_right, Bialgebra.comulAlgHom_apply]
-  convert DFunLike.congr_arg
-      (Algebra.TensorProduct.map (AlgHom.id R R) (mkUnderRightEquiv R A).symm.toAlgHom)
-      (Coalgebra.rTensor_counit_comul (R := R) x)
-  induction CoalgebraStruct.comul (R := R) x with
-  | zero => simp
-  | tmul x y => rfl
-  | add x y _ _ => simp_all
+variable {R : CommRingCat.{u}} {A : Type u} [CommRing A] [HopfAlgebra R A]
 
 noncomputable instance : Grp_Class <| op <| CommAlg.of R A where
   one := (CommAlg.ofHom <| Bialgebra.counitAlgHom R A).op
@@ -263,6 +125,20 @@ noncomputable instance : Grp_Class <| op <| CommAlg.of R A where
     | tmul x y => rfl
     | add x y _ _ => simp_all
 
+variable {B : Type u} [CommRing B] [HopfAlgebra R B] {f : A →ₐc[R] B}
+
+instance : IsMon_Hom (CommAlg.ofHom (f : A →ₐ[R] B)).op where
+  one_hom := by
+    apply Quiver.Hom.unop_inj
+    ext
+    simp [one]
+  mul_hom := by
+    apply Quiver.Hom.unop_inj
+    ext
+    simp only [mul, unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
+        CommAlg.tensorHom_unop_hom]
+    rw [BialgHomClass.map_comp_comulAlgHom]
+
 end hopfToGrp
 
 section grpToHopfObj
@@ -270,8 +146,6 @@ section grpToHopfObj
 variable {G : (CommAlg.{u} R)ᵒᵖ} [Grp_Class G]
 
 open MonoidalCategory
-
-variable {C : Type*} [Category C] [MonoidalCategory C]
 
 noncomputable
 instance : Bialgebra R G.unop :=
@@ -307,19 +181,37 @@ instance : HopfAlgebra R G.unop where
   mul_antipode_rTensor_comul := by
     convert congr(($(Grp_Class.left_inv G)).unop.hom.toLinearMap)
     simp [-Grp_Class.left_inv]
-    show _ = _ ∘ₗ CoalgebraStruct.comul
     rw [← LinearMap.comp_assoc]
     congr 1
-    ext x
+    ext
     rfl
   mul_antipode_lTensor_comul := by
     convert congr(($(Grp_Class.right_inv G)).unop.hom.toLinearMap)
     simp [-Grp_Class.right_inv]
-    show _ = _ ∘ₗ CoalgebraStruct.comul
     rw [← LinearMap.comp_assoc]
     congr 1
-    ext x
+    ext
     rfl
+
+variable {H : (CommAlg R)ᵒᵖ} [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f]
+
+def IsMon_Hom.toCoalgHom : H.unop →ₗc[R] G.unop :=
+  { f.unop.hom with
+    map_smul' := by simp
+    counit_comp := by
+      exact congr(($(IsMon_Hom.one_hom (f := f))).unop.hom.toLinearMap)
+    map_comp_comul := by
+      convert congr(($((IsMon_Hom.mul_hom (f := f)).symm)).unop.hom.toLinearMap)
+      simp
+      rw [←Quiver.Hom.op_unop (f ⊗ f)]
+      show _ = (CommAlg.Hom.hom ((unop f).op ⊗ (unop f).op).unop).toLinearMap
+          ∘ₗ (CommAlg.Hom.hom μ[H].unop).toLinearMap
+      rw [CommAlg.tensorHom_unop_hom]
+      congr 1
+      }
+
+def IsMon_Hom.toBialgHom : H.unop →ₐc[R] G.unop :=
+  { IsMon_Hom.toCoalgHom f, f.unop.hom with }
 
 end grpToHopfObj
 
