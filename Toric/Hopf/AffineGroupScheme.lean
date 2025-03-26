@@ -12,6 +12,8 @@ import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.Basic
+import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -32,7 +34,7 @@ R-Hopf algebra → Group scheme over Spec R
 ```
 -/
 
-open AlgebraicGeometry CategoryTheory Opposite Limits
+open AlgebraicGeometry CategoryTheory Opposite Limits Mon_Class
 
 attribute [local instance] Over.chosenFiniteProducts -- From #21399
 
@@ -267,16 +269,38 @@ section grpToHopfObj
 
 variable {G : (CommAlg.{u} R)ᵒᵖ} [Grp_Class G]
 
-instance : Bialgebra R G.unop where
-  comul := sorry
-  counit := sorry
-  coassoc := sorry
-  rTensor_counit_comp_comul := sorry
-  lTensor_counit_comp_comul := sorry
-  counit_one := sorry
-  mul_compr₂_counit := sorry
-  comul_one := sorry
-  mul_compr₂_comul := sorry
+open MonoidalCategory
+
+variable {C : Type*} [Category C] [MonoidalCategory C]
+
+noncomputable
+instance : Bialgebra R G.unop :=
+  .mkAlgHoms μ[G].unop.hom η[G].unop.hom
+  (by
+    convert congr(($((Mon_Class.mul_assoc_flip G).symm)).unop.hom)
+    · simp [-Mon_Class.mul_assoc]
+      rw [CommAlg.associator_inv_unop_hom]
+      rw [← Quiver.Hom.op_unop μ[G]]
+      rw [CommAlg.rightWhisker_hom]
+      simp
+      rfl
+    simp
+    rw [← Quiver.Hom.op_unop μ[G]]
+    rw [CommAlg.leftWhisker_hom]
+    rfl)
+  (by
+    convert congr(($(Mon_Class.one_mul G)).unop.hom)
+    simp [-Mon_Class.one_mul]
+    rw [← Quiver.Hom.op_unop η[G]]
+    rw [CommAlg.rightWhisker_hom]
+    rfl)
+  (by
+    convert congr(($(Mon_Class.mul_one G)).unop.hom)
+    simp [-Mon_Class.mul_one]
+    rw [← Quiver.Hom.op_unop η[G]]
+    rw [CommAlg.leftWhisker_hom]
+    rfl)
+
 
 end grpToHopfObj
 

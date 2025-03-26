@@ -11,6 +11,26 @@ open CategoryTheory ChosenFiniteProducts Mon_Class MonoidalCategory
 
 section
 
+variable {C : Type*} [Category C] [MonoidalCategory C]
+
+namespace Mon_Class
+
+theorem mul_assoc_flip (X : C) [Mon_Class X] : X ◁ μ ≫ μ = (α_ X X X).inv ≫ μ ▷ X ≫ μ := by simp
+
+end Mon_Class
+
+namespace Mon_
+
+-- Rewrite Mon_.mul_assoc_flip to this
+example {M : Mon_ C} : (M.X ◁ M.mul) ≫ M.mul = (α_ M.X M.X M.X).inv ≫ (M.mul ▷ M.X) ≫ M.mul :=
+  Mon_Class.mul_assoc_flip M.X
+
+end Mon_
+
+end
+
+section
+
 variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
 
 instance {M N : Mon_ C} (f : M ⟶ N) : IsMon_Hom f.hom := ⟨f.2, f.3⟩
