@@ -11,6 +11,7 @@ import Toric.Hopf.CommAlg
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
+import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -70,7 +71,7 @@ In this section, we provide ways to turn an unbundled `R`-Hopf algebra into a bu
 object under `R`, and vice versa.
 -/
 
-section Michal
+section leftEdge
 
 universe u
 
@@ -260,7 +261,26 @@ noncomputable instance : Grp_Class <| op <| CommAlg.of R A where
     | tmul x y => rfl
     | add x y _ _ => simp_all
 
-end Michal
+end hopfToGrp
+
+section grpToHopfObj
+
+variable {G : (CommAlg.{u} R)ᵒᵖ} [Grp_Class G]
+
+instance : Bialgebra R G.unop where
+  comul := sorry
+  counit := sorry
+  coassoc := sorry
+  rTensor_counit_comp_comul := sorry
+  lTensor_counit_comp_comul := sorry
+  counit_one := sorry
+  mul_compr₂_counit := sorry
+  comul_one := sorry
+  mul_compr₂_comul := sorry
+
+end grpToHopfObj
+
+end leftEdge
 
 /-!
 ### Right edge: Group schemes corresponds to group objects in the category of schemes
