@@ -286,3 +286,17 @@ lemma associator_inv_unop_hom :
 end Coprod
 
 end CommAlg
+
+
+section
+
+open MonoidalCategory
+
+variable {R : Type*} [CommRing R] {A B C : (CommAlg R)ᵒᵖ}
+
+example :
+    (α_ A B C).inv.unop.hom =
+      (Algebra.TensorProduct.assoc R A.unop B.unop C.unop).toAlgHom :=
+  CommAlg.associator_inv_unop_hom
+
+end
