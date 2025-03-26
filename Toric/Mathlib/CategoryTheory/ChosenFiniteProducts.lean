@@ -46,4 +46,7 @@ lemma prodComparisonIso_comp (X Y : C) :
       G.mapIso (prodComparisonIso F X Y) ≪≫ prodComparisonIso G (F.obj X) (F.obj Y) := by
   ext <;> simp [ChosenFiniteProducts.prodComparison, ← G.map_comp]
 
+-- TODO: Rename
+alias map_toUnit_comp_terminalComparison := map_toUnit_comp_terminalCompariso 
+
 end CategoryTheory.Functor
