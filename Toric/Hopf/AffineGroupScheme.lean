@@ -7,6 +7,7 @@ import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
+import Toric.Hopf.CommAlg
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
@@ -157,10 +158,10 @@ variable (A) in
 noncomputable def UnderOp.Unitor.ringHom := (Algebra.TensorProduct.lid R A).symm.toAlgHom
 
 -- (UnderOp.Unitor.ringHom A).toRingHom
-example : toAlgHom (unop (λ_ (op (R.mkUnder A))).hom) =
-    (Algebra.TensorProduct.map (.mk (R := R) (.id R) (fun _ ↦ rfl)) (.mk (R := R) (.id A) (fun _ ↦ rfl)))
-      ∘ (Algebra.TensorProduct.lid R A).symm.toAlgHom
-    := by
+example :
+    toAlgHom (unop (λ_ (op (R.mkUnder A))).hom) =
+    (Algebra.TensorProduct.map (.mk (R := R) (.id R) (fun _ ↦ rfl)) (.mk (R := R) (.id A)
+      (fun _ ↦ rfl))) ∘ (Algebra.TensorProduct.lid R A).symm.toAlgHom := by
   sorry
 
 noncomputable def UnderOp.Unitor.hom : 𝟙_ (Under R)ᵒᵖ ⊗ op (R.mkUnder A) ⟶ op (R.mkUnder A) := by
@@ -181,7 +182,8 @@ lemma UnderOp.Unitor.hom_eq : (λ_ (op (R.mkUnder A))).hom = UnderOp.Unitor.hom 
 --   apply op
 --   change unop (op (R.mkUnder A) ⊗ _) ⟶ unop ((op (Under.mk (𝟙 R))) ⊗ _)
 --   refine (Algebra.TensorProduct.map ?_ ?_).toUnder
---   · exact @AlgHom.mk _ _ _ _ _ _ _ (_) ((Bialgebra.counitAlgHom R A).toRingHom) (Bialgebra.counitAlgHom (↑R) A).commutes'
+--   · exact @AlgHom.mk _ _ _ _ _ _ _ (_) ((Bialgebra.counitAlgHom R A).toRingHom)
+--       (Bialgebra.counitAlgHom (↑R) A).commutes'
 --   exact @AlgHom.mk _ _ _ _ _ _ _ (_) (.id _) fun _ ↦ rfl
 
 open TensorProduct
@@ -215,46 +217,48 @@ lemma foo : (Bialgebra.counitAlgHom R A).toUnder.op ▷ op (R.mkUnder A) ≫
   | tmul x y => rfl
   | add x y _ _ => simp_all
 
--- whatsnew in
-set_option trace.profiler true in
--- set_option maxHeartbeats 0 in
-noncomputable instance : Mon_Class <| op <| CommRingCat.mkUnder R A where
-  one := (Bialgebra.counitAlgHom R A).toUnder.op
-  mul := ((tensorProductMkUnder R A).comp (Bialgebra.comulAlgHom R A)).toUnder.op
+noncomputable instance : Grp_Class <| op <| CommAlg.of R A where
+  one := (CommAlg.ofHom <| Bialgebra.counitAlgHom R A).op
+  mul := (CommAlg.ofHom <| Bialgebra.comulAlgHom R A).op
   one_mul' := by
     apply Quiver.Hom.unop_inj
     ext x
-    simp only [AlgHom.toUnder_comp, op_comp, unop_comp, Quiver.Hom.unop_op, Category.assoc,
-      Under.comp_right, CommRingCat.hom_comp, UnderOp.rightWhisker_hom, AlgHom.toRingHom_eq_coe,
-      RingHom.coe_comp, Function.comp_apply, AlgHom.toUnder_right, Bialgebra.comulAlgHom_apply]
-    convert DFunLike.congr_arg
-        (Algebra.TensorProduct.map (AlgHom.id R R) (mkUnderRightEquiv R A).symm.toAlgHom)
-        (Coalgebra.rTensor_counit_comul (R := R) x)
-    induction CoalgebraStruct.comul (R := R) x with
-    | zero => simp
-    | tmul x y => rfl
-    | add x y _ _ => simp_all
+    convert Coalgebra.rTensor_counit_comul (R := R) x
+    simp [-Coalgebra.rTensor_counit_comul, CommAlg.rightWhisker_hom]
+    rfl
   mul_one' := by
     apply Quiver.Hom.unop_inj
     ext x
-    simp only [AlgHom.toUnder_comp, op_comp, unop_comp, Quiver.Hom.unop_op, Category.assoc,
-      Under.comp_right, CommRingCat.hom_comp, UnderOp.leftWhisker_hom, AlgHom.toRingHom_eq_coe,
-      RingHom.coe_comp, Function.comp_apply, AlgHom.toUnder_right, Bialgebra.comulAlgHom_apply]
-    convert DFunLike.congr_arg (Algebra.TensorProduct.map
-          (mkUnderRightEquiv R A).symm.toAlgHom (AlgHom.id R R))
-        (Coalgebra.lTensor_counit_comul (R := R) x)
+    convert Coalgebra.lTensor_counit_comul (R := R) x
+    simp [-Coalgebra.lTensor_counit_comul, CommAlg.leftWhisker_hom]
+    rfl
+  mul_assoc' := by
+    apply Quiver.Hom.unop_inj
+    ext x
+    convert (Coalgebra.coassoc_symm_apply (R := R) x).symm
+      <;> simp [-Coalgebra.coassoc_symm_apply, CommAlg.associator_hom_unop_hom,
+      CommAlg.rightWhisker_hom, CommAlg.leftWhisker_hom] <;> rfl
+  inv := (CommAlg.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
+  left_inv' := by
+    apply Quiver.Hom.unop_inj
+    ext (x : A)
+    refine .trans ?_ (HopfAlgebra.mul_antipode_rTensor_comul_apply (R := R) x)
+    change (ChosenFiniteProducts.lift (CommAlg.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
+      (𝟙 _)).unop.hom (CoalgebraStruct.comul (R := R) x) = _
     induction CoalgebraStruct.comul (R := R) x with
     | zero => simp
     | tmul x y => rfl
     | add x y _ _ => simp_all
-  mul_assoc' := sorry
-  -- inv := op <| (HopfAlgebra.antipodeAlgHom R A).toUnder
-  -- left_inv' := sorry
-  -- right_inv' := sorry
-
--- #print prefix instGrp_ClassOppositeUnderCommRingCatOpMkUnder_toric
-
-#exit
+  right_inv' := by
+    apply Quiver.Hom.unop_inj
+    ext (x : A)
+    refine .trans ?_ (HopfAlgebra.mul_antipode_lTensor_comul_apply (R := R) x)
+    change (ChosenFiniteProducts.lift (𝟙 _) (CommAlg.ofHom
+      (HopfAlgebra.antipodeAlgHom R A)).op).unop.hom (CoalgebraStruct.comul (R := R) x) = _
+    induction CoalgebraStruct.comul (R := R) x with
+    | zero => simp
+    | tmul x y => rfl
+    | add x y _ _ => simp_all
 
 end Michal
 
