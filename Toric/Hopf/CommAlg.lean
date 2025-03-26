@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.ModuleCat.Basic
-import Mathlib.Algebra.Category.Ring.Basic
+import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.ChosenFiniteProducts
 import Mathlib.RingTheory.TensorProduct.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
@@ -286,3 +286,15 @@ lemma associator_inv_unop_hom :
 end Coprod
 
 end CommAlg
+
+/-- The category of commutative algebras over a commutative ring `R` is the same as rings under `R`.
+-/
+@[simps]
+def commAlgEquivUnder (R : CommRingCat) : CommAlg R ≌ Under R where
+  functor.obj A := R.mkUnder A
+  functor.map {A B} f := f.hom.toUnder
+  inverse.obj A := CommAlg.of _ A
+  inverse.map {A B} f := CommAlg.ofHom <| CommRingCat.toAlgHom f
+  unitIso := NatIso.ofComponents fun A ↦
+    AlgEquiv.toCommAlgIso { __ := RingEquiv.refl A, commutes' _ := rfl }
+  counitIso := .refl _
