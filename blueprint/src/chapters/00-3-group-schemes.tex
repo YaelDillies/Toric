@@ -104,13 +104,32 @@ Second, let's do the top edge.
 \end{proof}
 
 
-\begin{proposition}[The category of Hopf algebras is equivalent to the category of affine group schemes]
-  \label{0-hopf-equiv-aff-grp-sch}
+\begin{proposition}[The category of Hopf algebras is equivalent to the category of group affine schemes]
+  \label{0-hopf-equiv-grp-aff-sch}
   \uses{}
-  \lean{hopfAlgEquivAffGrpSch}
+  \lean{hopfAlgEquivGrpAffSch}
   \leanok
 
-  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of affine group schemes over $\Spec R$.
+  The functor $A\rightsquigarrow \Spec A$ is a contravariant equivalence from the category of Hopf algebras over $R$ to the category of group affine schemes over $\Spec R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-over-lim, 0-grp-equiv}
+  % \leanok
+
+  $\Spec : \Ring \to \AffSch$ is a contravariant equivalence which preserves finite limits, hence so is $\Spec : \Ring_R \to \AffSch_{\Spec R}$ by Proposition \ref{0-over-lim}. Therefore we get an equivalence $\Grp(\Spec) : \Hopf_R \to \GrpAffSch_{\Spec R}$.
+\end{proof}
+
+
+Thirdly, we do the right edge, namely that group affine schemes are equivalent to affine group schemes.
+
+
+\begin{proposition}[The category of group affine schemes is equivalent to the category of affine group schemes]
+  \label{0-hopf-equiv-grp-aff-sch}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  The category of group schemes over $\Spec R$ that are affine is equivalent to group objects in the category of affine schemes over $\Spec R$.
 \end{proposition}
 \begin{proof}
   \uses{0-over-lim, 0-grp-equiv}
@@ -121,7 +140,7 @@ Second, let's do the top edge.
 \end{proof}
 
 
-The right edge is trivial. Finally, we obtain the bottom edge by composing the other three.
+Finally, we obtain the bottom edge by composing the other three.
 
 
 \begin{theorem}[Hopf algebras correspond to affine group schemes]
@@ -135,11 +154,11 @@ The right edge is trivial. Finally, we obtain the bottom edge by composing the o
   If $G$ is an affine group scheme over $\Spec R$, then $\Gamma(G)$ is naturally an $R$-Hopf algebra.
 \end{theorem}
 \begin{proof}
-  \uses{0-hopf-cogrp-alg, 0-hopf-equiv-aff-grp-sch}
+  \uses{0-hopf-cogrp-alg, 0-hopf-equiv-grp-aff-sch}
   % \leanok
 
   Turn an unbundled Hopf algebra into a bundled one using Proposition \ref{0-hopf-cogrp-alg}. Turn
-  the bundled Hopf algebra into an affine group scheme using Proposition \ref{0-hopf-equiv-aff-grp-sch}. By definition, an affine group scheme is a group scheme that is affine.
+  the bundled Hopf algebra into an affine group scheme using Proposition \ref{0-hopf-equiv-grp-aff-sch}. By definition, an affine group scheme is a group scheme that is affine.
 
   For the other way around, follow the steps backwards.
 \end{proof}
