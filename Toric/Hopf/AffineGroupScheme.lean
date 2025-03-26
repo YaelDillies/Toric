@@ -34,7 +34,7 @@ R-Hopf algebra → Group scheme over Spec R
 ```
 -/
 
-open AlgebraicGeometry CategoryTheory Opposite Limits Mon_Class
+open AlgebraicGeometry CategoryTheory Opposite Limits Mon_Class Grp_Class
 
 attribute [local instance] Over.chosenFiniteProducts -- From #21399
 
@@ -301,6 +301,25 @@ instance : Bialgebra R G.unop :=
     rw [CommAlg.leftWhisker_hom]
     rfl)
 
+noncomputable
+instance : HopfAlgebra R G.unop where
+  antipode := ι[G].unop.hom.toLinearMap
+  mul_antipode_rTensor_comul := by
+    convert congr(($(Grp_Class.left_inv G)).unop.hom.toLinearMap)
+    simp [-Grp_Class.left_inv]
+    show _ = _ ∘ₗ CoalgebraStruct.comul
+    rw [← LinearMap.comp_assoc]
+    congr 1
+    ext x
+    rfl
+  mul_antipode_lTensor_comul := by
+    convert congr(($(Grp_Class.right_inv G)).unop.hom.toLinearMap)
+    simp [-Grp_Class.right_inv]
+    show _ = _ ∘ₗ CoalgebraStruct.comul
+    rw [← LinearMap.comp_assoc]
+    congr 1
+    ext x
+    rfl
 
 end grpToHopfObj
 
