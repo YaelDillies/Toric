@@ -32,6 +32,7 @@ import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.ExactFunctor
+import Toric.Mathlib.CategoryTheory.Limits.FullSubcategory
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
