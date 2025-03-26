@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.RingTheory.Bialgebra.Basic
 
 open TensorProduct
 
