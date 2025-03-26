@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.Limits.ExactFunctor
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
@@ -160,6 +159,7 @@ variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Grp_ C}
 
 attribute [local instance] groupOfGrp_Class
 
+@[simps]
 def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f] :
     Grp_.mk' G ⟶ Grp_.mk' H := ⟨f, IsMon_Hom.one_hom, IsMon_Hom.mul_hom⟩
 
@@ -297,6 +297,11 @@ protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
 protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
   map_surjective := F.mapMon.map_surjective
 
+open LaxMonoidal
+
+protected def FullyFaithful.mapGrp (hF : F.FullyFaithful) : F.mapGrp.FullyFaithful where
+  preimage {X Y} f := Grp_.homMk <| hF.preimage f.hom
+
 @[simps!]
 noncomputable def mapGrpIdIso : mapGrp (𝟭 C) ≅ 𝟭 (Grp_ C) :=
   NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
@@ -306,8 +311,6 @@ noncomputable def mapGrpIdIso : mapGrp (𝟭 C) ≅ 𝟭 (Grp_ C) :=
 noncomputable def mapGrpCompIso : (F ⋙ G).mapGrp ≅ F.mapGrp ⋙ G.mapGrp :=
   NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
     (by simp [μ_of_chosenFiniteProducts]))
-
-attribute [local instance] NatTrans.monoidal_of_preservesFiniteProducts
 
 variable {F F'} in
 @[simps!]

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Yoneda
+import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 
 open CategoryTheory ChosenFiniteProducts Mon_Class MonoidalCategory
@@ -14,6 +15,7 @@ variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
 
 instance {M N : Mon_ C} (f : M ⟶ N) : IsMon_Hom f.hom := ⟨f.2, f.3⟩
 
+@[simps]
 def Mon_.homMk {M N : C} [Mon_Class M] [Mon_Class N] (f : M ⟶ N) [IsMon_Hom f] :
     Mon_.mk' M ⟶ Mon_.mk' N := ⟨f, IsMon_Hom.one_hom, IsMon_Hom.mul_hom⟩
 
@@ -156,17 +158,42 @@ end
 open Limits
 
 namespace CategoryTheory.Functor
-universe v₁ v₂ u₁ u₂
-variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts.{v₁} C]
-variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts.{v₂} D]
-variable (F : C ⥤ D) [PreservesFiniteProducts F]
+universe v₁ v₂ v₃ u₁ u₂ u₃
 
-attribute [local instance] monoidalOfChosenFiniteProducts
+section MonoidalCategory
+variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
+variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory D]
+variable {E : Type u₃} [Category.{v₃} E] [MonoidalCategory E]
+variable (F F' : C ⥤ D) (G : D ⥤ E)
 
-protected instance Faithful.mapMon [F.Faithful] : F.mapMon.Faithful where
+open LaxMonoidal
+
+section objMon
+variable [F.LaxMonoidal] (X : C) [Mon_Class X]
+
+instance obj.instMon_Class : Mon_Class (F.obj X) where
+  one := ε F ≫ F.map η
+  mul := LaxMonoidal.μ F X X ≫ F.map μ
+  one_mul' := by simp [← F.map_comp]
+  mul_one' := by simp [← F.map_comp]
+  mul_assoc' := by
+    simp_rw [comp_whiskerRight, Category.assoc, μ_natural_left_assoc,
+      MonoidalCategory.whiskerLeft_comp, Category.assoc, μ_natural_right_assoc]
+    slice_lhs 3 4 => rw [← F.map_comp, Mon_Class.mul_assoc]
+    simp
+
+@[reassoc (attr := simp)]
+lemma ε_comp_map_η : ε F ≫ F.map η = (η : 𝟙_ D ⟶ F.obj X) := rfl
+
+@[reassoc (attr := simp)]
+lemma μ_comp_map_μ (X : C) [Mon_Class X] : LaxMonoidal.μ F X X ≫ F.map μ = μ := rfl
+
+end objMon
+
+protected instance Faithful.mapMon [F.LaxMonoidal] [F.Faithful] : F.mapMon.Faithful where
   map_injective {_X _Y} _f _g hfg := Mon_.Hom.ext <| map_injective congr(($hfg).hom)
 
-protected instance Full.mapMon [F.Full] [F.Faithful] : F.mapMon.Full where
+protected instance Full.mapMon [F.Monoidal] [F.Full] [F.Faithful] : F.mapMon.Full where
   map_surjective {X Y} f :=
     let ⟨g, hg⟩ := F.map_surjective f.hom
     ⟨{
@@ -175,19 +202,84 @@ protected instance Full.mapMon [F.Full] [F.Faithful] : F.mapMon.Full where
       mul_hom := F.map_injective <| by simpa [← hg, cancel_epi] using f.mul_hom
     }, Mon_.Hom.ext hg⟩
 
+instance FullyFaithful.isMon_Hom_preimage [F.Monoidal] (hF : F.FullyFaithful) {X Y : C}
+    [Mon_Class X] [Mon_Class Y] (f : F.obj X ⟶ F.obj Y) [IsMon_Hom f] :
+    IsMon_Hom (hF.preimage f) where
+  one_hom := hF.map_injective <| by simp [← cancel_epi (ε F)]
+  mul_hom := hF.map_injective <| by simp [← μ_natural_assoc, ← cancel_epi (LaxMonoidal.μ F ..)]
+
+protected def FullyFaithful.mapMon [F.Monoidal] (hF : F.FullyFaithful) :
+    F.mapMon.FullyFaithful where
+  preimage {X Y} f := Mon_.homMk <| hF.preimage f.hom
+
+@[simps!]
+noncomputable def mapMonIdIso : mapMon (𝟭 C) ≅ 𝟭 (Mon_ C) :=
+  NatIso.ofComponents fun X ↦ Mon_.mkIso (.refl _) (by simp) (by simp)
+
+@[simps!]
+noncomputable def mapMonCompIso [F.LaxMonoidal] [G.LaxMonoidal] :
+    (F ⋙ G).mapMon ≅ F.mapMon ⋙ G.mapMon :=
+  NatIso.ofComponents fun X ↦ Mon_.mkIso (.refl _) (by simp) (by simp)
+
+end MonoidalCategory
+
+variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
+variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
+variable {E : Type u₃} [Category.{v₃} E] [ChosenFiniteProducts E]
+variable (F F' : C ⥤ D) [PreservesFiniteProducts F] [PreservesFiniteProducts F']
+variable (G : D ⥤ E) [PreservesFiniteProducts G]
+
+attribute [local instance] monoidalOfChosenFiniteProducts
+
+variable {F F'} in
+@[simps!]
+noncomputable def mapMonNatTrans (f : F ⟶ F') : F.mapMon ⟶ F'.mapMon where
+  app X := .mk (f.app _)
+
+variable {F F'} in
+@[simps!]
+noncomputable def mapMonNatIso (e : F ≅ F') : F.mapMon ≅ F'.mapMon := by
+  refine NatIso.ofComponents (fun X ↦ Mon_.mkIso (e.app _)) fun {X Y} f ↦ by ext; simp
+
 end CategoryTheory.Functor
 
 universe v₁ v₂ u₁ u₂
 
 namespace CategoryTheory.Equivalence
-variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
-variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory D]
+variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
+variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
 
-def mapMon (e : C ≌ D) [e.functor.LaxMonoidal] [e.inverse.LaxMonoidal] : Mon_ C ≌ Mon_ D where
+attribute [local instance] Functor.monoidalOfChosenFiniteProducts
+
+-- FIXME: There is a diamond between `LaxMonoidal.id` and `Functor.monoidalOfChosenFiniteProducts`
+noncomputable def mapMon (e : C ≌ D) : Mon_ C ≌ Mon_ D where
   functor := e.functor.mapMon
   inverse := e.inverse.mapMon
   unitIso := sorry
+    -- Functor.mapMonIdIso.symm ≪≫ Functor.mapMonNatIso e.unitIso ≪≫ Functor.mapMonCompIso _ _
   counitIso := sorry
+    -- (Functor.mapMonCompIso _ _).symm ≪≫ Functor.mapMonNatIso e.counitIso ≪≫ Functor.mapMonIdIso
   functor_unitIso_comp := sorry
 
 end CategoryTheory.Equivalence
+
+namespace CategoryTheory.ChosenFiniteProducts
+variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
+variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
+variable (F : C ⥤ D) [PreservesFiniteProducts F]
+
+attribute [local instance] Functor.monoidalOfChosenFiniteProducts
+
+open Functor LaxMonoidal
+
+@[reassoc (attr := simp)]
+lemma preservesTerminalIso_inv_comp_map_η (X : C) [Mon_Class X] :
+    (preservesTerminalIso F).inv ≫ F.map η = (η : 𝟙_ D ⟶ F.obj X) := by
+  simp [← ε_of_chosenFiniteProducts]
+
+@[reassoc (attr := simp)]
+lemma preservesProductIso_inv_comp_map_η (X : C) [Mon_Class X] :
+    (prodComparisonIso F X X).inv ≫ F.map μ = μ := by
+  simp [← μ_of_chosenFiniteProducts]
+
+end CategoryTheory.ChosenFiniteProducts
