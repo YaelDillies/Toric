@@ -5,4 +5,4 @@ import Mathlib.GroupTheory.FreeAbelianGroupFinsupp
 --making too large import changes!
 
 instance {σ : Type*} : UniqueSums (FreeAbelianGroup σ) :=
-  (AddEquiv.uniqueSums_iff (FreeAbelianGroup.equivFinsupp σ)).mpr inferInstance
+  (FreeAbelianGroup.equivFinsupp σ).uniqueSums_iff.mpr inferInstance

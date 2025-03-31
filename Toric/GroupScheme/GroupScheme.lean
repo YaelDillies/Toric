@@ -3,49 +3,11 @@ import Mathlib.Algebra.Category.Ring.Adjunctions
 import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.CategoryTheory.Adjunction.Opposites
 import Mathlib.CategoryTheory.Monoidal.Yoneda
+import Toric.Mathlib.Algebra.Category.Grp.Basic
+import Toric.Mathlib.Algebra.Category.MonCat.Basic
+import Toric.Mathlib.CategoryTheory.Yoneda
 
 open CategoryTheory Opposite
-
-def CategoryTheory.Adjunction.rightOp {C D : Type*} [Category C] [Category D]
-    {F : Cᵒᵖ ⥤ D} {G : Dᵒᵖ ⥤ C} (a : F.rightOp ⊣ G) : G.rightOp ⊣ F where
-  unit := NatTrans.unop a.counit
-  counit := NatTrans.op a.unit
-  left_triangle_components X := congr($(a.right_triangle_components (Opposite.op X)).op)
-  right_triangle_components X := congr($(a.left_triangle_components (Opposite.unop X)).unop)
-
-def CommMonCat.coyoneda : CommMonCatᵒᵖ ⥤ CommMonCat ⥤ CommMonCat where
-  obj M := { obj N := of (↑(unop M) →* N), map f := ofHom (.compHom f.hom) }
-  map f := { app N := ofHom (.compHom' f.unop.hom) }
-
-def CommMonCat.coyonedaForget :
-    coyoneda ⋙ (whiskeringRight _ _ _).obj (forget _) ≅ CategoryTheory.coyoneda :=
-  NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ { hom f := ofHom f, inv f := f.hom })
-    (fun _ ↦ rfl)) (fun _ ↦ rfl)
-
-def CommGrp.coyonedaRight : Type _ᵒᵖ ⥤ CommGrp ⥤ CommGrp where
-  obj M := { obj N := of (↑(unop M) → N),
-             map f := ofHom (Pi.monoidHom fun i ↦ f.hom.comp (Pi.evalMonoidHom _ i)) }
-  map f := { app N := ofHom (Pi.monoidHom fun i ↦ Pi.evalMonoidHom _ (f.unop i)) }
-
--- def CommMonCat.coyonedaRightForget :
---     coyonedaRight ⋙ (whiskeringRight _ _ _).obj (forget _) ≅
---       CategoryTheory.coyoneda ⋙ (whiskeringLeft _ _ _).obj (forget _) :=
-  -- Iso.refl _
-  -- NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ { hom f := f, inv f := f.hom })
-  --   (fun _ ↦ rfl)) (fun _ ↦ rfl)
-
-def opOpYoneda {C : Type*} [Category C] :
-    yoneda ⋙ (whiskeringLeft _ _ _).obj (opOp C) ≅ coyoneda :=
-  NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ (opEquiv (op Y) X).toIso)
-    (fun _ ↦ rfl)) (fun _ ↦ rfl)
-
-/-- The equivalence between `AddCommGrp` and `CommGrp`. -/
-@[simps]
-def AddCommGrp.equivalence : AddCommGrp ≌ CommGrp where
-  functor := { obj X := .of (Multiplicative X), map f := CommGrp.ofHom f.hom.toMultiplicative }
-  inverse := { obj X := .of (Additive X), map f := ofHom f.hom.toAdditive }
-  unitIso := Iso.refl _
-  counitIso := Iso.refl _
 
 namespace AlgebraicGeometry
 
