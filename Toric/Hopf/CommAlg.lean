@@ -130,9 +130,9 @@ instance {S : CommAlg.{v} R} : Ring ((forget (CommAlg R)).obj S) :=
 instance {S : CommAlg.{v} R} : Algebra R ((forget (CommAlg R)).obj S) :=
   inferInstanceAs <| Algebra R S.carrier
 
-instance hasForgetToRing : HasForget₂ (CommAlg.{v} R) RingCat.{v} where
-  forget₂.obj A := RingCat.of A
-  forget₂.map f := RingCat.ofHom f.hom.toRingHom
+instance hasForgetToCommRing : HasForget₂ (CommAlg.{v} R) CommRingCat.{v} where
+  forget₂.obj A := CommRingCat.of A
+  forget₂.map f := CommRingCat.ofHom f.hom.toRingHom
 
 instance hasForgetToModule : HasForget₂ (CommAlg.{v} R) (ModuleCat.{v} R) where
   forget₂.obj M := ModuleCat.of R M
