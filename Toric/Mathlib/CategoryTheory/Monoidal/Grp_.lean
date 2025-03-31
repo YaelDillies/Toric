@@ -318,8 +318,52 @@ noncomputable def mapGrpNatTrans (f : F ⟶ F') : F.mapGrp ⟶ F'.mapGrp where a
 
 variable {F F'} in
 @[simps!]
-noncomputable def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp := by
-  refine NatIso.ofComponents (fun X ↦ Grp_.mkIso (e.app _)) fun {X Y} f ↦ by ext; simp
+noncomputable def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp :=
+  NatIso.ofComponents (fun X ↦ Grp_.mkIso (e.app _)) fun {X Y} f ↦ by ext; simp
+
+open EssImageSubcategory Monoidal in
+variable {F} in
+/-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
+same on group objects as on objects. -/
+@[simp] lemma essImage_mapGrp [F.Full] [F.Faithful] {G : Grp_ D} :
+    F.mapGrp.essImage G ↔ F.essImage G.X where
+  mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
+  mpr hG := by
+    let F' := F.toEssImage.asEquivalence
+    have : F'.IsMonoidal := sorry
+    refine ⟨F'.inverse.mapGrp.obj <| {
+        X := ⟨G.X, hG⟩
+        one := G.one
+        mul := G.mul
+        one_mul := by simpa only [whiskerRight_def] using G.one_mul
+        mul_one := by simpa only [whiskerLeft_def] using G.mul_one
+        mul_assoc := by
+          simpa only [whiskerLeft_def, whiskerRight_def, associator_hom_def] using G.mul_assoc
+        inv := G.inv
+        left_inv := by simpa only [lift_def, toUnit_def] using G.left_inv
+        right_inv := by simpa only [lift_def, toUnit_def] using G.right_inv
+      }, ⟨Grp_.mkIso
+        ((fullSubcategoryInclusion _).mapIso <| F'.counitIso.app ⟨G.X, hG⟩) ?_ ?_⟩⟩
+    · simp
+      erw [F'.counitIso.hom.naturality (X := 𝟙_ F.EssImageSubcategory) (Y := ⟨G.X, hG⟩) G.one]
+      have : ε F ≫ F.map (ε F'.inverse) ≫ F'.counitIso.hom.app (𝟙_ F.EssImageSubcategory) = 𝟙 _ :=
+        toUnit_unique ..
+      apply_fun (· ≫ (G.one : 𝟙_ F.EssImageSubcategory ⟶ ⟨G.X, hG⟩)) at this
+      simpa using this
+    · simp
+      erw [F'.counitIso.hom.naturality (X := ⟨G.X, hG⟩ ⊗ ⟨G.X, hG⟩) (Y := ⟨G.X, hG⟩) G.mul]
+      have :
+        «μ» F _ _ ≫ F.map («μ» F'.inverse ⟨G.X, hG⟩ ⟨G.X, hG⟩) ≫ F'.counitIso.hom.app _ =
+          F'.counitIso.hom.app _ ⊗ F'.counitIso.hom.app _ := by
+        --erw [F'.functor_map_μ_inverse_comp_counitIso_hom_app_tensor]
+        simp
+        refine hom_ext _ _ ?_ ?_
+        · refine Eq.trans ?_ (tensorHom_fst (F'.counitIso.hom.app ⟨G.X, hG⟩)
+            (F'.counitIso.hom.app ⟨G.X, hG⟩)).symm
+          sorry
+        · sorry
+      apply_fun (· ≫ (G.mul : (⟨G.X, hG⟩ ⊗ ⟨G.X, hG⟩ : F.EssImageSubcategory) ⟶ ⟨G.X, hG⟩)) at this
+      sorry
 
 end CategoryTheory.Functor
 

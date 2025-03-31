@@ -107,6 +107,22 @@ Second, let's do the top edge.
 \end{proof}
 
 
+\begin{proposition}[Essential image of a functor on group objects]
+  \label{0-ess-image-grp}
+  \uses{}
+  \lean{CategoryTheory.Functor.essImage_mapGrp}
+  \leanok
+
+  If $F : C \hom D$ is a fully faithful functor between cartesian-monoidal categories, then $\Grp(F) : \Grp(C) \hom \Grp(D)$ has the same essential image as $F$.
+\end{proposition}
+\begin{proof}
+  \uses{0-grp-equiv}
+  % \leanok
+
+  Transfer all diagrams.
+\end{proof}
+
+
 \begin{proposition}[The category of Hopf algebras is equivalent to the category of affine group schemes]
   \label{0-hopf-equiv-aff-grp-sch}
   \uses{}
