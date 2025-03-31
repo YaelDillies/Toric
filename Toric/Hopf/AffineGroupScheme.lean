@@ -4,17 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.Bialgebra.Hom
-import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Hopf.CommAlg
-import Toric.Mathlib.AlgebraicGeometry.AffineScheme
+import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes

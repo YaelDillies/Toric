@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Category.MonCat.Basic
 import Mathlib.Algebra.Group.Hom.Instances
+import Mathlib.CategoryTheory.Yoneda
 
 open CategoryTheory Opposite
 
