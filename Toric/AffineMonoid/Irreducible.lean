@@ -8,7 +8,6 @@ import Toric.Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Submonoid.Basic
 import Toric.Mathlib.Algebra.Group.Submonoid.BigOperators
-import Toric.Mathlib.Algebra.Group.Units.Defs
 import Toric.Mathlib.GroupTheory.Finiteness
 
 /-!

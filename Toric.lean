@@ -23,13 +23,11 @@ import Toric.Mathlib.Algebra.Group.Submonoid.BigOperators
 import Toric.Mathlib.Algebra.Group.Submonoid.Operations
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.UniqueProds.Basic
-import Toric.Mathlib.Algebra.Group.Units.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
-import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Limits.ExactFunctor
 import Toric.Mathlib.CategoryTheory.Limits.FullSubcategory
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
