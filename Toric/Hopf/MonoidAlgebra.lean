@@ -74,12 +74,47 @@ protected lemma single_hopfHomToMonoidHom (f : MonoidAlgebra K G →ₐc[K] Mono
   rw [← mul_one k, ← smul_eq_mul, ← smul_single, ← smul_single, map_smul]
   exact congr(k • $(single_hopfHomToMap_one f g))
 
+@[simps] noncomputable
+def monoidHomToHopfHom (f : G →* H) : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H where
+  __ := MonoidAlgebra.mapDomainAlgHom K K f
+  map_smul' m x := by simp
+  counit_comp := by ext; simp
+  map_comp_comul := by ext; simp
+
+example {A : Type*} [Semiring A] [Algebra K A] (α β : MonoidAlgebra K G →ₐ[K] A)
+    (hyp : ∀ g : G, α (single g 1) = β (single g 1)) : α = β := by exact algHom_ext hyp
+
+private lemma aux1 {α : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H} {x : MonoidAlgebra K G} :
+    α x = (α : _ →ₐ[K] _) x := rfl
+
+private lemma aux2 {α β : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H}
+    (hyp : (α : _ →ₐ _) = (β : MonoidAlgebra K G →ₐ[K] MonoidAlgebra K H)) : α = β := by
+  ext1 x
+  rw [aux1, aux1]
+  exact congr($(hyp) x)
+
 noncomputable
 def hopfHomEquivMonoidHom : (MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) ≃ (G →* H) where
   toFun f := hopfHomToMonoidHom f
-  invFun f := sorry
-  left_inv := sorry
-  right_inv := sorry
+  invFun f := monoidHomToHopfHom f
+  left_inv f := by
+    simp
+    apply aux2
+    apply algHom_ext
+    intro x
+    simp
+    rw [← single_hopfHomToMap_one]
+    rfl
+  right_inv f := by
+    ext g
+    apply of_injective (k := K)
+    simp
+    show single (MonoidAlgebra.hopfHomToMap.{u_1, u_4, u_5} (K := K)
+        (MonoidAlgebra.monoidHomToHopfHom f) g) 1 = _
+    rw [MonoidAlgebra.single_hopfHomToMonoidHom]
+    show (mapDomainRingHom K f) (single g 1) = single (f g) 1
+    rw [MonoidAlgebra.mapDomainRingHom_apply]
+    simp
 
 end Field
 end MonoidAlgebra
