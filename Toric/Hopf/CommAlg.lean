@@ -6,8 +6,6 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.ChosenFiniteProducts
-import Mathlib.RingTheory.TensorProduct.Basic
-import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 
 /-!
 # Category of commutative algebras over a commutative ring

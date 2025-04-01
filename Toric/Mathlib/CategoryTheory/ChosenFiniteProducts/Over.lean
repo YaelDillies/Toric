@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathlib.CategoryTheory.ChosenFiniteProducts
-import Mathlib.CategoryTheory.Closed.Ideal
-import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 
 /-!
 # This is https://github.com/leanprover-community/mathlib4/pull/21399
