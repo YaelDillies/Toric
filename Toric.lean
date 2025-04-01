@@ -13,7 +13,6 @@ import Toric.Hopf.AffineGroupScheme
 import Toric.Hopf.CommAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.MonoidAlgebra
-import Toric.Hopf.grpHoms
 import Toric.Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic

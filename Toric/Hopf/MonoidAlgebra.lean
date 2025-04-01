@@ -17,7 +17,7 @@ of the image of the inclusion `G → k[G]`.
 open Coalgebra
 
 namespace MonoidAlgebra
-variable {K R A G : Type*}
+variable {K R A G H : Type*}
 
 section CommSemiring
 variable [CommSemiring R] [Semiring A] [HopfAlgebra R A] [Group G]
@@ -34,7 +34,7 @@ lemma isGroupLikeElem_single (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlg
 end CommSemiring
 
 section Field
-variable [Field K] [Group G] {x : MonoidAlgebra K G}
+variable [Field K] [Group G] [Group H] {x : MonoidAlgebra K G}
 
 open Submodule in
 @[simp]
@@ -48,6 +48,32 @@ lemma isGroupLikeElem_iff_mem_range_of : IsGroupLikeElem K x ↔ x ∈ Set.range
     rw [← mul_one (x g), ← smul_eq_mul, ← smul_single]
     refine smul_mem _ _ <| subset_span <| Set.mem_range_self _
   mpr := by rintro ⟨g, rfl⟩; exact isGroupLikeElem_of _
+
+private noncomputable def hopfHomToMap (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) : G → H :=
+  fun g ↦ (isGroupLikeElem_iff_mem_range_of.1 <| (isGroupLikeElem_of g).map f).choose
+
+@[simp]
+private lemma single_hopfHomToMap_one (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) (g : G) :
+    single (hopfHomToMap f g) 1 = f (single g 1) :=
+  (isGroupLikeElem_iff_mem_range_of.1 <| (isGroupLikeElem_of g).map f).choose_spec
+
+open Coalgebra in
+noncomputable
+def hopfHomToMonoidHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) : G →* H where
+  toFun := hopfHomToMap f
+  map_one' := of_injective (k := K) <| by simp [← one_def]
+  map_mul' g₁ g₂ := by
+    refine of_injective (k := K) ?_
+    simp only [of_apply, single_hopfHomToMap_one]
+    rw [← mul_one (1 : K), ← single_mul_single, ← single_mul_single, map_mul]
+    simp
+
+noncomputable
+def hopfHomEquivMonoidHom : (MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) ≃ (G →* H) where
+  toFun f := hopfHomToMonoidHom f
+  invFun f := sorry
+  left_inv := sorry
+  right_inv := sorry
 
 end Field
 end MonoidAlgebra
