@@ -66,7 +66,7 @@ class ToricVariety (X : Over <| Spec R) where
   /-- The torus action on a toric variety. -/
   [torusAct : Action_Class (torusOver R n) X]
   /-- The torus action extends the torus multiplication morphism. -/
-  torusMul_comp_torusEmb : (𝟙 (torusOver R n) ⊗ torusEmb) ≫ γ =  μ[(torusOver R n)] ≫ torusEmb :=
+  torusMul_comp_torusEmb : (𝟙 (torusOver R n) ⊗ torusEmb) ≫ γ =  μ[torusOver R n] ≫ torusEmb :=
     by aesop_cat
 
 
