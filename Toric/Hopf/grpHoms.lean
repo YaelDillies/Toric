@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Algebra.EuclideanDomain.Field
+import Mathlib.Algebra.Lie.OfAssociative
 import Toric.Hopf.MonoidAlgebra
 
 variable {G H k : Type*} [Group G] [Group H] [Field k]
