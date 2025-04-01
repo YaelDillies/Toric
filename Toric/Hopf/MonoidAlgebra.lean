@@ -68,6 +68,12 @@ def hopfHomToMonoidHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) : G 
     rw [← mul_one (1 : K), ← single_mul_single, ← single_mul_single, map_mul]
     simp
 
+@[simp]
+protected lemma single_hopfHomToMonoidHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) (g : G)
+    (k : K) : single (hopfHomToMap f g) k = f (single g k) := by
+  rw [← mul_one k, ← smul_eq_mul, ← smul_single, ← smul_single, map_smul]
+  exact congr(k • $(single_hopfHomToMap_one f g))
+
 noncomputable
 def hopfHomEquivMonoidHom : (MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) ≃ (G →* H) where
   toFun f := hopfHomToMonoidHom f
