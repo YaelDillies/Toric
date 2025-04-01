@@ -5,8 +5,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moisés Herradón Cueto
 -/
 import Mathlib.CategoryTheory.Comma.Over.Basic
+import Mathlib.CategoryTheory.FinCategory.Basic
 import Mathlib.CategoryTheory.Limits.Shapes.Terminal
 import Mathlib.CategoryTheory.Limits.Shapes.IsTerminal
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Data.Fintype.Option
 
 /-!
 # Adding a final object to a category
@@ -78,7 +81,21 @@ instance category : Category.{w'} (WithFinalObject J) where
     map := id
   }
 
-  #check CategoryTheory.Limits.terminal
+  instance IsFinType [Fintype J] : Fintype (WithFinalObject J) :=
+    (inferInstance :  Fintype (Option J) )
+
+  instance IsSmall  [SmallCategory J] :
+  SmallCategory (WithFinalObject J) := inferInstance
+
+  instance IsFin  [SmallCategory J] [FinCategory J] :
+  FinCategory (WithFinalObject J) := {
+    fintypeObj := inferInstance
+    fintypeHom a b := match a, b with
+    | _, none => (inferInstance : Fintype PUnit)
+    | none, some _ => (inferInstance : Fintype PEmpty)
+    | some a, some b => (inferInstance : Fintype (a ⟶ b))
+
+  }
 
   /-- For any functor `K : J ⥤ Over X`, there is a canonical extension
   `WithFinalObject J ⥤ C`: it is defined as `K` on `J`, and it maps the final

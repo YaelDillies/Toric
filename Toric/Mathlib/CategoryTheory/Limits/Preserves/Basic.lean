@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Comma.Over.Basic
+import Mathlib.CategoryTheory.FinCategory.Basic
 import Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.WithFinalObject
 
@@ -43,6 +44,11 @@ instance PreservesLimitsOfShape.overPost {X : C} {F : C ⥤ D}
         exact IsLimit.ofIsoLimit is_lim_over_D
           (WithFinalObject.coneToFrom ((Over.post F).mapCone lim))
     }
+
+instance PreservesFiniteLimits.overPost {X : C} {F : C ⥤ D}
+(h : ∀ (J :Type w) [SmallCategory J] [FinCategory J] , PreservesLimitsOfShape J F)
+[SmallCategory J] [FinCategory J] :  PreservesLimitsOfShape J (Over.post F (X := X)) :=
+by infer_instance
 
 
 instance PreservesLimitsOfShape.overPostEquivFunctor {X : C} {F : C ≌ D}
