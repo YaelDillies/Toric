@@ -3,11 +3,9 @@ Copyright (c) 2025 Yaël Dillies, Patrick Luo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo
 -/
+import Mathlib.Algebra.Group.Submonoid.BigOperators
 import Mathlib.Algebra.Module.NatInt
-import Toric.Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
-import Toric.Mathlib.Algebra.Group.Submonoid.Basic
-import Toric.Mathlib.Algebra.Group.Submonoid.BigOperators
 import Toric.Mathlib.GroupTheory.Finiteness
 
 /-!
@@ -68,12 +66,14 @@ variable [AddCancelCommMonoid M] [AddMonoid.FG M] [Subsingleton (AddUnits M)] {S
   obtain rfl | hr₀ := eq_or_ne r 0
   · simpa using hSmax (y := S \ {0}) (by simpa) Finset.sdiff_subset hrS
   obtain ⟨a, b, hr, ha, hb⟩ := hrirred <| by simpa
-  obtain ⟨m, hm⟩ := AddSubmonoid.mem_closure_finset (x := a).mp (by rw [hSgen]; trivial)
-  obtain ⟨n, hn⟩ := AddSubmonoid.mem_closure_finset (x := b).mp (by rw [hSgen]; trivial)
+  obtain ⟨m, -, hm⟩ := AddSubmonoid.mem_closure_finset (x := a).mp (by rw [hSgen]; trivial)
+  obtain ⟨n, -, hn⟩ := AddSubmonoid.mem_closure_finset (x := b).mp (by rw [hSgen]; trivial)
   replace hm : a = m r • r + ∑ s ∈ S \ {r}, m s • s := by
-    rw [hm, ← Finset.sum_sdiff <| Finset.singleton_subset_iff.2 hrS, Finset.sum_singleton, add_comm]
+    rw [← hm, ← Finset.sum_sdiff <| Finset.singleton_subset_iff.2 hrS, Finset.sum_singleton,
+      add_comm]
   replace hn : b = n r • r + ∑ s ∈ S \ {r}, n s • s := by
-    rw [hn, ← Finset.sum_sdiff <| Finset.singleton_subset_iff.2 hrS, Finset.sum_singleton, add_comm]
+    rw [← hn, ← Finset.sum_sdiff <| Finset.singleton_subset_iff.2 hrS, Finset.sum_singleton,
+      add_comm]
   have hr' : r = (m r + n r) • r + ∑ s ∈ S \ {r}, m s • s + ∑ s ∈ S \ {r}, n s • s := by
     rwa [add_smul, add_assoc, add_assoc, ← add_assoc (n r • r), add_comm (n r • r) _, add_assoc,
       ← hn, ← add_assoc, ← hm]
@@ -88,7 +88,7 @@ variable [AddCancelCommMonoid M] [AddMonoid.FG M] [Subsingleton (AddUnits M)] {S
     simpa using hSmax hrS
   | 1 =>
     simp only [hr, one_smul, add_assoc, eq_comm (a := r), add_eq_left,
-      AddLeftCancelMonoid.add_eq_zero, Finset.sum_eq_zero_iff''] at hr'
+      AddLeftCancelMonoid.add_eq_zero, Finset.sum_eq_zero_iff] at hr'
     obtain h | h : m r = 0 ∨ n r = 0 := by omega
     · obtain rfl : a = 0 := by simpa [h, Finset.sum_eq_zero hr'.1] using hm
       simp at ha

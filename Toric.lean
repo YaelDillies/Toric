@@ -13,13 +13,10 @@ import Toric.Hopf.AffineGroupScheme
 import Toric.Hopf.CommAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.MonoidAlgebra
-import Toric.Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
-import Toric.Mathlib.Algebra.Group.Submonoid.Basic
-import Toric.Mathlib.Algebra.Group.Submonoid.BigOperators
 import Toric.Mathlib.Algebra.Group.Submonoid.Operations
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.UniqueProds.Basic
