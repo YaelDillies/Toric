@@ -1,9 +1,10 @@
 
 /-
-Copyright (c) 2025 Yaël Dillies. All rights reserved.
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yaël Dillies
+Authors: Yaël Dillies, Michał Mrugała
 -/
+import Mathlib.Algebra.Equiv.TransferInstance
 import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.Hopf.GroupLike
 
@@ -34,11 +35,17 @@ lemma isGroupLikeElem_single (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlg
 end CommSemiring
 
 section Field
-variable [Field K] [Group G] [Group H] {x : MonoidAlgebra K G}
+
+variable [Field K] [Group G]
+
+section Group
+
+variable [Group H]
 
 open Submodule in
 @[simp]
-lemma isGroupLikeElem_iff_mem_range_of : IsGroupLikeElem K x ↔ x ∈ Set.range (of K G) where
+lemma isGroupLikeElem_iff_mem_range_of {x : MonoidAlgebra K G} :
+    IsGroupLikeElem K x ↔ x ∈ Set.range (of K G) where
   mp hx := by
     by_contra h
     have : LinearIndepOn K id (insert x <| .range (of K G)) :=
@@ -116,5 +123,18 @@ def hopfHomEquivMonoidHom : (MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) ≃
     rw [MonoidAlgebra.mapDomainRingHom_apply]
     simp
 
+end Group
+
+section CommGroup
+
+variable [CommGroup H]
+
+--TODO: Yaël fix diamonds!!!!!!!!!!!!!!!!!!!!!!!!
+noncomputable
+instance : Group <| MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H := hopfHomEquivMonoidHom.group
+
+end CommGroup
+
 end Field
+
 end MonoidAlgebra
