@@ -39,4 +39,59 @@ theorem IsPolyhedral.bot :
     (⊥ : PointedCone 𝕜 E).IsPolyhedral :=
   ⟨{0}, by simp⟩
 
+section
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+
+open Classical
+
+theorem IsPolyhedral.top [hE : FiniteDimensional ℝ E] :
+    (⊤ : PointedCone ℝ E).IsPolyhedral := by
+  obtain ⟨S,hS⟩ := Module.finite_def.mp hE
+  let R : Finset E := S ∪ S.map (Function.Embedding.mk (Neg.neg : E → E) neg_injective)
+  have useful : ∀ x ∈ span ℝ R, (-x : E) ∈ span ℝ R := by
+    apply Submodule.span_induction
+    · intro x hx
+      apply Submodule.subset_span
+      rw [Finset.mem_coe, Finset.mem_union] at hx
+      cases' hx with hx₁ hx₂
+      · apply Finset.mem_union_right
+        erw [Finset.mem_map']
+        exact hx₁
+      · rw [Finset.mem_map] at hx₂
+        obtain ⟨y,hy1,rfl⟩ := hx₂
+        apply Finset.mem_union_left
+        rw [Function.Embedding.coeFn_mk, neg_neg]
+        exact hy1
+    · rw [neg_zero]
+      exact Submodule.zero_mem _
+    · intro x y hx1 hy1 hx2 hy2
+      rw [neg_add_rev]
+      exact Submodule.add_mem _ hy2 hx2
+    · intro t x hx1 hx2
+      rw [←smul_neg]
+      exact Submodule.smul_mem _ _ hx2
+  use R
+  symm
+  rw [Submodule.eq_top_iff']
+  rw [Submodule.eq_top_iff'] at hS
+  intro x
+  specialize hS x
+  revert hS x
+  apply Submodule.span_induction
+  · intro x hxS
+    apply Submodule.subset_span
+    exact Finset.mem_union_left _ hxS
+  · apply Submodule.zero_mem
+  · intro x y _ _ hx hy
+    exact Submodule.add_mem _ hx hy
+  · intro t x _ hx
+    by_cases ht : 0 ≤ t
+    · exact Submodule.smul_mem _ ⟨t,ht⟩ hx
+    · rw [←neg_neg (t • x), ←neg_smul, ←smul_neg]
+      apply Submodule.smul_mem _ (⟨-t, by linarith⟩ : {a : ℝ // 0 ≤ a})
+      apply useful 
+      exact hx
+end
+
 end PointedCone
