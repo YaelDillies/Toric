@@ -13,6 +13,8 @@ We define the pointed cone hull and what it means for a pointed cone to be polyh
 
 variable {𝕜 E : Type*} [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E]
 
+open Classical
+
 namespace PointedCone
 
 variable (𝕜) in
@@ -41,36 +43,39 @@ theorem IsPolyhedral.bot :
 
 section
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+variable {𝕜 E : Type*} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
-open Classical
-
-theorem IsPolyhedral.top [hE : FiniteDimensional ℝ E] :
-    (⊤ : PointedCone ℝ E).IsPolyhedral := by
+/-- `⊤` is a polyhedral cone in a finite dimensional vector space over a linear
+ordered field. -/
+theorem IsPolyhedral.top [hE : FiniteDimensional 𝕜 E] :
+    (⊤ : PointedCone 𝕜 E).IsPolyhedral := by
   obtain ⟨S,hS⟩ := Module.finite_def.mp hE
+  -- We take R to be the union of S with {-x | x ∈ S}
   let R : Finset E := S ∪ S.map (Function.Embedding.mk (Neg.neg : E → E) neg_injective)
-  have useful : ∀ x ∈ span ℝ R, (-x : E) ∈ span ℝ R := by
+  -- We first show that the span of R is closed under negation
+  have neg_mem_span_R : ∀ x ∈ span 𝕜 R, (-x : E) ∈ span 𝕜 R := by
     apply Submodule.span_induction
     · intro x hx
       apply Submodule.subset_span
+      -- Clearly, T is closed under negation. We show this by simple case distinction
       rw [Finset.mem_coe, Finset.mem_union] at hx
       cases' hx with hx₁ hx₂
       · apply Finset.mem_union_right
-        erw [Finset.mem_map']
-        exact hx₁
-      · rw [Finset.mem_map] at hx₂
+        simpa only [Finset.mem_map, Function.Embedding.coeFn_mk, neg_inj, exists_eq_right]
+      · rw [Finset.mem_map, Function.Embedding.coeFn_mk] at hx₂
         obtain ⟨y,hy1,rfl⟩ := hx₂
-        apply Finset.mem_union_left
-        rw [Function.Embedding.coeFn_mk, neg_neg]
-        exact hy1
+        rw [neg_neg]
+        exact Finset.mem_union_left _ hy1
+    -- The three other cases in the induction are trivial
     · rw [neg_zero]
       exact Submodule.zero_mem _
-    · intro x y hx1 hy1 hx2 hy2
+    · intro x y _ _ hx hy
       rw [neg_add_rev]
-      exact Submodule.add_mem _ hy2 hx2
-    · intro t x hx1 hx2
+      exact Submodule.add_mem _ hy hx
+    · intro t x _ hx
       rw [←smul_neg]
-      exact Submodule.smul_mem _ _ hx2
+      exact Submodule.smul_mem _ _ hx
+  -- We now claim that `⊤` is generated as a pointed cone by `R`.
   use R
   symm
   rw [Submodule.eq_top_iff']
@@ -78,6 +83,9 @@ theorem IsPolyhedral.top [hE : FiniteDimensional ℝ E] :
   intro x
   specialize hS x
   revert hS x
+  -- By reverting x, the claim now says that every element of the span of S
+  -- (as a usual `ℝ`-submodule) is contained in the span of `R` as a pointed cone.
+  -- This can be shown by induction on the span.
   apply Submodule.span_induction
   · intro x hxS
     apply Submodule.subset_span
@@ -86,12 +94,14 @@ theorem IsPolyhedral.top [hE : FiniteDimensional ℝ E] :
   · intro x y _ _ hx hy
     exact Submodule.add_mem _ hx hy
   · intro t x _ hx
+    -- This is the only interesting case, as here we have split cases
+    -- according to whether the scalar `t` is positive or not.
     by_cases ht : 0 ≤ t
     · exact Submodule.smul_mem _ ⟨t,ht⟩ hx
     · rw [←neg_neg (t • x), ←neg_smul, ←smul_neg]
-      apply Submodule.smul_mem _ (⟨-t, by linarith⟩ : {a : ℝ // 0 ≤ a})
-      apply useful 
-      exact hx
+      apply Submodule.smul_mem _ (⟨-t, by linarith⟩ : {a : 𝕜 // 0 ≤ a})
+      -- We use our auxiliary statement from above
+      exact neg_mem_span_R _ hx
 end
 
 end PointedCone
