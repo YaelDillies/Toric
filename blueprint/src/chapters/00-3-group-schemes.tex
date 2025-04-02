@@ -62,14 +62,15 @@ Second, let's do the top edge.
   \uses{}
   \lean{CategoryTheory.Limits.PreservesLimitsOfShape.overPost, CategoryTheory.Limits.PreservesLimitsOfSize.overPost, CategoryTheory.Limits.PreservesFiniteProducts.overPost}
   \leanok
+  Let $J$ be a shape (i.e. a category). Let $\widetilde J$ denote the category which is the same as $J$, but has an extra object $*$ which is terminal.
 
-  If $F : C \to D$ is a functor preserving limits of shape $J$, then so is the obvious functor $C / X \to D / F(X)$.
+  If $F : C \to D$ is a functor preserving limits of shape $\widetilde J$, then the obvious functor $C / X \to D / F(X)$ preserves limits of shape $J$.
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
 
-  Hopefully easy.
+  Extend a functor $K\colon  J \to C / X$ to a functor $\widetilde K\colon \widetilde J \to C$, by letting $\widetilde K (*) = X$.
 \end{proof}
 
 
