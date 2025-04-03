@@ -24,8 +24,8 @@ def asNatTransf {X : C} (K : J ⥤ Over X) :
 NatTrans (K ⋙ Over.forget X) ((Functor.const J).obj X) where
   app a := (K.obj a).hom
 
-  /-- For any functor `K : J ⥤ Over X`, there is a canonical extension
-  `WithTerminal J ⥤ C`, that sends `star` to `X`-/
+/-- For any functor `K : J ⥤ Over X`, there is a canonical extension
+`WithTerminal J ⥤ C`, that sends `star` to `X`-/
 @[simps!]
 def liftFromOver {X : C} (K : J ⥤ Over X) : WithTerminal J ⥤ C :=
   ofCommaObject {
@@ -38,12 +38,12 @@ def liftFromOver {X : C} (K : J ⥤ Over X) : WithTerminal J ⥤ C :=
 @[simps]
 def extendCompose {X : C} (K : J ⥤ Over X) (F : C ⥤ D) :
   (liftFromOver K ⋙ F) ≅ liftFromOver (K ⋙ (Over.post F)) where
-  hom.app
-  | star => 𝟙 _
-  | of a => 𝟙 _
-  inv.app
-  | star => 𝟙 _
-  | of a => 𝟙 _
+hom.app
+| star => 𝟙 _
+| of a => 𝟙 _
+inv.app
+| star => 𝟙 _
+| of a => 𝟙 _
 
 @[simps]
 def coneLift {X : C} {K : J ⥤ Over X} : Cone K ⥤ Cone (liftFromOver K) where
@@ -57,14 +57,13 @@ obj t := {
   | of a, star, _ => by aesop
   | star, of _, _ => by contradiction
   | of a, of b , f => by
-    have : (t.π.app b).left = (t.π.app a).left ≫ (K.map f).left := by
+    have := by
       calc
         (t.π.app b).left = (t.π.app a ≫ K.map f).left := by
           simp only [Functor.const_obj_obj, Cone.w]
         _ = (t.π.app a).left ≫ (K.map f).left := rfl
-    simpa [Functor.const_obj_obj, Cone.w]
+    simpa
 }
-
 map {t₁ t₂} f := {
   hom := f.hom.left
   w
@@ -89,7 +88,7 @@ obj t := {
           t.π.app (of a) ≫ (K.obj a).hom = t.π.app (of a) ≫
             (liftFromOver K).map (homFrom a) := rfl
           _ = t.π.app star := by simp only [Functor.const_obj_obj, Cone.w]
-      simp [this]
+      simpa
   }
   π.naturality a b f := by
     ext
@@ -104,7 +103,7 @@ map {t₁ t₂ f} := {
 }
 
 @[simp]
-def coneToFromObj {X : C} {K : J ⥤ Over X} (t : Cone K) :
+lemma coneToFromObj {X : C} {K : J ⥤ Over X} (t : Cone K) :
   (coneBack.obj (coneLift.obj t)).pt = t.pt := by aesop
 
 @[simps]
