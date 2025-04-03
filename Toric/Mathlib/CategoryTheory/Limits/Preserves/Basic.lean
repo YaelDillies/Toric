@@ -38,7 +38,7 @@ instance PreservesLimitsOfShape.overPost {X : C} {F : C ⥤ D}
 
 instance PreservesFiniteLimits.overPost {X : C} {F : C ⥤ D}
 (h : ∀ (J :Type w) [SmallCategory J] [FinCategory J] , PreservesLimitsOfShape J F)
-[SmallCategory J] [FinCategory J] :  PreservesLimitsOfShape J (Over.post F (X := X)) :=
+[SmallCategory J] [FinCategory J] : PreservesLimitsOfShape J (Over.post F (X := X)) :=
 by infer_instance
 
 
