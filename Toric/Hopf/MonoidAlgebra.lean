@@ -5,7 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.Algebra.Equiv.TransferInstance
-import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
+import Mathlib.RingTheory.Coalgebra.MonoidAlgebra
+import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Hopf.GroupLike
 
 /-!

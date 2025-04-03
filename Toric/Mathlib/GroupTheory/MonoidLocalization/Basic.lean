@@ -1,5 +1,5 @@
 import Mathlib.GroupTheory.MonoidLocalization.Basic
-import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
+import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.GroupTheory.Finiteness
 
 open Function

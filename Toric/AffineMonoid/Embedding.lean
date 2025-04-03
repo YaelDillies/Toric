@@ -8,6 +8,7 @@ import Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.Algebra.Group.UniqueProds.Basic
+import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 
