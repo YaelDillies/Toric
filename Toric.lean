@@ -5,7 +5,6 @@ import Toric.ConvexAnalysis.Polytope
 import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
-import Toric.GroupScheme.Diagrams
 import Toric.GroupScheme.GroupScheme
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.TorusCommGrp
@@ -48,4 +47,3 @@ import Toric.SphericalVariety
 import Toric.ToricIdeal
 import Toric.ToricVariety
 import Toric.ToricVarietyFromMonoid
-import Toric.Torus
