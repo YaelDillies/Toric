@@ -4,20 +4,36 @@
 \subsection{The Torus}
 
 
-\begin{definition}
+\begin{definition}[The torus]
   \label{1-1-torus}
-  \lean{SplitTorus, SplitTorus.instCanonicallyOver}
+  \lean{AlgebraicGeometry.Scheme.SplitTorus, AlgebraicGeometry.Scheme.SplitTorus.instCanonicallyOver}
   \leanok
 
-  The (algebraic) torus $\Gm^n = \Spec(R[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}])$ over $\Spec R$.
+  The split torus $\Gm^n$ over a scheme $S$ is the pullback of $\Spec \Z[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}]$ along the unique map $S \to \Spec \Z$.
 \end{definition}
+
+
+\begin{lemma}[The torus over $\Spec R$]
+  \label{1-1-torus-spec}
+  \uses{1-1-torus}
+  \lean{AlgebraicGeometry.Scheme.splitTorusIsoSpec, AlgebraicGeometry.Scheme.splitTorusIsoSpecOver}
+  \leanok
+
+  The split torus over $\Spec R$ is isomorphic to $\Spec(R[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}])$.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Ask any toddler on the street.
+\end{proof}
 
 
 \begin{definition}
   \label{1-1-cochar}
   \uses{1-1-torus}
-  % \lean{}
-  % \leanok
+  \lean{AlgebraicGeometry.Scheme.Over.cochar}
+  \leanok
 
   One-parameter subgroup: a group morphism $\lambda : \Gm \to \Gm^n$.
 \end{definition}
@@ -25,7 +41,7 @@
 
 \begin{definition}
   \label{1-1-char}
-  \lean{SchemeOver.characterGroup}
+  \lean{AlgebraicGeometry.Scheme.Over.char}
   \leanok
 
   The {\bf character lattice} $M = X(\Gm^n) := \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm)$.
@@ -149,7 +165,7 @@
 \begin{definition}
   \label{1-1-3-aff-tor-var}
   \uses{1-1-torus}
-  \lean{ToricVariety}
+  \lean{AlgebraicGeometry.ToricVariety}
   \leanok
 
   A {\bf toric variety} is a variety $X$ with
@@ -265,9 +281,10 @@
   If $S$ is an affine monoid, then $\Spec(\Bbbk[S])$ is an affine toric variety.
 \end{proposition}
 \begin{proof}
-  \uses{0-aff-mon-alg-domain, 0-congr_hopf_affgrpsch}
+  \uses{0-aff-mon-alg-domain, 0-congr_hopf_affgrpsch, 1-1-torus-spec}
   % \leanok
 
+  Identify the torus with $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Lemma \ref{1-1-torus-spec}.
   $i$ induces a morphism $T \to \Spec(\Bbbk[S])$. It's an open embedding as $i$ gives the localization of $\Bbbk[S]$ at $\chi^{a_i}$, so $\im i$ is an affine open. It's dominant as $\Spec(\Bbbk[S])$ is integral and so is irreducible, and $\im i$ is open and nonempty, so dense. The torus action is given by the natural restriction of comultiplication on $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$.
 \end{proof}
 

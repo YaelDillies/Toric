@@ -11,29 +11,29 @@ import Toric.ToricVariety.Defs
 # Affine monoids give rise to toric varieties
 -/
 
-open AlgebraicGeometry CategoryTheory Limits AddMonoidAlgebra AddLocalization AffineMonoid
+open AlgebraicGeometry Scheme CategoryTheory Limits AddMonoidAlgebra AddLocalization AffineMonoid
 
-variable {R : CommRingCat} [IsDomain R] {S : Type*} [AddCancelCommMonoid S] [AddMonoid.FG S]
+universe u
+variable {R : CommRingCat.{u}} [IsDomain R] {S : Type u} [AddCancelCommMonoid S] [AddMonoid.FG S]
   [IsAddTorsionFree S]
 
 variable (R S) in
-noncomputable abbrev AffineToricVarietyFromMonoid := Spec <| CommRingCat.of <| AddMonoidAlgebra R S
+noncomputable abbrev AffineToricVarietyFromMonoid : Over <| Spec R :=
+  .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R R[S]
 
 namespace AffineToricVarietyFromMonoid
 
-noncomputable instance : (AffineToricVarietyFromMonoid R S).Over (Spec R) where
-  hom := Spec.map <| CommRingCat.ofHom <| algebraMap R _
-
 noncomputable instance instToricVariety :
     ToricVariety R (dim S) (AffineToricVarietyFromMonoid R S) where
-  torusEmb := Spec.map <| CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S)
-  torusEmb_comp_overHom := by
+  torusEmb := (splitTorusIsoSpecOver _ _).hom ≫ (Over.homMk
+    (Spec.map (CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S))) <| by
     change Spec.map _ ≫ Spec.map _ = Spec.map _
     simp [← Spec.map_comp, ← CommRingCat.ofHom_comp]
     congr! 2
     ext
-    simp
+    simp)
   isOpenImmersion_torusEmb := by
+    stop
     obtain ⟨s, hsgen⟩ := AddMonoid.FG.out (N := S)
     let x : AddMonoidAlgebra R S := ∏ z ∈ s, single z 1
     let alg : Algebra R[S] R[FreeAbelianGroup <| Fin <| dim S] :=
@@ -42,14 +42,18 @@ noncomputable instance instToricVariety :
       sorry
     exact .of_isLocalization x (S := R[FreeAbelianGroup <| Fin <| dim S])
   isDominant_torusEmb := by -- integral + open nonempty
+    stop
     let img := RingHom.range (AddMonoidAlgebra.mapDomainRingHom R <| embedding S)
     have img_domain := Subring.instIsDomainSubtypeMem img
     have := (AlgebraicGeometry.affine_isIntegral_iff (CommRingCat.of (AddMonoidAlgebra R S)))
     sorry
-  torusAct := (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
-    (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)
-      (.id _ _)).toRingHom (Bialgebra.comulAlgHom R _).toRingHom)
+  torusAct :=
+    sorry
+    -- (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
+    -- (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)
+    --   (.id _ _)).toRingHom (Bialgebra.comulAlgHom R _).toRingHom)
   torusMul_comp_torusEmb := by
+    stop
     simp [← Spec.map_comp, ← CommRingCat.ofHom_comp, pullback.condition]
     sorry
 

@@ -5,44 +5,36 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Toric.GroupScheme.Torus
 
-open AlgebraicGeometry CategoryTheory
+/-!
+# The lattices of characters and cocharacters
+-/
 
-instance {C : Type*} [Category C] [ChosenFiniteProducts C] (X : C) [CommGrp_Class X] :
-  CommGrp_Class (Grp_.mk' X).X := ‹_›
+open CategoryTheory
+
+namespace AlgebraicGeometry.Scheme.Over
+variable {S : Scheme} {G : Over S}
 
 attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
-section
 
-variable {S : Scheme} {G : Over S} [Grp_Class G]
-
-variable (G) in
-abbrev SchemeOver.char :=
-  Grp_.mk' G ⟶ Grp_.mk' <| .mk (𝔾ₘ[S] ↘ S)
-
-notation "X("G")" => SchemeOver.char G
+section Grp_Class
+variable [Grp_Class G]
 
 variable (G) in
-abbrev SchemeOver.cochar :=
-  (Grp_.mk' <| .mk (𝔾ₘ[S] ↘ S)) ⟶ Grp_.mk' G
+abbrev char := Grp_.mk' G ⟶ .mk' <| .mk (𝔾ₘ[S] ↘ S)
 
-end
+variable (G) in
+abbrev cochar := Grp_.mk' (.mk (𝔾ₘ[S] ↘ S)) ⟶ .mk' G
 
-section
+notation "X("G")" => char G
 
-variable (G : Type*)
+end Grp_Class
 
-@[ext] lemma addToMulExt {a b : Additive G} (h : a.toMul = b.toMul) : a = b := h
+section CommGrp_Class
+variable [CommGrp_Class G]
 
-end
+noncomputable def charPairing : cochar G →* X(G) →* X(.mk (𝔾ₘ[S] ↘ S)) := sorry
 
-section
+def charPairingInt : char G →* cochar G →* ℤ := sorry
 
-variable {S : Scheme} {G : Over S} [CommGrp_Class G]
-
-
-noncomputable def SchemeOver.charPairing :
-    cochar G →* X(G) →* X(.mk (𝔾ₘ[S] ↘ S)) := sorry
-
-def SchemeOver.charPairingInt : SchemeOver.char G →* SchemeOver.cochar G →* ℤ := sorry
-
-end
+end CommGrp_Class
+end AlgebraicGeometry.Scheme.Over
