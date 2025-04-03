@@ -38,38 +38,33 @@ def liftFromOver {X : C} (K : J ⥤ Over X) : WithTerminal J ⥤ C :=
 @[simps]
 def extendCompose {X : C} (K : J ⥤ Over X) (F : C ⥤ D) :
   (liftFromOver K ⋙ F) ≅ liftFromOver (K ⋙ (Over.post F)) where
-  hom := {
-    app
-    | star => 𝟙 _
-    | of a => 𝟙 _
-  }
-  inv := {
-    app
-    | star => 𝟙 _
-    | of a => 𝟙 _
-  }
+  hom.app
+  | star => 𝟙 _
+  | of a => 𝟙 _
+  inv.app
+  | star => 𝟙 _
+  | of a => 𝟙 _
 
 @[simps]
 def coneLift {X : C} {K : J ⥤ Over X} : Cone K ⥤ Cone (liftFromOver K) where
 obj t := {
   pt := t.pt.left
-  π := {
-    app
-    | of a => CommaMorphism.left (t.π.app a)
-    | star => t.pt.hom
-    naturality
-    | star , star , _
-    | of a, star, _ => by aesop
-    | star, of _, _ => by contradiction
-    | of a, of b , f => by
-      have : (t.π.app b).left = (t.π.app a).left ≫ (K.map f).left := by
-        calc
-          (t.π.app b).left = (t.π.app a ≫ K.map f).left := by
-            simp only [Functor.const_obj_obj, Cone.w]
-          _ = (t.π.app a).left ≫ (K.map f).left := rfl
-      simpa [Functor.const_obj_obj, Cone.w]
-  }
+  π.app
+  | of a => CommaMorphism.left (t.π.app a)
+  | star => t.pt.hom
+  π.naturality
+  | star , star , _
+  | of a, star, _ => by aesop
+  | star, of _, _ => by contradiction
+  | of a, of b , f => by
+    have : (t.π.app b).left = (t.π.app a).left ≫ (K.map f).left := by
+      calc
+        (t.π.app b).left = (t.π.app a ≫ K.map f).left := by
+          simp only [Functor.const_obj_obj, Cone.w]
+        _ = (t.π.app a).left ≫ (K.map f).left := rfl
+    simpa [Functor.const_obj_obj, Cone.w]
 }
+
 map {t₁ t₂} f := {
   hom := f.hom.left
   w
@@ -85,26 +80,24 @@ map {t₁ t₂} f := {
 def coneBack {X : C} {K : J ⥤ Over X} : Cone (liftFromOver K) ⥤ Cone K where
 obj t := {
   pt := Over.mk (t.π.app star)
-  π := {
-      app a := {
-          left := t.π.app (of a)
-          right := 𝟙 _
-          w := by
-            have := by
-              calc
-                t.π.app (of a) ≫ (K.obj a).hom = t.π.app (of a) ≫
-                  (liftFromOver K).map (homFrom a) := rfl
-                _ = t.π.app star := by simp only [Functor.const_obj_obj, Cone.w]
-            simp [this]
-      }
-      naturality a b f := by
-        ext
-        let f₂ := incl.map f
-        have eq_after_K: (K.map f₂).left = (K.map f).left := by aesop
-        have nat : t.π.app (of b) =
-          t.π.app (of a) ≫ (K.map f₂).left := by simpa using t.π.naturality f₂
-        simp [nat, eq_after_K]
+  π.app a := {
+    left := t.π.app (of a)
+    right := 𝟙 _
+    w := by
+      have := by
+        calc
+          t.π.app (of a) ≫ (K.obj a).hom = t.π.app (of a) ≫
+            (liftFromOver K).map (homFrom a) := rfl
+          _ = t.π.app star := by simp only [Functor.const_obj_obj, Cone.w]
+      simp [this]
   }
+  π.naturality a b f := by
+    ext
+    let f₂ := incl.map f
+    have eq_after_K: (K.map f₂).left = (K.map f).left := by aesop
+    have nat : t.π.app (of b) =
+      t.π.app (of a) ≫ (K.map f₂).left := by simpa using t.π.naturality f₂
+    simp [nat, eq_after_K]
 }
 map {t₁ t₂ f} := {
   hom := Over.homMk f.hom
@@ -116,22 +109,14 @@ def coneToFromObj {X : C} {K : J ⥤ Over X} (t : Cone K) :
 
 @[simps]
 def coneLiftBack {X : C} {K : J ⥤ Over X} (t : Cone K) : coneBack.obj (coneLift.obj t) ≅ t where
-  hom := {
-    hom := 𝟙 t.pt
-  }
-  inv := {
-    hom := 𝟙 t.pt
-  }
+  hom.hom := 𝟙 t.pt
+  inv.hom := 𝟙 t.pt
 
 @[simps]
 def coneBackLift {X : C} {K : J ⥤ Over X} (t : Cone (liftFromOver K)) :
 coneLift.obj (coneBack.obj t) ≅ t where
-  hom := {
-    hom := 𝟙 t.pt
-  }
-  inv := {
-    hom := 𝟙 t.pt
-  }
+  hom.hom := 𝟙 t.pt
+  inv.hom := 𝟙 t.pt
 
 def coneEquiv {X : C} (K : J ⥤ Over X) : Cone K ≌ Cone (liftFromOver K) where
   functor := coneLift

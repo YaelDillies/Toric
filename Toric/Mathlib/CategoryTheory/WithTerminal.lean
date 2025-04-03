@@ -31,12 +31,12 @@ instance instSmall [SmallCategory C] :
 SmallCategory (WithTerminal C) := inferInstance
 
 instance instFin [SmallCategory C] [FinCategory C] :
-FinCategory (WithTerminal C) := {
-  fintypeObj := inferInstance
-  fintypeHom
-  | star, star => (inferInstance : Fintype PUnit)
-  | of _, star => (inferInstance : Fintype PUnit)
-  | star, of _ => (inferInstance : Fintype PEmpty)
-  | of a, of b => (inferInstance : Fintype (a ⟶ b))
-}
+FinCategory (WithTerminal C) where
+fintypeObj := inferInstance
+fintypeHom
+| star, star
+| of _, star => (inferInstance : Fintype PUnit)
+| star, of _ => (inferInstance : Fintype PEmpty)
+| of a, of b => (inferInstance : Fintype (a ⟶ b))
+
 end CategoryTheory.Limits.WithTerminal
