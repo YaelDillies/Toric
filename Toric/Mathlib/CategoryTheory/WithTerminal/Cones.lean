@@ -1,10 +1,5 @@
 import Mathlib.CategoryTheory.Comma.Over.Basic
-import Mathlib.CategoryTheory.FinCategory.Basic
-import Mathlib.CategoryTheory.Limits.Shapes.Terminal
-import Mathlib.CategoryTheory.Limits.Shapes.IsTerminal
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Fintype.Option
-import Mathlib.CategoryTheory.WithTerminal
+import Toric.Mathlib.CategoryTheory.WithTerminal
 
 /-!
 # Relations between `Cone`, `WithTerminal` and `Over`
@@ -15,7 +10,7 @@ equivalent categories of cones (`coneEquiv`). As a corollary, the limit of `K` "
 limit of `liftFromOver K`, and viceversa
 -/
 
-open CategoryTheory CategoryTheory.Limits CategoryTheory.WithTerminal -- CategoryTheory.con
+open CategoryTheory CategoryTheory.Limits CategoryTheory.WithTerminal
 
 universe w w' v₁ v₂ u₁ u₂
 variable {C : Type u₁} [Category.{v₁} C]
@@ -23,37 +18,6 @@ variable {D : Type u₂} [Category.{v₂} D]
 variable {J : Type w} [Category.{w'} J]
 
 namespace CategoryTheory.Limits.WithTerminal
-
-  -- These should go somewhere else, but I'm not sure where
-  def OptionEquiv   : (Option J) ≃ (WithTerminal J) where
-  toFun
-  | some a => of a
-  | none => star
-  invFun
-  | of a => some a
-  | star => none
-  left_inv
-  | some _
-  | none => by simp
-  right_inv
-  | of _
-  | star => by simp
-
-  instance IsFinType [Fintype J] : Fintype (WithTerminal J) :=
-    Fintype.ofEquiv (Option J) OptionEquiv
-
-  instance IsSmall  [SmallCategory J] :
-  SmallCategory (WithTerminal J) := inferInstance
-
-  instance IsFin  [SmallCategory J] [FinCategory J] :
-  FinCategory (WithTerminal J) := {
-    fintypeObj := inferInstance
-    fintypeHom a b := match a, b with
-    | star, star => (inferInstance : Fintype PUnit)
-    | of _, star => (inferInstance : Fintype PUnit)
-    | star, of _ => (inferInstance : Fintype PEmpty)
-    | of a, of b => (inferInstance : Fintype (a ⟶ b))
-  }
 
   @[simps]
   def asNatTransf {X : C} (K : J ⥤ Over X) :
