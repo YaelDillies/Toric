@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.Limits.Preserves.Basic
+import Mathlib.CategoryTheory.Adjunction.Limits
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 
 open CategoryTheory
@@ -41,14 +42,13 @@ instance PreservesFiniteLimits.overPost {X : C} {F : C ⥤ D}
 [SmallCategory J] [FinCategory J] : PreservesLimitsOfShape J (Over.post F (X := X)) :=
 by infer_instance
 
+instance PreservesLimitsOfShape.overPostEquivFunctor {X : C} {F : C ≌ D} :
+    PreservesLimitsOfShape J (Over.postEquiv F (X := X)).functor :=
+    Functor.instPreservesLimitsOfShapeOfIsRightAdjoint (Over.postEquiv X F).functor
 
-instance PreservesLimitsOfShape.overPostEquivFunctor {X : C} {F : C ≌ D}
-    [PreservesLimitsOfShape J F.functor] :
-    PreservesLimitsOfShape J (Over.postEquiv F (X := X)).functor := sorry
-
-instance PreservesLimitsOfShape.overPostEquivInverse {X : C} {F : C ≌ D}
-    [PreservesLimitsOfShape J F.inverse] :
-    PreservesLimitsOfShape J (Over.postEquiv F (X := X)).inverse := sorry
+instance PreservesLimitsOfShape.overPostEquivInverse {X : C} {F : C ≌ D} :
+    PreservesLimitsOfShape J (Over.postEquiv F (X := X)).inverse :=
+    Functor.instPreservesLimitsOfShapeOfIsRightAdjoint (Over.postEquiv X F).inverse
 
 instance PreservesLimitsOfSize.overPost {X : C} {F : C ⥤ D} [PreservesLimitsOfSize.{w', w} F] :
     PreservesLimitsOfSize.{w', w} (Over.post F (X := X)) where
