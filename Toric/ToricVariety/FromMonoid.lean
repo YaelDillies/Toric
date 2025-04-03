@@ -33,7 +33,7 @@ noncomputable instance instToricVariety :
     simp)
   isOpenImmersion_torusEmb := by
     stop
-    obtain ⟨s, hsgen⟩ := AddMonoid.FG.out (N := S)
+    obtain ⟨s, hsgen⟩ := AddMonoid.FG.fg_top (N := S)
     let x : AddMonoidAlgebra R S := ∏ z ∈ s, single z 1
     let alg : Algebra R[S] R[FreeAbelianGroup <| Fin <| dim S] :=
       (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S).toAlgebra

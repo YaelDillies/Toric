@@ -24,7 +24,7 @@ variable [AddCommMonoid M] [Subsingleton (AddUnits M)]
 lemma addIrreducible_mem_addSubmonoidClosure_subset :
     {p ∈ AddSubmonoid.closure S | AddIrreducible p} ⊆ S := by
   refine fun x hx ↦
-      AddSubmonoid.closure_induction (s := S) (p := fun x _ ↦ (AddIrreducible x → x ∈ S))
+      AddSubmonoid.closure_induction (s := S) (motive := fun x _ ↦ (AddIrreducible x → x ∈ S))
       (fun _ hx _ ↦ hx) (by simp) (fun a b _ _ ha hb h ↦ ?_) hx.1 hx.2
   obtain h₀ | h₀ := h.isAddUnit_or_isAddUnit rfl
   · obtain rfl := isAddUnit_iff_eq_zero.mp h₀
@@ -47,7 +47,7 @@ variable [AddMonoid.FG M]
 
 /-- A finitely generated salient monoid has finitely many irreducible elements. -/
 lemma finite_addIrreducible : {p : M | AddIrreducible p}.Finite := by
-  simpa using AddMonoid.FG.out.finite_addIrreducible_mem_addSubmonoidClosure
+  simpa using AddMonoid.FG.fg_top.finite_addIrreducible_mem_addSubmonoidClosure
 
 end AddCommMonoid
 

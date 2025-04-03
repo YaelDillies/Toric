@@ -14,11 +14,10 @@ import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
+import Toric.Mathlib.Algebra.FreeAbelianGroup.UniqueSums
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
-import Toric.Mathlib.Algebra.Group.Submonoid.Operations
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
-import Toric.Mathlib.Algebra.Group.UniqueProds.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over

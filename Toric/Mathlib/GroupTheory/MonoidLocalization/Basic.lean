@@ -52,7 +52,7 @@ lemma fg [Monoid.FG M] (hN : N.FG) : Monoid.FG <| Localization N := by
 
 /-- The Grothendieck group of a finitely generated monoid is finitely generated. -/
 @[to_additive "The Grothendieck group of a finitely generated monoid is finitely generated."]
-instance instFG [Monoid.FG M] : Monoid.FG <| Localization (⊤ : Submonoid M) := fg Monoid.FG.out
+instance instFG [Monoid.FG M] : Monoid.FG <| Localization (⊤ : Submonoid M) := fg Monoid.FG.fg_top
 
 /-- The localization of a torsion-free monoid is torsion-free. -/
 @[to_additive "The localization of a torsion-free monoid is torsion-free."]

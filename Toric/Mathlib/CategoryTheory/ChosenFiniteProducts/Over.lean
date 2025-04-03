@@ -198,6 +198,7 @@ def chosenFiniteProducts (X : C) : ChosenFiniteProducts (Under X)ᵒᵖ where
       · simpa using congr(($e₁).unop.right)
       · simpa using congr(($e₂).unop.right)
   }
+  terminal.cone := _
   terminal.isLimit := terminalOpOfInitial Under.mkIdInitial
 
 instance (X : C) : PreservesFiniteProducts (Under.opToOverOp X) := sorry
