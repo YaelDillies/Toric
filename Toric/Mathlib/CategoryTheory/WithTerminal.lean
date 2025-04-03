@@ -33,7 +33,7 @@ SmallCategory (WithTerminal C) := inferInstance
 instance instFin [SmallCategory C] [FinCategory C] :
 FinCategory (WithTerminal C) := {
   fintypeObj := inferInstance
-  fintypeHom a b := match a, b with
+  fintypeHom
   | star, star => (inferInstance : Fintype PUnit)
   | of _, star => (inferInstance : Fintype PUnit)
   | star, of _ => (inferInstance : Fintype PEmpty)

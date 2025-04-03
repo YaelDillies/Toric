@@ -54,15 +54,14 @@ def coneLift {X : C} {K : J ⥤ Over X} : Cone K ⥤ Cone (liftFromOver K) where
 obj t := {
   pt := t.pt.left
   π := {
-    app a := match a with
+    app
     | of a => CommaMorphism.left (t.π.app a)
     | star => t.pt.hom
-    naturality a b f:=
-    match a, b with
-    | star , star
-    | of a, star => by aesop
-    | star, of _ => by contradiction
-    | of a, of b => by
+    naturality
+    | star , star , _
+    | of a, star, _ => by aesop
+    | star, of _, _ => by contradiction
+    | of a, of b , f => by
       have : (t.π.app b).left = (t.π.app a).left ≫ (K.map f).left := by
         calc
           (t.π.app b).left = (t.π.app a ≫ K.map f).left := by
@@ -73,15 +72,13 @@ obj t := {
 }
 map {t₁ t₂} f := {
   hom := f.hom.left
-  w := by
-    intro a
-    cases a with
-    | star => aesop_cat
-    | of a =>
-        have := by calc
-          f.hom.left ≫ (t₂.π.app a).left = (f.hom ≫ t₂.π.app a).left := by rfl_cat
-          _ = (t₁.π.app a).left := by simp_all only [ConeMorphism.w, Functor.const_obj_obj]
-        simpa
+  w
+  | star => by aesop_cat
+  | of a => by
+    have := by calc
+      f.hom.left ≫ (t₂.π.app a).left = (f.hom ≫ t₂.π.app a).left := by rfl_cat
+      _ = (t₁.π.app a).left := by simp_all only [ConeMorphism.w, Functor.const_obj_obj]
+    simpa
 }
 
 @[simps]
