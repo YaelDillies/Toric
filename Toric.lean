@@ -35,6 +35,7 @@ import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 import Toric.Mathlib.CategoryTheory.Yoneda
 import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.Data.Fintype.EquivFin
