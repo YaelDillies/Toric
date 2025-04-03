@@ -22,18 +22,14 @@ instance PreservesLimitsOfShape.overPost {X : C} {F : C ⥤ D}
         have : Nonempty (IsLimit (F.mapCone lim_C)) :=
           PreservesLimitsOfShape.preservesLimit.preserves is_limit_forget
         have is_lim_D : IsLimit (F.mapCone lim_C) := Classical.choice this
-
         have is_lim_D := (IsLimit.postcomposeHomEquiv (WithTerminal.extendCompose K F)
           (F.mapCone lim_C)).symm is_lim_D
-
         let same_cone_in_D := (Cones.postcompose (WithTerminal.extendCompose K F).hom).obj
          (F.mapCone lim_C)
-
         have cone_iso : same_cone_in_D ≅ WithTerminal.coneLift.obj ((Over.post F).mapCone lim) :=
          Cones.ext (Iso.refl same_cone_in_D.pt) (fun
           | .star => by aesop
           | .of a => by aesop)
-
         exact WithTerminal.limitEquiv.toFun (is_lim_D.ofIsoLimit cone_iso)
     }
 

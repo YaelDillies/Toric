@@ -17,12 +17,8 @@ toFun
 invFun
 | of a => some a
 | star => none
-left_inv
-| some _
-| none => by simp
-right_inv
-| of _
-| star => by simp
+left_inv a := by cases a <;> simp
+right_inv a := by cases a <;> simp
 
 instance instFinType [Fintype C] : Fintype (WithTerminal C) :=
   Fintype.ofEquiv (Option C) OptionEquiv
