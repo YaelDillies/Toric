@@ -55,16 +55,20 @@ namespace CategoryTheory.Limits.WithTerminal
     | of a, of b => (inferInstance : Fintype (a ⟶ b))
   }
 
+  @[simps]
+  def asNatTransf {X : C} (K : J ⥤ Over X) :
+  NatTrans (K ⋙ Over.forget X) ((Functor.const J).obj X) where
+    app a := (K.obj a).hom
+
   /-- For any functor `K : J ⥤ Over X`, there is a canonical extension
-  `WithTerminal J ⥤ C`, since `Over X` has a final object, `𝟙 X`. It is
-  easier to define it ad hoc, since the final object can be chosen canonically
-  (note that any isomorphism mapping to `X` is also final)-/
+  `WithTerminal J ⥤ C`, that sends `star` to `X`-/
   @[simps!]
   def liftFromOver {X : C} (K : J ⥤ Over X) : WithTerminal J ⥤ C :=
-    WithTerminal.lift
-      (K ⋙ Over.forget X)
-      (fun a ↦ (K.obj a).hom)
-      (by aesop_cat)
+    ofCommaObject {
+      left := K ⋙ Over.forget X
+      right := X
+      hom := asNatTransf K
+    }
 
   /-- The extension of a functor to over categories behaves well with compositions -/
   @[simps]
