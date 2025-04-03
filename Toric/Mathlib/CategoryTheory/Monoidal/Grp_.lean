@@ -173,7 +173,7 @@ lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H]
 
 @[reassoc]
 lemma Grp_Class.div_comp {G H K : C} (f g : G ⟶ H) (h : H ⟶ K) [Grp_Class H] [Grp_Class K]
-    [IsMon_Hom h] : (f / g) ≫ h =  (f ≫ h) / (g ≫ h) :=
+    [IsMon_Hom h] : (f / g) ≫ h = (f ≫ h) / (g ≫ h) :=
     (((yonedaGrp.map (Grp_.homMk h)).app (.op G)).hom.map_div f g)
 
 lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι = f⁻¹ := rfl

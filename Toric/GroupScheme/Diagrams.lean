@@ -82,7 +82,7 @@ lemma gigaDiagram3 :
         ≫ M.X ◁ ((β_ _ _).hom ▷ M.X)
         ≫ M.X ◁ (M.mul ▷ M.X)
         ≫ M.X ◁ M.mul
-        ≫ M.mul  := by simp
+        ≫ M.mul := by simp
 
 lemma gigaDiagram4 :
     (α_ _ _ _).hom

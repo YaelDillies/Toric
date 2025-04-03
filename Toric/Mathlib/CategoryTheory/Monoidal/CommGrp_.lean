@@ -10,7 +10,7 @@ namespace CommGrp_
 
 variable [ChosenFiniteProducts C]
 
-def mk' (X : C)  [Grp_Class X] [IsCommMon X] : CommGrp_ C where
+def mk' (X : C) [Grp_Class X] [IsCommMon X] : CommGrp_ C where
   __ := Grp_.mk' X
   mul_comm := IsCommMon.mul_comm X
 

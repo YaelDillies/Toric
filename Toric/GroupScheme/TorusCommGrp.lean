@@ -31,11 +31,11 @@ def CategoryTheory.Over.equivalenceOfIsTerminal
   unitIso := NatIso.ofComponents (fun Y ↦ Over.isoMk (Iso.refl _) (hX.hom_ext _ _))
   counitIso := NatIso.ofComponents (fun _ ↦ Iso.refl _)
 
-instance {C : Type*} [Category C] [HasBinaryProducts C] {X : C} : (Over.star X).IsRightAdjoint  :=
+instance {C : Type*} [Category C] [HasBinaryProducts C] {X : C} : (Over.star X).IsRightAdjoint :=
   ⟨_, ⟨Over.forgetAdjStar X⟩⟩
 
 noncomputable
-def Over.forgetMapTerminal {C} [Category C] [HasTerminal C] (S : C)  :
+def Over.forgetMapTerminal {C} [Category C] [HasTerminal C] (S : C) :
     Over.forget _ ≅ Over.map (terminal.from S) ⋙
       (Over.equivalenceOfIsTerminal terminalIsTerminal).functor :=
   NatIso.ofComponents (fun X ↦ Iso.refl _) (by simp)
