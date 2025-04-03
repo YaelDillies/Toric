@@ -24,20 +24,28 @@ def asNatTransf {X : C} (K : J ⥤ Over X) :
 NatTrans (K ⋙ Over.forget X) ((Functor.const J).obj X) where
   app a := (K.obj a).hom
 
+@[simps]
+def commaFromFunctorToOver {X : C} : (J ⥤ Over X) ⥤ Comma (𝟭 (J ⥤ C)) (Functor.const J) where
+  obj K := {
+    left := K ⋙ Over.forget X
+    right := X
+    hom.app a := (K.obj a).hom
+  }
+  map f := {
+    left := whiskerRight f (Over.forget X)
+    right := 𝟙 X
+  }
+
 /-- For any functor `K : J ⥤ Over X`, there is a canonical extension
 `WithTerminal J ⥤ C`, that sends `star` to `X`-/
 @[simps!]
-def liftFromOver {X : C} (K : J ⥤ Over X) : WithTerminal J ⥤ C :=
-  ofCommaObject {
-    left := K ⋙ Over.forget X
-    right := X
-    hom := asNatTransf K
-  }
+def liftFromOver {X : C} : (J ⥤ Over X) ⥤ (WithTerminal J ⥤ C) :=
+  commaFromFunctorToOver ⋙ equivComma.inverse
 
 /-- The extension of a functor to over categories behaves well with compositions -/
 @[simps]
 def extendCompose {X : C} (K : J ⥤ Over X) (F : C ⥤ D) :
-  (liftFromOver K ⋙ F) ≅ liftFromOver (K ⋙ (Over.post F)) where
+  (liftFromOver.obj K ⋙ F) ≅ liftFromOver.obj (K ⋙ (Over.post F)) where
 hom.app
 | star => 𝟙 _
 | of a => 𝟙 _
@@ -46,7 +54,7 @@ inv.app
 | of a => 𝟙 _
 
 @[simps]
-def coneLift {X : C} {K : J ⥤ Over X} : Cone K ⥤ Cone (liftFromOver K) where
+def coneLift {X : C} {K : J ⥤ Over X} : Cone K ⥤ Cone (liftFromOver.obj K) where
 obj t := {
   pt := t.pt.left
   π.app
@@ -76,7 +84,7 @@ map {t₁ t₂} f := {
 }
 
 @[simps]
-def coneBack {X : C} {K : J ⥤ Over X} : Cone (liftFromOver K) ⥤ Cone K where
+def coneBack {X : C} {K : J ⥤ Over X} : Cone (liftFromOver.obj K) ⥤ Cone K where
 obj t := {
   pt := Over.mk (t.π.app star)
   π.app a := {
@@ -86,7 +94,7 @@ obj t := {
       have := by
         calc
           t.π.app (of a) ≫ (K.obj a).hom = t.π.app (of a) ≫
-            (liftFromOver K).map (homFrom a) := rfl
+            (liftFromOver.obj K).map (homFrom a) := rfl
           _ = t.π.app star := by simp only [Functor.const_obj_obj, Cone.w]
       simpa
   }
@@ -112,12 +120,12 @@ def coneLiftBack {X : C} {K : J ⥤ Over X} (t : Cone K) : coneBack.obj (coneLif
   inv.hom := 𝟙 t.pt
 
 @[simps]
-def coneBackLift {X : C} {K : J ⥤ Over X} (t : Cone (liftFromOver K)) :
+def coneBackLift {X : C} {K : J ⥤ Over X} (t : Cone (liftFromOver.obj K)) :
 coneLift.obj (coneBack.obj t) ≅ t where
   hom.hom := 𝟙 t.pt
   inv.hom := 𝟙 t.pt
 
-def coneEquiv {X : C} (K : J ⥤ Over X) : Cone K ≌ Cone (liftFromOver K) where
+def coneEquiv {X : C} (K : J ⥤ Over X) : Cone K ≌ Cone (liftFromOver.obj K) where
   functor := coneLift
   inverse := coneBack
   unitIso := NatIso.ofComponents coneLiftBack
