@@ -47,5 +47,5 @@ import Toric.MonoidObjectAction.Basic
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
 import Toric.ToricIdeal
-import Toric.ToricVariety
-import Toric.ToricVarietyFromMonoid
+import Toric.ToricVariety.Defs
+import Toric.ToricVariety.FromMonoid

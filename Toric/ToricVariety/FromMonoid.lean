@@ -5,7 +5,7 @@ Authors: Patrick Luo
 -/
 import Mathlib.AlgebraicGeometry.Properties
 import Toric.AffineMonoid.Embedding
-import Toric.ToricVariety
+import Toric.ToricVariety.Defs
 
 /-!
 # Affine monoids give rise to toric varieties
