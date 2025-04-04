@@ -41,6 +41,7 @@ import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.MonoidObjectAction.Basic
 import Toric.MvLaurentPolynomial

@@ -5,9 +5,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.Algebra.Equiv.TransferInstance
-import Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Hopf.GroupLike
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
 # Characterisation of group-like elements in group algebras
@@ -57,72 +57,52 @@ lemma isGroupLikeElem_iff_mem_range_of {x : MonoidAlgebra K G} :
     refine smul_mem _ _ <| subset_span <| Set.mem_range_self _
   mpr := by rintro ⟨g, rfl⟩; exact isGroupLikeElem_of _
 
-private noncomputable def hopfHomToMap (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) : G → H :=
+private noncomputable def mapDomainOfBialgHomFun (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) :
+    G → H :=
   fun g ↦ (isGroupLikeElem_iff_mem_range_of.1 <| (isGroupLikeElem_of g).map f).choose
 
 @[simp]
-private lemma single_hopfHomToMap_one (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) (g : G) :
-    single (hopfHomToMap f g) 1 = f (single g 1) :=
+private lemma single_mapDomainOfBialgHomFun_one (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H)
+    (g : G) : single (mapDomainOfBialgHomFun f g) 1 = f (single g 1) :=
   (isGroupLikeElem_iff_mem_range_of.1 <| (isGroupLikeElem_of g).map f).choose_spec
 
 open Coalgebra in
+/-- A bialgebra homomorphism `K[G] → K[H]` between group algebras over a field `K` comes from a
+group hom `G → H`. This is that group hom, namely the inverse of `MonoidAlgebra.mapDomainBialgHom`.
+-/
 noncomputable
-def hopfHomToMonoidHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) : G →* H where
-  toFun := hopfHomToMap f
+def mapDomainOfBialgHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) : G →* H where
+  toFun := mapDomainOfBialgHomFun f
   map_one' := of_injective (k := K) <| by simp [← one_def]
   map_mul' g₁ g₂ := by
     refine of_injective (k := K) ?_
-    simp only [of_apply, single_hopfHomToMap_one]
+    simp only [of_apply, single_mapDomainOfBialgHomFun_one]
     rw [← mul_one (1 : K), ← single_mul_single, ← single_mul_single, map_mul]
     simp
 
-@[simp]
-protected lemma single_hopfHomToMonoidHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) (g : G)
-    (k : K) : single (hopfHomToMap f g) k = f (single g k) := by
+protected lemma single_mapDomainOfBialgHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H)
+    (g : G) (k : K) : single (mapDomainOfBialgHom f g) k = f (single g k) := by
   rw [← mul_one k, ← smul_eq_mul, ← smul_single, ← smul_single, map_smul]
-  exact congr(k • $(single_hopfHomToMap_one f g))
+  exact congr(k • $(single_mapDomainOfBialgHomFun_one f g))
 
-@[simps] noncomputable
-def monoidHomToHopfHom (f : G →* H) : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H where
-  __ := MonoidAlgebra.mapDomainAlgHom K K f
-  map_smul' m x := by simp
-  counit_comp := by ext; simp
-  map_comp_comul := by ext; simp
+@[simp]
+lemma mapDomainBialgHom_mapDomainOfBialgHom (f : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) :
+    mapDomainBialgHom (mapDomainOfBialgHom f) = f :=
+  BialgHom.coe_algHom_injective <| algHom_ext fun x ↦ by
+    simpa [-single_mapDomainOfBialgHomFun_one] using single_mapDomainOfBialgHomFun_one f x
 
-example {A : Type*} [Semiring A] [Algebra K A] (α β : MonoidAlgebra K G →ₐ[K] A)
-    (hyp : ∀ g : G, α (single g 1) = β (single g 1)) : α = β := by exact algHom_ext hyp
+@[simp] lemma mapDomainOfBialgHom_mapDomainBialgHom (f : G →* H) :
+    mapDomainOfBialgHom (mapDomainBialgHom (R := K) f) = f := by
+  ext g; refine of_injective (k := K) ?_; simp [MonoidAlgebra.single_mapDomainOfBialgHom]
 
-private lemma aux1 {α : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H} {x : MonoidAlgebra K G} :
-    α x = (α : _ →ₐ[K] _) x := rfl
-
-private lemma aux2 {α β : MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H}
-    (hyp : (α : _ →ₐ _) = (β : MonoidAlgebra K G →ₐ[K] MonoidAlgebra K H)) : α = β := by
-  ext1 x
-  rw [aux1, aux1]
-  exact congr($(hyp) x)
-
-noncomputable
-def hopfHomEquivMonoidHom : (MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) ≃ (G →* H) where
-  toFun f := hopfHomToMonoidHom f
-  invFun f := monoidHomToHopfHom f
-  left_inv f := by
-    simp
-    apply aux2
-    apply algHom_ext
-    intro x
-    simp
-    rw [← single_hopfHomToMap_one]
-    rfl
-  right_inv f := by
-    ext g
-    apply of_injective (k := K)
-    simp
-    show single (MonoidAlgebra.hopfHomToMap.{u_1, u_4, u_5} (K := K)
-        (MonoidAlgebra.monoidHomToHopfHom f) g) 1 = _
-    rw [MonoidAlgebra.single_hopfHomToMonoidHom]
-    show (mapDomainRingHom K f) (single g 1) = single (f g) 1
-    rw [MonoidAlgebra.mapDomainRingHom_apply]
-    simp
+/-- The equivalence between group homs `G → H` and bialgebra homs `K[G] → K[H]` of group algebras
+over a field. -/
+noncomputable def mapDomainBialgHomEquiv :
+    (G →* H) ≃ (MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) where
+  toFun := mapDomainBialgHom
+  invFun := mapDomainOfBialgHom
+  left_inv := mapDomainOfBialgHom_mapDomainBialgHom
+  right_inv := mapDomainBialgHom_mapDomainOfBialgHom
 
 end Group
 
@@ -132,7 +112,13 @@ variable [CommGroup H]
 
 --TODO: Yaël fix diamonds!!!!!!!!!!!!!!!!!!!!!!!!
 noncomputable
-instance : Group <| MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H := hopfHomEquivMonoidHom.group
+instance : Group <| MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H := mapDomainBialgHomEquiv.symm.group
+
+/-- The group isomorphism between group homs `G → H` and bialgebra homs `K[G] → K[H]` of group
+algebras over a field. -/
+noncomputable def mapDomainBialgHomMulEquiv :
+    (G →* H) ≃* (MonoidAlgebra K G →ₐc[K] MonoidAlgebra K H) :=
+  mapDomainBialgHomEquiv.symm.mulEquiv.symm
 
 end CommGroup
 
