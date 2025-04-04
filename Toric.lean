@@ -5,9 +5,9 @@ import Toric.ConvexAnalysis.Polytope
 import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
+import Toric.GroupScheme.HopfAffine
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.Torus
-import Toric.Hopf.AffineGroupScheme
 import Toric.Hopf.CommAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.HopfAlg
