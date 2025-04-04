@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Adjunctions
+import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.Algebra.Category.Ring.Adjunctions
 import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.CategoryTheory.Adjunction.Opposites
@@ -52,10 +53,11 @@ def TorusInt.representableBy (σ : Type*) :
       CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
         (TorusInt σ) :=
   ((ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
-    CommGrp.forget₂CommMonAdj.op.comp <| AddCommGrp.equivalence.toAdjunction.op.comp <|
-    (AddCommGrp.adj.op)).representableBy (op σ)).ofIso
-    (isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙ forget CommGrp)
-      (opOpYoneda.app _))
+    CommGrp.forget₂CommMonAdj.op.comp <|
+      commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
+        AddCommGrp.adj.op).representableBy (op σ)).ofIso <|
+    isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙ forget CommGrp)
+      (opOpYoneda.app _)
 
 instance (σ : Type*) : CommGrp_Class (TorusInt σ) :=
   .ofRepresentableBy _
@@ -89,13 +91,14 @@ def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
   ((((Over.mapPullbackAdj (terminal.from S)).comp
     (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
     (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
-      CommGrp.forget₂CommMonAdj.op.comp <| AddCommGrp.equivalence.toAdjunction.op.comp <|
-    (AddCommGrp.adj.op))).representableBy (op σ)).ofIso
-    (isoWhiskerRight (NatIso.op (Over.forgetMapTerminal S))
+      CommGrp.forget₂CommMonAdj.op.comp <|
+        commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
+          AddCommGrp.adj.op)).representableBy (op σ)).ofIso <|
+    isoWhiskerRight (NatIso.op (Over.forgetMapTerminal S))
       (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-          CommMonCat.units ⋙ forget CommGrp) (opOpYoneda.app _)))
+          CommMonCat.units ⋙ forget CommGrp) (opOpYoneda.app _))
 
 /-- The split torus of dimension `n` over `Spec R`. -/
 notation "𝔾ₘ[" R ", " n "]" => Over.mk (SplitTorus (Spec R) (ULift <| Fin n) ↘ Spec R)
