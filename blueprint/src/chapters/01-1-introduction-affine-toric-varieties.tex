@@ -39,44 +39,41 @@
 \end{definition}
 
 
-\begin{definition}
+\begin{definition}[Characters of a group scheme]
   \label{1-1-char}
   \uses{1-1-torus}
   \lean{AlgebraicGeometry.Scheme.Over.char}
   \leanok
 
-  The {\bf character lattice} $M = X(\Gm^n) := \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm)$.
-  An element is (unsurprisingly) called a {\bf character}.
+  For a group scheme $G$ over $\Spec R$, the {\bf character lattice of $G$} is
+  \[
+    X(G) := \Hom_{\mathsf{GrpSch}}(G, \Gm).
+  \]
+  An element $X(G)$ is (unsurprisingly) called a {\bf character}.
 \end{definition}
 
 
-\begin{proposition}
+\begin{proposition}[Character lattice of the torus]
   \label{1-1-char-torus}
   \uses{1-1-char}
   % \lean{}
   % \leanok
 
-  $M = X(\Gm^n) \cong \Z^n$. For $m \in M$ we write $\chi^m$ for the corresponding character.
+  Characters of the torus over a field $k$ are isomorphic to $\Z^n$. $X(\Gm^n) = \Z^n$.
 \end{proposition}
 \begin{proof}
   \uses{0-full-faithful-spec-grp-alg, 1-1-torus-spec}
   % \leanok
 
+  By Propositions \ref{1-1-torus-spec} and \ref{0-full-faithful-spec-grp-alg} in turn, we have
+  \[
+    X(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm) = \Hom(k[\Z], k[\Z^n]) = \Hom(\Z, \Z^n) = \Z^n.
+  \]
 \end{proof}
 
 
-\begin{definition}
-  \label{1-1-cochar-lat}
-  \uses{1-1-cochar}
-  % \lean{}
-  % \leanok
-
-  One-parameter subgroup/cocharacter lattice $N := \Hom(\Gm, \Gm^n)$.
-\end{definition}
-
-
-\begin{proposition}[Proposition 1.1.1(a)]
-  \label{1-1-1-group-hom-subtorus}
+\begin{proposition}[The image of a torus is a torus]
+  \label{1-1-1-group-hom-subtorus} % Proposition 1.1.1(a)
   \uses{1-1-torus}
   % \lean{}
   % \leanok
@@ -134,20 +131,19 @@
 \end{proof}
 
 
-\begin{definition}
+\begin{definition}[The character-cocharacter pairing]
   \label{1-1-char-cochar-pairing}
-  \uses{1-1-char}
-  \uses{1-1-cochar-lat}
-  % \lean{}
+  \uses{1-1-char, 1-1-cochar}
+  \lean{AlgebraicGeometry.Scheme.Over.charPairing}
   % \leanok
 
   Character lattice and one-parameter subgroup pairing.
 \end{definition}
 
 
-\begin{proposition}
+\begin{proposition}[Cocharacter lattice of the torus]
   \label{1-1-cochar-torus}
-  \uses{1-1-cochar-lat}
+  \uses{1-1-cochar}
   % \lean{}
   % \leanok
 
@@ -157,6 +153,10 @@
   \uses{1-1-char-torus, 1-1-char-cochar-pairing}
   % \leanok
 
+  By Propositions \ref{1-1-torus-spec} and \ref{0-full-faithful-spec-grp-alg} in turn, we have
+  \[
+    \mathrm{cochar}(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm, \Gm^n) = \Hom(k[\Z^n], k[\Z]) = \Hom(\Z^n, \Z) \cong \Z^n.
+  \]
 \end{proof}
 
 
