@@ -7,9 +7,11 @@ import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
 import Toric.GroupScheme.SchemeOver
+import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.Torus
 import Toric.Hopf.CommAlg
 import Toric.Hopf.GroupLike
+import Toric.Hopf.GrpAlg
 import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.Grp.Basic
