@@ -200,7 +200,11 @@ lemma Grp_Class.comp_zpow {G H K : C} [Grp_Class H] (f : G ⟶ H) (h : K ⟶ G) 
   | (n : ℕ) => by simp [comp_pow]
   | .negSucc n => by simp [comp_pow, comp_inv]
 
-namespace Grp_.Hom
+namespace Grp_
+
+@[simp] lemma mk'_X (G : C) [Grp_Class G] : (mk' G).X = G := rfl
+
+namespace Hom
 
 instance instOne : One (G ⟶ H) := inferInstanceAs <| One (G.toMon_ ⟶ H.toMon_)
 
