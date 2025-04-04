@@ -18,7 +18,7 @@ of the image of the inclusion `G → k[G]`.
 
 open Coalgebra
 
-variable {K R A G H : Type*}
+variable {K R A G H I : Type*}
 
 namespace MonoidAlgebra
 section CommSemiring
@@ -140,7 +140,7 @@ section Field
 variable [Field K] [AddGroup G]
 
 section AddGroup
-variable [AddGroup H]
+variable [AddGroup H] [AddGroup I]
 
 open Submodule in
 @[simp]
@@ -168,8 +168,7 @@ open Coalgebra in
 /-- A bialgebra homomorphism `K[G] → K[H]` between group algebras over a field `K` comes from a
 group hom `G → H`. This is that group hom, namely the inverse of
 `AddMonoidAlgebra.mapDomainBialgHom`. -/
-noncomputable
-def mapDomainOfBialgHom (f : K[G] →ₐc[K] K[H]) : G →+ H where
+noncomputable def mapDomainOfBialgHom (f : K[G] →ₐc[K] K[H]) : G →+ H where
   toFun := mapDomainOfBialgHomFun f
   map_zero' := Multiplicative.ofAdd.injective <| of_injective (k := K) <| by simp [← one_def]
   map_add' g₁ g₂ := by
@@ -195,6 +194,16 @@ lemma mapDomainBialgHom_mapDomainOfBialgHom (f : K[G] →ₐc[K] K[H]) :
   ext g
   refine Multiplicative.ofAdd.injective <| of_injective (k := K) ?_
   simp [AddMonoidAlgebra.single_mapDomainOfBialgHom]
+
+@[simp] lemma mapDomainOfBialgHom_id : mapDomainOfBialgHom (.id K K[G]) = .id _ := by
+  simp [← mapDomainBialgHom_id]
+
+@[simp] lemma mapDomainOfBialgHom_comp (f : K[H] →ₐc[K] K[I]) (g : K[G] →ₐc[K] K[H]) :
+    mapDomainOfBialgHom (f.comp g) = (mapDomainOfBialgHom f).comp (mapDomainOfBialgHom g) := by
+  rw [← mapDomainOfBialgHom_mapDomainBialgHom (K := K)
+    ((mapDomainOfBialgHom f).comp (mapDomainOfBialgHom g)),
+    mapDomainBialgHom_comp, mapDomainBialgHom_mapDomainOfBialgHom,
+    mapDomainBialgHom_mapDomainOfBialgHom]
 
 /-- The equivalence between group homs `G → H` and bialgebra homs `K[G] → K[H]` of group algebras
 over a field. -/
