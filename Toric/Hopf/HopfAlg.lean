@@ -29,7 +29,7 @@ section hopfToGrp
 variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra R A] [HopfAlgebra R B]
   {f : A →ₐc[R] B}
 
-noncomputable instance : Grp_Class <| op <| CommAlg.of R A where
+noncomputable instance grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
   one := (CommAlg.ofHom <| Bialgebra.counitAlgHom R A).op
   mul := (CommAlg.ofHom <| Bialgebra.comulAlgHom R A).op
   one_mul' := by
@@ -72,7 +72,7 @@ noncomputable instance : Grp_Class <| op <| CommAlg.of R A where
     | tmul x y => rfl
     | add x y _ _ => simp_all
 
-instance : IsMon_Hom (CommAlg.ofHom (f : A →ₐ[R] B)).op where
+instance isMon_Hom_commAlgOfHom : IsMon_Hom (CommAlg.ofHom (f : A →ₐ[R] B)).op where
    one_hom := by
      apply Quiver.Hom.unop_inj
      ext
@@ -93,7 +93,7 @@ variable {R : Type u} [CommRing R] {G : (CommAlg.{u} R)ᵒᵖ} [Grp_Class G]
 
 open MonoidalCategory
 
-noncomputable instance : Bialgebra R G.unop :=
+noncomputable instance bialgebra_unop : Bialgebra R G.unop :=
   .mkAlgHoms μ[G].unop.hom η[G].unop.hom
   (by
     convert congr(($((Mon_Class.mul_assoc_flip G).symm)).unop.hom)
@@ -120,7 +120,7 @@ noncomputable instance : Bialgebra R G.unop :=
     rw [CommAlg.leftWhisker_hom]
     rfl)
 
-noncomputable instance : HopfAlgebra R G.unop where
+noncomputable instance hopfAlgebra_unop : HopfAlgebra R G.unop where
   antipode := ι[G].unop.hom.toLinearMap
   mul_antipode_rTensor_comul := by
     convert congr(($(Grp_Class.left_inv G)).unop.hom.toLinearMap)

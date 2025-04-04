@@ -40,7 +40,7 @@ noncomputable def commGrpAlgebra.fullyFaithful : (commGrpAlgebra k).FullyFaithfu
   map_preimage {X Y} f := by simp [commGrpAlgebra]; rfl
   preimage_map {X Y} f := by simp [commGrpAlgebra]
 
-instance : (commGrpAlgebra k).Full := commGrpAlgebra.fullyFaithful.full
-instance : (commGrpAlgebra k).Faithful := commGrpAlgebra.fullyFaithful.faithful
+instance commGrpAlgebra.instFull : (commGrpAlgebra k).Full := fullyFaithful.full
+instance commGrpAlgebra.instFaithful : (commGrpAlgebra k).Faithful := fullyFaithful.faithful
 
 end Field

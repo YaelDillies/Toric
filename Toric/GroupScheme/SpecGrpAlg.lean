@@ -29,15 +29,13 @@ end CommRingCat
 section Field
 variable {k : Type*} [Field k]
 
-instance : (specCommGrpAlgebra <| .of k).Full :=
-  @Functor.Full.comp _ _ _ _ _ _ _ _ _ hopfSpec.instFull
-
-instance : (specCommGrpAlgebra <| .of k).Faithful :=
-  @Functor.Faithful.comp _ _ _ _ _ _ _ _ _ hopfSpec.instFaithful
-
 /-- The diagonalizable group scheme functor over a field is fully faithful. -/
 noncomputable
 def specCommGrpAlgebra.fullyFaithful : (specCommGrpAlgebra (.of k)).FullyFaithful :=
   commGrpAlgebra.fullyFaithful.comp hopfSpec.fullyFaithful
+
+instance specCommGrpAlgebra.instFull : (specCommGrpAlgebra <| .of k).Full := fullyFaithful.full
+instance specCommGrpAlgebra.instFaithful : (specCommGrpAlgebra <| .of k).Faithful :=
+  fullyFaithful.faithful
 
 end Field
