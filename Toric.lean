@@ -10,6 +10,7 @@ import Toric.GroupScheme.Torus
 import Toric.Hopf.AffineGroupScheme
 import Toric.Hopf.CommAlg
 import Toric.Hopf.GroupLike
+import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic

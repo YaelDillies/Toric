@@ -4,13 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
-import Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Hopf.CommAlg
 import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.RingTheory.Bialgebra.Basic
-import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -53,148 +50,9 @@ variable {R : CommRingCat.{u}}
 /-!
 ### Left edge: `R`-Hopf algebras correspond to cogroup objects under `R`
 
-In this section, we provide ways to turn an unbundled `R`-Hopf algebra into a bundled cogroup
-object under `R`, and vice versa.
--/
+Ways to turn an unbundled `R`-Hopf algebra into a bundled cogroup object under `R`, and vice versa,
+are already provided in `Toric.Hopf.HopfAlg`.
 
-section leftEdge
-
-section hopfToGrp
-variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra R A] [HopfAlgebra R B]
-  {f : A →ₐc[R] B}
-
-noncomputable instance : Grp_Class <| op <| CommAlg.of R A where
-  one := (CommAlg.ofHom <| Bialgebra.counitAlgHom R A).op
-  mul := (CommAlg.ofHom <| Bialgebra.comulAlgHom R A).op
-  one_mul' := by
-    apply Quiver.Hom.unop_inj
-    ext x
-    convert Coalgebra.rTensor_counit_comul (R := R) x
-    simp [-Coalgebra.rTensor_counit_comul, CommAlg.rightWhisker_hom]
-    rfl
-  mul_one' := by
-    apply Quiver.Hom.unop_inj
-    ext x
-    convert Coalgebra.lTensor_counit_comul (R := R) x
-    simp [-Coalgebra.lTensor_counit_comul, CommAlg.leftWhisker_hom]
-    rfl
-  mul_assoc' := by
-    apply Quiver.Hom.unop_inj
-    ext x
-    convert (Coalgebra.coassoc_symm_apply (R := R) x).symm
-      <;> simp [-Coalgebra.coassoc_symm_apply, CommAlg.associator_hom_unop_hom,
-      CommAlg.rightWhisker_hom, CommAlg.leftWhisker_hom] <;> rfl
-  inv := (CommAlg.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
-  left_inv' := by
-    apply Quiver.Hom.unop_inj
-    ext (x : A)
-    refine .trans ?_ (HopfAlgebra.mul_antipode_rTensor_comul_apply (R := R) x)
-    change (ChosenFiniteProducts.lift (CommAlg.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
-      (𝟙 _)).unop.hom (CoalgebraStruct.comul (R := R) x) = _
-    induction CoalgebraStruct.comul (R := R) x with
-    | zero => simp
-    | tmul x y => rfl
-    | add x y _ _ => simp_all
-  right_inv' := by
-    apply Quiver.Hom.unop_inj
-    ext (x : A)
-    refine .trans ?_ (HopfAlgebra.mul_antipode_lTensor_comul_apply (R := R) x)
-    change (ChosenFiniteProducts.lift (𝟙 _) (CommAlg.ofHom
-      (HopfAlgebra.antipodeAlgHom R A)).op).unop.hom (CoalgebraStruct.comul (R := R) x) = _
-    induction CoalgebraStruct.comul (R := R) x with
-    | zero => simp
-    | tmul x y => rfl
-    | add x y _ _ => simp_all
-
-instance : IsMon_Hom (CommAlg.ofHom (f : A →ₐ[R] B)).op where
-   one_hom := by
-     apply Quiver.Hom.unop_inj
-     ext
-     simp [one]
-   mul_hom := by
-     apply Quiver.Hom.unop_inj
-     ext
-     simp only [mul, unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
-         CommAlg.tensorHom_unop_hom]
-     rw [BialgHomClass.map_comp_comulAlgHom]
-
-end hopfToGrp
-
-section grpToHopf
-variable {R : Type u} [CommRing R] {G : (CommAlg.{u} R)ᵒᵖ} [Grp_Class G]
-
-open MonoidalCategory
-
-noncomputable instance : Bialgebra R G.unop :=
-  .mkAlgHoms μ[G].unop.hom η[G].unop.hom
-  (by
-    convert congr(($((Mon_Class.mul_assoc_flip G).symm)).unop.hom)
-    · simp [-Mon_Class.mul_assoc]
-      rw [CommAlg.associator_inv_unop_hom]
-      rw [← Quiver.Hom.op_unop μ[G]]
-      rw [CommAlg.rightWhisker_hom]
-      simp
-      rfl
-    simp
-    rw [← Quiver.Hom.op_unop μ[G]]
-    rw [CommAlg.leftWhisker_hom]
-    rfl)
-  (by
-    convert congr(($(Mon_Class.one_mul G)).unop.hom)
-    simp [-Mon_Class.one_mul]
-    rw [← Quiver.Hom.op_unop η[G]]
-    rw [CommAlg.rightWhisker_hom]
-    rfl)
-  (by
-    convert congr(($(Mon_Class.mul_one G)).unop.hom)
-    simp [-Mon_Class.mul_one]
-    rw [← Quiver.Hom.op_unop η[G]]
-    rw [CommAlg.leftWhisker_hom]
-    rfl)
-
-noncomputable instance : HopfAlgebra R G.unop where
-  antipode := ι[G].unop.hom.toLinearMap
-  mul_antipode_rTensor_comul := by
-    convert congr(($(Grp_Class.left_inv G)).unop.hom.toLinearMap)
-    simp [-Grp_Class.left_inv]
-    rw [← LinearMap.comp_assoc]
-    congr 1
-    ext
-    rfl
-  mul_antipode_lTensor_comul := by
-    convert congr(($(Grp_Class.right_inv G)).unop.hom.toLinearMap)
-    simp [-Grp_Class.right_inv]
-    rw [← LinearMap.comp_assoc]
-    congr 1
-    ext
-    rfl
-
-variable {H : (CommAlg R)ᵒᵖ} [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f]
-
-/-- The coalgebra hom coming from a group morphism in the category of algebras. -/
-def IsMon_Hom.toCoalgHom : H.unop →ₗc[R] G.unop where
-  __ := f.unop.hom
-  map_smul' := by simp
-  counit_comp := congr(($(IsMon_Hom.one_hom (f := f))).unop.hom.toLinearMap)
-  map_comp_comul := by
-    convert congr(($((IsMon_Hom.mul_hom (f := f)).symm)).unop.hom.toLinearMap)
-    simp
-    rw [←Quiver.Hom.op_unop (f ⊗ f)]
-    show _ = (CommAlg.Hom.hom ((unop f).op ⊗ (unop f).op).unop).toLinearMap
-        ∘ₗ (CommAlg.Hom.hom μ[H].unop).toLinearMap
-    rw [CommAlg.tensorHom_unop_hom]
-    congr 1
-
-/-- The Hopf algebra hom coming from a group morphism in the category of algebras. -/
-def IsMon_Hom.toBialgHom : H.unop →ₐc[R] G.unop where
-  __ := IsMon_Hom.toCoalgHom f
-  __ := f.unop.hom
-
-end grpToHopf
-
-end leftEdge
-
-/-!
 ### Top edge: `Spec` as a functor on Hopf algebras
 
 In this section we construct `Spec` as a functor from `R`-Hopf algebras to affine group schemes over
