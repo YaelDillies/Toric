@@ -37,7 +37,7 @@ end CommRing
 section Field
 variable {K : Type*} [Field K] {G : Over (Spec <| .of K)} [Grp_Class G]
 
-instance : HopfAlgebra K (Γ.obj <| op G.left) := sorry
+instance : HopfAlgebra K (Γ.obj <| op G.left) := by sorry
 
 /-- An algebraic group `G` over a field `K` is diagonalisable iff `Γ(G)` is `K`-spanned by its
 group-like elements.
