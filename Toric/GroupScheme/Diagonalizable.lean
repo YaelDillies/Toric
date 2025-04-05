@@ -6,21 +6,14 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.GroupScheme.SchemeOver
+import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GroupLike
+import Toric.Hopf.HopfAlg
+import Toric.Hopf.GrpAlg
 
 open AlgebraicGeometry CategoryTheory Coalgebra Opposite
 
 universe u
-
-section
-variable {C A : Type*} [Category C] [ChosenFiniteProducts C]
-    {R : CommRingCat} [CommGroup A]
-
-instance :
-    Grp_Class <| Over.mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A :=
-  sorry
-
-end
 
 namespace AlgebraicGeometry.Scheme
 section CommRing
@@ -32,12 +25,13 @@ variable (G) in
 class IsDiagonalisable : Prop where
   existsIso :
     ∃ (A : Type u) (_ : CommGroup A) (_ : Monoid.FG A),
-      Nonempty <| Grp_.mk' G ≅ sorry
-      -- Grp_.mk' <| .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A
+      Nonempty <| Grp_.mk' G ≅
+      Grp_.mk' ((hopfSpec R).obj <| Grp_.mk' <| Opposite.op <| CommAlg.of R (MonoidAlgebra R A)).X
 
 instance :
-    IsDiagonalisable <| .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R <| MonoidAlgebra R A :=
-  ⟨⟨A, _, ‹_›, sorry⟩⟩
+    IsDiagonalisable ((hopfSpec R).obj <| Grp_.mk' <| Opposite.op <|
+      CommAlg.of R (MonoidAlgebra R A)).X :=
+  ⟨⟨A, _, ‹_›, Nonempty.intro (Iso.refl _)⟩⟩
 
 end CommRing
 
