@@ -94,7 +94,7 @@ variable {R : Type u} [CommRing R] {G : (CommAlg.{u} R)ᵒᵖ} [Grp_Class G]
 open MonoidalCategory
 
 noncomputable instance bialgebra_unop : Bialgebra R G.unop :=
-  .mkAlgHoms μ[G].unop.hom η[G].unop.hom
+  .ofAlgHom μ[G].unop.hom η[G].unop.hom
   (by
     convert congr(($((Mon_Class.mul_assoc_flip G).symm)).unop.hom)
     · simp [-Mon_Class.mul_assoc]

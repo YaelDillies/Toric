@@ -3,7 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Yunzhou Xie. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
-import Mathlib.RingTheory.Bialgebra.Hom
+import Toric.Mathlib.RingTheory.Bialgebra.Hom
 
 /-!
 # Convolution product on linear maps from a coalgebra to an algebra
@@ -21,7 +21,7 @@ f * g = f g
 We then inherit this structure on bialgebra maps `C → A` where `C` and `A` are bialgebras.
 -/
 
-open Coalgebra TensorProduct
+open Coalgebra Bialgebra TensorProduct
 
 suppress_compilation
 
@@ -71,6 +71,7 @@ instance : Ring (C →ₗ[R] A) where
     calc
           μ ∘ₗ (η ∘ₗ ε ⊗ₘ f) ∘ₗ δ
       _ = (μ ∘ₗ rTensor _ η) ∘ₗ lTensor _ f ∘ₗ (lTensor _ ε ∘ₗ δ) := sorry
+      _ = _ := _
       _ = f := sorry
   mul_one f := by
     stop
@@ -82,20 +83,21 @@ instance : Ring (C →ₗ[R] A) where
 end LinearMap
 
 namespace BialgHom
-variable [Ring A] [Ring C] [Bialgebra R A] [Bialgebra R C]
+variable [CommRing A] [CommRing C] [Bialgebra R A] [Bialgebra R C]
 
-instance : One (C →ₐc[R] A) where one := sorry -- Algebra.linearMap R A ∘ₗ counit
-instance : Mul (C →ₐc[R] A) where mul f g := sorry -- mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul
+instance : One (C →ₐc[R] A) where one := (unitBialgHom R A).comp <| counitBialgHom R C
+instance : Mul (C →ₐc[R] A) where
+  mul f g := .comp (mulBialgHom R A) <| .comp sorry <| comulBialgHom R C
 
--- lemma one_def : (1 : C →ₐc[R] A) = Algebra.linearMap R A ∘ₗ counit := rfl
+lemma one_def : (1 : C →ₐc[R] A) = (unitBialgHom R A).comp (counitBialgHom ..) := rfl
 -- lemma mul_def (f g : C →ₐc[R] A) : f * g = mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul := rfl
 
--- @[simp] lemma one_apply' (c : C) : (1 : C →ₐc[R] A) c = algebraMap R A (counit c) := rfl
+@[simp] lemma one_apply' (c : C) : (1 : C →ₐc[R] A) c = algebraMap R A (counit c) := rfl
 
 -- @[simp]
 -- lemma mul_apply'' (f g : C →ₐc[R] A) (c : C) : (f * g) c = mul' R A (.map f g (comul c)) := rfl
 
-lemma toLinearMap_one : (1 : C →ₐc[R] A) = (1 : C →ₗ[R] A) := sorry
+lemma toLinearMap_one : (1 : C →ₐc[R] A) = (1 : C →ₗ[R] A) := rfl
 lemma toLinearMap_mul (f g : C →ₐc[R] A) : ↑(f * g) = (f * g : C →ₗ[R] A) := sorry
 
 -- instance : Ring (C →ₐc[R] A) := coe_linearMap_injective.ring _ _ _ _ _ _ _
