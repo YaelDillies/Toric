@@ -62,6 +62,7 @@ instance : Ring (C →ₗ[R] A) where
       _ = (μ ∘ₗ .lTensor _ μ) ∘ₗ (f ⊗ₘ (g ⊗ₘ h)) ∘ₗ (lTensor C δ ∘ₗ δ) := by
         rw [← coassoc_symm]
         -- What's the `Algebra` equivalent of `coassoc`?
+        -- Probably associativity of multiplication :)
         sorry
       _ = μ ∘ₗ (f ⊗ₘ μ ∘ₗ (g ⊗ₘ h) ∘ₗ δ) ∘ₗ δ := by
         rw [comp_assoc, ← comp_assoc _ _ (lTensor _ _), lTensor_comp_map,
