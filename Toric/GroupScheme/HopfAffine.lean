@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Hopf.CommAlg
-import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
@@ -84,8 +83,8 @@ instance algSpec.instFaithful : (algSpec R).Faithful :=
 
 /-- `Spec` is fully faithful on `R`-algebras, with inverse `Gamma`. -/
 noncomputable def algSpec.fullyFaithful : (algSpec R).FullyFaithful :=
-  ((commAlgEquivUnder R).op.trans (Over.opEquivOpUnder R).symm).fullyFaithfulFunctor.comp
-    Spec.fullyFaithful.over
+  ((commAlgEquivUnder R).op.trans (Over.opEquivOpUnder R).symm).fullyFaithfulFunctor.comp <|
+    Spec.fullyFaithful.over _
 
 variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/

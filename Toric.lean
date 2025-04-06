@@ -18,7 +18,6 @@ import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
-import Toric.Mathlib.Algebra.FreeAbelianGroup.UniqueSums
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
