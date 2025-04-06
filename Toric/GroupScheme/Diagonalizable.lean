@@ -60,7 +60,25 @@ lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
   refine ⟨fun {existsIso := ⟨A, _, _, h⟩} ↦ ?_, ?_⟩
   · set e : (Γ.obj <| op G.left) ≃ₐc[K] MonoidAlgebra K A := by
       set e := Classical.choice h
+      sorry
+  -- Here we need a "global sections" functor from R-group schemes to R-Hopf algebras.
+    have eq : {a | IsGroupLikeElem K a} = e.symm '' {a | IsGroupLikeElem K a} := sorry
+    -- this should probably be a more general lemma
+    have eq' : Submodule.span K {a : MonoidAlgebra K A | IsGroupLikeElem K a} = ⊤ := by
+      rw [eq_top_iff]
+      have sub : Set.range (MonoidAlgebra.of K A) ≤ {a | IsGroupLikeElem K a} := sorry
+      refine le_trans ?_ (Submodule.span_mono sub)
+      rw [← Finsupp.range_linearCombination]
+      intro x _
+      rw [LinearMap.mem_range]
+      use x
+      ext a
+      change ((Finsupp.linearCombination K (fun a ↦ Finsupp.single a 1)) x) a = _
+      --erw [Finsupp.linearCombination_single_index]
 
+
+
+    rw [eq, ← Submodule.map_span, eq', Submodule.map_top, LinearEquivClass.range]
   · sorry
 
 end Field
