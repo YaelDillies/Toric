@@ -2,7 +2,6 @@ import Mathlib.CategoryTheory.WithTerminal
 import Mathlib.CategoryTheory.FinCategory.Basic
 import Mathlib.Data.Fintype.Option
 
-
 open CategoryTheory CategoryTheory.Limits CategoryTheory.WithTerminal
 
 universe v u
