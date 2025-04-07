@@ -16,6 +16,33 @@ open AlgebraicGeometry CategoryTheory Coalgebra Opposite
 
 universe u
 
+namespace HopfAlgebra
+
+variable {A R : Type u} {B : Type*} [CommRing R] [CommGroup A] [Monoid.FG A] [Semiring B]
+  [Bialgebra R B]
+
+variable (R B) in
+@[mk_iff]
+class IsDiagonalisable : Prop where
+  existsIso :
+    ∃ (A : Type u) (_ : CommGroup A) (_ : Monoid.FG A),
+      Nonempty (B ≃ₐc[R] MonoidAlgebra R A)
+
+instance : IsDiagonalisable R (MonoidAlgebra R A) :=
+  ⟨⟨A, _, ‹_›, Nonempty.intro (BialgEquiv.refl _ _)⟩⟩
+-- This causes universe errors unless we assume that `R` and `A` are in the same universe. Why?
+
+-- maybe assume that `R` is a field for this?
+lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
+    IsDiagonalisable R B ↔
+      Submodule.span R {a : B | IsGroupLikeElem R a} = ⊤ := by
+  refine ⟨fun {existsIso := ⟨A, _, _, h⟩} ↦ ?_, ?_⟩
+  · exact MonoidAlgebra.groupLikeElem_span_of_iso (Classical.choice h).symm
+  · sorry
+
+
+end HopfAlgebra
+
 namespace AlgebraicGeometry.Scheme
 section CommRing
 variable {R : CommRingCat.{u}} {G : Over (Spec R)} [Grp_Class G]
@@ -47,8 +74,7 @@ variable {K : Type*} [Field K] {G : Over (Spec <| .of K)} [Grp_Class G]
 noncomputable instance : HopfAlgebra K (Γ.obj <| op G.left) := by sorry
 -- annoyingly, Lean is not able to use the instance on line 37; must find a way to fix this
 
-#check LinearEquiv
-
+-- This is false if we do not assume that `G` is affine.
 /-- An algebraic group `G` over a field `K` is diagonalisable iff `Γ(G)` is `K`-spanned by its
 group-like elements.
 
@@ -62,23 +88,7 @@ lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
       set e := Classical.choice h
       sorry
   -- Here we need a "global sections" functor from R-group schemes to R-Hopf algebras.
-    have eq : {a | IsGroupLikeElem K a} = e.symm '' {a | IsGroupLikeElem K a} := sorry
-    -- this should probably be a more general lemma
-    have eq' : Submodule.span K {a : MonoidAlgebra K A | IsGroupLikeElem K a} = ⊤ := by
-      rw [eq_top_iff]
-      have sub : Set.range (MonoidAlgebra.of K A) ≤ {a | IsGroupLikeElem K a} := sorry
-      refine le_trans ?_ (Submodule.span_mono sub)
-      rw [← Finsupp.range_linearCombination]
-      intro x _
-      rw [LinearMap.mem_range]
-      use x
-      ext a
-      change ((Finsupp.linearCombination K (fun a ↦ Finsupp.single a 1)) x) a = _
-      --erw [Finsupp.linearCombination_single_index]
-
-
-
-    rw [eq, ← Submodule.map_span, eq', Submodule.map_top, LinearEquivClass.range]
+    exact MonoidAlgebra.groupLikeElem_span_of_iso e.symm
   · sorry
 
 end Field

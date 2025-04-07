@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.RingTheory.Bialgebra.Hom
+import Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 
@@ -32,6 +33,18 @@ lemma IsGroupLikeElem.map [FunLike F A B] [BialgHomClass F R A B] (f : F)
     simp
 
 lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
+
+lemma IsGroupLikeElem.map_sub [FunLike F A B] [BialgHomClass F R A B] (f : F) :
+    f '' {a | IsGroupLikeElem R a} ≤ {a | IsGroupLikeElem R a} := by
+  simp only [Set.le_eq_subset, Set.image_subset_iff, Set.preimage_setOf_eq, Set.setOf_subset_setOf]
+  exact fun _ h ↦ IsGroupLikeElem.map f h
+
+lemma IsGroupLikeElem.equiv [EquivLike F A B] [BialgEquivClass F R A B] (f : F) :
+    {a | IsGroupLikeElem R a} = f '' {a | IsGroupLikeElem R a} := by
+  refine le_antisymm ?_ (IsGroupLikeElem.map_sub f)
+  change _ ⊆ (BialgEquivClass.toBialgEquiv f).toEquiv '' _
+  rw [← Equiv.symm_image_subset]
+  exact IsGroupLikeElem.map_sub (BialgEquivClass.toBialgEquiv f).symm
 
 end CommSemiring
 

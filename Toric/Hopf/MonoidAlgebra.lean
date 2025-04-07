@@ -32,6 +32,27 @@ lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
 lemma isGroupLikeElem_single (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlgebra A G) :=
   isGroupLikeElem_of _
 
+lemma groupLikeElem_span : Submodule.span A {a : MonoidAlgebra A G | IsGroupLikeElem R a} = ⊤ := by
+  rw [eq_top_iff]
+  have sub : Set.range (MonoidAlgebra.of A G) ≤ {a | IsGroupLikeElem R a} := by
+    intro _ ⟨_, eq⟩
+    rw [← eq]
+    exact isGroupLikeElem_single _
+  refine le_trans ?_ (Submodule.span_mono sub)
+  rw [← Finsupp.range_linearCombination]
+  intro x _
+  rw [LinearMap.mem_range]
+  use x
+  rw [Finsupp.linearCombination_apply]
+  ext a
+  simp only [of_apply, smul_single, smul_eq_mul, mul_one, sum_single]
+
+lemma groupLikeElem_span_of_iso {F H : Type*} [Semiring H] [Bialgebra R H]
+    [EquivLike F (MonoidAlgebra R G) H] [BialgEquivClass F R (MonoidAlgebra R G) H] (f : F) :
+    Submodule.span R {a : H | IsGroupLikeElem R a} = ⊤ := by
+  rw [IsGroupLikeElem.equiv f, ← Submodule.map_span, groupLikeElem_span, Submodule.map_top,
+  LinearEquivClass.range]
+
 end CommSemiring
 
 section Field
