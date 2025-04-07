@@ -73,12 +73,12 @@ lemma span_dual_eq {s : Set E} :
 
 /-- A generating set for `span ℝ S ⊓ dual' {w}`, see `span_inf_dual'_singleton_eq_span -/
 abbrev inf_dual'_singleton_generating_set : Set E :=
-  {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ} ∪
-  Set.image2 (fun x y => ⟪x, w⟫_ℝ • y - ⟪y, w⟫_ℝ • x) {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ} {s ∈ S | ⟪s,w⟫_ℝ ≤ 0}
+  {s ∈ S | 0 ≤ ⟪s, w⟫_ℝ} ∪
+  Set.image2 (fun x y => ⟪x, w⟫_ℝ • y - ⟪y, w⟫_ℝ • x) {s ∈ S | 0 ≤ ⟪s, w⟫_ℝ} {s ∈ S | ⟪s, w⟫_ℝ ≤ 0}
 
 lemma mem_span_inf_dual'_singleton_generating_set {x y : E}
-  (hx : x ∈ span ℝ {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ})
-  (hy : y ∈ span ℝ {s ∈ S | ⟪s,w⟫_ℝ ≤ 0}) :
+  (hx : x ∈ span ℝ {s ∈ S | 0 ≤ ⟪s, w⟫_ℝ})
+  (hy : y ∈ span ℝ {s ∈ S | ⟪s, w⟫_ℝ ≤ 0}) :
     ⟪x, w⟫_ℝ • y - ⟪y, w⟫_ℝ • x ∈ span ℝ (inf_dual'_singleton_generating_set S w) := by
   revert x y
   apply Submodule.span_induction₂
@@ -114,12 +114,12 @@ lemma span_inf_dual'_singleton_eq_span :
   · intro v ⟨h₁,h₂⟩
     simp only [SetLike.mem_coe, mem_dual', Set.mem_singleton_iff, forall_eq] at h₂
     -- We split `S` into the subset of elements with inner product nonnegative resp. negative.
-    have S_eq_union : S = {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ} ∪ {s ∈ S | ⟪s,w⟫_ℝ < 0} := by
+    have S_eq_union : S = {s ∈ S | 0 ≤ ⟪s, w⟫_ℝ} ∪ {s ∈ S | ⟪s, w⟫_ℝ < 0} := by
       ext s
       simp only [Set.mem_union, Set.mem_setOf_eq]
       constructor
       · intro hs
-        by_cases H : 0 ≤ ⟪s,w⟫_ℝ
+        by_cases H : 0 ≤ ⟪s, w⟫_ℝ
         · exact Or.inl ⟨hs,H⟩
         · exact Or.inr ⟨hs,lt_of_not_ge H⟩
       · rintro (hs|hs) <;> exact hs.1
