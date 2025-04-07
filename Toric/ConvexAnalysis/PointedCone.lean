@@ -20,89 +20,13 @@ open scoped InnerProductSpace
 
 namespace PointedCone
 
-lemma inner_nonneg_of_mem_span_inner_nonneg (w : E) (S : Set E) (hS : ∀ x ∈ S, ⟪x,w⟫_ℝ ≥ 0)
-    {x : E} (hx : x ∈ span ℝ S) : ⟪x,w⟫_ℝ ≥ 0 := by
-  revert x
-  apply Submodule.span_induction
-  · exact hS
-  · rw [inner_zero_left]
-  · intro x y hx hy hxw hyw
-    rw [inner_add_left]
-    exact add_nonneg hxw hyw
-  · intro ⟨t,ht⟩ x hx hxw
-    rw [Nonneg.mk_smul, real_inner_smul_left]
-    exact mul_nonneg ht hxw
-
-lemma inner_nonpos_of_mem_span_inner_nonpos (w : E) (S : Set E) (hS : ∀ x ∈ S, ⟪x,w⟫_ℝ ≤ 0)
-    {x : E} (hx : x ∈ span ℝ S) : ⟪x,w⟫_ℝ ≤ 0 := by
-  revert x
-  apply Submodule.span_induction
-  · exact hS
-  · rw [inner_zero_left]
-  · intro x y hx hy hxw hyw
-    rw [inner_add_left]
-    exact add_nonpos hxw hyw
-  · intro ⟨t,ht⟩ x hx hxw
-    rw [Nonneg.mk_smul, real_inner_smul_left]
-    exact mul_nonpos_of_nonneg_of_nonpos ht hxw
-
-lemma eq_zero_of_inner_eq_zero_of_mem_span_inner_pos (w : E) (S : Set E)
-    (hS : ∀ x ∈ S, ⟪x,w⟫_ℝ > 0) {x : E} (hx₁ : x ∈ span ℝ S) (hx₂ : ⟪x,w⟫_ℝ = 0) : x = 0 := by
-  revert x
-  apply Submodule.span_induction
-  · intro x hxS hxw
-    specialize hS x hxS
-    linarith
-  · intro h
-    rfl
-  · intro x y hxS hyS hx hy hxyw
-    rw [inner_add_left] at hxyw
-    have H : ⟪x,w⟫_ℝ = 0 ∧ ⟪y,w⟫_ℝ = 0 := (add_eq_zero_iff_of_nonneg
-      (inner_nonneg_of_mem_span_inner_nonneg w S (fun z hz => le_of_lt (hS z hz)) hxS)
-      (inner_nonneg_of_mem_span_inner_nonneg w S (fun z hz => le_of_lt (hS z hz)) hyS)).mp hxyw
-    rw [hx H.1, hy H.2]
-    exact zero_add 0
-  · intro ⟨t,ht⟩ x hxS hx hxw
-    rw [Nonneg.mk_smul, real_inner_smul_left] at hxw
-    rw [Nonneg.mk_smul]
-    by_cases ht : t = 0
-    · rw [ht, zero_smul]
-    · rw [hx ((mul_eq_zero_iff_left ht).mp hxw), smul_zero]
-
-lemma eq_zero_of_inner_eq_zero_of_mem_span_inner_neg (w : E) (S : Set E)
-    (hS : ∀ x ∈ S, ⟪x,w⟫_ℝ < 0) {x : E} (hx₁ : x ∈ span ℝ S) (hx₂ : ⟪x,w⟫_ℝ = 0) : x = 0 := by
-  revert x
-  apply Submodule.span_induction
-  · intro x hxS hxw
-    specialize hS x hxS
-    linarith
-  · intro h
-    rfl
-  · intro x y hxS hyS hx hy hxyw
-    rw [inner_add_left] at hxyw
-    have H := (add_eq_zero_iff_of_nonneg
-      (neg_nonneg_of_nonpos <|
-        inner_nonpos_of_mem_span_inner_nonpos w S (fun z hz => le_of_lt (hS z hz)) hxS)
-      (neg_nonneg_of_nonpos <|
-        inner_nonpos_of_mem_span_inner_nonpos w S (fun z hz => le_of_lt (hS z hz)) hyS)).mp <| by
-      rw [←neg_add, hxyw, neg_zero]
-    rw [neg_eq_zero, neg_eq_zero] at H
-    rw [hx H.1, hy H.2]
-    exact zero_add 0
-  · intro ⟨t,ht⟩ x hxS hx hxw
-    rw [Nonneg.mk_smul, real_inner_smul_left] at hxw
-    rw [Nonneg.mk_smul]
-    by_cases ht : t = 0
-    · rw [ht, zero_smul]
-    · rw [hx ((mul_eq_zero_iff_left ht).mp hxw), smul_zero]
-
 section Dual
 
 variable (S : Set E) (w : E)
 
 /-- The dual of an arbitrary set as a `PointedCone`. -/
 def dual' : PointedCone ℝ E :=
-  (S.innerDualCone).toPointedCone <| pointed_innerDualCone S
+  S.innerDualCone.toPointedCone <| pointed_innerDualCone S
 
 @[simp, norm_cast]
 theorem toConvexCone_dual' : ↑(dual' S) = (S : Set E).innerDualCone :=
@@ -143,25 +67,25 @@ lemma span_dual_eq {s : Set E} :
     · intro y z _ _ hxy hyz
       rw [inner_add_left]
       exact add_nonneg hxy hyz
-    · intro t y _ hxy 
+    · intro t y _ hxy
       erw [inner_smul_real_left]
       exact mul_nonneg t.prop hxy
 
 /-- A generating set for `span ℝ S ⊓ dual' {w}`, see `span_inf_dual'_singleton_eq_span -/
 abbrev inf_dual'_singleton_generating_set : Set E :=
   {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ} ∪
-  Set.image2 (fun x y => ⟪x,w⟫_ℝ • y - ⟪y,w⟫_ℝ • x) {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ} {s ∈ S | ⟪s,w⟫_ℝ ≤ 0}
+  Set.image2 (fun x y => ⟪x, w⟫_ℝ • y - ⟪y, w⟫_ℝ • x) {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ} {s ∈ S | ⟪s,w⟫_ℝ ≤ 0}
 
 lemma mem_span_inf_dual'_singleton_generating_set {x y : E}
   (hx : x ∈ span ℝ {s ∈ S | 0 ≤ ⟪s,w⟫_ℝ})
   (hy : y ∈ span ℝ {s ∈ S | ⟪s,w⟫_ℝ ≤ 0}) :
-    ⟪x,w⟫_ℝ • y - ⟪y,w⟫_ℝ • x ∈ span ℝ (inf_dual'_singleton_generating_set S w) := by
+    ⟪x, w⟫_ℝ • y - ⟪y, w⟫_ℝ • x ∈ span ℝ (inf_dual'_singleton_generating_set S w) := by
   revert x y
   apply Submodule.span_induction₂
   · intro x y hx hy
     apply Submodule.subset_span
     apply Set.subset_union_right
-    exact ⟨x,hx,y,hy,rfl⟩ 
+    exact ⟨x,hx,y,hy,rfl⟩
   · intro x hx
     simp only [inner_zero_left, zero_smul, smul_zero, sub_self, Submodule.zero_mem]
   · intro x hx
@@ -210,25 +134,24 @@ lemma span_inf_dual'_singleton_eq_span :
       Submodule.span_mono Set.subset_union_left hx
     -- Clearly, `x` itself has nonnegative inner product with `w`, while `y` has negative
     -- inner product
-    have hxw : 0 ≤ ⟪x,w⟫_ℝ := inner_nonneg_of_mem_span_inner_nonneg w _ (fun z hz => hz.2) hx
-    have hyw : ⟪y,w⟫_ℝ ≤ 0 := inner_nonpos_of_mem_span_inner_nonpos w _
-      (fun z hz => le_of_lt hz.2) hy
-    -- We treat the case `⟪x,w⟫_ℝ` = 0 seperately.
-    by_cases H : ⟪x,w⟫_ℝ = 0
+    have hxw : 0 ≤ ⟪x, w⟫_ℝ := inner_nonneg_of_mem_span_inner_nonneg (fun z hz => hz.2) hx
+    have hyw : ⟪y, w⟫_ℝ ≤ 0 := inner_nonpos_of_mem_span_inner_nonpos (fun z hz => hz.2.le) hy
+    -- We treat the case `⟪x, w⟫_ℝ` = 0 seperately.
+    by_cases H : ⟪x, w⟫_ℝ = 0
     · rw [H, zero_add] at h₂
       rw [←hv]
       apply Submodule.add_mem _ x_mem
       convert Submodule.zero_mem _
       -- Since `y` is in the span of elements with negative inner product with `w`, but itself
-      -- has `⟪y,w⟫_ℝ = 0`, `y` must be zero.
+      -- has `⟪y, w⟫_ℝ = 0`, `y` must be zero.
       exact eq_zero_of_inner_eq_zero_of_mem_span_inner_neg w _ (fun x hx => hx.2) hy <|
         le_antisymm hyw h₂
-    · let u : E := ⟪x,w⟫_ℝ • y - ⟪y,w⟫_ℝ • x
+    · let u : E := ⟪x, w⟫_ℝ • y - ⟪y, w⟫_ℝ • x
       have u_mem : u ∈ span ℝ (inf_dual'_singleton_generating_set S w) :=
         mem_span_inf_dual'_singleton_generating_set S w hx <|
           Submodule.span_mono (fun z hz => And.intro hz.1 (le_of_lt hz.2)) hy
-      have t₂_nonneg : 0 ≤ (⟪x,w⟫_ℝ)⁻¹ := inv_nonneg_of_nonneg hxw
-      have t₁_nonneg : 0 ≤ 1 + ⟪y,w⟫_ℝ * (⟪x,w⟫_ℝ)⁻¹ := by
+      have t₂_nonneg : 0 ≤ (⟪x, w⟫_ℝ)⁻¹ := inv_nonneg_of_nonneg hxw
+      have t₁_nonneg : 0 ≤ 1 + ⟪y, w⟫_ℝ * (⟪x, w⟫_ℝ)⁻¹ := by
         convert mul_le_mul_of_nonneg_right h₂ t₂_nonneg using 1
         · rw [zero_mul]
         · rw [add_mul, mul_inv_cancel₀ H]
@@ -249,11 +172,11 @@ lemma span_inf_dual'_singleton_eq_span :
       · exact Submodule.subset_span hv.1
       · simp only [Set.mem_image2, Set.mem_setOf_eq] at hv
         obtain ⟨x,⟨hxS,hxw⟩,y,⟨hyS,hyw⟩,rfl⟩ := hv
-        let t₁ : {t : ℝ // 0 ≤ t} := ⟨⟪x,w⟫_ℝ, hxw⟩
-        let t₂ : {t : ℝ // 0 ≤ t} := ⟨-⟪y,w⟫_ℝ, neg_nonneg.mpr hyw⟩
+        let t₁ : {t : ℝ // 0 ≤ t} := ⟨⟪x, w⟫_ℝ, hxw⟩
+        let t₂ : {t : ℝ // 0 ≤ t} := ⟨-⟪y, w⟫_ℝ, neg_nonneg.mpr hyw⟩
         rw [SetLike.mem_coe, sub_eq_add_neg, ←neg_smul]
         exact Submodule.add_mem _
-          (Submodule.smul_mem _ t₁ (Submodule.subset_span hyS)) 
+          (Submodule.smul_mem _ t₁ (Submodule.subset_span hyS))
           (Submodule.smul_mem _ t₂ (Submodule.subset_span hxS))
     · intro x hx
       simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_image2] at hx
