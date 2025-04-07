@@ -2,13 +2,11 @@ import Mathlib.CategoryTheory.WithTerminal
 import Mathlib.CategoryTheory.FinCategory.Basic
 import Mathlib.Data.Fintype.Option
 
-open CategoryTheory CategoryTheory.Limits CategoryTheory.WithTerminal
+namespace CategoryTheory.WithTerminal
 
 universe v u
 variable {C : Type u} [Category.{v} C]
 
-
-namespace CategoryTheory.Limits.WithTerminal
 def OptionEquiv : Option C ≃ WithTerminal C where
   toFun
   | some a => of a
@@ -31,4 +29,4 @@ instance instFin [SmallCategory C] [FinCategory C] :
   | star, of _ => (inferInstance : Fintype PEmpty)
   | of a, of b => (inferInstance : Fintype (a ⟶ b))
 
-end CategoryTheory.Limits.WithTerminal
+end CategoryTheory.WithTerminal
