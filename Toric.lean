@@ -9,6 +9,7 @@ import Toric.GroupScheme.HopfAffine
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.Torus
+import Toric.Hopf.CoalgToAlg
 import Toric.Hopf.CommAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.GrpAlg
@@ -17,10 +18,10 @@ import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
-import Toric.Mathlib.Algebra.FreeAbelianGroup.UniqueSums
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
+import Toric.Mathlib.Algebra.Module.LinearMap.End
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
@@ -44,6 +45,7 @@ import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.MonoidObjectAction.Basic
