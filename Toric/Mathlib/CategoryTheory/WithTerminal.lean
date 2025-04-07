@@ -23,9 +23,6 @@ def OptionEquiv : Option C ≃ WithTerminal C where
 instance instFinType [Fintype C] : Fintype (WithTerminal C) :=
   Fintype.ofEquiv (Option C) OptionEquiv
 
-instance instSmall [SmallCategory C] :
-    SmallCategory (WithTerminal C) := inferInstance
-
 instance instFin [SmallCategory C] [FinCategory C] :
     FinCategory (WithTerminal C) where
   fintypeObj := inferInstance
