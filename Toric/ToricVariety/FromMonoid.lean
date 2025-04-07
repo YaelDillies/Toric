@@ -23,7 +23,7 @@ noncomputable abbrev AffineToricVarietyFromMonoid : Over <| Spec R :=
 namespace AffineToricVarietyFromMonoid
 
 noncomputable instance instToricVariety :
-    ToricVariety R (dim S) (AffineToricVarietyFromMonoid R S) where
+    ToricVariety (dim S) (AffineToricVarietyFromMonoid R S) where
   torusEmb := (splitTorusIsoSpecOver _ _).hom ≫ (Over.homMk
     (Spec.map (CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S))) <| by
     change Spec.map _ ≫ Spec.map _ = Spec.map _

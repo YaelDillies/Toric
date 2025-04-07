@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Patrick Luo, Michał Mrugała, Paul Lezeau
 import Mathlib.AlgebraicGeometry.Morphisms.UnderlyingMap
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
 import Toric.GroupScheme.Torus
-import Toric.Torus
 import Toric.MonoidObjectAction.Basic
 
 /-!
@@ -22,7 +21,7 @@ open CategoryTheory ChosenFiniteProducts Limits AlgebraicGeometry.Scheme
 open scoped Mon_Class MonoidalCategory
 namespace AlgebraicGeometry
 universe u
-variable {R : CommRingCat.{u}} {n : ℕ}
+variable {R : CommRingCat.{u}} (n : ℕ)
 
 attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
 
@@ -38,14 +37,14 @@ class ToricVariety (X : Over <| Spec R) where
   /-- The torus embedding is dominant. -/
   [isDominant_torusEmb : IsDominant torusEmb.left]
   /-- The torus action on a toric variety. -/
-  [torusAct : Action_Class (torusOver R n) X]
+  [torusAct : Action_Class 𝔾ₘ[R, n] X]
   /-- The torus action extends the torus multiplication morphism. -/
-  torusMul_comp_torusEmb : (𝟙 (torusOver R n) ⊗ torusEmb) ≫ γ =  μ[torusOver R n] ≫ torusEmb :=
+  torusMul_comp_torusEmb : (𝟙 (𝔾ₘ[R, n]) ⊗ torusEmb) ≫ γ =  μ[𝔾ₘ[R, n]] ≫ torusEmb :=
     by aesop_cat
 
 
-noncomputable instance : ToricVariety R n (torusOver R n) where
-  torusEmb := 𝟙 ((torusOver R n))
+noncomputable instance : ToricVariety n 𝔾ₘ[R, n] where
+  torusEmb := 𝟙 𝔾ₘ[R, n]
   torusAct := selfAction _
 
 end AlgebraicGeometry
