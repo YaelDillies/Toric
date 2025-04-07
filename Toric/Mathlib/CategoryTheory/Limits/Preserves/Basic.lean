@@ -2,8 +2,6 @@ import Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Mathlib.CategoryTheory.Adjunction.Limits
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 
-open CategoryTheory
-
 namespace CategoryTheory.Limits
 
 universe w w' v₁ v₂ u₁ u₂
