@@ -28,7 +28,6 @@ import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
-import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_

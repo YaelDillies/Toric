@@ -7,7 +7,7 @@ import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Hopf.CommAlg
 import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
-import Toric.Mathlib.CategoryTheory.Limits.Preserves.Finite
+import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
