@@ -3,6 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Yunzhou Xie. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
+import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 
 /-!
@@ -28,6 +29,15 @@ suppress_compilation
 variable {R A C : Type*} [CommRing R]
 
 namespace LinearMap
+
+local notation "η" => Algebra.linearMap R A
+local notation "ε" => counit (R := R) (A := C)
+local notation "μ" => mul' R A
+local notation "δ" => comul
+local infix:70 " ⊗ₘ " => TensorProduct.map
+-- local notation "α" => TensorProduct.assoc _ _ _
+
+section Ring
 variable [Ring A] [AddCommGroup C] [Algebra R A] [Module R C] [Coalgebra R C]
 
 instance : One (C →ₗ[R] A) where one := Algebra.linearMap R A ∘ₗ counit
@@ -41,14 +51,7 @@ lemma mul_def (f g : C →ₗ[R] A) : f * g = mul' R A ∘ₗ TensorProduct.map 
 @[simp]
 lemma mul_apply'' (f g : C →ₗ[R] A) (c : C) : (f * g) c = mul' R A (.map f g (comul c)) := rfl
 
-local notation "η" => Algebra.linearMap R A
-local notation "ε" => counit (R := R) (A := C)
-local notation "μ" => mul' R A
-local notation "δ" => comul
-local infix:70 " ⊗ₘ " => TensorProduct.map
--- local notation "α" => TensorProduct.assoc _ _ _
-
-lemma conv_mul_assoc (f g h : C →ₗ[R] A) : f * g * h = f * (g * h) := calc
+private lemma convMul_assoc (f g h : C →ₗ[R] A) : f * g * h = f * (g * h) := calc
       μ ∘ₗ (μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ ⊗ₘ h) ∘ₗ δ
   _ = (μ ∘ₗ .rTensor _ μ) ∘ₗ ((f ⊗ₘ g) ⊗ₘ h) ∘ₗ (.rTensor _ δ ∘ₗ δ) := by
     rw [comp_assoc, ← comp_assoc _ _ (rTensor _ _), rTensor_comp_map,
@@ -67,7 +70,7 @@ lemma conv_mul_assoc (f g h : C →ₗ[R] A) : f * g * h = f * (g * h) := calc
     rw [comp_assoc, ← comp_assoc _ _ (lTensor _ _), lTensor_comp_map,
       ← comp_assoc _ (lTensor _ _), map_comp_lTensor, comp_assoc]
 
-lemma conv_one_mul (f : C →ₗ[R] A) : 1 * f = f := calc
+private lemma one_convMul (f : C →ₗ[R] A) : 1 * f = f := calc
       μ ∘ₗ ((η ∘ₗ ε) ⊗ₘ f) ∘ₗ δ
   _ = μ ∘ₗ ((η ⊗ₘ f) ∘ₗ rTensor C ε) ∘ₗ δ  := by simp only [map_comp_rTensor]
   _ = μ ∘ₗ (η ⊗ₘ f) ∘ₗ (rTensor C ε) ∘ₗ δ := by rw [comp_assoc]
@@ -77,10 +80,10 @@ lemma conv_one_mul (f : C →ₗ[R] A) : 1 * f = f := calc
     rw [rTensor_counit_comp_comul]
   _ = f := by ext; simp
 
-lemma conv_mul_one (f : C →ₗ[R] A) : f * 1 = f := calc
-      μ ∘ₗ (f ⊗ₘ (η ∘ₗ ε) ) ∘ₗ δ
+private lemma convMul_one (f : C →ₗ[R] A) : f * 1 = f := calc
+      μ ∘ₗ (f ⊗ₘ (η ∘ₗ ε)) ∘ₗ δ
   _ = μ ∘ₗ ((f ⊗ₘ η) ∘ₗ lTensor C ε) ∘ₗ δ  := by simp only [map_comp_lTensor]
-  _ = μ ∘ₗ (f ⊗ₘ η) ∘ₗ (lTensor C ε) ∘ₗ δ := by rw [comp_assoc]
+  _ = μ ∘ₗ (f ⊗ₘ η) ∘ₗ lTensor C ε ∘ₗ δ := by rw [comp_assoc]
   _ = μ ∘ₗ (lTensor A η ∘ₗ rTensor R f) ∘ₗ lTensor C ε ∘ₗ δ := by simp
   _ = (μ ∘ₗ lTensor A η) ∘ₗ rTensor R f ∘ₗ (lTensor C ε ∘ₗ δ) := by simp only [comp_assoc]
   _ = (μ ∘ₗ lTensor A η) ∘ₗ rTensor R f ∘ₗ ((TensorProduct.mk R C R).flip 1) := by
@@ -92,18 +95,36 @@ instance : Ring (C →ₗ[R] A) where
   right_distrib f g h := by ext; simp [TensorProduct.map_add_left]
   zero_mul f := by ext; simp
   mul_zero f := by ext; simp
-  mul_assoc := conv_mul_assoc
-  one_mul := conv_one_mul
-  mul_one := conv_mul_one
+  mul_assoc := convMul_assoc
+  one_mul := one_convMul
+  mul_one := convMul_one
 
+end Ring
+
+section CommRing
+variable [CommRing A] [AddCommGroup C] [Algebra R A] [Module R C] [Coalgebra R C]
+
+private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := calc
+      μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ
+  _ = μ ∘ₗ (g ⊗ₘ f) ∘ₗ δ := sorry
+
+instance : CommRing (C →ₗ[R] A) where
+  mul_comm := convMul_comm
+
+end CommRing
 end LinearMap
 
 namespace BialgHom
-variable [CommRing A] [CommRing C] [Bialgebra R A] [Bialgebra R C]
+variable [CommRing A] [CommRing C]
+
+section Bialgebra
+variable [Bialgebra R A] [Bialgebra R C]
 
 instance : One (C →ₐc[R] A) where one := (unitBialgHom R A).comp <| counitBialgHom R C
 instance : Mul (C →ₐc[R] A) where
   mul f g := .comp (mulBialgHom R A) <| .comp sorry <| comulBialgHom R C
+
+instance : Pow (C →ₐc[R] A) ℕ := ⟨fun f n ↦ npowRec n f⟩
 
 lemma one_def : (1 : C →ₐc[R] A) = (unitBialgHom R A).comp (counitBialgHom ..) := rfl
 -- lemma mul_def (f g : C →ₐc[R] A) : f * g = mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul := rfl
@@ -115,7 +136,26 @@ lemma one_def : (1 : C →ₐc[R] A) = (unitBialgHom R A).comp (counitBialgHom .
 
 lemma toLinearMap_one : (1 : C →ₐc[R] A) = (1 : C →ₗ[R] A) := rfl
 lemma toLinearMap_mul (f g : C →ₐc[R] A) : ↑(f * g) = (f * g : C →ₗ[R] A) := sorry
+lemma toLinearMap_pow (f : C →ₐc[R] A) (n : ℕ) : ↑(f ^ n) = (f ^ n : C →ₗ[R] A) := sorry
 
--- instance : Ring (C →ₐc[R] A) := coe_linearMap_injective.ring _ _ _ _ _ _ _
+instance : CommMonoid (C →ₐc[R] A) :=
+  coe_linearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
 
+end Bialgebra
+
+section HopfAlgebra
+variable [HopfAlgebra R A] [HopfAlgebra R C]
+
+instance : Inv (C →ₐc[R] A) where inv := sorry
+
+-- lemma inv_def (f : C →ₐc[R] A) : f⁻¹ = sorry := rfl
+
+-- @[simp]
+-- lemma inv_apply (f : C →ₐc[R] A) (c : C) : f⁻¹ c = sorry := rfl
+
+private lemma inv_convMul_cancel (f : C →ₐc[R] A) : f⁻¹ * f = 1 := sorry
+
+instance : CommGroup (C →ₐc[R] A) where inv_mul_cancel := inv_convMul_cancel
+
+end HopfAlgebra
 end BialgHom
