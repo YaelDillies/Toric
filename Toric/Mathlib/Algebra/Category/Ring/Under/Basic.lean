@@ -1,6 +1,5 @@
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.ChosenFiniteProducts
-import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
 
 open CategoryTheory Limits Opposite

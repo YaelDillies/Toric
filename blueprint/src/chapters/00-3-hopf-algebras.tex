@@ -1,0 +1,134 @@
+\section{Hopf algebras}
+
+
+\subsection{Group-like elements}
+
+
+\begin{definition}[Group-like elements]
+  \label{0-grp-like}
+  \uses{}
+  \lean{Coalgebra.IsGroupLikeElem}
+  \leanok
+
+  An element $a$ of a coalgebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
+\end{definition}
+
+
+\begin{lemma}[Bialgebra homs preserve group-like elements]
+  \label{0-grp-like-map}
+  \uses{0-grp-like}
+  \lean{Coalgebra.IsGroupLikeElem.map}
+  \leanok
+
+  Let $f : A \to B$ be a bi-algebra hom. If $a \in A$ is group-like, then $f(a)$ is group-like too.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  $a$ is a unit, so $f(a)$ is a unit too. Then
+  \[
+    f(a) \ox f(a) = (f \ox f)(\Delta_A(a)) = \Delta_B(f(a))
+  \]
+  so $f(a)$ is group-like.
+\end{proof}
+
+
+\begin{lemma}[Independence of group-like elements]
+  \label{0-grp-like-lin-indep}
+  \uses{0-grp-like}
+  \lean{Coalgebra.linearIndepOn_isGroupLikeElem}
+  \leanok
+
+  The group-like elements in $A$ are linearly independent.
+\end{lemma}
+\begin{proof}
+  \uses{0-tensor-lin-indep}
+  \leanok
+
+  See Lemma 4.23 in \cite{Milne_2017}.
+\end{proof}
+
+
+\begin{lemma}[Group-like elements in a group algebra]
+  \label{0-grp-like-grp-alg}
+  \uses{0-grp-like}
+  \lean{MonoidAlgebra.isGroupLikeElem_iff_mem_range_of}
+  \leanok
+
+  The group-like elements of $k[M]$ are exactly the image of $M$.
+\end{lemma}
+\begin{proof}
+  \uses{0-grp-like-lin-indep}
+  \leanok
+
+  See Lemma 12.4 in \cite{Milne_2017}.
+\end{proof}
+
+
+\subsection{The group algebra functor}
+
+
+\begin{proposition}[The antipode is a antihomomorphism]
+  \label{0-hopf-antipode-antihom}
+  \uses{}
+  \lean{HopfAlgebra.antipode_mul_antidistrib, HopfAlgebra.antipode_mul_distrib}
+  \leanok
+
+  If $A$ is a $R$-Hopf algebra, then the antipode map $s : A \to A$ is anti-commutative, ie $s(a * b) = s(b) * s(a)$. If further $A$ is commutative, then $s(a * b) = s(a) * s(b)$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Any standard reference will have a proof.
+\end{proof}
+
+
+\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
+  \label{0-hopf-cogrp-alg}
+  \uses{}
+  \lean{grp_Class_op_commAlgOf, isMon_Hom_commAlgOfHom, bialgebra_unop, hopfAlgebra_unop, IsMon_Hom.toBialgHom}
+  \leanok
+
+  From a $R$-Hopf algebra, one can build a cogroup object in the category of $R$-algebras.
+
+  From a cogroup object in the category of $R$-algebras, one can build a $R$-Hopf algebra.
+\end{proposition}
+\begin{proof}
+  \uses{0-hopf-antipode-antihom}
+  \leanok
+
+  Turn the arrows around.
+\end{proof}
+
+
+\begin{definition}[The group algebra functor]
+  \label{0-grp-alg}
+  \uses{0-hopf-cogrp-alg}
+  \lean{commGrpAlgebra}
+  \leanok
+
+  For a commutative ring $R$, we have a functor $G \rightsquigarrow R[G] : \Grp \to \Hopf_R$.
+\end{definition}
+
+
+\begin{proposition}[The group algebra functor is fully faithful]
+  \label{0-full-faithful-grp-alg}
+  \uses{0-grp-alg}
+  \lean{MonoidAlgebra.mapDomainBialgHomMulEquiv, AddMonoidAlgebra.mapDomainBialgHomMulEquiv, commGrpAlgebra.fullyFaithful, commGrpAlgebra.instFull, commGrpAlgebra.instFaithful}
+  \leanok
+
+  For a field $K$, the functor $G \rightsquigarrow K[G]$ from the category of groups to the category of Hopf algebras over $K$ is fully faithful.
+\end{proposition}
+\begin{proof}
+  \uses{0-grp-like-grp-alg, 0-grp-like-map}
+  \leanok
+
+  It is clearly faithful.
+  Now for the full part, if $f : K[G] \to K[H]$ is a Hopf algebra hom, then we get a series of maps
+  \[
+    G \simeq \text{ group-like elements of } R[G] \to \text{ group-like elements of } R[H] \simeq H
+  \]
+  and each map separately is clearly multiplicative.
+\end{proof}

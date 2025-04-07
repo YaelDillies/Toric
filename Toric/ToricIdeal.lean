@@ -38,7 +38,7 @@ lemma monoidIdeal_comap :
 
 /-- An ideal is toric if it's prime and a group ideal. -/
 @[mk_iff isToricIdeal_iff_exists_monoidIdeal_eq']
-class IsToricIdeal (I : Ideal R[M])  extends I.IsPrime where
+class IsToricIdeal (I : Ideal R[M]) extends I.IsPrime where
   /-- Use `IsToricIdeal.exists_monoidIdeal_eq` instead. -/
   exists_monoidIdeal_eq' :
     ∃ s : AddSubgroup (AddLocalization (⊤ : AddSubmonoid M)),
@@ -71,7 +71,7 @@ lemma isToricIdeal_iff_exists_span_single_sub_single :
   mpr := by
     let G := AddLocalization (⊤ : AddSubmonoid M)
     rintro ⟨_, s, hsI⟩
-    letI V := Spec (.of  <| k[M] ⧸ I)
+    letI V := Spec (.of <| k[M] ⧸ I)
     let _ : V.Over (Spec (.of k[M])) := sorry
     let _ : (Spec (.of k[G])).Over (Spec (.of k[M])) := sorry
     let VinterT := pullback (V ↘ Spec (.of k[M])) (Spec (.of k[G]) ↘ Spec (.of k[M]))

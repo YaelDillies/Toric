@@ -1,0 +1,271 @@
+\section{Group Schemes}
+
+
+\subsection{Correspondence between Hopf algebras and affine group schemes}
+
+
+We want to show that Hopf algebras correspond to affine group schemes.
+This can easily be done categorically assuming both categories on either side are defined thoughtfully.
+However, the categorical version will not be workable with if we do not also have links to the non-categorical notions.
+Therefore, one solution would be to build the left, top and right edges of the following
+diagram so that the bottom edge can be obtained by composing the three:
+%   Cogrp Mod_R   ⥤        Grp Sch_{Spec R}
+%       ↑ ↓                        ↓
+% R-Hopf algebras → Affine group schemes over Spec R
+
+
+\subsubsection{Bundling/unbundling Hopf algebras}
+
+
+We have already done the left edge in the previous section.
+
+
+\subsubsection{Spec of a Hopf algebra}
+
+
+Now let's do the top edge.
+
+
+\begin{proposition}[Sliced adjoint functors]
+  \label{0-slice-adj}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  If $a : F \vdash G$ is an adjunction between $F : C \to D$ and $G : D \to C$ and $X : C$, then there is an adjunction between $F / X : C / X \to D / F(X)$ and $G / X : D / F(X) \to C / X$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  See https://ncatlab.org/nlab/show/sliced+adjoint+functors+--+section.
+\end{proof}
+
+
+\begin{proposition}[Limit-preserving functors lift to over categories]
+  \label{0-over-lim}
+  \uses{}
+  \lean{CategoryTheory.Limits.PreservesLimitsOfShape.overPost, CategoryTheory.Limits.PreservesLimitsOfSize.overPost, CategoryTheory.Limits.PreservesFiniteProducts.overPost}
+  \leanok
+
+  If $F : C \to D$ is a functor preserving limits of shape $J$, then so is the obvious functor $C / X \to D / F(X)$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Hopefully easy.
+\end{proof}
+
+
+\begin{proposition}[Fully faithful product-preserving functors lift to group objects]
+  \label{0-full-faithful-grp}
+  \uses{}
+  \lean{CategoryTheory.Functor.Faithful.mapGrp, CategoryTheory.Functor.Full.mapGrp}
+  \leanok
+
+  If a finite-products-preserving functor $F : C \to D$ is fully faithful, then so is $\Grp(F) : \Grp C \to \Grp D$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Faithfulness is immediate.
+
+  For fullness, assume $f : F(G) \to F(H)$ is a morphism. By fullness of $F$, find $g : G \to H$ such that $F(g) = f$. $g$ is a morphism because we can pull back each diagram from $D$ to $C$ along $F$ which is faithful.
+\end{proof}
+
+
+\begin{definition}[Spec as a functor on algebras]
+  \label{0-spec-alg}
+  \uses{}
+  \lean{algSpec}
+  \leanok
+
+  Spec is a contravariant functor from the category of $R$-algebras to the category of schemes over $\Spec_R$.
+\end{definition}
+
+
+\begin{proposition}[Spec as a functor on algebras is fully faithful]
+  \label{0-full-faithful-spec-alg}
+  \uses{0-spec-alg}
+  \lean{algSpec.instPreservesLimits, algSpec.instFull, algSpec.instFaithful, algSpec.fullyFaithful}
+  \leanok
+
+  Spec is a fully faithful contravariant functor from the category of $R$-algebras to the category of schemes over $\Spec_R$, preserving all limits.
+\end{proposition}
+\begin{proof}
+  \uses{0-slice-adj, 0-over-lim}
+  \leanok
+
+  $\Spec : \Ring \to \Sch$ is a fully faithful contravariant functor which preserves all limits, hence so is $\Spec : \Ring_R \to \AffSch_{\Spec R}$ by Proposition \ref{0-over-lim} (alternatively, by Proposition \ref{0-slice-adj}).
+\end{proof}
+
+
+\begin{definition}[Spec as a functor on Hopf algebras]
+  \label{0-spec-hopf}
+  \uses{0-full-faithful-spec-alg}
+  \lean{hopfSpec}
+  \leanok
+
+  Spec is a fully faithful contravariant functor from the category of $R$-algebras to the category of group schemes over $\Spec_R$.
+\end{definition}
+
+
+\begin{proposition}[Spec as a functor on Hopf algebras is fully faithful]
+  \label{0-full-faithful-spec-hopf}
+  \uses{0-spec-alg}
+  \lean{hopfSpec.instFull, hopfSpec.instFaithful, hopfSpec.fullyFaithful}
+  \leanok
+
+  Spec is a fully faithful contravariant functor from the category of $R$-Hopf algebras to the category of group schemes over $\Spec_R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-grp, 0-full-faithful-spec-alg}
+  \leanok
+
+  $\Spec : \Ring_R \to \Sch_{\Spec R}$ is a fully faithful contravariant functor preserving all limits according to Proposition \ref{0-spec-alg}, therefore $\Spec : \Hopf_R \to \GrpSch_{\Spec R}$ too is fully faithful according to \ref{0-full-faithful-grp}.
+\end{proof}
+
+
+\subsection{Essential image of Spec on Hopf algebras}
+
+
+Finally, let's do the right edge.
+
+
+\begin{proposition}[Essential image of a sliced functor]
+  \label{0-ess-image-over}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  If $F : C \to D$ is a fully faithful functor between cartesian-monoidal categories, then $F / X : C / X \hom D / F(X)$ has the same essential image as $F$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Transfer all diagrams.
+\end{proof}
+
+
+\begin{proposition}[Equivalences lift to group object categories]
+  \label{0-grp-equiv}
+  \uses{}
+  \lean{CategoryTheory.Equivalence.mapGrp}
+  \leanok
+
+  If $e : C \backsimeq D$ is an equivalence of cartesian-monoidal categories, then $\Grp(e) : \Grp(C) \backsimeq \Grp(D)$ too is an equivalence of categories.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Transfer all diagrams.
+\end{proof}
+
+
+\begin{proposition}[Essential image of a functor on group objects]
+  \label{0-ess-image-grp}
+  \uses{}
+  \lean{CategoryTheory.Functor.essImage_mapGrp}
+  \leanok
+
+  If $F : C \to D$ is a fully faithful functor between cartesian-monoidal categories, then $\Grp(F) : \Grp(C) \hom \Grp(D)$ has the same essential image as $F$.
+\end{proposition}
+\begin{proof}
+  \uses{0-grp-equiv}
+  % \leanok
+
+  Transfer all diagrams.
+\end{proof}
+
+
+\begin{proposition}[Essential image of Spec on algebras]
+  \label{0-ess-image-spec-alg}
+  \uses{0-spec-alg}
+  \lean{essImage_algSpec}
+  \leanok
+
+  The essential image of $\Spec : \Ring_R \to \Sch_{\Spec R}$ is precisely affine schemes over $\Spec R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-ess-image-over}
+  % \leanok
+
+  Direct consequence of Proposition \ref{0-ess-image-over}.
+\end{proof}
+
+
+\begin{proposition}[Essential image of Spec on Hopf algebras]
+  \label{0-ess-image-spec-hopf}
+  \uses{0-spec-hopf}
+  \lean{essImage_hopfSpec}
+  \leanok
+
+  The essential image of $\Spec : \Hopf_R \to \GrpSch_{\Spec R}$ is precisely affine group schemes over $\Spec R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-ess-image-grp, 0-ess-image-spec-alg, 0-full-faithful-spec-alg}
+  \leanok
+
+  Direct consequence of Propositions \ref{0-ess-image-grp} and \ref{0-ess-image-spec-alg}.
+\end{proof}
+
+
+\subsection{Diagonalisable groups}
+
+
+\begin{definition}
+  \label{0-spec-grp-alg}
+  \uses{0-spec-hopf}
+  \lean{hopfSpec, MonoidAlgebra}
+  \leanok
+
+  For a commutative group $G$ we define $D_R(G)$ as the spectrum $\Spec R[G]$ of the group algebra $R[G]$.
+\end{definition}
+
+
+\begin{definition}
+  \label{0-diag}
+  \uses{0-spec-grp-alg}
+  \lean{AlgebraicGeometry.Scheme.IsDiagonalisable}
+  % \leanok
+
+  An algebraic group $G$ over $\Spec R$ is {\bf diagonalisable} if it is isomorphic to $D_R(G)$ for some commutative group $G$.
+\end{definition}
+
+
+\begin{theorem}
+  \label{0-diag-iff-grp-like-span}
+  \uses{0-spec-grp-alg, 0-diag}
+  \lean{AlgebraicGeometry.Scheme.isDiagonalisable_iff_span_isGroupLikeElem_eq_top}
+  \leanok
+
+  An algebraic group $G$ over a field $k$ is diagonalizable if and only if group-like elements span $\Gamma(G)$.
+\end{theorem}
+\begin{proof}
+  \uses{0-grp-like-lin-indep}
+  % \leanok
+
+  See Theorem 12.8 in \cite{Milne_2017}.
+\end{proof}
+
+
+\begin{theorem}
+  \label{0-full-faithful-spec-grp-alg}
+  \uses{0-spec-grp-alg}
+  \lean{specCommGrpAlgebra.fullyFaithful, specCommGrpAlgebra.instFull, specCommGrpAlgebra.instFaithful}
+  \leanok
+
+  For a field $k$, $D_k$ is a fully faithful contravariant functor from the category of commutative groups to the category of group schemes over $\Spec k$.
+\end{theorem}
+\begin{proof}
+  \uses{0-full-faithful-spec-hopf, 0-full-faithful-grp-alg}
+  \leanok
+
+  Compose Propositions \ref{0-full-faithful-spec-hopf} and \ref{0-full-faithful-grp-alg}.
+
+  Also see Theorem 12.9(a) in \cite{Milne_2017}. See SGA III Exposé VIII for a proof that works for $R$ an arbitrary commutative ring in place of $k$.
+\end{proof}

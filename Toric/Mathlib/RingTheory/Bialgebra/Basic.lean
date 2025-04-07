@@ -7,17 +7,14 @@ section
 variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 
 noncomputable
-def Bialgebra.mkAlgHoms
-    (comul : A →ₐ[R] (A ⊗[R] A))
-    (counit : A →ₐ[R] R)
+abbrev Bialgebra.ofAlgHom (comul : A →ₐ[R] A ⊗[R] A) (counit : A →ₐ[R] R)
     (h_coassoc : (Algebra.TensorProduct.assoc R A A A).toAlgHom.comp
       ((Algebra.TensorProduct.map comul (.id R A)).comp comul)
       = (Algebra.TensorProduct.map (.id R A) comul).comp comul)
     (h_rTensor : (Algebra.TensorProduct.map counit (.id R A)).comp comul
       = (Algebra.TensorProduct.lid R A).symm)
     (h_lTensor : (Algebra.TensorProduct.map (.id R A) counit).comp comul
-      = (Algebra.TensorProduct.rid R R A).symm)
-   :
+      = (Algebra.TensorProduct.rid R R A).symm) :
     Bialgebra R A :=
   letI : Coalgebra R A := {
     comul := comul

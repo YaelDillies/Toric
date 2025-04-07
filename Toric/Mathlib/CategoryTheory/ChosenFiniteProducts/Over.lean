@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathlib.CategoryTheory.ChosenFiniteProducts
-import Mathlib.CategoryTheory.Closed.Ideal
-import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 
 /-!
 # This is https://github.com/leanprover-community/mathlib4/pull/21399
@@ -194,12 +192,13 @@ def chosenFiniteProducts (X : C) : ChosenFiniteProducts (Under X)ᵒᵖ where
       (fun s ↦ Quiver.Hom.unop_inj <| Under.UnderMorphism.ext (pushout.inl_desc _ _ _))
       (fun s ↦ Quiver.Hom.unop_inj <| Under.UnderMorphism.ext (pushout.inr_desc _ _ _))
         fun s m e₁ e₂ ↦ by
-      refine  Quiver.Hom.unop_inj ?_
+      refine Quiver.Hom.unop_inj ?_
       ext1
       apply pushout.hom_ext
       · simpa using congr(($e₁).unop.right)
       · simpa using congr(($e₂).unop.right)
   }
+  terminal.cone := _
   terminal.isLimit := terminalOpOfInitial Under.mkIdInitial
 
 instance (X : C) : PreservesFiniteProducts (Under.opToOverOp X) := sorry

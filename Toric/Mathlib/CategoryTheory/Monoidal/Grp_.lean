@@ -162,6 +162,8 @@ attribute [local instance] groupOfGrp_Class
 def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f] :
     Grp_.mk' G ⟶ Grp_.mk' H := ⟨f, IsMon_Hom.one_hom, IsMon_Hom.mul_hom⟩
 
+@[simp] lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) : homMk f.hom = f := rfl
+
 @[reassoc]
 lemma Grp_Class.comp_inv {G H K : C} (f : G ⟶ H) (h : K ⟶ G) [Grp_Class H] :
     h ≫ f⁻¹ = (h ≫ f)⁻¹ := ((yonedaGrp.obj (.mk' H)).map (h.op)).hom.map_inv f
@@ -173,7 +175,7 @@ lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H]
 
 @[reassoc]
 lemma Grp_Class.div_comp {G H K : C} (f g : G ⟶ H) (h : H ⟶ K) [Grp_Class H] [Grp_Class K]
-    [IsMon_Hom h] : (f / g) ≫ h =  (f ≫ h) / (g ≫ h) :=
+    [IsMon_Hom h] : (f / g) ≫ h = (f ≫ h) / (g ≫ h) :=
     (((yonedaGrp.map (Grp_.homMk h)).app (.op G)).hom.map_div f g)
 
 lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι = f⁻¹ := rfl
@@ -200,7 +202,11 @@ lemma Grp_Class.comp_zpow {G H K : C} [Grp_Class H] (f : G ⟶ H) (h : K ⟶ G) 
   | (n : ℕ) => by simp [comp_pow]
   | .negSucc n => by simp [comp_pow, comp_inv]
 
-namespace Grp_.Hom
+namespace Grp_
+
+@[simp] lemma mk'_X (G : C) [Grp_Class G] : (mk' G).X = G := rfl
+
+namespace Hom
 
 instance instOne : One (G ⟶ H) := inferInstanceAs <| One (G.toMon_ ⟶ H.toMon_)
 

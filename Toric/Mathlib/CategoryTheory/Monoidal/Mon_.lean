@@ -3,6 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.CategoryTheory.Adjunction.Limits
 import Mathlib.CategoryTheory.Monoidal.Yoneda
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
@@ -44,7 +45,7 @@ section
 
 attribute [local instance] monoidOfMon_Class
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}  [IsCommMon N.X]
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C} [IsCommMon N.X]
 
 @[reassoc]
 lemma Mon_Class.comp_mul {M N O : C} (f g : M ⟶ N) (h : O ⟶ M) [Mon_Class N] :
@@ -80,7 +81,7 @@ lemma Mon_Class.one_comp {M N O : C} (h : N ⟶ O) [Mon_Class N] [Mon_Class O]
 
 @[reassoc (attr := simp)]
 lemma Mon_Class.comp_one {M N O : C} (h : M ⟶ N) [Mon_Class O] :
-    h ≫ (1 : N ⟶ O) = 1 :=  ((yonedaMon.obj (.mk' O)).map (h.op)).hom.map_one
+    h ≫ (1 : N ⟶ O) = 1 := ((yonedaMon.obj (.mk' O)).map (h.op)).hom.map_one
 
 instance Hom.instCommMonoid {M N : C} [Mon_Class N] [IsCommMon N] : CommMonoid (M ⟶ N) where
   mul_comm f g := by
@@ -140,7 +141,7 @@ lemma hom_pow (f : M ⟶ N) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
 instance : CommMonoid (M ⟶ N) :=
   Function.Injective.commMonoid hom (fun _ _ ↦ ext) hom_one hom_mul hom_pow
 
-end  Mon_.Hom
+end Mon_.Hom
 
 section Yoneda
 variable {C : Type*} [Category C] [ChosenFiniteProducts C]
