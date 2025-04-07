@@ -22,7 +22,7 @@ lemma antipode_mul_distrib (a b : A) :
 alias antipode_mul := antipode_mul_distrib
 
 variable (R A) in
- def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap antipode antipode_one antipode_mul
+def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap antipode antipode_one antipode_mul
 
 end CommRing
 end HopfAlgebra
