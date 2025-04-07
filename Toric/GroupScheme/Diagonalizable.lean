@@ -40,18 +40,54 @@ section Field
 
 namespace HopfAlgebra
 
-variable {A K : Type u} {B : Type u} [Field K] [CommGroup A] [CommSemiring B] [Bialgebra K B]
+open MonoidAlgebra
+
+variable {A K : Type u} {B : Type u} [Field K] [CommGroup A] [CommRing B] [Bialgebra K B]
 
 -- also true over a commutative ring, but with a more complicated proof
-lemma isDiagonalisable_of_span_isGroupLikeElem_eq_top :
+lemma isDiagonalisable_of_span_isGroupLikeElem_eq_top [Nontrivial B] :
     Submodule.span K {a : B | IsGroupLikeElem K a} = ⊤ → IsDiagonalisable K B := by
   intro h
   refine {existsIso := ⟨{a : B // IsGroupLikeElem K a}, inferInstance, ?_⟩}
   apply Nonempty.intro
-  sorry
+  have hinj : Function.Injective (algebraMap K B) := RingHom.injective _
+  have h : Function.Bijective (lift_isGroupLikeElem hinj) := by
+    constructor
+    · rw [RingHom.injective_iff_ker_eq_bot, RingHom.ker_eq_bot_iff_eq_zero]
+      intro x hx
+      dsimp [lift_isGroupLikeElem, lift_bialgHom, lift, liftNCAlgHom, liftNCRingHom, liftNC] at hx
+      erw [Finsupp.liftAddHom_apply] at hx
+      simp only [AddMonoidHom.coe_comp, AddMonoidHom.coe_mulRight, AddMonoidHom.coe_coe] at hx
+      have heq : (Finsupp.sum x (fun x ↦ ((fun x_1 ↦ x_1 * x) ∘ (Algebra.ofId K B) : K → B))) =
+          Finsupp.linearCombination K (fun a ↦ a.1) x := by
+        rw [Finsupp.linearCombination_apply]
+        refine Finsupp.sum_congr (fun a ha ↦ ?_)
+        dsimp [Algebra.ofId]
+        rw [Algebra.smul_def]
+      rw [heq] at hx
+      apply (linearIndepOn_isGroupLikeElem (K := K) (A := B)).linearIndependent (a₁ := x) (a₂ := 0)
+      simp only [Set.coe_setOf, Set.mem_setOf_eq, id_eq, map_zero]
+      exact hx
+    · intro b
+      have : b ∈ Submodule.span K {a | IsGroupLikeElem K a} := by rw [h]; exact Submodule.mem_top
+      obtain ⟨x, hx⟩ := (Finsupp.mem_span_iff_linearCombination _ _ _).mp this
+      use x
+      dsimp [lift_isGroupLikeElem, lift_bialgHom, lift, liftNCAlgHom, liftNCRingHom, liftNC]
+      erw [Finsupp.liftAddHom_apply]
+      simp only [AddMonoidHom.coe_comp, AddMonoidHom.coe_mulRight, AddMonoidHom.coe_coe]
+      have heq : (Finsupp.sum x (fun x ↦ ((fun x_1 ↦ x_1 * x) ∘ (Algebra.ofId K B) : K → B))) =
+          Finsupp.linearCombination K (fun a ↦ a.1) x := by
+        rw [Finsupp.linearCombination_apply]
+        refine Finsupp.sum_congr (fun a ha ↦ ?_)
+        dsimp [Algebra.ofId]
+        rw [Algebra.smul_def]
+      erw [heq]
+      exact hx
+
+  exact (BialgEquiv.ofBialgHom _ _ _ h).symm
 
 -- also true over a commutative ring, but with a more complicated proof
-lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
+lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top [Nontrivial B] :
     IsDiagonalisable K B ↔
       Submodule.span K {a : B | IsGroupLikeElem K a} = ⊤ :=
   ⟨span_isGroupLikeElem_eq_top_of_isDiagonalizable, isDiagonalisable_of_span_isGroupLikeElem_eq_top⟩

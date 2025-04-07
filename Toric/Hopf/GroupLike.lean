@@ -34,12 +34,15 @@ lemma IsGroupLikeElem.map [FunLike F A B] [BialgHomClass F R A B] (f : F)
 
 lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
 
-lemma IsGroupLikeElem.counit (ha : IsGroupLikeElem R a) : counit a = (1 : R) := by
+lemma IsGroupLikeElem.counit (hinj : Function.Injective (algebraMap R A))
+    (ha : IsGroupLikeElem R a) : counit a = (1 : R) := by
   have := rTensor_counit_comul (R := R) a
   rw [ha.comul_eq_tmul_self, LinearMap.rTensor_tmul] at this
-  apply_fun (fun x ↦ ((1 : R) ⊗ₜ[R] (Ring.inverse a)) * x) at this
-  rw [Algebra.TensorProduct.tmul_mul_tmul, Algebra.TensorProduct.tmul_mul_tmul, one_mul,
-    one_mul] at this
+  apply_fun (fun x ↦ Algebra.TensorProduct.lid R A (((1 : R) ⊗ₜ[R] (Ring.inverse a)) * x)) at this
+  dsimp at this
+  simp only [one_mul, mul_one, one_smul, Ring.inverse_mul_cancel _ ha.isUnit, Algebra.smul_def]
+    at this
+  exact hinj this
 
 lemma IsGroupLikeElem.map_sub [FunLike F A B] [BialgHomClass F R A B] (f : F) :
     f '' {a | IsGroupLikeElem R a} ≤ {a | IsGroupLikeElem R a} := by

@@ -55,16 +55,14 @@ lemma groupLikeElem_span_of_iso {F H : Type*} [Semiring H] [Bialgebra R H]
 
 end CommSemiring
 
-namespace MonoidAlgebra
-
 open Bialgebra
 
 variable {R A M : Type*}
 
 variable [CommSemiring R] [Monoid M] [Semiring A] [Bialgebra R A]
 
-noncomputable def MonoidAlgebra.lift_bialgHom (φ : M →* {a : A // IsGroupLikeElem R a}) :
-    MonoidAlgebra R M →ₐc[R] A := by
+noncomputable def lift_bialgHom (hinj : Function.Injective (algebraMap R A))
+    (φ : M →* {a : A // IsGroupLikeElem R a}) : MonoidAlgebra R M →ₐc[R] A := by
   set ψ : M →* A := {
     toFun x := φ x
     map_one' := by rw [φ.map_one]; rfl
@@ -74,20 +72,22 @@ noncomputable def MonoidAlgebra.lift_bialgHom (φ : M →* {a : A // IsGroupLike
       ext x
       dsimp
       simp only [lift_single, one_smul, counit_single, CommSemiring.counit_apply]
-      sorry
-    ,
-    map_comp_comul := sorry,
-    map_smul' := sorry}
-
-end MonoidAlgebra
+      exact IsGroupLikeElem.counit hinj (φ x).2,
+    map_comp_comul := by
+      ext x
+      dsimp
+      simp only [comul_single, CommSemiring.comul_apply, TensorProduct.map_tmul, lsingle_apply,
+        LinearMap.coe_mk, AddHom.coe_mk, lift_single, one_smul]
+      exact (φ x).2.comul_eq_tmul_self.symm,
+    map_smul' := fun _ _ ↦ by dsimp; simp only [map_smul]}
 
 
 section CommSemiring
 variable [CommSemiring R] [CommSemiring A] [Bialgebra R A]
 
-noncomputable def MonoidAlgebra.lift_self :
+noncomputable def lift_isGroupLikeElem (hinj : Function.Injective (algebraMap R A)) :
     MonoidAlgebra R {a : A // IsGroupLikeElem R a} →ₐc[R] A :=
-  MonoidAlgebra.lift_bialgHom (MonoidHom.id _)
+  MonoidAlgebra.lift_bialgHom hinj (MonoidHom.id _)
 
 end CommSemiring
 
