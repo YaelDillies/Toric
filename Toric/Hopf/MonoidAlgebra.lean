@@ -55,6 +55,42 @@ lemma groupLikeElem_span_of_iso {F H : Type*} [Semiring H] [Bialgebra R H]
 
 end CommSemiring
 
+namespace MonoidAlgebra
+
+open Bialgebra
+
+variable {R A M : Type*}
+
+variable [CommSemiring R] [Monoid M] [Semiring A] [Bialgebra R A]
+
+noncomputable def MonoidAlgebra.lift_bialgHom (φ : M →* {a : A // IsGroupLikeElem R a}) :
+    MonoidAlgebra R M →ₐc[R] A := by
+  set ψ : M →* A := {
+    toFun x := φ x
+    map_one' := by rw [φ.map_one]; rfl
+    map_mul' a b := by rw [φ.map_mul]; rfl }
+  exact {MonoidAlgebra.lift R M A ψ with
+    counit_comp := by
+      ext x
+      dsimp
+      simp only [lift_single, one_smul, counit_single, CommSemiring.counit_apply]
+      sorry
+    ,
+    map_comp_comul := sorry,
+    map_smul' := sorry}
+
+end MonoidAlgebra
+
+
+section CommSemiring
+variable [CommSemiring R] [CommSemiring A] [Bialgebra R A]
+
+noncomputable def MonoidAlgebra.lift_self :
+    MonoidAlgebra R {a : A // IsGroupLikeElem R a} →ₐc[R] A :=
+  MonoidAlgebra.lift_bialgHom (MonoidHom.id _)
+
+end CommSemiring
+
 section Field
 variable [Field K] [Group G]
 

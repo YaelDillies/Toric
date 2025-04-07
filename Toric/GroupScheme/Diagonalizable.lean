@@ -18,47 +18,66 @@ universe u
 
 namespace HopfAlgebra
 
-variable {A R : Type u} {B : Type*} [CommRing R] [CommGroup A] [Monoid.FG A] [Semiring B]
-  [Bialgebra R B]
+variable {A R : Type u} {B : Type*} [CommRing R] [CommGroup A] [Semiring B] [Bialgebra R B]
 
 variable (R B) in
 @[mk_iff]
 class IsDiagonalisable : Prop where
   existsIso :
-    ∃ (A : Type u) (_ : CommGroup A) (_ : Monoid.FG A),
-      Nonempty (B ≃ₐc[R] MonoidAlgebra R A)
+    ∃ (A : Type u) (_ : CommGroup A), Nonempty (B ≃ₐc[R] MonoidAlgebra R A)
 
 instance : IsDiagonalisable R (MonoidAlgebra R A) :=
-  ⟨⟨A, _, ‹_›, Nonempty.intro (BialgEquiv.refl _ _)⟩⟩
+  ⟨⟨A, _, Nonempty.intro (BialgEquiv.refl _ _)⟩⟩
 -- This causes universe errors unless we assume that `R` and `A` are in the same universe. Why?
 
--- maybe assume that `R` is a field for this?
-lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
-    IsDiagonalisable R B ↔
-      Submodule.span R {a : B | IsGroupLikeElem R a} = ⊤ := by
-  refine ⟨fun {existsIso := ⟨A, _, _, h⟩} ↦ ?_, ?_⟩
-  · exact MonoidAlgebra.groupLikeElem_span_of_iso (Classical.choice h).symm
-  · sorry
-
+lemma span_isGroupLikeElem_eq_top_of_isDiagonalizable : IsDiagonalisable R B ->
+      Submodule.span R {a : B | IsGroupLikeElem R a} = ⊤ :=
+  fun {existsIso := ⟨_, _, h⟩} ↦ MonoidAlgebra.groupLikeElem_span_of_iso (Classical.choice h).symm
 
 end HopfAlgebra
 
+section Field
+
+namespace HopfAlgebra
+
+variable {A K : Type u} {B : Type u} [Field K] [CommGroup A] [CommSemiring B] [Bialgebra K B]
+
+-- also true over a commutative ring, but with a more complicated proof
+lemma isDiagonalisable_of_span_isGroupLikeElem_eq_top :
+    Submodule.span K {a : B | IsGroupLikeElem K a} = ⊤ → IsDiagonalisable K B := by
+  intro h
+  refine {existsIso := ⟨{a : B // IsGroupLikeElem K a}, inferInstance, ?_⟩}
+  apply Nonempty.intro
+  sorry
+
+-- also true over a commutative ring, but with a more complicated proof
+lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
+    IsDiagonalisable K B ↔
+      Submodule.span K {a : B | IsGroupLikeElem K a} = ⊤ :=
+  ⟨span_isGroupLikeElem_eq_top_of_isDiagonalizable, isDiagonalisable_of_span_isGroupLikeElem_eq_top⟩
+
+end HopfAlgebra
+
+end Field
+
+
+
+
 namespace AlgebraicGeometry.Scheme
 section CommRing
-variable {R : CommRingCat.{u}} {G : Over (Spec R)} [Grp_Class G]
-    {A : Type u} [CommGroup A] [Monoid.FG A]
+variable {R : CommRingCat.{u}} {G : Over (Spec R)} [Grp_Class G] {A : Type u} [CommGroup A]
 
 variable (G) in
 @[mk_iff]
 class IsDiagonalisable : Prop where
   existsIso :
-    ∃ (A : Type u) (_ : CommGroup A) (_ : Monoid.FG A),
+    ∃ (A : Type u) (_ : CommGroup A),
       Nonempty <| Grp_.mk' G ≅
       ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A)
 
 instance :
     IsDiagonalisable ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A).X :=
-  ⟨⟨A, _, ‹_›, Nonempty.intro (Iso.refl _)⟩⟩
+  ⟨⟨A, _, Nonempty.intro (Iso.refl _)⟩⟩
 
 noncomputable instance : Algebra R (Γ.obj <| op G.left) := sorry
 
@@ -67,6 +86,7 @@ noncomputable instance : HopfAlgebra R (Γ.obj <| op G.left) := by
   exact hopfAlgebra_unop (G := Opposite.op (CommAlg.of R (Γ.obj <| op G.left)))
 
 end CommRing
+
 
 section Field
 variable {K : Type*} [Field K] {G : Over (Spec <| .of K)} [Grp_Class G]
@@ -83,7 +103,7 @@ See SGA III, Exposé VIII for more info. -/
 lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
     IsDiagonalisable G ↔
       Submodule.span K {a : Γ.obj <| op G.left | IsGroupLikeElem K a} = ⊤ := by
-  refine ⟨fun {existsIso := ⟨A, _, _, h⟩} ↦ ?_, ?_⟩
+  refine ⟨fun {existsIso := ⟨A, _, h⟩} ↦ ?_, ?_⟩
   · set e : (Γ.obj <| op G.left) ≃ₐc[K] MonoidAlgebra K A := by
       set e := Classical.choice h
       sorry

@@ -34,6 +34,13 @@ lemma IsGroupLikeElem.map [FunLike F A B] [BialgHomClass F R A B] (f : F)
 
 lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
 
+lemma IsGroupLikeElem.counit (ha : IsGroupLikeElem R a) : counit a = (1 : R) := by
+  have := rTensor_counit_comul (R := R) a
+  rw [ha.comul_eq_tmul_self, LinearMap.rTensor_tmul] at this
+  apply_fun (fun x ↦ ((1 : R) ⊗ₜ[R] (Ring.inverse a)) * x) at this
+  rw [Algebra.TensorProduct.tmul_mul_tmul, Algebra.TensorProduct.tmul_mul_tmul, one_mul,
+    one_mul] at this
+
 lemma IsGroupLikeElem.map_sub [FunLike F A B] [BialgHomClass F R A B] (f : F) :
     f '' {a | IsGroupLikeElem R a} ≤ {a | IsGroupLikeElem R a} := by
   simp only [Set.le_eq_subset, Set.image_subset_iff, Set.preimage_setOf_eq, Set.setOf_subset_setOf]
@@ -47,6 +54,68 @@ lemma IsGroupLikeElem.equiv [EquivLike F A B] [BialgEquivClass F R A B] (f : F) 
   exact IsGroupLikeElem.map_sub (BialgEquivClass.toBialgEquiv f).symm
 
 end CommSemiring
+
+end Coalgebra
+
+open Coalgebra
+
+namespace Bialgebra
+
+variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] {a b : A}
+
+def isGroupLikeElem_one : IsGroupLikeElem R (1 : A) where
+  isUnit := isUnit_one
+  comul_eq_tmul_self := by rw [comul_one, Algebra.TensorProduct.one_def]
+
+def isGroupLikeElem_mul (ha : IsGroupLikeElem R a) (hb : IsGroupLikeElem R b) :
+    IsGroupLikeElem R (a * b) where
+      isUnit := IsUnit.mul ha.isUnit hb.isUnit
+      comul_eq_tmul_self := by rw [comul_mul, ha.comul_eq_tmul_self, hb.comul_eq_tmul_self,
+        Algebra.TensorProduct.tmul_mul_tmul]
+
+def isGroupLikeElem_inv (ha : IsGroupLikeElem R a) : IsGroupLikeElem R (Ring.inverse a) where
+  isUnit := by simp only [isUnit_ring_inverse, ha.isUnit]
+  comul_eq_tmul_self := by
+    rw [comul_inv, ha.comul_eq_tmul_self, Algebra.TensorProduct.tmul_inv]
+
+instance : Mul {a : A // IsGroupLikeElem R a} where
+  mul a b := ⟨a * b, isGroupLikeElem_mul a.2 b.2⟩
+
+instance : One {a : A // IsGroupLikeElem R a} where
+  one := ⟨1, isGroupLikeElem_one⟩
+
+instance : MulOneClass {a : A // IsGroupLikeElem R a} where
+  one_mul _ := by rw [← SetCoe.ext_iff]; exact one_mul _
+  mul_one _ := by rw [← SetCoe.ext_iff]; exact mul_one _
+
+instance : Semigroup {a : A // IsGroupLikeElem R a} where
+  mul_assoc _ _ _ := by rw [← SetCoe.ext_iff]; exact mul_assoc _ _ _
+
+instance : Monoid {a : A // IsGroupLikeElem R a} where
+  one_mul := one_mul
+  mul_one := mul_one
+
+noncomputable instance : Inv {a : A // IsGroupLikeElem R a} where
+  inv a := ⟨Ring.inverse a, isGroupLikeElem_inv a.2⟩
+
+noncomputable instance : Group {a : A // IsGroupLikeElem R a} where
+  inv_mul_cancel a := by rw [← SetCoe.ext_iff]; exact Ring.inverse_mul_cancel a.1 a.2.isUnit
+
+end Bialgebra
+
+
+namespace Bialgebra
+
+variable {R A B : Type*} [CommSemiring R] [CommSemiring A] [Bialgebra R A]
+
+instance : CommMonoid {a : A // IsGroupLikeElem R a} where
+  mul_comm a b := by rw [← SetCoe.ext_iff]; exact mul_comm _ _
+
+noncomputable instance : CommGroup {a : A // IsGroupLikeElem R a} where
+
+end Bialgebra
+
+namespace Coalgebra
 
 section Field
 variable {F K A B : Type*} [Field K] [Ring A] [Algebra K A] [Coalgebra K A] [Nontrivial A]
