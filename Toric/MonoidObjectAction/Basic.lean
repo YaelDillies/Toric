@@ -3,12 +3,8 @@ Copyright (c) 2025 Paul Lezeau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Lezeau
 -/
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Mathlib.Algebra.Category.Grp.Adjunctions
-import Mathlib.Algebra.Category.Ring.Adjunctions
-import Mathlib.AlgebraicGeometry.Limits
-import Mathlib.CategoryTheory.Adjunction.Opposites
-import Mathlib.CategoryTheory.Monoidal.Yoneda
+import Mathlib.CategoryTheory.ChosenFiniteProducts
+import Mathlib.CategoryTheory.Monoidal.Mon_
 
 
 /-
@@ -66,20 +62,7 @@ instance (A : ActedBy M) : Action_Class M A := A.action
 attribute [instance] ActedBy.action
 
 def trivialAction (S : C) : Action_Class M S where
-  smul := (ChosenFiniteProducts.toUnit M ▷ S) ≫ (λ_ S).hom
-  mul_smul' := by
-    --This is painful
-    -- rw [← Category.assoc, ←Category.assoc (α_ M M S).inv, ←Category.assoc
-      --((α_ M M S).inv ≫ (μ ⊗ 𝟙 S : (M ⊗ M) ⊗ S ⟶ M ⊗ S)), Iso.cancel_iso_hom_right,
-      --assoc, tensorHom_id,
-    --   ←comp_whiskerRight, ChosenFiniteProducts.comp_toUnit, associator_inv_naturality_right]
-    -- have : μ ▷ S = (μ[M] ⊗ 𝟙 S)  := rfl
-    -- rw [←this, ←assoc]
-    sorry
-  one_smul' := by
-    --In an ideal world `aesop_cat` would already solve this
-    rw [Iso.inv_comp_eq_id, ←Iso.comp_inv_eq_id]
-    aesop_cat
+  smul := ChosenFiniteProducts.snd M S
 
 def selfAction : Action_Class M M where
   smul := μ

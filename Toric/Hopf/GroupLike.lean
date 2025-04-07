@@ -19,7 +19,7 @@ variable {F R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B] [Algebra R
   [Coalgebra R A] [Coalgebra R B] {a : A}
 
 variable (R) in
-/--  A group-like element in a coalgebra is a unit `a` such that `Δ a = a ⊗ₜ a`. -/
+/-- A group-like element in a coalgebra is a unit `a` such that `Δ a = a ⊗ₜ a`. -/
 structure IsGroupLikeElem (a : A) where
   isUnit : IsUnit a
   comul_eq_tmul_self : comul (R := R) a = a ⊗ₜ a
