@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Hopf.CommAlg
+import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.EssentialImage
