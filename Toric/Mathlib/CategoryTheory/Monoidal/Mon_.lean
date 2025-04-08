@@ -259,8 +259,8 @@ noncomputable def mapMonNatTrans (f : F ⟶ F') : F.mapMon ⟶ F'.mapMon where
 
 variable {F F'} in
 @[simps!]
-noncomputable def mapMonNatIso (e : F ≅ F') : F.mapMon ≅ F'.mapMon := by
-  refine NatIso.ofComponents (fun X ↦ Mon_.mkIso (e.app _)) fun {X Y} f ↦ by ext; simp
+noncomputable def mapMonNatIso (e : F ≅ F') : F.mapMon ≅ F'.mapMon :=
+  NatIso.ofComponents (fun X ↦ Mon_.mkIso (e.app _)) fun {X Y} f ↦ by ext; simp
 
 end CategoryTheory.Functor
 
