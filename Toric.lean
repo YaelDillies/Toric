@@ -1,6 +1,5 @@
 import Toric.AffineMonoid.Embedding
 import Toric.AffineMonoid.Irreducible
-import Toric.ConvexAnalysis.PointedCone
 import Toric.ConvexAnalysis.PolyhedralCone
 import Toric.ConvexAnalysis.Polytope
 import Toric.GroupScheme.CFPGrp
@@ -24,6 +23,7 @@ import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 import Toric.Mathlib.Algebra.Module.LinearMap.End
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
+import Toric.Mathlib.Analysis.Convex.Cone.InnerDual
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
