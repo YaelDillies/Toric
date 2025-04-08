@@ -116,10 +116,10 @@ end CommRing
 end LinearMap
 
 namespace AlgHom
-variable [CommRing A] [Ring C]
+variable [CommRing A] [Ring C] [Bialgebra R C]
 
 section BialgebraToAlgebra
-variable [Algebra R A] [Bialgebra R C]
+variable [Algebra R A]
 
 noncomputable instance : One (C →ₐ[R] A) where one := (Algebra.ofId R A).comp <| counitAlgHom R C
 noncomputable instance : Mul (C →ₐ[R] A) where
@@ -131,16 +131,63 @@ lemma one_def : (1 : C →ₐ[R] A) = (Algebra.ofId R A).comp (counitAlgHom ..) 
 lemma mul_def (f g : C →ₐ[R] A) : f * g =
     (.comp (mulAlgHom R A) <| .comp (Algebra.TensorProduct.map f g) <| comulAlgHom R C) := rfl
 
+lemma pow_succ (f : C →ₐ[R] A) (n : ℕ) : f ^ (n + 1) = (f ^ n) * f := rfl
+
 @[simp] lemma one_apply' (c : C) : (1 : C →ₐ[R] A) c = algebraMap R A (counit c) := rfl
 
 lemma toLinearMap_one : (1 : C →ₐ[R] A) = (1 : C →ₗ[R] A) := rfl
-lemma toLinearMap_mul (f g : C →ₐ[R] A) : ↑(f * g) = (f * g : C →ₗ[R] A) := rfl
-lemma toLinearMap_pow (f : C →ₐ[R] A) (n : ℕ) : ↑(f ^ n) = (f ^ n : C →ₗ[R] A) := sorry
+lemma toLinearMap_mul (f g : C →ₐ[R] A) : (f * g).toLinearMap = f.toLinearMap * g.toLinearMap := rfl
+lemma toLinearMap_pow (f : C →ₐ[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.toLinearMap ^ n := by
+  induction' n with n hn
+  · rfl
+  simp only [pow_succ, toLinearMap_mul, hn, _root_.pow_succ]
 
-noncomputable instance : CommMonoid (C →ₐ[R] A) := sorry
-  --coe_linearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
+noncomputable instance : CommMonoid (C →ₐ[R] A) :=
+  toLinearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
+
+lemma mul_distrib_comp {B : Type u} [Ring B] [Bialgebra R B] (f g : C →ₐ A) (h : B →ₐc[R] C) :
+    AlgHom.comp (f * g) (h : B →ₐ[R] C) = (.comp f h) * (.comp g h) := calc
+  _ = (.comp (mulAlgHom R A) <| .comp (Algebra.TensorProduct.map f g) <|
+      .comp (Algebra.TensorProduct.map (h : B →ₐ[R] C) (h : B →ₐ[R] C)) (comulAlgHom R B)) := by
+    simp [mul_def, comp_assoc]
+  _ = (.comp (mulAlgHom R A) <|
+      .comp (Algebra.TensorProduct.map (.comp f h) (.comp g h)) (comulAlgHom R B)) := by
+    rw [Algebra.TensorProduct.map_comp]
+    simp [comp_assoc]
+  _ = _ := by simp [mul_def]
 
 end BialgebraToAlgebra
+
+section BialgebraToHopfAlgebra
+variable [HopfAlgebra R A]
+
+export HopfAlgebraStruct (antipode)
+
+@[simp]
+lemma toLinearMap_antipode :
+    (HopfAlgebra.antipodeAlgHom R A).toLinearMap = antipode (R := R) (A := A) := rfl
+
+private lemma antipode_id_cancel : HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A = 1 := by
+  apply AlgHom.toLinearMap_injective
+  rw [toLinearMap_mul]
+  ext
+  simp [LinearMap.mul_def, ← LinearMap.rTensor_def]
+
+private lemma inv_convMul_cancel (f : C →ₐc[R] A) :
+    (.comp (HopfAlgebra.antipodeAlgHom R A) f) * (f : C →ₐ[R] A) = 1 := calc
+  _ = (.comp (HopfAlgebra.antipodeAlgHom R A) f) * (.comp (AlgHom.id R A) (f : C →ₐ[R] A)) := by
+    simp
+  _ = (.comp (mulAlgHom R A) <|
+      .comp (Algebra.TensorProduct.map (HopfAlgebra.antipodeAlgHom R A) (AlgHom.id R A)) <|
+      .comp (Algebra.TensorProduct.map f f) (comulAlgHom R C)) := by
+    rw [mul_def, Algebra.TensorProduct.map_comp]
+    simp only [comp_assoc]
+  _ = (HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A).comp f := by
+    simp only [mul_def, BialgHomClass.map_comp_comulAlgHom]
+    simp only [comp_assoc]
+  _ = _ := by simp [antipode_id_cancel, one_def, comp_assoc]
+
+end BialgebraToHopfAlgebra
 
 end AlgHom
 
@@ -160,14 +207,20 @@ lemma one_def : (1 : C →ₐc[R] A) = (unitBialgHom R A).comp (counitBialgHom .
 lemma mul_def (f g : C →ₐc[R] A) : f * g =
     (.comp (mulBialgHom R A) <| .comp (Bialgebra.TensorProduct.map f g) <| comulBialgHom R C) := rfl
 
+lemma pow_succ (f : C →ₐc[R] A) (n : ℕ) : f ^ (n + 1) = (f ^ n) * f := rfl
+
 @[simp] lemma one_apply' (c : C) : (1 : C →ₐc[R] A) c = algebraMap R A (counit c) := rfl
 
 -- @[simp]
 -- lemma mul_apply'' (f g : C →ₐc[R] A) (c : C) : (f * g) c = mul' R A (.map f g (comul c)) := rfl
 
-lemma toLinearMap_one : (1 : C →ₐc[R] A) = (1 : C →ₗ[R] A) := rfl
-lemma toLinearMap_mul (f g : C →ₐc[R] A) : ↑(f * g) = (f * g : C →ₗ[R] A) := rfl
-lemma toLinearMap_pow (f : C →ₐc[R] A) (n : ℕ) : ↑(f ^ n) = (f ^ n : C →ₗ[R] A) := sorry
+lemma toLinearMap_one : (1 : C →ₐc[R] A).toLinearMap = (1 : C →ₗ[R] A) := rfl
+lemma toLinearMap_mul (f g : C →ₐc[R] A) :
+    (f * g).toLinearMap = f.toLinearMap * g.toLinearMap := rfl
+lemma toLinearMap_pow (f : C →ₐc[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.toLinearMap ^ n := by
+  induction' n with n hn
+  · rfl
+  rw [pow_succ, _root_.pow_succ, toLinearMap_mul, hn]
 
 noncomputable instance : CommMonoid (C →ₐc[R] A) :=
   coe_linearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
