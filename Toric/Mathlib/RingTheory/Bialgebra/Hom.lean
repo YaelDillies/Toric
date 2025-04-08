@@ -54,6 +54,7 @@ noncomputable def mulBialgHom : A ⊗[R] A →ₐc[R] A where
   __ := mulAlgHom R A
   __ := mulCoalgHom R A
 
+-- This is false without cocommutativity of A :)
 variable (R A) in
 noncomputable def comulCoalgHom : A →ₗc[R] A ⊗[R] A where
   __ := comulAlgHom R A
