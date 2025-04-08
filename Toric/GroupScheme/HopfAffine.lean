@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.AlgebraicGeometry.AffineScheme
-import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
@@ -116,7 +115,7 @@ section rightEdge
 /-- The essential image of `R`-algebras under `Spec` is precisely affine schemes over `Spec R`. -/
 @[simp]
 lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffine G.left := by
-  simp [algSpec]
+  simp [algSpec, -Over.opEquivOpUnder_inverse]
   rw [Functor.essImage_overPost] -- not sure why `simp` doesn't use this already
   simp
 
