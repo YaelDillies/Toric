@@ -8,7 +8,7 @@ universe v u
 variable {C : Type u} [Category.{v} C]
 
 /-- The equivalence between `Option C` and `WithTerminal C` (they are both the
-type `C` plus an extra object `none` or `star`)-/
+type `C` plus an extra object `none` or `star`). -/
 def optionEquiv : Option C ≃ WithTerminal C where
   toFun
   | some a => of a
