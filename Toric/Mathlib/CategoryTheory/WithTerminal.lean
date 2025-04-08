@@ -7,7 +7,9 @@ namespace CategoryTheory.WithTerminal
 universe v u
 variable {C : Type u} [Category.{v} C]
 
-def OptionEquiv : Option C ≃ WithTerminal C where
+/-- The equivalence between `Option C` and `WithTerminal C` (they are both the
+type `C` plus an extra object `none` or `star`)-/
+def optionEquiv : Option C ≃ WithTerminal C where
   toFun
   | some a => of a
   | none => star
@@ -18,7 +20,7 @@ def OptionEquiv : Option C ≃ WithTerminal C where
   right_inv a := by cases a <;> simp
 
 instance instFinType [Fintype C] : Fintype (WithTerminal C) :=
-  Fintype.ofEquiv (Option C) OptionEquiv
+  Fintype.ofEquiv (Option C) optionEquiv
 
 instance instFin [SmallCategory C] [FinCategory C] :
     FinCategory (WithTerminal C) where
