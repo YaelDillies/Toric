@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2025 Moisés Herradón Cueto. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Moisés Herradón Cueto
+-/
 import Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.WithTerminal
 
@@ -7,7 +12,7 @@ import Toric.Mathlib.CategoryTheory.WithTerminal
 Given a categories `C` and `J`, an object `X : C` and a functor `K : J ⥤ Over X`,
 it has an obvious lift `liftFromOver K : WithFinal J ⥤ C`. These two functors have
 equivalent categories of cones (`coneEquiv`). As a corollary, the limit of `K` "is" the
-limit of `liftFromOver K`, and viceversa
+limit of `liftFromOver K`, and viceversa.
 -/
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.WithTerminal
@@ -19,11 +24,13 @@ variable {J : Type w} [Category.{w'} J]
 
 namespace CategoryTheory.Limits.WithTerminal
 
-@[simps]
-def asNatTransf {X : C} (K : J ⥤ Over X) :
-    NatTrans (K ⋙ Over.forget X) ((Functor.const J).obj X) where
-  app a := (K.obj a).hom
+/-- The category of functors `J ⥤ Over X` can be seen as part of a comma category,
+namely the comma category constructed from the identity of the category of functors
+`J ⥤ C` and the functor that maps `X : C` to the constant functor `J ⥤ C`.
 
+Given a functor `K : J ⥤ Over X`, it is mapped to a natural transformation from the
+obvious functor `J ⥤ C` to the constant functor `X`.
+-/
 @[simps]
 def commaFromFunctorToOver {X : C} : (J ⥤ Over X) ⥤ Comma (𝟭 (J ⥤ C)) (Functor.const J) where
   obj K := {
@@ -53,6 +60,10 @@ def extendCompose {X : C} (K : J ⥤ Over X) (F : C ⥤ D) :
   | star => 𝟙 _
   | of a => 𝟙 _
 
+/-- A cone of a functor `K : J ⥤ Over X` consists of an object of `Over X`, together
+with morphisms. This same object is a cone of the extended functor
+`liftFromOver.obj K : WithTerminal J ⥤ C`.
+-/
 @[simps]
 def coneLift {X : C} {K : J ⥤ Over X} : Cone K ⥤ Cone (liftFromOver.obj K) where
   obj t := {
@@ -83,6 +94,11 @@ def coneLift {X : C} {K : J ⥤ Over X} : Cone K ⥤ Cone (liftFromOver.obj K) w
       simpa
   }
 
+/-- This is the inverse of the previous construction: a cone of an extended functor
+`liftFromOver.obj K : WithTerminal J ⥤ C` consists of an object of `C`, together
+with morphisms. This same object is a cone of the original functor
+`K : J ⥤ Over X`.
+-/
 @[simps]
 def coneBack {X : C} {K : J ⥤ Over X} : Cone (liftFromOver.obj K) ⥤ Cone K where
   obj t := {
@@ -110,27 +126,34 @@ def coneBack {X : C} {K : J ⥤ Over X} : Cone (liftFromOver.obj K) ⥤ Cone K w
     hom := Over.homMk f.hom
   }
 
+/-- `coneBack` and `coneLift` are (left and right, respectively) inverses
+at the level of the object defining a cone.-/
 @[simp]
 lemma coneToFromObj {X : C} {K : J ⥤ Over X} (t : Cone K) :
   (coneBack.obj (coneLift.obj t)).pt = t.pt := by aesop
 
+/-- The isomorphism between `coneLift ⋙ coneBack` and the identity, at the level of objects.-/
 @[simps]
 def coneLiftBack {X : C} {K : J ⥤ Over X} (t : Cone K) : coneBack.obj (coneLift.obj t) ≅ t where
   hom.hom := 𝟙 t.pt
   inv.hom := 𝟙 t.pt
 
+/-- The isomorphism between `coneBack ⋙ coneLift` and the identity, at the level of objects.-/
 @[simps]
 def coneBackLift {X : C} {K : J ⥤ Over X} (t : Cone (liftFromOver.obj K)) :
 coneLift.obj (coneBack.obj t) ≅ t where
   hom.hom := 𝟙 t.pt
   inv.hom := 𝟙 t.pt
 
+/-- The equivalence made up of `coneBack` and `coneLift`.-/
 def coneEquiv {X : C} (K : J ⥤ Over X) : Cone K ≌ Cone (liftFromOver.obj K) where
   functor := coneLift
   inverse := coneBack
   unitIso := NatIso.ofComponents coneLiftBack
   counitIso := NatIso.ofComponents coneBackLift
 
+/-- A cone `t` of `K : J ⥤ Over X` is a limit if and only if the corresponding cone
+`coneLift t` of `liftFromOver.obj K : WithTerminal K ⥤ C` is a limit.-/
 def limitEquiv {X : C} {K : J ⥤ Over X} {t : Cone K} :
   IsLimit (coneLift.obj t) ≃ IsLimit t := IsLimit.ofConeEquiv (coneEquiv K)
 
