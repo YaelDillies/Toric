@@ -1,16 +1,22 @@
 import Mathlib.CategoryTheory.Comma.Over.Basic
 
 namespace CategoryTheory.Over
+variable {C : Type*} [Category C] {X : C}
 
 open Limits
 
 /-- If `X : C` is initial, then the under category of `X` is equivalent to `C`. -/
 @[simps]
-def equivalenceOfIsTerminal {C : Type*} [Category C] {X : C} (hX : IsTerminal X) : Over X ≌ C where
+def equivalenceOfIsTerminal (hX : IsTerminal X) : Over X ≌ C where
   functor := forget X
   inverse := { obj Y := mk (hX.from Y), map f := homMk f }
   unitIso := NatIso.ofComponents (fun Y ↦ isoMk (.refl _) (hX.hom_ext _ _))
   counitIso := NatIso.ofComponents (fun _ ↦ .refl _)
+
+instance : (Over.opToOpUnder X).EssSurj := (Over.opEquivOpUnder X).essSurj_functor
+instance : (Under.opToOverOp X).EssSurj := (Over.opEquivOpUnder X).essSurj_inverse
+instance : (Under.opToOpOver X).EssSurj := (Under.opEquivOpOver X).essSurj_functor
+instance : (Over.opToUnderOp X).EssSurj := (Under.opEquivOpOver X).essSurj_inverse
 
 end CategoryTheory.Over
 
