@@ -3,13 +3,10 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Toric.GroupScheme.SchemeOver
+import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GroupLike
 import Toric.Hopf.HopfAlg
-import Toric.Hopf.GrpAlg
 
 open AlgebraicGeometry CategoryTheory Coalgebra Opposite
 

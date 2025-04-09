@@ -1,6 +1,4 @@
 import Mathlib.CategoryTheory.ChosenFiniteProducts
-import Mathlib.CategoryTheory.Limits.FullSubcategory
-import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Terminal
 
 namespace CategoryTheory
 

@@ -16,7 +16,7 @@ open CategoryTheory
 open scoped MonoidalCategory
 
 namespace AlgebraicGeometry
-variable {R : CommRingCat} {k : Type} [Field k] {S X Y Z : Scheme}
+variable {R : CommRingCat} {S X Y Z : Scheme}
 
 noncomputable instance : ChosenFiniteProducts (Over S) := Over.chosenFiniteProducts _
 

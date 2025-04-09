@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.CategoryTheory.Adjunction.Limits
 import Mathlib.CategoryTheory.Monoidal.Yoneda
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 
 open CategoryTheory ChosenFiniteProducts Mon_Class MonoidalCategory
 
@@ -38,7 +37,7 @@ instance {M N : Mon_ C} (f : M ⟶ N) : IsMon_Hom f.hom := ⟨f.2, f.3⟩
 
 @[simps]
 def Mon_.homMk {M N : C} [Mon_Class M] [Mon_Class N] (f : M ⟶ N) [IsMon_Hom f] :
-    Mon_.mk' M ⟶ Mon_.mk' N := ⟨f, IsMon_Hom.one_hom, IsMon_Hom.mul_hom⟩
+    Mon_.mk' M ⟶ Mon_.mk' N := .mk f
 
 end
 section
@@ -142,32 +141,6 @@ instance : CommMonoid (M ⟶ N) :=
   Function.Injective.commMonoid hom (fun _ _ ↦ ext) hom_one hom_mul hom_pow
 
 end Mon_.Hom
-
-section Yoneda
-variable {C : Type*} [Category C] [ChosenFiniteProducts C]
-
-variable {X G : C} [Mon_Class G]
-
--- TODO (Michał): doc string
-def yonedaMonObjMon_ClassOfRepresentableBy :
-    ((Over.forget X).op ⋙ yonedaMonObj G ⋙ forget MonCat).RepresentableBy (.mk (snd G X)) where
-  homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
-      toFun f := f.left ≫ fst _ _
-      invFun f := Over.homMk (lift f Y.hom)
-      left_inv f := by ext; simp; ext <;> simp; simpa using f.w.symm
-      right_inv f := by simp
-    }
-  homEquiv_comp {Y Z} f g := by dsimp; erw [Equiv.coe_fn_mk, Equiv.coe_fn_mk]; simp
-
-variable [Limits.HasPullbacks C]
-
-attribute [local instance] Over.chosenFiniteProducts
-
-noncomputable instance : Mon_Class <| Over.mk <| snd G X :=
-  Mon_Class.ofRepresentableBy _ ((Over.forget _).op ⋙ yonedaMonObj G)
-      yonedaMonObjMon_ClassOfRepresentableBy
-
-end Yoneda
 
 section
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G : C}

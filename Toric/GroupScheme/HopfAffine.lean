@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
+import Toric.GroupScheme.SchemeOver
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
@@ -40,8 +41,6 @@ so that in particular we do not easily know that its inverse is given by `Γ`.
 -/
 
 open AlgebraicGeometry Scheme CategoryTheory Opposite Limits Mon_Class Grp_Class
-
-attribute [local instance] Over.chosenFiniteProducts -- From #21399
 
 universe u
 variable {R : CommRingCat.{u}}

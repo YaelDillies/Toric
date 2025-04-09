@@ -128,26 +128,6 @@ lemma essImage_yonedaGrp :
     letI := Grp_Class.ofRepresentableBy X F e
     exact ⟨Grp_.mk' X, ⟨yonedaGrpObjGrp_ClassOfRepresentableBy X F e⟩⟩
 
-variable {X} {G : C} [Grp_Class G]
-
--- TODO (Michał): doc string
-def yonedaGrpObjRepresentableByOverMkSnd :
-    ((Over.forget X).op ⋙ yonedaGrpObj G ⋙ forget Grp).RepresentableBy (.mk (snd G X)) where
-  homEquiv {Y} := show (Y ⟶ Over.mk (snd G X)) ≃ (Y.left ⟶ G) from {
-      toFun f := f.left ≫ fst _ _
-      invFun f := Over.homMk (lift f Y.hom)
-      left_inv f := by ext; simp; ext <;> simp; simpa using f.w.symm
-      right_inv f := by simp
-    }
-  homEquiv_comp {Y Z} f g := by dsimp; erw [Equiv.coe_fn_mk, Equiv.coe_fn_mk]; simp
-
-variable [Limits.HasPullbacks C]
-
-attribute [local instance] Over.chosenFiniteProducts
-
-noncomputable instance : Grp_Class <| Over.mk <| snd G X :=
-  .ofRepresentableBy _ ((Over.forget _).op ⋙ yonedaGrpObj G) yonedaGrpObjRepresentableByOverMkSnd
-
 end Yoneda
 
 section
