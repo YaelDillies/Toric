@@ -35,7 +35,7 @@
          ≫ M.mul := by simp
    _ = (M.X ⊗ M.X) ◁ M.mul
          ≫ M.mul ▷ M.X
-         ≫ M.mul := by simp?
+         ≫ M.mul := by simp
    _ = (M.mul ⊗ M.mul) ≫ M.mul := by
      rw [tensorHom_def']
      simp
@@ -56,7 +56,7 @@
      ≫ N.X ◁ (α_ _ _ _).inv
      ≫ N.X ◁ (((β_ _ _).hom ≫ N.mul) ▷ N.X)
      ≫ N.X ◁ N.mul
-     ≫ N.mul := by simp?
+     ≫ N.mul := by simp
    _ = (α_ _ _ _).hom
          ≫ N.X ◁ (α_ _ _ _).inv
          ≫ N.X ◁ (N.mul ▷ N.X)
@@ -82,7 +82,7 @@
          ≫ M.X ◁ ((β_ _ _).hom ▷ M.X)
          ≫ M.X ◁ (M.mul ▷ M.X)
          ≫ M.X ◁ M.mul
-         ≫ M.mul := by simp?
+         ≫ M.mul := by simp
 
  lemma gigaDiagram4 :
      (α_ _ _ _).hom

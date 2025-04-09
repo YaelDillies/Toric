@@ -1,6 +1,19 @@
+/-
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Michał Mrugała
+-/
 import Mathlib.RingTheory.Coalgebra.Hom
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
+
+/-!
+# Cocommutative coalgebras
+
+This file defines cocommutative coalgebras, namely coalgebras `C` in which the comultiplication
+`δ : C → C ⊗ C` commutes with the swapping `β : C ⊗ C ≃ C ⊗ C` of the factors in the tensor
+product.
+-/
 
 open Coalgebra TensorProduct
 
@@ -17,8 +30,6 @@ class IsCocomm where
 
 instance : IsCocomm R R where comul_comm' := by ext; simp
 
-variable [IsCocomm R C]
-
 local notation "ε" => counit (R := R) (A := C)
 local notation "μ" => LinearMap.mul' R R
 local infix:90 " ◁ " => LinearMap.lTensor
@@ -28,10 +39,6 @@ local infix:70 " ⊗ₘ " => TensorProduct.map
 local notation "α" => TensorProduct.assoc R
 
 local notation "β" => TensorProduct.comm R
-
-variable (R C) in
-@[simp]
-lemma comul_comm : (TensorProduct.comm R C C).comp δ = δ := IsCocomm.comul_comm'
 
 private lemma gigaDiagram :
     (α C C (C ⊗ C)).symm.toLinearMap
@@ -57,29 +64,6 @@ private lemma gigaDiagram :
          ∘ₗ δ := by simp [coassoc, LinearMap.lTensor_comp, LinearMap.comp_assoc]
    _ = (δ ⊗ₘ δ) ∘ₗ δ := by
     simp [← LinearMap.lTensor_comp_rTensor, LinearMap.comp_assoc]
-
-private lemma gigaDiagram2 :
-     (α C C (C ⊗ C)).symm.toLinearMap
-     ∘ₗ C ◁ (α C C C).toLinearMap
-     ∘ₗ (C ◁ ((β C C).toLinearMap ▷ C)
-     ∘ₗ C ◁ (δ ▷ C))
-     ∘ₗ C ◁ δ
-     ∘ₗ δ
-       = (α C C (C ⊗ C)).symm.toLinearMap
-         ∘ₗ C ◁ (α C C C).toLinearMap
-         ∘ₗ C ◁ (δ ▷ C)
-         ∘ₗ C ◁ δ
-         ∘ₗ δ := calc
-   _ = (α C C (C ⊗ C)).symm.toLinearMap
-     ∘ₗ C ◁ (α C C C).toLinearMap
-     ∘ₗ C ◁ (((β C C).toLinearMap ∘ₗ δ) ▷ C)
-     ∘ₗ C ◁ δ
-     ∘ₗ δ := by simp only [LinearMap.lTensor_comp, LinearMap.rTensor_comp]
-   _ = (α C C (C ⊗ C)).symm.toLinearMap
-         ∘ₗ C ◁ (α C C C).toLinearMap
-         ∘ₗ C ◁ (δ ▷ C)
-         ∘ₗ C ◁ δ
-         ∘ₗ δ := by simp [comul_comm]
 
 private lemma gigaDiagram3 :
      (α C C (C ⊗ C)).symm.toLinearMap
@@ -129,6 +113,35 @@ private lemma gigaDiagram4 :
           simp [LinearMap.comp_assoc, coassoc]
           simp [← LinearMap.comp_assoc, LinearMap.lTensor_comp]
 
+variable [IsCocomm R C]
+
+variable (R C) in
+@[simp]
+lemma comul_comm : (TensorProduct.comm R C C).comp δ = δ := IsCocomm.comul_comm'
+
+private lemma gigaDiagram2 :
+     (α C C (C ⊗ C)).symm.toLinearMap
+     ∘ₗ C ◁ (α C C C).toLinearMap
+     ∘ₗ (C ◁ ((β C C).toLinearMap ▷ C)
+     ∘ₗ C ◁ (δ ▷ C))
+     ∘ₗ C ◁ δ
+     ∘ₗ δ
+       = (α C C (C ⊗ C)).symm.toLinearMap
+         ∘ₗ C ◁ (α C C C).toLinearMap
+         ∘ₗ C ◁ (δ ▷ C)
+         ∘ₗ C ◁ δ
+         ∘ₗ δ := calc
+   _ = (α C C (C ⊗ C)).symm.toLinearMap
+     ∘ₗ C ◁ (α C C C).toLinearMap
+     ∘ₗ C ◁ (((β C C).toLinearMap ∘ₗ δ) ▷ C)
+     ∘ₗ C ◁ δ
+     ∘ₗ δ := by simp only [LinearMap.lTensor_comp, LinearMap.rTensor_comp]
+   _ = (α C C (C ⊗ C)).symm.toLinearMap
+         ∘ₗ C ◁ (α C C C).toLinearMap
+         ∘ₗ C ◁ (δ ▷ C)
+         ∘ₗ C ◁ δ
+         ∘ₗ δ := by simp [comul_comm]
+
 lemma gigaOmegaDiagram :
      (δ ⊗ₘ δ)
      ∘ₗ δ
@@ -155,7 +168,10 @@ def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
     simp [LinearMap.comp_assoc]
     rw [tensorTensorTensorComm, leftComm]
     simp only [LinearEquiv.coe_trans]
-    sorry
+    simp [← LinearMap.comp_assoc]
+    congr 2
+    ext
+    simp
 
 end Coalgebra
 
