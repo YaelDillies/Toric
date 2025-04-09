@@ -1,5 +1,6 @@
 import Mathlib.RingTheory.Coalgebra.Hom
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 
 open Coalgebra TensorProduct
 
@@ -22,12 +23,124 @@ local notation "ε" => counit (R := R) (A := C)
 local notation "μ" => LinearMap.mul' R R
 local infix:90 " ◁ " => LinearMap.lTensor
 local notation:90 f:90 " ▷ " X:90 => LinearMap.rTensor X f
-local notation "δ" => comul
+local notation "δ" => comul (R := R)
 local infix:70 " ⊗ₘ " => TensorProduct.map
+local notation "α" => TensorProduct.assoc R
+
+local notation "β" => TensorProduct.comm R
 
 variable (R C) in
 @[simp]
 lemma comul_comm : (TensorProduct.comm R C C).comp δ = δ := IsCocomm.comul_comm'
+
+private lemma gigaDiagram :
+    (α C C (C ⊗ C)).symm.toLinearMap
+     ∘ₗ C ◁ (α C C C).toLinearMap
+     ∘ₗ C ◁ (δ ▷ C)
+     ∘ₗ C ◁ δ
+     ∘ₗ δ
+       = (δ ⊗ₘ δ)
+         ∘ₗ δ := calc
+   _ = (α _ _ _).symm.toLinearMap
+         ∘ₗ C ◁ ((α _ _ _).toLinearMap ∘ₗ δ ▷ C ∘ₗ δ)
+         ∘ₗ δ := by simp [LinearMap.lTensor_comp, LinearMap.comp_assoc]
+   _ = (α _ _ _).symm.toLinearMap
+         ∘ₗ C ◁ (C ◁ δ)
+         ∘ₗ C ◁ δ
+         ∘ₗ δ := by simp [coassoc, LinearMap.lTensor_comp, LinearMap.comp_assoc]
+   _ = ((C ⊗ C) ◁ δ
+         ∘ₗ (α _ _ _).symm.toLinearMap)
+         ∘ₗ C ◁ δ
+         ∘ₗ δ := by simp [LinearMap.lTensor_tensor, LinearMap.comp_assoc]
+   _ = (C ⊗ C) ◁ δ
+         ∘ₗ δ ▷ C
+         ∘ₗ δ := by simp [coassoc, LinearMap.lTensor_comp, LinearMap.comp_assoc]
+   _ = (δ ⊗ₘ δ) ∘ₗ δ := by
+    simp [← LinearMap.lTensor_comp_rTensor, LinearMap.comp_assoc]
+
+private lemma gigaDiagram2 :
+     (α C C (C ⊗ C)).symm.toLinearMap
+     ∘ₗ C ◁ (α C C C).toLinearMap
+     ∘ₗ (C ◁ ((β C C).toLinearMap ▷ C)
+     ∘ₗ C ◁ (δ ▷ C))
+     ∘ₗ C ◁ δ
+     ∘ₗ δ
+       = (α C C (C ⊗ C)).symm.toLinearMap
+         ∘ₗ C ◁ (α C C C).toLinearMap
+         ∘ₗ C ◁ (δ ▷ C)
+         ∘ₗ C ◁ δ
+         ∘ₗ δ := calc
+   _ = (α C C (C ⊗ C)).symm.toLinearMap
+     ∘ₗ C ◁ (α C C C).toLinearMap
+     ∘ₗ C ◁ (((β C C).toLinearMap ∘ₗ δ) ▷ C)
+     ∘ₗ C ◁ δ
+     ∘ₗ δ := by simp only [LinearMap.lTensor_comp, LinearMap.rTensor_comp]
+   _ = (α C C (C ⊗ C)).symm.toLinearMap
+         ∘ₗ C ◁ (α C C C).toLinearMap
+         ∘ₗ C ◁ (δ ▷ C)
+         ∘ₗ C ◁ δ
+         ∘ₗ δ := by simp [comul_comm]
+
+private lemma gigaDiagram3 :
+     (α C C (C ⊗ C)).symm.toLinearMap
+     ∘ₗ C ◁ (α C C C).toLinearMap
+     ∘ₗ C ◁ ((β C C).toLinearMap ▷ C)
+     ∘ₗ (C ◁ (α C C C).symm.toLinearMap
+     ∘ₗ ((α C C (C ⊗ C)).toLinearMap
+     ∘ₗ (α C C (C ⊗ C)).symm.toLinearMap)
+     ∘ₗ C ◁ (α C C C).toLinearMap)
+     ∘ₗ C ◁ (δ ▷ C)
+     ∘ₗ C ◁ δ
+     ∘ₗ δ
+       = (α C C (C ⊗ C)).symm.toLinearMap
+         ∘ₗ C ◁ (α C C C).toLinearMap
+         ∘ₗ (C ◁ ((β C C).toLinearMap ▷ C)
+         ∘ₗ C ◁ (δ ▷ C))
+         ∘ₗ C ◁ δ
+         ∘ₗ δ := by
+         simp
+         rw [← LinearMap.lTensor_comp]
+         simp [LinearMap.comp_assoc]
+
+private lemma gigaDiagram4 :
+     (α C C (C ⊗ C)).symm.toLinearMap
+     ∘ₗ C ◁ (α C C C).toLinearMap
+     ∘ₗ C ◁ ((β C C).toLinearMap ▷ C)
+     ∘ₗ (C ◁ (α C C C).symm.toLinearMap
+     ∘ₗ ((α C C (C ⊗ C)).toLinearMap
+     ∘ₗ (α C C (C ⊗ C)).symm.toLinearMap)
+     ∘ₗ C ◁ (α C C C).toLinearMap)
+     ∘ₗ C ◁ (δ ▷ C)
+     ∘ₗ C ◁ δ
+     ∘ₗ δ
+       = ((α _ _ _).symm.toLinearMap
+         ∘ₗ (C ◁ (α _ _ _).toLinearMap
+         ∘ₗ C ◁ ((β _ _).toLinearMap ▷ C)
+         ∘ₗ C ◁ (α _ _ _).symm.toLinearMap)
+         ∘ₗ (α _ _ _).toLinearMap)
+         ∘ₗ (δ ⊗ₘ δ)
+         ∘ₗ δ := by
+          simp [LinearMap.comp_assoc]
+          congr 3
+          simp only [← LinearMap.comp_assoc, ← LinearMap.lTensor_comp]
+          rw [LinearMap.comp_assoc, coassoc]
+          rw [← LinearMap.lTensor_comp_rTensor]
+          simp only [← LinearMap.comp_assoc, LinearMap.lTensor_tensor2]
+          simp [LinearMap.comp_assoc, coassoc]
+          simp [← LinearMap.comp_assoc, LinearMap.lTensor_comp]
+
+lemma gigaOmegaDiagram :
+     (δ ⊗ₘ δ)
+     ∘ₗ δ
+       = (α _ _ _).symm.toLinearMap
+         ∘ₗ C ◁ (α _ _ _).toLinearMap
+         ∘ₗ C ◁ ((β _ _).toLinearMap ▷ C)
+         ∘ₗ C ◁ (α _ _ _).symm.toLinearMap
+         ∘ₗ (α _ _ _).toLinearMap
+         ∘ₗ (δ ⊗ₘ δ)
+         ∘ₗ δ := by
+   nth_rewrite 1 [← gigaDiagram, ← gigaDiagram2, ← gigaDiagram3, gigaDiagram4]
+   simp [LinearMap.comp_assoc]
 
 /-- Comultiplication as a coalgebra hom. -/
 def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
@@ -38,9 +151,10 @@ def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
       rw [LinearMap.comp_assoc, ← LinearMap.comp_assoc _ _ (.rTensor _ _)]; simp
     _ = ε := by ext; simp
   map_comp_comul := by
-    have := congr((TensorProduct.assoc R _ C C).toLinearMap ∘ₗ
-      ((TensorProduct.assoc R C C C).symm.toLinearMap ∘ₗ C ◁ $(comul_comm R C)) ▷ C ∘ₗ δ ▷ C ∘ₗ δ)
-    simp [-comul_comm, LinearMap.comp_assoc] at this
+    rw [gigaOmegaDiagram]
+    simp [LinearMap.comp_assoc]
+    rw [tensorTensorTensorComm, leftComm]
+    simp only [LinearEquiv.coe_trans]
     sorry
 
 end Coalgebra
