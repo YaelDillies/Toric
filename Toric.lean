@@ -15,6 +15,7 @@ import Toric.Hopf.GroupLike
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
+import Toric.Hopf.mwe
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
@@ -45,6 +46,7 @@ import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
 import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
+import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
