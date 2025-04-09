@@ -13,7 +13,6 @@ import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.CategoryTheory.Comma.Over.Pullback
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
-import Toric.Mathlib.CategoryTheory.Yoneda
 import Toric.MvLaurentPolynomial
 
 /-!
@@ -37,7 +36,7 @@ def DiagInt.representableBy (M : Type*) [CommMonoid M] :
       CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget _).RepresentableBy
       (DiagInt M) :=
   letI e : opOp CommMonCat ⋙ yoneda.obj (op (.of M)) ≅ CommMonCat.coyoneda.obj _ ⋙ forget _ :=
-    opOpYoneda.app (op _) ≪≫ CommMonCat.coyonedaForget.symm.app (op (.of M))
+    Coyoneda.opIso.app (op _) ≪≫ CommMonCat.coyonedaForget.symm.app (op (.of M))
   letI e' := isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat) e
   ((ΓSpec.adjunction.comp (CommRingCat.forget₂Adj CommRingCat.isInitial).op).representableBy
     (op (.of M))).ofIso e'
@@ -57,7 +56,7 @@ def TorusInt.representableBy (σ : Type*) :
       commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
         AddCommGrp.adj.op).representableBy (op σ)).ofIso <|
     isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙ forget CommGrp)
-      (opOpYoneda.app _)
+      (Coyoneda.opIso.app _)
 
 instance (σ : Type*) : CommGrp_Class (TorusInt σ) :=
   .ofRepresentableBy _
@@ -98,7 +97,7 @@ def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
       (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-          CommMonCat.units ⋙ forget CommGrp) (opOpYoneda.app _))
+          CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
 
 /-- The split torus of dimension `n` over `Spec R`. -/
 notation "𝔾ₘ[" R ", " n "]" => Over.mk (SplitTorus (Spec R) (ULift <| Fin n) ↘ Spec R)
