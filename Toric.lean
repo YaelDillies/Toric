@@ -28,12 +28,9 @@ import Toric.Mathlib.Analysis.Convex.Cone.InnerDual
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
-import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
-import Toric.Mathlib.CategoryTheory.Comma.Over.Pullback
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.WithTerminal

@@ -11,7 +11,6 @@ import Mathlib.CategoryTheory.Adjunction.Opposites
 import Mathlib.CategoryTheory.Limits.Constructions.Over.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
-import Toric.Mathlib.CategoryTheory.Comma.Over.Pullback
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.MvLaurentPolynomial
 
@@ -93,7 +92,7 @@ def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
       CommGrp.forget₂CommMonAdj.op.comp <|
         commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
           AddCommGrp.adj.op)).representableBy (op σ)).ofIso <|
-    isoWhiskerRight (NatIso.op (Over.forgetMapTerminal S))
+    isoWhiskerRight (NatIso.op (Over.forgetMapTerminal _ _))
       (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
