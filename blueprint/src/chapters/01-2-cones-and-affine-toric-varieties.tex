@@ -33,7 +33,7 @@ has an multiplicative inverse).
 
 \begin{definition}
   \label{1-2-1-polyhedral-cone}
-  \uses{1-2-1-cone-hull}
+  \uses{1-2-cone-hull}
   \lean{PointedCone.IsPolyhedral}
   \leanok
   A {\bf polyhedral cone} is a convex pointed cone that can be
@@ -76,7 +76,7 @@ has an multiplicative inverse).
 
 \begin{definition}
   \label{1-2-2-dual-cone}
-  \uses{1-2-2-pointed-cone}
+  \uses{1-2-pointed-cone}
   \lean{PointedCone.dual'}
   \leanok
   For a set \( S \subseteq N \), the {\bf dual cone of \( S \)} is
@@ -104,8 +104,8 @@ has an multiplicative inverse).
 
 \begin{proposition}[Fourier-Motzkin elimination]
   \label{1-2-2-fourier-motzkin}
-  \uses{1-2-1-polyhedal-cone, 1-2-2-dual-cone}
-  \lean{PointedCone.inf_dual'_singleton}
+  \uses{1-2-1-polyhedral-cone, 1-2-2-dual-cone}
+  \lean{PointedCone.IsPolyhedral.inf_dual'_singleton}
   \leanok
   If \( \sigma \subseteq M \) is a polyhedral cone and \( w \in N \), then 
   \( \sigma \cap \{w\}^\vee \) is polyhedral too.
@@ -165,7 +165,7 @@ has an multiplicative inverse).
 
 \begin{proposition}[Dual cone of a sumset]
   \label{1-2-dual-cone-add}
-  \uses{1-2-3-dual-cone}
+  \uses{1-2-2-dual-cone}
   % \lean{}
   % \leanok
 
@@ -182,7 +182,7 @@ has an multiplicative inverse).
 
 \begin{proposition}[Double dual of a polyhedral cone]
   \label{1-2-4-double-dual-polyhedral-cone}
-  \uses{1-2-1-polyhedral-cone, 1-2-3-dual-cone}
+  \uses{1-2-1-polyhedral-cone, 1-2-2-dual-cone}
   % \lean{}
   % \leanok
 
@@ -292,7 +292,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 \begin{proposition}[Dual cone of the intersection of halfspaces]
   \label{1-2-8-dual-cone-inter-halfspaces}
-  \uses{1-2-1-cone-hull, 1-2-3-dual-cone}
+  \uses{1-2-cone-hull, 1-2-2-dual-cone}
   % \lean{}
   % \leanok
 
@@ -309,7 +309,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 \begin{proposition}[Facets of a full dimensional cone]
   \label{1-2-8-facet-full-dim-cone}
-  \uses{1-2-1-cone-hull, 1-2-5-facet}
+  \uses{1-2-cone-hull, 1-2-5-facet}
   % \lean{}
   % \leanok
 
@@ -341,7 +341,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 \begin{definition}[Dual face]
   \label{1-2-10-dual-face}
-  \uses{1-2-3-dual-cone, 1-2-5-face}
+  \uses{1-2-2-dual-cone, 1-2-5-face}
   % \lean{}
   % \leanok
 
@@ -494,7 +494,7 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 \begin{proposition}[Alternative definitions of salient cones]
   \label{1-2-12-salient-cone-tfae}
-  \uses{1-2-3-dual-cone, 1-2-12-salient-cone}
+  \uses{1-2-2-dual-cone, 1-2-12-salient-cone}
   % \lean{}
   % \leanok
 
@@ -543,7 +543,7 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
 
 \begin{definition}[Rational cone]
   \label{1-2-14-rat-cone}
-  \uses{1-2-1-cone-hull}
+  \uses{1-2-cone-hull}
   % \lean{}
   % \leanok
 
@@ -569,7 +569,7 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
 
 \begin{lemma}[The dual of a rational cone]
   \label{1-2-14-dual-rat-cone}
-  \uses{1-2-3-dual-cone, 1-2-14-rat-cone}
+  \uses{1-2-2-dual-cone, 1-2-14-rat-cone}
   % \lean{}
   % \leanok
 
@@ -644,7 +644,7 @@ Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z
 
 \begin{definition}[Dual lattice of a cone]
   \label{1-2-17-dual-lat-cone}
-  \uses{1-2-3-dual-cone}
+  \uses{1-2-2-dual-cone}
   % \lean{}
   % \leanok
 
