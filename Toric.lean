@@ -24,7 +24,6 @@ import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 import Toric.Mathlib.Algebra.Module.LinearMap.End
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
-import Toric.Mathlib.AlgebraicGeometry.AffineScheme
 import Toric.Mathlib.Analysis.Convex.Cone.InnerDual
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
