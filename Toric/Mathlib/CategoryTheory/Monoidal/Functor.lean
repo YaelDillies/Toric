@@ -16,7 +16,7 @@ variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) [F.Monoidal] [G.Monoidal] [
 
 open Functor.OplaxMonoidal Functor.LaxMonoidal
 
-@[reassoc (attr := simp)]
+@[reassoc]
 lemma ε_comp_map_ε : ε G ≫ G.map (ε F) = adj.unit.app (𝟙_ C) := by
   simp [← adj.unit_app_unit_comp_map_η]
 
