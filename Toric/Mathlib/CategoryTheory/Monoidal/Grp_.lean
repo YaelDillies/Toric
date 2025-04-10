@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 
 /-!
 # Yoneda embedding of `Grp_ C`
@@ -16,7 +16,7 @@ showing that it is fully faithful and its (essential) image is the representable
 
 -/
 
-open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
+open CategoryTheory Limits Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
 
 section Yoneda
 
@@ -28,7 +28,7 @@ variable (X : C)
 /-- If `X` represents a presheaf of groups, then `X` is a group object. -/
 def Grp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ Grp.{w}) (α : (F ⋙ forget _).RepresentableBy X) :
     Grp_Class X where
-  __ := Mon_Class.ofRepresentableBy X (F ⋙ (forget₂ Grp MonCat)) α
+  __ := Mon_Class.ofRepresentableBy X (F ⋙ forget₂ Grp MonCat) α
   inv := α.homEquiv.symm (α.homEquiv (𝟙 _))⁻¹
   left_inv' := by
     change lift (α.homEquiv.symm (α.homEquiv (𝟙 X))⁻¹) (𝟙 X) ≫
@@ -65,7 +65,7 @@ instance Grp_Class.instInv [Grp_Class X] (Y : C) : Inv (Y ⟶ X) where
 
 attribute [local instance] groupOfGrp_Class
 
-/- If `X` is a group object, then `Hom(-, X)` is a presheaf of groups. -/
+/-- If `X` is a group object, then `Hom(-, X)` is a presheaf of groups. -/
 @[simps]
 def yonedaGrpObj [Grp_Class X] : Cᵒᵖ ⥤ Grp.{v} where
   obj Y := .of (unop Y ⟶ X)
@@ -129,6 +129,8 @@ lemma essImage_yonedaGrp :
     exact ⟨Grp_.mk' X, ⟨yonedaGrpObjGrp_ClassOfRepresentableBy X F e⟩⟩
 
 end Yoneda
+
+universe v₁ v₂ v₃ u₁ u₂ u₃
 
 section
 
@@ -254,20 +256,13 @@ instance instCommGroup : CommGroup (G ⟶ H) :=
 
 end Grp_.Hom
 
-section
-
 variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G : C}
 
-instance [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
+instance Grp_.mk'.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
 
 end
-
-end
-
-open Limits
 
 namespace CategoryTheory.Functor
-universe v₁ v₂ v₃ u₁ u₂ u₃
 variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts.{v₁} C]
 variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts.{v₂} D]
 variable {E : Type u₃} [Category.{v₃} E] [ChosenFiniteProducts E]
@@ -351,11 +346,9 @@ same on group objects as on objects. -/
 
 end CategoryTheory.Functor
 
-universe v₁ v₂ u₁ u₂
-
 namespace CategoryTheory.Equivalence
 variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
-variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
+variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D](e : C ≌ D)
 
 attribute [local instance] Functor.monoidalOfChosenFiniteProducts
 
