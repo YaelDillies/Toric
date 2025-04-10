@@ -17,20 +17,48 @@ open scoped TensorProduct
 
 variable [Module R P]
 
-namespace LinearMap
+lemma TensorProduct.tensorTensorTensorComm_def
+    {R : Type*} [CommSemiring R] (M N P Q : Type*)
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q]
+    [Module R M] [Module R N] [Module R P] [Module R Q] :
+    TensorProduct.tensorTensorTensorComm R M N P Q =
+    (TensorProduct.assoc R M N (P ⊗[R] Q)).trans
+      ((TensorProduct.congr (LinearEquiv.refl R M) (TensorProduct.leftComm R N P Q)).trans
+        (TensorProduct.assoc R M P (N ⊗[R] Q)).symm) := rfl
 
-variable {N}
+@[simp]
+lemma TensorProduct.coe_congr
+    {R : Type*} [CommSemiring R] {M N P Q : Type*}
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q]
+    [Module R M] [Module R N] [Module R P] [Module R Q]
+    (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) :
+    (TensorProduct.congr f g).toLinearMap = TensorProduct.map f g := rfl
 
-variable (g : P →ₗ[R] Q) (f : N →ₗ[R] P)
+lemma TensorProduct.leftComm_def
+    {R : Type*} [CommSemiring R] (M N P : Type*)
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P]
+    [Module R M] [Module R N] [Module R P] :
+    TensorProduct.leftComm R M N P =
+    (TensorProduct.assoc R M N P).symm.trans
+      ((TensorProduct.congr (TensorProduct.comm R M N) (LinearEquiv.refl R P)).trans
+        (TensorProduct.assoc R N M P)) := rfl
 
--- Not sure if this should actually go into mathlib?
-theorem lTensor_tensor :  lTensor (M ⊗[R] N) g  ∘ₗ (TensorProduct.assoc R M N P).symm =
-    (TensorProduct.assoc R M N Q).symm ∘ₗ lTensor M (lTensor N g) :=
-  TensorProduct.ext <| LinearMap.ext fun _ ↦ TensorProduct.ext rfl
+lemma LinearMap.lTensor_tensor
+    {R : Type*} [CommSemiring R] (M N P Q : Type*)
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q]
+    [Module R M] [Module R N] [Module R P] [Module R Q] (f : P →ₗ[R] Q) :
+    LinearMap.lTensor (M ⊗[R] N) f =
+      (TensorProduct.assoc R M N Q).symm ∘ₗ
+        LinearMap.lTensor M (LinearMap.lTensor N f) ∘ₗ
+          TensorProduct.assoc R M N P :=
+  TensorProduct.ext <| TensorProduct.ext rfl
 
-
-theorem lTensor_tensor2 :  (TensorProduct.assoc R M N Q) ∘ₗ lTensor (M ⊗[R] N) g =
-    lTensor M (lTensor N g) ∘ₗ (TensorProduct.assoc R M N P) :=
-  by exact TensorProduct.ext_threefold fun x y ↦ congrFun rfl
-
-end LinearMap
+lemma LinearEquiv.toLinearMap_comp_symm_comp
+    {R₁ R₂ R₃ : Type*} [Semiring R₁] [Semiring R₂] [Semiring R₃]
+    {σ₂₃ : R₂ →+* R₃} {σ₃₂ : R₃ →+* R₂} {σ₁₂ : R₁ →+* R₂} {σ₁₃ : R₁ →+* R₃}
+    [RingHomInvPair σ₂₃ σ₃₂] [RingHomInvPair σ₃₂ σ₂₃]
+    [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomCompTriple σ₁₃ σ₃₂ σ₁₂]
+    {P M N : Type*} [AddCommMonoid P] [AddCommMonoid M] [AddCommMonoid N]
+    [Module R₁ P] [Module R₂ M] [Module R₃ N] (e : M ≃ₛₗ[σ₂₃] N) (f : P →ₛₗ[σ₁₃] N) :
+    e.toLinearMap ∘ₛₗ e.symm.toLinearMap ∘ₛₗ f = f :=
+  (LinearEquiv.eq_toLinearMap_symm_comp (e.symm.toLinearMap ∘ₛₗ f) f).mp rfl

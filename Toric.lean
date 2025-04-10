@@ -15,7 +15,6 @@ import Toric.Hopf.GroupLike
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
-import Toric.Hopf.mwe
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
