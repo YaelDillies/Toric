@@ -282,7 +282,7 @@ protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
 protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
   map_surjective := F.mapMon.map_surjective
 
-open LaxMonoidal
+open LaxMonoidal Monoidal
 
 protected def FullyFaithful.mapGrp (hF : F.FullyFaithful) : F.mapGrp.FullyFaithful where
   preimage {X Y} f := Grp_.homMk <| hF.preimage f.hom
@@ -315,7 +315,6 @@ same on group objects as on objects. -/
   mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
   mpr hG := by
     let F' := F.toEssImage.asEquivalence
-    have : F'.IsMonoidal := sorry
     refine ⟨F'.inverse.mapGrp.obj <| {
         X := ⟨G.X, hG⟩
         one := G.one

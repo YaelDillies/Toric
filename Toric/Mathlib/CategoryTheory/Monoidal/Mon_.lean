@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Adjunction.Limits
 import Mathlib.CategoryTheory.Monoidal.Yoneda
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 
 open CategoryTheory ChosenFiniteProducts Mon_Class MonoidalCategory
 
@@ -264,7 +263,7 @@ variable (F : C ⥤ D) [PreservesFiniteProducts F]
 
 attribute [local instance] Functor.monoidalOfChosenFiniteProducts
 
-open Functor LaxMonoidal
+open Functor LaxMonoidal Monoidal
 
 @[reassoc (attr := simp)]
 lemma preservesTerminalIso_inv_comp_map_η (X : C) [Mon_Class X] :

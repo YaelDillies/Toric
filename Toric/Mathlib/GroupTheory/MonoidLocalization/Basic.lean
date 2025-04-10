@@ -1,6 +1,6 @@
+import Mathlib.GroupTheory.Finiteness
 import Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.Algebra.Group.Torsion
-import Toric.Mathlib.GroupTheory.Finiteness
 
 open Function
 

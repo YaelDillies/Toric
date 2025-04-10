@@ -113,7 +113,7 @@ section rightEdge
 /-- The essential image of `R`-algebras under `Spec` is precisely affine schemes over `Spec R`. -/
 @[simp]
 lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffine G.left := by
-  simp [algSpec, -Over.opEquivOpUnder_inverse]
+  simp [algSpec]
   rw [Functor.essImage_overPost] -- not sure why `simp` doesn't use this already
   simp
 

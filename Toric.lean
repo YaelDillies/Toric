@@ -28,10 +28,10 @@ import Toric.Mathlib.Algebra.Module.LinearMap.End
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.Analysis.Convex.Cone.InnerDual
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
+import Toric.Mathlib.CategoryTheory.Limits.Constructions.Over.Products
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Basic
-import Toric.Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
+import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
@@ -40,7 +40,6 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Over.Mon_
 import Toric.Mathlib.CategoryTheory.WithTerminal
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 import Toric.Mathlib.Data.Finset.Powerset
-import Toric.Mathlib.Data.Fintype.EquivFin
 import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
