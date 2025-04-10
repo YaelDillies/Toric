@@ -100,7 +100,46 @@ noncomputable instance : Ring (C →ₗ[R] A) where
   one_mul := one_convMul
   mul_one := convMul_one
 
+lemma AlgHom.map_comp_mul {B : Type u} [Ring B] [Algebra R B] (h : A →ₐ B) :
+    h.toLinearMap ∘ₗ μ = mul' R B ∘ₗ (h.toLinearMap ⊗ₘ h.toLinearMap) := by ext; simp
+
+lemma comp_mul_distrib {B : Type u} [Ring B] [Algebra R B] (f g : C →ₗ[R] A) (h : A →ₐ[R] B) :
+    h.toLinearMap.comp (f * g) = (.comp h.toLinearMap f) * (.comp h.toLinearMap g) := by
+  simp only [mul_def, map_comp, ← comp_assoc, AlgHom.map_comp_mul]
+
 end Ring
+
+section Antipode
+variable [Ring C] [HopfAlgebra R C]
+
+export HopfAlgebraStruct (antipode)
+
+@[simp]
+lemma algebraMapBase : Algebra.linearMap R R = id := rfl
+
+lemma toBaseId : ε = 1 := by simp [one_def]
+
+@[simp]
+lemma counitAlgHomToLinear: (counitAlgHom R C).toLinearMap = ε := rfl
+
+@[simp]
+lemma antipode_id_cancel : antipode (R := R) (A := C) * id = 1 := by
+  ext; simp [LinearMap.mul_def, ← LinearMap.rTensor_def]
+
+@[simp]
+lemma id_antipode_cancel : id * antipode (R := R) (A := C) = 1 := by
+  ext; simp [LinearMap.mul_def, ← LinearMap.lTensor_def]
+
+lemma counit_comp_antipode : ε ∘ₗ (antipode (R := R) (A := C)) = ε := calc
+  _ = 1 * (ε ∘ₗ (antipode (R := R) (A := C))) := (one_mul _).symm
+  _ = (ε ∘ₗ id) * (ε ∘ₗ (antipode (R := R) (A := C))) := rfl
+  _ = (counitAlgHom R C).toLinearMap ∘ₗ (id * (antipode (R := R) (A := C))) := by
+    simp only [comp_id, comp_mul_distrib]
+    simp
+  _ = ε ∘ₗ 1 := by simp
+  _ = ε := by ext; simp
+
+end Antipode
 
 section CommRing
 variable [CommRing A] [AddCommGroup C] [Algebra R A] [Module R C] [Coalgebra R C]
@@ -156,6 +195,11 @@ lemma mul_distrib_comp {B : Type u} [Ring B] [Bialgebra R B] (f g : C →ₐ A) 
     simp [comp_assoc]
   _ = _ := by simp [mul_def]
 
+lemma comp_mul_distrib {B : Type u} [CommRing B] [Algebra R B] (f g : C →ₐ[R] A) (h : A →ₐ[R] B) :
+    h.comp (f * g) = (h.comp f) * (h.comp g) := by
+  apply toLinearMap_injective
+  simp [toLinearMap_mul, LinearMap.comp_mul_distrib]
+
 end BialgebraToAlgebra
 
 section BialgebraToHopfAlgebra
@@ -167,11 +211,16 @@ export HopfAlgebraStruct (antipode)
 lemma toLinearMap_antipode :
     (HopfAlgebra.antipodeAlgHom R A).toLinearMap = antipode (R := R) (A := A) := rfl
 
-private lemma antipode_id_cancel : HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A = 1 := by
+lemma antipode_id_cancel : HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A = 1 := by
   apply AlgHom.toLinearMap_injective
   rw [toLinearMap_mul]
   ext
-  simp [LinearMap.mul_def, ← LinearMap.rTensor_def]
+  simp [LinearMap.antipode_id_cancel]
+
+lemma counit_comp_antipode :
+    (counitAlgHom R A).comp (HopfAlgebra.antipodeAlgHom R A) = (counitAlgHom R A) := by
+  apply AlgHom.toLinearMap_injective
+  simp [LinearMap.counit_comp_antipode]
 
 private lemma inv_convMul_cancel (f : C →ₐc[R] A) :
     (.comp (HopfAlgebra.antipodeAlgHom R A) f) * (f : C →ₐ[R] A) = 1 := calc

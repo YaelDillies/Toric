@@ -1,11 +1,10 @@
 /-
-Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
+Copyright (c) 2025 Aaron Liu, Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yaël Dillies, Michał Mrugała
+Authors: Aaron Liu, Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.RingTheory.Coalgebra.Hom
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 
 /-!
 # Cocommutative coalgebras
@@ -16,6 +15,56 @@ product.
 -/
 
 open Coalgebra TensorProduct
+
+section MissingLemmas
+
+lemma TensorProduct.tensorTensorTensorComm_def
+    {R : Type*} [CommSemiring R] (M N P Q : Type*)
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q]
+    [Module R M] [Module R N] [Module R P] [Module R Q] :
+    TensorProduct.tensorTensorTensorComm R M N P Q =
+    (TensorProduct.assoc R M N (P ⊗[R] Q)).trans
+      ((TensorProduct.congr (LinearEquiv.refl R M) (TensorProduct.leftComm R N P Q)).trans
+        (TensorProduct.assoc R M P (N ⊗[R] Q)).symm) := rfl
+
+@[simp]
+lemma TensorProduct.coe_congr
+    {R : Type*} [CommSemiring R] {M N P Q : Type*}
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q]
+    [Module R M] [Module R N] [Module R P] [Module R Q]
+    (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) :
+    (TensorProduct.congr f g).toLinearMap = TensorProduct.map f g := rfl
+
+lemma TensorProduct.leftComm_def
+    {R : Type*} [CommSemiring R] (M N P : Type*)
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P]
+    [Module R M] [Module R N] [Module R P] :
+    TensorProduct.leftComm R M N P =
+    (TensorProduct.assoc R M N P).symm.trans
+      ((TensorProduct.congr (TensorProduct.comm R M N) (LinearEquiv.refl R P)).trans
+        (TensorProduct.assoc R N M P)) := rfl
+
+lemma LinearMap.lTensor_tensor
+    {R : Type*} [CommSemiring R] (M N P Q : Type*)
+    [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q]
+    [Module R M] [Module R N] [Module R P] [Module R Q] (f : P →ₗ[R] Q) :
+    LinearMap.lTensor (M ⊗[R] N) f =
+      (TensorProduct.assoc R M N Q).symm ∘ₗ
+        LinearMap.lTensor M (LinearMap.lTensor N f) ∘ₗ
+          TensorProduct.assoc R M N P :=
+  TensorProduct.ext <| TensorProduct.ext rfl
+
+lemma LinearEquiv.toLinearMap_comp_symm_comp
+    {R₁ R₂ R₃ : Type*} [Semiring R₁] [Semiring R₂] [Semiring R₃]
+    {σ₂₃ : R₂ →+* R₃} {σ₃₂ : R₃ →+* R₂} {σ₁₂ : R₁ →+* R₂} {σ₁₃ : R₁ →+* R₃}
+    [RingHomInvPair σ₂₃ σ₃₂] [RingHomInvPair σ₃₂ σ₂₃]
+    [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomCompTriple σ₁₃ σ₃₂ σ₁₂]
+    {P M N : Type*} [AddCommMonoid P] [AddCommMonoid M] [AddCommMonoid N]
+    [Module R₁ P] [Module R₂ M] [Module R₃ N] (e : M ≃ₛₗ[σ₂₃] N) (f : P →ₛₗ[σ₁₃] N) :
+    e.toLinearMap ∘ₛₗ e.symm.toLinearMap ∘ₛₗ f = f :=
+  (LinearEquiv.eq_toLinearMap_symm_comp (e.symm.toLinearMap ∘ₛₗ f) f).mp rfl
+
+end MissingLemmas
 
 universe u
 
@@ -32,128 +81,19 @@ instance : IsCocomm R R where comul_comm' := by ext; simp
 
 local notation "ε" => counit (R := R) (A := C)
 local notation "μ" => LinearMap.mul' R R
+local notation "δ" => comul (R := R)
 local infix:90 " ◁ " => LinearMap.lTensor
 local notation:90 f:90 " ▷ " X:90 => LinearMap.rTensor X f
-local notation "δ" => comul (R := R)
 local infix:70 " ⊗ₘ " => TensorProduct.map
 local notation "α" => TensorProduct.assoc R
 
 local notation "β" => TensorProduct.comm R
-
-private lemma gigaDiagram :
-    (α C C (C ⊗ C)).symm.toLinearMap
-     ∘ₗ C ◁ (α C C C).toLinearMap
-     ∘ₗ C ◁ (δ ▷ C)
-     ∘ₗ C ◁ δ
-     ∘ₗ δ
-       = (δ ⊗ₘ δ)
-         ∘ₗ δ := calc
-   _ = (α _ _ _).symm.toLinearMap
-         ∘ₗ C ◁ ((α _ _ _).toLinearMap ∘ₗ δ ▷ C ∘ₗ δ)
-         ∘ₗ δ := by simp [LinearMap.lTensor_comp, LinearMap.comp_assoc]
-   _ = (α _ _ _).symm.toLinearMap
-         ∘ₗ C ◁ (C ◁ δ)
-         ∘ₗ C ◁ δ
-         ∘ₗ δ := by simp [coassoc, LinearMap.lTensor_comp, LinearMap.comp_assoc]
-   _ = ((C ⊗ C) ◁ δ
-         ∘ₗ (α _ _ _).symm.toLinearMap)
-         ∘ₗ C ◁ δ
-         ∘ₗ δ := by simp [LinearMap.lTensor_tensor, LinearMap.comp_assoc]
-   _ = (C ⊗ C) ◁ δ
-         ∘ₗ δ ▷ C
-         ∘ₗ δ := by simp [coassoc, LinearMap.lTensor_comp, LinearMap.comp_assoc]
-   _ = (δ ⊗ₘ δ) ∘ₗ δ := by
-    simp [← LinearMap.lTensor_comp_rTensor, LinearMap.comp_assoc]
-
-private lemma gigaDiagram3 :
-     (α C C (C ⊗ C)).symm.toLinearMap
-     ∘ₗ C ◁ (α C C C).toLinearMap
-     ∘ₗ C ◁ ((β C C).toLinearMap ▷ C)
-     ∘ₗ (C ◁ (α C C C).symm.toLinearMap
-     ∘ₗ ((α C C (C ⊗ C)).toLinearMap
-     ∘ₗ (α C C (C ⊗ C)).symm.toLinearMap)
-     ∘ₗ C ◁ (α C C C).toLinearMap)
-     ∘ₗ C ◁ (δ ▷ C)
-     ∘ₗ C ◁ δ
-     ∘ₗ δ
-       = (α C C (C ⊗ C)).symm.toLinearMap
-         ∘ₗ C ◁ (α C C C).toLinearMap
-         ∘ₗ (C ◁ ((β C C).toLinearMap ▷ C)
-         ∘ₗ C ◁ (δ ▷ C))
-         ∘ₗ C ◁ δ
-         ∘ₗ δ := by
-         simp
-         rw [← LinearMap.lTensor_comp]
-         simp [LinearMap.comp_assoc]
-
-private lemma gigaDiagram4 :
-     (α C C (C ⊗ C)).symm.toLinearMap
-     ∘ₗ C ◁ (α C C C).toLinearMap
-     ∘ₗ C ◁ ((β C C).toLinearMap ▷ C)
-     ∘ₗ (C ◁ (α C C C).symm.toLinearMap
-     ∘ₗ ((α C C (C ⊗ C)).toLinearMap
-     ∘ₗ (α C C (C ⊗ C)).symm.toLinearMap)
-     ∘ₗ C ◁ (α C C C).toLinearMap)
-     ∘ₗ C ◁ (δ ▷ C)
-     ∘ₗ C ◁ δ
-     ∘ₗ δ
-       = ((α _ _ _).symm.toLinearMap
-         ∘ₗ (C ◁ (α _ _ _).toLinearMap
-         ∘ₗ C ◁ ((β _ _).toLinearMap ▷ C)
-         ∘ₗ C ◁ (α _ _ _).symm.toLinearMap)
-         ∘ₗ (α _ _ _).toLinearMap)
-         ∘ₗ (δ ⊗ₘ δ)
-         ∘ₗ δ := by
-          simp [LinearMap.comp_assoc]
-          congr 3
-          simp only [← LinearMap.comp_assoc, ← LinearMap.lTensor_comp]
-          rw [LinearMap.comp_assoc, coassoc]
-          rw [← LinearMap.lTensor_comp_rTensor]
-          simp only [← LinearMap.comp_assoc, LinearMap.lTensor_tensor2]
-          simp [LinearMap.comp_assoc, coassoc]
-          simp [← LinearMap.comp_assoc, LinearMap.lTensor_comp]
 
 variable [IsCocomm R C]
 
 variable (R C) in
 @[simp]
 lemma comul_comm : (TensorProduct.comm R C C).comp δ = δ := IsCocomm.comul_comm'
-
-private lemma gigaDiagram2 :
-     (α C C (C ⊗ C)).symm.toLinearMap
-     ∘ₗ C ◁ (α C C C).toLinearMap
-     ∘ₗ (C ◁ ((β C C).toLinearMap ▷ C)
-     ∘ₗ C ◁ (δ ▷ C))
-     ∘ₗ C ◁ δ
-     ∘ₗ δ
-       = (α C C (C ⊗ C)).symm.toLinearMap
-         ∘ₗ C ◁ (α C C C).toLinearMap
-         ∘ₗ C ◁ (δ ▷ C)
-         ∘ₗ C ◁ δ
-         ∘ₗ δ := calc
-   _ = (α C C (C ⊗ C)).symm.toLinearMap
-     ∘ₗ C ◁ (α C C C).toLinearMap
-     ∘ₗ C ◁ (((β C C).toLinearMap ∘ₗ δ) ▷ C)
-     ∘ₗ C ◁ δ
-     ∘ₗ δ := by simp only [LinearMap.lTensor_comp, LinearMap.rTensor_comp]
-   _ = (α C C (C ⊗ C)).symm.toLinearMap
-         ∘ₗ C ◁ (α C C C).toLinearMap
-         ∘ₗ C ◁ (δ ▷ C)
-         ∘ₗ C ◁ δ
-         ∘ₗ δ := by simp [comul_comm]
-
-lemma gigaOmegaDiagram :
-     (δ ⊗ₘ δ)
-     ∘ₗ δ
-       = (α _ _ _).symm.toLinearMap
-         ∘ₗ C ◁ (α _ _ _).toLinearMap
-         ∘ₗ C ◁ ((β _ _).toLinearMap ▷ C)
-         ∘ₗ C ◁ (α _ _ _).symm.toLinearMap
-         ∘ₗ (α _ _ _).toLinearMap
-         ∘ₗ (δ ⊗ₘ δ)
-         ∘ₗ δ := by
-   nth_rewrite 1 [← gigaDiagram, ← gigaDiagram2, ← gigaDiagram3, gigaDiagram4]
-   simp [LinearMap.comp_assoc]
 
 /-- Comultiplication as a coalgebra hom. -/
 def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
@@ -164,23 +104,37 @@ def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
       rw [LinearMap.comp_assoc, ← LinearMap.comp_assoc _ _ (.rTensor _ _)]; simp
     _ = ε := by ext; simp
   map_comp_comul := by
-    rw [gigaOmegaDiagram]
-    simp [LinearMap.comp_assoc]
-    rw [tensorTensorTensorComm, leftComm]
-    simp only [LinearEquiv.coe_trans]
-    simp [← LinearMap.comp_assoc]
-    congr 2
-    ext
-    simp
+    rw [instCoalgebraStruct_comul]
+    simp only [tensorTensorTensorComm_def, TensorProduct.coe_congr,
+      TensorProduct.leftComm_def, LinearEquiv.coe_trans, LinearEquiv.refl_toLinearMap]
+    simp only [LinearMap.comp_assoc, ← LinearMap.lTensor_def, ← LinearMap.rTensor_def,
+      LinearMap.lTensor_comp]
+    rw [← LinearMap.lTensor_comp_rTensor, LinearMap.lTensor_tensor]
+    simp only [LinearMap.comp_assoc, LinearEquiv.toLinearMap_comp_symm_comp]
+    rw [Coalgebra.coassoc]
+    conv =>
+      enter [2, 2]
+      simp only [← LinearMap.comp_assoc, ← LinearMap.lTensor_comp]
+      simp only [LinearMap.comp_assoc]
+      rw [Coalgebra.coassoc_symm]
+      rw [← LinearMap.comp_assoc comul, ← LinearMap.rTensor_comp, comul_comm]
+      rw [Coalgebra.coassoc]
+    simp only [LinearMap.comp_assoc, LinearMap.lTensor_comp]
 
 end Coalgebra
 
-namespace HopfAlgebra
-variable [CommSemiring C] [HopfAlgebra R C]
 
+namespace HopfAlgebra
+
+variable [Semiring C] [HopfAlgebra R C]
+
+variable [IsCocomm R C]
+
+-- Need to refactor CoalgToAlg to use Semirings when possible
 def antipodeCoalgHom : C →ₗc[R] C where
   __ := antipode (R := R) (A := C)
   counit_comp := sorry
   map_comp_comul := sorry
+
 
 end HopfAlgebra
