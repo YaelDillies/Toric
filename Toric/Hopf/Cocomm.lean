@@ -5,7 +5,9 @@ Authors: Yaël Dillies, Aaron Liu, Michał Mrugała
 -/
 import Mathlib.RingTheory.Coalgebra.Hom
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
+import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 
 /-!
 # Cocommutative coalgebras

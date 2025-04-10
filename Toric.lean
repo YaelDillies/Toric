@@ -23,6 +23,7 @@ import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 import Toric.Mathlib.Algebra.Module.Equiv.Basic
+import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.Module.LinearMap.End
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.Analysis.Convex.Cone.InnerDual
