@@ -139,6 +139,25 @@ lemma counit_comp_antipode : ε ∘ₗ (antipode (R := R) (A := C)) = ε := calc
   _ = ε ∘ₗ 1 := by simp
   _ = ε := by ext; simp
 
+local notation "ε₁" => counit (R := R) (A := C)
+local notation "ε₂" => counit (R := R) (A := C ⊗[R] C)
+local notation "μ₁" => LinearMap.mul' R C
+local notation "μ₂" => LinearMap.mul' R (C ⊗[R] C)
+local notation "δ₁" => comul (R := R) (A := C)
+local notation "δ₂" => comul (R := R) (A := C ⊗[R] C)
+local notation "η₁" => Algebra.linearMap R C
+local notation "η₂" => Algebra.linearMap R (C ⊗[R] C)
+local infix:90 " ◁ " => LinearMap.lTensor
+local notation:90 f:90 " ▷ " X:90 => LinearMap.rTensor X f
+local infix:70 " ⊗ₘ " => TensorProduct.map
+local notation "α" => TensorProduct.assoc R
+local notation "β" => TensorProduct.comm R
+local notation "𝑺" => antipode (R := R) (A := C)
+local notation "𝑭" => δ₁ ∘ₗ 𝑺
+local notation "𝑮" => (𝑺 ⊗ₘ 𝑺) ∘ₗ (β C C) ∘ₗ δ₁
+
+lemma comul_right_inv : δ₁ * 𝑭 = 1 := sorry
+
 end Antipode
 
 section CommRing
