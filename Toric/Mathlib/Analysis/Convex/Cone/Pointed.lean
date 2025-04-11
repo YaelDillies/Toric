@@ -12,7 +12,8 @@ namespace PointedCone
 variable {𝕜 E : Type*}
 
 section Module
-variable [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] {S : Set E}
+variable [Semiring 𝕜] [PartialOrder 𝕜] [IsOrderedRing 𝕜] [AddCommMonoid E] [Module 𝕜 E]
+  {S : Set E}
 
 @[simp]
 lemma _root_.ConvexCone.toPointedCone_top : (⊤ : ConvexCone 𝕜 E).toPointedCone trivial = ⊤ := rfl

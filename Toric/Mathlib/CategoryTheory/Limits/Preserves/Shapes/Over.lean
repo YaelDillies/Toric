@@ -1,5 +1,5 @@
 import Mathlib.CategoryTheory.Limits.Preserves.Finite
-import Toric.Mathlib.CategoryTheory.WithTerminal
+import Mathlib.CategoryTheory.WithTerminal.FinCategory
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 
 namespace CategoryTheory.Limits

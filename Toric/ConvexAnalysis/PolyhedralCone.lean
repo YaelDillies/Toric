@@ -11,25 +11,25 @@ import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 We define the pointed cone hull and what it means for a pointed cone to be polyhedral.
 -/
 
-variable {𝕜 E : Type*}
+variable {𝕜 R E : Type*}
 
 open scoped InnerProductSpace
 
 namespace PointedCone
 section OrderedSemiring
-variable [OrderedSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E] {s : Set E}
+variable [Semiring R] [PartialOrder R] [IsOrderedRing R] [AddCommMonoid E] [Module R E] {s : Set E}
 
 /-- A pointed cone is polyhedral if it is the convex hull of finitely many points. -/
-def IsPolyhedral (c : PointedCone 𝕜 E) : Prop := ∃ t : Finset E, PointedCone.span 𝕜 t = c
+def IsPolyhedral (c : PointedCone R E) : Prop := ∃ t : Finset E, PointedCone.span R t = c
 
-protected lemma IsPolyhedral.span (h : s.Finite) : (span 𝕜 s).IsPolyhedral := ⟨h.toFinset, by simp⟩
+protected lemma IsPolyhedral.span (h : s.Finite) : (span R s).IsPolyhedral := ⟨h.toFinset, by simp⟩
 
-@[simp] lemma IsPolyhedral.bot : (⊥ : PointedCone 𝕜 E).IsPolyhedral := ⟨{0}, by simp⟩
+@[simp] lemma IsPolyhedral.bot : (⊥ : PointedCone R E).IsPolyhedral := ⟨{0}, by simp⟩
 
 end OrderedSemiring
 
 section LinearOrderedField
-variable [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
+variable [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 /-- `⊤` is a polyhedral cone in a finite dimensional vector space over a linear ordered field. -/
 @[simp]

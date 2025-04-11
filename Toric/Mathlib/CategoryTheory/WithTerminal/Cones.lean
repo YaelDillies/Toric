@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moisés Herradón Cueto
 -/
 import Mathlib.CategoryTheory.Comma.Over.Basic
-import Mathlib.CategoryTheory.WithTerminal
+import Mathlib.CategoryTheory.WithTerminal.Basic
 
 /-!
 # Relations between `Cone`, `WithTerminal` and `Over`

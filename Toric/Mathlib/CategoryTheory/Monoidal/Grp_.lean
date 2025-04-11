@@ -142,7 +142,7 @@ attribute [local instance] groupOfGrp_Class
 
 @[simps]
 def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f] :
-    Grp_.mk' G ⟶ Grp_.mk' H := ⟨f, IsMon_Hom.one_hom, IsMon_Hom.mul_hom⟩
+    Grp_.mk' G ⟶ Grp_.mk' H := Mon_.Hom.mk' f
 
 @[simp] lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) : homMk f.hom = f := rfl
 
