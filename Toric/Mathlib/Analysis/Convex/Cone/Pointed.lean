@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Cone.Pointed
+import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 
 /-!
 # TODO
@@ -6,7 +7,7 @@ import Mathlib.Analysis.Convex.Cone.Pointed
 Make cone explicit in `ConvexCone.toPointedCone`
 -/
 
-open scoped InnerProductSpace
+--open scoped InnerProductSpace
 
 namespace PointedCone
 variable {𝕜 E : Type*}
@@ -28,43 +29,53 @@ lemma subset_span : S ⊆ PointedCone.span 𝕜 S := Submodule.subset_span
 
 end Module
 
-section NormedAddCommGroup
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] {w x y : E} {s t : Set E}
+section Dual
 
--- TODO: Replace `dual`
-variable (s) in
-/-- The dual of an arbitrary set as a `PointedCone`. -/
-def dual' : PointedCone ℝ E := s.innerDualCone.toPointedCone <| pointed_innerDualCone s
+open scoped PerfectPairing
 
-@[simp, norm_cast]
-lemma toConvexCone_dual' (s : Set E) : ↑(dual' s) = (s : Set E).innerDualCone := rfl
+variable {𝕜 : Type*} {N M : Type*}
+variable [OrderedCommRing 𝕜] [AddCommGroup N] [AddCommGroup M] [Module 𝕜 N] [Module 𝕜 M]
+variable [PerfectPairing 𝕜 N M]
 
-lemma dual_eq_dual' (σ : PointedCone ℝ E) : σ.dual = dual' (σ : Set E) := rfl
+variable (𝕜 M) in
+/-- The dual cone of a set as a pointed cone in the dual space. -/
+def dual' (s : Set N) : PointedCone 𝕜 M where
+  carrier := {y : M | ∀ x ∈ s, 0 ≤ ⟪x, y⟫_𝕜}
+  add_mem' ha hb w hw := by
+    rw [PerfectPairing.inner_add_right]
+    exact add_nonneg (ha w hw) (hb w hw)
+  zero_mem' w hw := by rw [PerfectPairing.inner_zero_right]
+  smul_mem' t y hy w hw := by
+    rw [Nonneg.mk_smul, PerfectPairing.inner_smul_right]
+    exact mul_nonneg t.2 (hy w hw)
 
-@[simp] lemma mem_dual' : y ∈ dual' s ↔ ∀ ⦃x⦄, x ∈ s → 0 ≤ ⟪x, y⟫_ℝ := .rfl
+variable {x : N} {y : M} {s t : Set N}
 
-@[gcongr] lemma dual'_le_dual' (h : s ⊆ t) : dual' t ≤ dual' s := fun _ hx y hy => hx y (h hy)
+@[simp] lemma mem_dual' : y ∈ dual' 𝕜 M s ↔ ∀ ⦃x⦄, x ∈ s → 0 ≤ ⟪x, y⟫_𝕜 := .rfl
 
-@[simp] lemma dual'_empty : dual' (∅ : Set E) = ⊤ := by simp [dual']
+@[gcongr] lemma dual'_le_dual' (h : s ⊆ t) : dual' 𝕜 M t ≤ dual' 𝕜 M s :=
+  fun _ hx y hy => hx y (h hy)
 
-lemma dual'_union (s t : Set E) : dual' (s ∪ t) = dual' s ⊓ dual' t := by
+@[simp] lemma dual'_empty : dual' 𝕜 M (∅ : Set N) = ⊤ := by simp [dual']; rfl
+
+lemma dual'_union : dual' 𝕜 M (s ∪ t) = dual' 𝕜 M s ⊓ dual' 𝕜 M t := by
   refine le_antisymm (le_inf (dual'_le_dual' le_sup_left) (dual'_le_dual' le_sup_right)) ?_
-  rintro x ⟨hxs, hxt⟩ y (hy | hy)
-  exacts [hxs y hy, hxt y hy]
+  rintro y ⟨hys, hyt⟩ x (hx | hx)
+  exacts [hys x hx, hyt x hx]
 
-lemma dual_span (s : Set E) : (span ℝ s).dual = dual' s := by
-  refine le_antisymm (innerDualCone_le_innerDualCone _ _ subset_span) ?_
-  intro x hx
-  apply Submodule.span_induction
-  · intro y hy
-    exact hx y hy
-  · simp only [inner_zero_left, le_refl]
-  · intro y z _ _ hxy hyz
-    rw [inner_add_left]
-    exact add_nonneg hxy hyz
-  · intro t y _ hxy
-    erw [inner_smul_real_left]
-    exact mul_nonneg t.prop hxy
+@[simp]
+lemma dual'_span : dual' 𝕜 M (span 𝕜 s : Set N) = dual' 𝕜 M s := by
+  refine le_antisymm (dual'_le_dual' Submodule.subset_span) ?_
+  intro x hx y hy
+  induction hy using Submodule.span_induction with
+  | mem y hy => exact hx y hy
+  | zero => simp
+  | add y z hys hzs hyx hzx =>
+    rw [PerfectPairing.inner_add_left]
+    exact add_nonneg hyx hzx
+  | smul t y hys hyx =>
+    rw [Nonneg.mk_smul, PerfectPairing.inner_smul_left]
+    exact mul_nonneg t.2 hyx
 
 lemma inner_nonneg_of_mem_span_inner_nonneg (hs : ∀ x ∈ s, 0 ≤ ⟪x, w⟫_ℝ) (hx : x ∈ span ℝ s) :
     0 ≤ ⟪x, w⟫_ℝ := by
@@ -130,5 +141,6 @@ lemma eq_zero_of_inner_eq_zero_of_mem_span_inner_neg (hs : ∀ x ∈ s, ⟪x, w�
       NNReal.coe_eq_zero] at hw
     exact Or.elim hw .inl fun h => .inr (hxw h)
 
-end NormedAddCommGroup
+end Dual
+
 end PointedCone
