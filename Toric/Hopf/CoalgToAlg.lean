@@ -139,6 +139,24 @@ lemma counit_comp_antipode : ε ∘ₗ (antipode (R := R) (A := C)) = ε := calc
   _ = ε ∘ₗ 1 := by simp
   _ = ε := by ext; simp
 
+end Antipode
+
+section CommRing
+variable [CommRing A] [AddCommGroup C] [Algebra R A] [Module R C] [Coalgebra R C]
+
+private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := calc
+      μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ
+  _ = μ ∘ₗ (g ⊗ₘ f) ∘ₗ δ := sorry
+
+noncomputable instance : CommRing (C →ₗ[R] A) where
+  mul_comm := convMul_comm
+
+end CommRing
+end LinearMap
+
+namespace LinearMap
+variable [Ring C] [HopfAlgebra R C]
+
 local notation "ε₁" => counit (R := R) (A := C)
 local notation "ε₂" => counit (R := R) (A := C ⊗[R] C)
 local notation "μ₁" => LinearMap.mul' R C
@@ -156,21 +174,19 @@ local notation "𝑺" => antipode (R := R) (A := C)
 local notation "𝑭" => δ₁ ∘ₗ 𝑺
 local notation "𝑮" => (𝑺 ⊗ₘ 𝑺) ∘ₗ (β C C) ∘ₗ δ₁
 
-lemma comul_right_inv : δ₁ * 𝑭 = 1 := sorry
+lemma comul_right_inv : δ₁ * 𝑭 = 1 := calc
+    μ₂ ∘ₗ (δ₁ ⊗ₘ (δ₁ ∘ₗ 𝑺)) ∘ₗ δ₁
+  _ = μ₂ ∘ₗ ((δ₁ ∘ₗ id) ⊗ₘ (δ₁ ∘ₗ 𝑺)) ∘ₗ δ₁ := rfl
+  _ = μ₂ ∘ₗ (δ₁ ⊗ₘ δ₁) ∘ₗ (id ⊗ₘ 𝑺) ∘ₗ δ₁ := by simp only [map_comp, comp_assoc]
+  _ = δ₁ ∘ₗ μ₁ ∘ₗ (id ⊗ₘ 𝑺) ∘ₗ δ₁ := by
+      have : μ₂ ∘ₗ (δ₁ ⊗ₘ δ₁) = δ₁ ∘ₗ μ₁ := by ext; simp
+      simp [this, ← comp_assoc]
+  _ = δ₁ ∘ₗ (id * 𝑺) := rfl
+  _ = δ₁ ∘ₗ η₁ ∘ₗ ε₁ := by simp [one_def]
+  _ = η₂ ∘ₗ ε₁ := by
+      have : δ₁ ∘ₗ η₁ = η₂ := by ext; simp; rfl
+      simp [this, ← comp_assoc]
 
-end Antipode
-
-section CommRing
-variable [CommRing A] [AddCommGroup C] [Algebra R A] [Module R C] [Coalgebra R C]
-
-private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := calc
-      μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ
-  _ = μ ∘ₗ (g ⊗ₘ f) ∘ₗ δ := sorry
-
-noncomputable instance : CommRing (C →ₗ[R] A) where
-  mul_comm := convMul_comm
-
-end CommRing
 end LinearMap
 
 namespace AlgHom
