@@ -79,9 +79,12 @@ def isGroupLikeElem_mul (ha : IsGroupLikeElem R a) (hb : IsGroupLikeElem R b) :
 def isGroupLikeElem_inv (ha : IsGroupLikeElem R a) : IsGroupLikeElem R (ha.isUnit.unit⁻¹).val where
   isUnit := by simp only [Units.isUnit]
   comul_eq_tmul_self := by
-    rw [comul_inv]
+    have : comul (R := R) ha.isUnit.unit⁻¹.1 =
+        (comulAlgHom R A).toMonoidHom ha.isUnit.unit⁻¹.1 := by dsimp
+    rw [this, ← Units.coe_map_inv]
     refine (Units.eq_inv_of_mul_eq_one_left ?_).symm
-    rw [IsUnit.unit_spec, ha.comul_eq_tmul_self, Algebra.TensorProduct.tmul_mul_tmul]
+    dsimp
+    rw [ha.comul_eq_tmul_self, Algebra.TensorProduct.tmul_mul_tmul]
     simp only [IsUnit.mul_val_inv, Algebra.TensorProduct.one_def]
 
 instance : Mul {a : A // IsGroupLikeElem R a} where
