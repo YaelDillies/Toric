@@ -76,10 +76,13 @@ def isGroupLikeElem_mul (ha : IsGroupLikeElem R a) (hb : IsGroupLikeElem R b) :
       comul_eq_tmul_self := by rw [comul_mul, ha.comul_eq_tmul_self, hb.comul_eq_tmul_self,
         Algebra.TensorProduct.tmul_mul_tmul]
 
-def isGroupLikeElem_inv (ha : IsGroupLikeElem R a) : IsGroupLikeElem R (Ring.inverse a) where
-  isUnit := by simp only [isUnit_ring_inverse, ha.isUnit]
+def isGroupLikeElem_inv (ha : IsGroupLikeElem R a) : IsGroupLikeElem R (ha.isUnit.unit⁻¹).val where
+  isUnit := by simp only [Units.isUnit]
   comul_eq_tmul_self := by
-    rw [comul_inv, ha.comul_eq_tmul_self, Algebra.TensorProduct.tmul_inv]
+    rw [comul_inv]
+    refine (Units.eq_inv_of_mul_eq_one_left ?_).symm
+    rw [IsUnit.unit_spec, ha.comul_eq_tmul_self, Algebra.TensorProduct.tmul_mul_tmul]
+    simp only [IsUnit.mul_val_inv, Algebra.TensorProduct.one_def]
 
 instance : Mul {a : A // IsGroupLikeElem R a} where
   mul a b := ⟨a * b, isGroupLikeElem_mul a.2 b.2⟩
@@ -99,10 +102,13 @@ instance : Monoid {a : A // IsGroupLikeElem R a} where
   mul_one := mul_one
 
 noncomputable instance : Inv {a : A // IsGroupLikeElem R a} where
-  inv a := ⟨Ring.inverse a, isGroupLikeElem_inv a.2⟩
+  inv a := ⟨a.2.isUnit.unit⁻¹.1, isGroupLikeElem_inv a.2⟩
 
 noncomputable instance : Group {a : A // IsGroupLikeElem R a} where
-  inv_mul_cancel a := by rw [← SetCoe.ext_iff]; exact Ring.inverse_mul_cancel a.1 a.2.isUnit
+  inv_mul_cancel a := by
+    rw [← SetCoe.ext_iff]
+    change a.2.isUnit.unit⁻¹.1 * a.2.isUnit.unit.1 = 1
+    rw [Units.inv_mul]
 
 end Bialgebra
 
