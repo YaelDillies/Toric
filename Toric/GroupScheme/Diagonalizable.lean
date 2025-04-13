@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.Hopf.GroupLike
@@ -82,8 +82,7 @@ lemma isDiagonalisable_of_span_isGroupLikeElem_eq_top [Nontrivial B] :
         rw [Algebra.smul_def]
       erw [heq]
       exact hx
-
-  exact (BialgEquiv.ofBialgHom _ _ _ h).symm
+  exact (BialgEquiv.ofBialgHom _ h).symm
 
 -- also true over a commutative ring, but with a more complicated proof
 lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top [Nontrivial B] :
