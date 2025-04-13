@@ -48,13 +48,14 @@ Now let's do the top edge.
   \lean{CategoryTheory.Limits.PreservesLimitsOfShape.overPost, CategoryTheory.Limits.PreservesLimitsOfSize.overPost, CategoryTheory.Limits.PreservesFiniteProducts.overPost}
   \leanok
 
-  If $F : C \to D$ is a functor preserving limits of shape $J$, then so is the obvious functor $C / X \to D / F(X)$.
+  Let $J$ be a shape (i.e. a category). Let $\widetilde J$ denote the category which is the same as $J$, but has an extra object $*$ which is terminal.
+  If $F : C \to D$ is a functor preserving limits of shape $\widetilde J$, then the obvious functor $C / X \to D / F(X)$ preserves limits of shape $J$.
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
 
-  Hopefully easy.
+  Extend a functor $K\colon  J \to C / X$ to a functor $\widetilde K\colon \widetilde J \to C$, by letting $\widetilde K (*) = X$.
 \end{proof}
 
 
@@ -137,14 +138,14 @@ Finally, let's do the right edge.
 \begin{proposition}[Essential image of a sliced functor]
   \label{0-ess-image-over}
   \uses{}
-  % \lean{}
-  % \leanok
+  \lean{CategoryTheory.Functor.essImage_overPost}
+  \leanok
 
-  If $F : C \to D$ is a fully faithful functor between cartesian-monoidal categories, then $F / X : C / X \hom D / F(X)$ has the same essential image as $F$.
+  If $F : C \to D$ is a full functor between cartesian-monoidal categories, then $F / X : C / X \hom D / F(X)$ has the same essential image as $F$.
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
 
   Transfer all diagrams.
 \end{proof}
@@ -192,7 +193,7 @@ Finally, let's do the right edge.
 \end{proposition}
 \begin{proof}
   \uses{0-ess-image-over}
-  % \leanok
+  \leanok
 
   Direct consequence of Proposition \ref{0-ess-image-over}.
 \end{proof}

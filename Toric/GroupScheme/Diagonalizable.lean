@@ -10,7 +10,6 @@ import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.HopfAlg
-import Toric.Hopf.GrpAlg
 
 open AlgebraicGeometry CategoryTheory Coalgebra Opposite
 

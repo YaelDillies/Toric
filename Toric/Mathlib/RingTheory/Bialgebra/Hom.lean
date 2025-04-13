@@ -23,12 +23,21 @@ def unitBialgHom : R →ₐc[R] A where
 end Semiring
 
 section CommSemiring
-variable [CommSemiring A] [Bialgebra R A]
 
+section Algebra
+variable [CommSemiring A] [Algebra R A]
+
+-- TODO: Move this somewhere more appropriate
 variable (R A) in
 noncomputable def mulAlgHom : A ⊗[R] A →ₐ[R] A :=
   .ofLinearMap (.mul' R A) (by simp [Algebra.TensorProduct.one_def]) fun x y ↦ by
     induction x <;> induction y <;> simp [mul_mul_mul_comm, mul_add, add_mul, *]; sorry
+
+end Algebra
+
+section Bialgebra
+variable [CommSemiring A] [Bialgebra R A]
+
 
 variable (R A) in
 noncomputable def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
@@ -45,6 +54,7 @@ noncomputable def mulBialgHom : A ⊗[R] A →ₐc[R] A where
   __ := mulAlgHom R A
   __ := mulCoalgHom R A
 
+-- This is false without cocommutativity of A :)
 variable (R A) in
 noncomputable def comulCoalgHom : A →ₗc[R] A ⊗[R] A where
   __ := comulAlgHom R A
@@ -59,6 +69,8 @@ variable (R A) in
 noncomputable def comulBialgHom : A →ₐc[R] A ⊗[R] A where
   __ := comulAlgHom R A
   __ := comulCoalgHom R A
+
+end Bialgebra
 
 end CommSemiring
 end Bialgebra

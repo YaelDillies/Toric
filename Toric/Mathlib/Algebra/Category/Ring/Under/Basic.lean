@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.ChosenFiniteProducts
-import Toric.Mathlib.CategoryTheory.Limits.Shapes.Pullback.PullbackCone
+import Toric.Mathlib.CategoryTheory.Limits.Constructions.Over.Products
 
 open CategoryTheory Limits Opposite
 
@@ -11,13 +11,11 @@ variable {R : CommRingCat}
 -/
 noncomputable instance chosenFiniteProducts : ChosenFiniteProducts (Under R)ᵒᵖ where
   product X Y := {
-    cone := BinaryCofan.op <| pushoutCocone.toBinaryCofan.obj <|
+    cone := BinaryCofan.op <| pushoutCoconeEquivBinaryCofan.functor.obj <|
       pushoutCocone R (unop X).right (unop Y).right
-    isLimit := BinaryCofan.IsColimit.op <| pushoutCocone.IsColimit.toBinaryCofanIsColimit <|
-        CommRingCat.pushoutCoconeIsColimit R _ _
+    isLimit := BinaryCofan.IsColimit.op
+      (CommRingCat.pushoutCoconeIsColimit R _ _).pushoutCoconeEquivBinaryCofan
   }
   terminal := ⟨_, terminalOpOfInitial Under.mkIdInitial⟩
-
-instance : PreservesFiniteProducts (Under.opToOverOp R) := sorry
 
 end CommRingCat.Under

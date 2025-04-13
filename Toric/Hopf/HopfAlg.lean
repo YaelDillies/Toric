@@ -5,9 +5,8 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.Bialgebra.Hom
-import Toric.Hopf.CommAlg
+import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
 /-!
