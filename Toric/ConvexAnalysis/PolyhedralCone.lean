@@ -242,14 +242,11 @@ lemma IsPolyhedral.dual [FiniteDimensional ℝ E] {c : PointedCone ℝ E} (hc : 
     exact hS.inf_dual'_singleton
 
 end NormedAddCommGroup
+
 variable {𝕜 E : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]
   [AddCommGroup E] [Module 𝕜 E]
 
-example {a : 𝕜} (h : a ≤ 1) : 2 - a > 0 := by
-  simp only [sub_pos]
-  exact lt_of_le_of_lt h (by simp)
-
-theorem test {a b c : 𝕜} {x : E} (hab : a < b) (hbc : b < c) :
+theorem smul_mem_openSegment {a b c : 𝕜} {x : E} (hab : a < b) (hbc : b < c) :
     b • x ∈ openSegment 𝕜 (a • x) (c • x) := by
   have hba : b - a > 0 := by simp_all
   have hcb : c - b > 0 := by simp_all
@@ -269,9 +266,9 @@ theorem smul_mem_of_isExtreme {c : PointedCone 𝕜 E} {s : Set E} (he : IsExtre
   · by_cases a = 1 <;> (try simp_all; done)
     refine he.2 (c.smul_mem ⟨a, ha⟩ (he.1 hxs))
       (c.smul_mem ⟨2, by positivity⟩ (he.1 hxs)) hxs ?_ |>.1
-    simpa using test (𝕜 := 𝕜) (E := E) (b := 1) (lt_of_le_of_ne hcmp ‹_›) (by simp)
+    simpa using smul_mem_openSegment (𝕜 := 𝕜) (E := E) (b := 1) (lt_of_le_of_ne hcmp ‹_›) (by simp)
   · refine he.2 (c.smul_mem ⟨0, le_rfl⟩ (he.1 hxs)) (c.smul_mem ⟨a, ha⟩ (he.1 hxs)) hxs ?_ |>.2
-    simpa using test (𝕜 := 𝕜) (E := E) (a := 0) (b := 1) (by simp) (by simp_all)
+    simpa using smul_mem_openSegment (𝕜 := 𝕜) (E := E) (a := 0) (b := 1) (by simp) (by simp_all)
 
 theorem smul_mem_convexHull {s : Set E} (h : ∀ x ∈ s, ∀ a : 𝕜, a ≥ 0 → a • x ∈ s) :
     ∀ x ∈ convexHull 𝕜 s, ∀ a : 𝕜, a ≥ 0 → a • x ∈ convexHull 𝕜 s := by
