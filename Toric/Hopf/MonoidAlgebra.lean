@@ -57,37 +57,63 @@ end CommSemiring
 
 open Bialgebra
 
-variable {R A M : Type*}
+variable (R : Type*) {A M : Type*}
 
 variable [CommSemiring R] [Monoid M] [Semiring A] [Bialgebra R A]
 
-noncomputable def lift_bialgHom (hinj : Function.Injective (algebraMap R A))
-    (φ : M →* {a : A // IsGroupLikeElem R a}) : MonoidAlgebra R M →ₐc[R] A := by
-  set ψ : M →* A := {
-    toFun x := φ x
-    map_one' := by rw [φ.map_one]; rfl
-    map_mul' a b := by rw [φ.map_mul]; rfl }
-  exact {MonoidAlgebra.lift R M A ψ with
+/--
+A multiplicative map from a monoid `M` into the group of grouplike elements of `A`
+lifts to an `R`-algebra map from `MonoidAlgebra R M` to `A`.
+-/
+@[simps!]
+noncomputable def grouplike_lift_algHom (φ : M →* {a : A // IsGroupLikeElem R a}) :
+    MonoidAlgebra R M →ₐ[R] A := MonoidAlgebra.lift R M A {
+  toFun x := φ x
+  map_one' := by rw [φ.map_one]; rfl
+  map_mul' a b := by rw [φ.map_mul]; rfl }
+
+/--
+A multiplicative map from a monoid `M` into the group of grouplike elements of `A`
+lifts to an `R`-bialgebra map from `MonoidAlgebra R M` to `A`.
+-/
+@[simps!]
+noncomputable def grouplike_lift_bialgHom (hinj : Function.Injective (algebraMap R A))
+    (φ : M →* {a : A // IsGroupLikeElem R a}) : MonoidAlgebra R M →ₐc[R] A :=
+  {grouplike_lift_algHom R φ with
     counit_comp := by
       ext x
       dsimp
-      simp only [lift_single, one_smul, counit_single, CommSemiring.counit_apply]
+      simp only [liftNC_single, AddMonoidHom.coe_coe, map_one, one_mul, counit_single,
+        CommSemiring.counit_apply]
       exact IsGroupLikeElem.counit hinj (φ x).2,
     map_comp_comul := by
       ext x
       dsimp
       simp only [comul_single, CommSemiring.comul_apply, TensorProduct.map_tmul, lsingle_apply,
-        LinearMap.coe_mk, AddHom.coe_mk, lift_single, one_smul]
+        LinearMap.coe_mk, AddHom.coe_mk, grouplike_lift_algHom_apply, liftNC_single,
+        AddMonoidHom.coe_coe, map_one, one_mul]
       exact (φ x).2.comul_eq_tmul_self.symm,
-    map_smul' := fun _ _ ↦ by dsimp; simp only [map_smul]}
-
+    map_smul' := fun _ _ ↦ by dsimp [grouplike_lift_algHom]; simp only [map_smul]}
 
 section CommSemiring
 variable [CommSemiring R] [CommSemiring A] [Bialgebra R A]
 
-noncomputable def lift_isGroupLikeElem (hinj : Function.Injective (algebraMap R A)) :
+variable (A) in
+/--
+The `R`-algebra map from the monoid algebra on the group-like elements of `A` to `A`.
+-/
+@[simps!]
+noncomputable def lift_isGroupLikeElem_algHom :
+    MonoidAlgebra R {a : A // IsGroupLikeElem R a} →ₐ[R] A :=
+  MonoidAlgebra.grouplike_lift_algHom R (MonoidHom.id _)
+
+/--
+The `R`-bialgebra map from the monoid algebra on the group-like elements of `A` to `A`.
+-/
+@[simps!]
+noncomputable def lift_isGroupLikeElem_bialgHom (hinj : Function.Injective (algebraMap R A)) :
     MonoidAlgebra R {a : A // IsGroupLikeElem R a} →ₐc[R] A :=
-  MonoidAlgebra.lift_bialgHom hinj (MonoidHom.id _)
+  MonoidAlgebra.grouplike_lift_bialgHom R hinj (MonoidHom.id _)
 
 end CommSemiring
 
