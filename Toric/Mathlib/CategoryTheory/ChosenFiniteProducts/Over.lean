@@ -201,6 +201,4 @@ def chosenFiniteProducts (X : C) : ChosenFiniteProducts (Under X)ᵒᵖ where
   terminal.cone := _
   terminal.isLimit := terminalOpOfInitial Under.mkIdInitial
 
-instance (X : C) : PreservesFiniteProducts (Under.opToOverOp X) := sorry
-
 end CategoryTheory.Under
