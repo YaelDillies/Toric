@@ -17,7 +17,6 @@ import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
-import Toric.Mathlib.Algebra.Category.Ring.Under.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
@@ -30,9 +29,7 @@ import Toric.Mathlib.Analysis.Convex.Cone.InnerDual
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.Analysis.Convex.Polytope
 import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
-import Toric.Mathlib.CategoryTheory.Limits.Constructions.Over.Products
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
-import Toric.Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
