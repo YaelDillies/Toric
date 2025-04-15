@@ -5,7 +5,6 @@ import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
-import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.Torus
 import Toric.Hopf.CoalgToAlg
@@ -25,10 +24,10 @@ import Toric.Mathlib.Algebra.Module.Equiv.Basic
 import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.Module.LinearMap.End
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
+import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.Analysis.Convex.Cone.InnerDual
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.Analysis.Convex.Polytope
-import Toric.Mathlib.CategoryTheory.ChosenFiniteProducts.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_

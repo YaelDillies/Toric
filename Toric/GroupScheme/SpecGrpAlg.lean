@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Toric.GroupScheme.HopfAffine
-import Toric.GroupScheme.SchemeOver
 import Toric.Hopf.GrpAlg
 
 /-!
