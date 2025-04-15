@@ -1,5 +1,5 @@
 import Mathlib.RingTheory.Bialgebra.Hom
-import Mathlib.RingTheory.Coalgebra.MonoidAlgebra
+import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 open Coalgebra
 
