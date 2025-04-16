@@ -1,4 +1,3 @@
-
 /-
 Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
@@ -38,6 +37,9 @@ lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLi
   eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
     simp [← Finsupp.range_linearCombination]
 
+/--
+A bialgebra isomorphic to a monoid algebra is spanned by its group-like elements.
+-/
 lemma span_isGroupLikeElem_of_iso {F H : Type*} [Semiring H] [Bialgebra R H]
     [EquivLike F (MonoidAlgebra R G) H] [BialgEquivClass F R (MonoidAlgebra R G) H] (f : F) :
     Submodule.span R {a : H | IsGroupLikeElem R a} = ⊤ := by
@@ -247,3 +249,52 @@ noncomputable def mapDomainBialgHomMulEquiv : (G →+ H) ≃+ (K[G] →ₐc[K] K
 end AddCommGroup
 end Field
 end AddMonoidAlgebra
+
+namespace MonoidAlgebra
+
+open Bialgebra Coalgebra
+
+variable (R A : Type*)
+
+variable [CommSemiring R] [Semiring A] [Bialgebra R A]
+
+/--
+The `R`-algebra map from the monoid algebra on the group-like elements of `A` to `A`.
+-/
+@[simps!]
+noncomputable def lift_isGroupLikeElem_algHom :
+    MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
+  MonoidAlgebra.lift R (GroupLike R A) A
+  {
+    toFun g := g.1
+    map_one' := by simp
+    map_mul' := by simp
+  }
+
+/--
+The `R`-bialgebra map from the monoid algebra on the group-like elements of `A` to `A`.
+-/
+@[simps!]
+noncomputable def lift_isGroupLikeElem_bialgHom (hinj : Function.Injective (algebraMap R A)) :
+    MonoidAlgebra R (GroupLike R A) →ₐc[R] A :=
+  {
+    lift_isGroupLikeElem_algHom R A with
+    map_smul' := fun a x ↦ by
+      change (lift_isGroupLikeElem_algHom R A) (a • x) = _
+      simp
+    counit_comp := by
+      ext x
+      dsimp
+      simp only [liftNC_single, AddMonoidHom.coe_coe, map_one, one_mul, counit_single,
+        CommSemiring.counit_apply]
+      exact IsGroupLikeElem.counit_eq_one hinj x.2
+    map_comp_comul := by
+      ext x
+      dsimp
+      simp only [comul_single, CommSemiring.comul_apply, TensorProduct.map_tmul, lsingle_apply,
+        LinearMap.coe_mk, AddHom.coe_mk, lift_isGroupLikeElem_algHom_apply, liftNC_single,
+        AddMonoidHom.coe_coe, map_one, one_mul]
+      exact x.2.comul_eq_tmul_self.symm
+  }
+
+end MonoidAlgebra

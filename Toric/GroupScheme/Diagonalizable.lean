@@ -66,8 +66,8 @@ lemma isDiagonalisable_of_span_isGroupLikeElem_eq_top
      left_inv g := by simp
      right_inv a := by simp
     }
-  refine {existsIso := ⟨GroupLike K B, inferInstance, Nonempty.intro
-  ((BialgEquiv.ofBialgHom (lift_isGroupLikeElem_bialgHom K (RingHom.injective _)) ⟨?_, ?_⟩).symm)⟩}
+  refine {existsIso := ⟨GroupLike K B, inferInstance, Nonempty.intro ((BialgEquiv.ofBijective
+    (lift_isGroupLikeElem_bialgHom K B (RingHom.injective _)) ⟨?_, ?_⟩).symm)⟩}
   · rw [RingHom.injective_iff_ker_eq_bot, RingHom.ker_eq_bot_iff_eq_zero]
     intro x hx
     refine (linearIndependent_equiv e).mpr
