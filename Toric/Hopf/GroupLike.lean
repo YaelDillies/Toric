@@ -97,9 +97,7 @@ instance GroupLike.instCommGroup : CommGroup (GroupLike R A) := by unfold GroupL
 
 end CommSemiring
 
-end Coalgebra
-
-open Coalgebra
+end Bialgebra
 
 namespace Bialgebra
 
@@ -166,7 +164,7 @@ noncomputable instance : CommGroup {a : A // IsGroupLikeElem R a} where
 
 end Bialgebra
 
-namespace Coalgebra
+namespace Bialgebra
 
 section Field
 variable {F K A B : Type*} [Field K] [Ring A] [Bialgebra K A] [Nontrivial A]
