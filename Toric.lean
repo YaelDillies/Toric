@@ -40,10 +40,12 @@ import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
+import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic

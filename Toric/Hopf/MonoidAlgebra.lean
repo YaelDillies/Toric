@@ -7,6 +7,7 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.Algebra.Equiv.TransferInstance
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Hopf.GroupLike
+import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
@@ -29,8 +30,13 @@ lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
   comul_eq_tmul_self := by simp; rfl
 
 @[simp]
-lemma isGroupLikeElem_single (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlgebra A G) :=
+lemma isGroupLikeElem_single_one (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlgebra A G) :=
   isGroupLikeElem_of _
+
+@[simp]
+lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLikeElem R a} = ⊤ :=
+  eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
+    simp [← Finsupp.range_linearCombination]
 
 end CommSemiring
 
