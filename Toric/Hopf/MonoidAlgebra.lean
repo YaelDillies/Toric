@@ -38,6 +38,16 @@ lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLi
   eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
     simp [← Finsupp.range_linearCombination]
 
+lemma span_isGroupLikeElem_of_iso {F H : Type*} [Semiring H] [Bialgebra R H]
+    [EquivLike F (MonoidAlgebra R G) H] [BialgEquivClass F R (MonoidAlgebra R G) H] (f : F) :
+    Submodule.span R {a : H | IsGroupLikeElem R a} = ⊤ := by
+  rw [(Set.setOf_inj.mpr (funext (fun (a : H) ↦ propext_iff.mpr
+    (isGroupLikeElem_map (a := a) (BialgEquivClass.toBialgEquiv f).symm)))).symm.trans
+    (Equiv.setOf_apply_symm_eq_image_setOf (BialgEquivClass.toBialgEquiv f).toEquiv _),
+    ← LinearEquiv.range (BialgEquivClass.toBialgEquiv f).toLinearEquiv, ← Submodule.map_top,
+    ← span_isGroupLikeElem (R := R) (A := R) (G := G), Submodule.map_span]
+  rfl
+
 end CommSemiring
 
 section Field
