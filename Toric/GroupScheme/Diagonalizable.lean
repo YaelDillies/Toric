@@ -11,7 +11,7 @@ import Toric.GroupScheme.SpecGrpAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.HopfAlg
 
-open AlgebraicGeometry CategoryTheory Coalgebra Opposite
+open AlgebraicGeometry CategoryTheory Bialgebra Opposite
 
 universe u
 

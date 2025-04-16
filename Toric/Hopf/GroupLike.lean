@@ -3,21 +3,19 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Toric.Mathlib.RingTheory.Bialgebra.Hom
-import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
+import Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 
 /-!
 # Group-like elements in a bialgebra
 -/
 
-open TensorProduct
+open Coalgebra Function TensorProduct
 
-namespace Coalgebra
-section CommSemiring
-variable {F R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
-  [Coalgebra R A] [Coalgebra R B] {a : A}
+namespace Bialgebra
+section Semiring
+variable {F R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B] [Bialgebra R A]
+  [Bialgebra R B] {a b : A}
 
 variable (R) in
 /-- A group-like element in a coalgebra is a unit `a` such that `Δ a = a ⊗ₜ a`. -/
@@ -25,36 +23,77 @@ structure IsGroupLikeElem (a : A) where
   isUnit : IsUnit a
   comul_eq_tmul_self : comul (R := R) a = a ⊗ₜ a
 
+lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
+
+/-- The image of a group-like element by the counit is `1`, if `algebraMap R A` is injective. -/
+lemma IsGroupLikeElem.counit_eq_one (hinj : Injective (algebraMap R A)) (ha : IsGroupLikeElem R a) :
+    counit a = (1 : R) := hinj <| by
+  simpa [ha.comul_eq_tmul_self, Ring.inverse_mul_cancel _ ha.isUnit, Algebra.smul_def] using
+    congr(Algebra.TensorProduct.lid R A (((1 : R) ⊗ₜ[R] (Ring.inverse a)) *
+      $(rTensor_counit_comul (R := R) a)))
+
+/-- A bialgebra hom sends group-like elements to group-like elements. -/
 lemma IsGroupLikeElem.map [FunLike F A B] [BialgHomClass F R A B] (f : F)
     (ha : IsGroupLikeElem R a) : IsGroupLikeElem R (f a) where
   isUnit := ha.isUnit.map f
-  comul_eq_tmul_self := by
-    rw [← CoalgHomClass.map_comp_comul_apply, ha.comul_eq_tmul_self]
-    simp
+  comul_eq_tmul_self := by rw [← CoalgHomClass.map_comp_comul_apply, ha.comul_eq_tmul_self]; simp
 
-lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
+/-- A bialgebra equivalence preserves group-like elements. -/
+lemma isGroupLikeElem_map [EquivLike F A B] [BialgEquivClass F R A B] (f : F) :
+    IsGroupLikeElem R (f a) ↔ IsGroupLikeElem R a where
+  mp ha := by
+    rw [← (BialgEquivClass.toBialgEquiv f).symm_apply_apply a]
+    exact ha.map (BialgEquivClass.toBialgEquiv f).symm
+  mpr := .map f
 
-lemma IsGroupLikeElem.counit (hinj : Function.Injective (algebraMap R A))
-    (ha : IsGroupLikeElem R a) : counit a = (1 : R) := by
-  have := rTensor_counit_comul (R := R) a
-  rw [ha.comul_eq_tmul_self, LinearMap.rTensor_tmul] at this
-  apply_fun (fun x ↦ Algebra.TensorProduct.lid R A (((1 : R) ⊗ₜ[R] (Ring.inverse a)) * x)) at this
-  dsimp at this
-  simp only [one_mul, mul_one, one_smul, Ring.inverse_mul_cancel _ ha.isUnit, Algebra.smul_def]
-    at this
-  exact hinj this
+/-- In a bialgebra, `1` is a group-like element. -/
+lemma IsGroupLikeElem.one : IsGroupLikeElem R (1 : A) where
+  isUnit := isUnit_one
+  comul_eq_tmul_self := by rw [comul_one, Algebra.TensorProduct.one_def]
 
-lemma IsGroupLikeElem.map_sub [FunLike F A B] [BialgHomClass F R A B] (f : F) :
-    f '' {a | IsGroupLikeElem R a} ≤ {a | IsGroupLikeElem R a} := by
-  simp only [Set.le_eq_subset, Set.image_subset_iff, Set.preimage_setOf_eq, Set.setOf_subset_setOf]
-  exact fun _ h ↦ IsGroupLikeElem.map f h
+/-- Group-like elements in a bialgebra are stable under multiplication. -/
+lemma IsGroupLikeElem.mul (ha : IsGroupLikeElem R a) (hb : IsGroupLikeElem R b) :
+    IsGroupLikeElem R (a * b) where
+  isUnit := ha.isUnit.mul hb.isUnit
+  comul_eq_tmul_self := by rw [comul_mul, ha.comul_eq_tmul_self, hb.comul_eq_tmul_self,
+    Algebra.TensorProduct.tmul_mul_tmul]
 
-lemma IsGroupLikeElem.equiv [EquivLike F A B] [BialgEquivClass F R A B] (f : F) :
-    {a | IsGroupLikeElem R a} = f '' {a | IsGroupLikeElem R a} := by
-  refine le_antisymm ?_ (IsGroupLikeElem.map_sub f)
-  change _ ⊆ (BialgEquivClass.toBialgEquiv f).toEquiv '' _
-  rw [← Equiv.symm_image_subset]
-  exact IsGroupLikeElem.map_sub (BialgEquivClass.toBialgEquiv f).symm
+/-- Group-like elements in a bialgebra are stable under inverses. -/
+lemma IsGroupLikeElem.unitsInv {u : Aˣ} (ha : IsGroupLikeElem R u.val) :
+    IsGroupLikeElem R u⁻¹.val where
+  isUnit := u⁻¹.isUnit
+  comul_eq_tmul_self := calc
+          (u⁻¹.map (comulAlgHom R A)).val
+      _ = (u.map (comulAlgHom R A))⁻¹.val := by simp
+      _ = u⁻¹.val ⊗ₜ[R] u⁻¹.val := Units.inv_eq_of_mul_eq_one_left <| by
+        simp [ha.comul_eq_tmul_self, Algebra.TensorProduct.tmul_mul_tmul,
+          Algebra.TensorProduct.one_def]
+
+/-- Group-like elements in a bialgebra are stable under inverses. -/
+lemma IsGroupLikeElem.ringInverse (ha : IsGroupLikeElem R a) :
+    IsGroupLikeElem R (Ring.inverse a) := by
+  simpa [← Ring.inverse_of_isUnit] using ha.unitsInv (u := ha.isUnit.unit)
+
+variable (R A) in
+/-- The group of group-like elements in a bialgebra. -/
+abbrev GroupLike : Type _ := ({
+  carrier := {u | IsGroupLikeElem R (u : A)}
+  mul_mem' := .mul
+  one_mem' := .one
+  inv_mem' := .unitsInv
+} : Subgroup Aˣ)
+
+/-- Group structure on group-like elements of a bialgebra, given by multiplication. -/
+instance GroupLike.instGroup : Group (GroupLike R A) := by unfold GroupLike; infer_instance
+
+end Semiring
+
+section CommSemiring
+variable {R A : Type*} [CommSemiring R] [CommSemiring A] [Bialgebra R A]
+
+/-- Commutative group structure on group-like elements of a commutative bialgebra,
+given by multiplication. -/
+instance GroupLike.instCommGroup : CommGroup (GroupLike R A) := by unfold GroupLike; infer_instance
 
 end CommSemiring
 
@@ -130,7 +169,7 @@ end Bialgebra
 namespace Coalgebra
 
 section Field
-variable {F K A B : Type*} [Field K] [Ring A] [Algebra K A] [Coalgebra K A] [Nontrivial A]
+variable {F K A B : Type*} [Field K] [Ring A] [Bialgebra K A] [Nontrivial A]
 
 open Submodule in
 /-- Group-like elements over a field are linearly independent. -/
@@ -171,4 +210,4 @@ lemma linearIndepOn_isGroupLikeElem : LinearIndepOn K id {a : A | IsGroupLikeEle
     _ = a := hcea
 
 end Field
-end Coalgebra
+end Bialgebra

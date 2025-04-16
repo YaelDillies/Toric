@@ -7,17 +7,33 @@
 \begin{definition}[Group-like elements]
   \label{0-grp-like}
   \uses{}
-  \lean{Coalgebra.IsGroupLikeElem}
+  \lean{Bialgebra.IsGroupLikeElem}
   \leanok
 
-  An element $a$ of a coalgebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
+  An element $a$ of a bi-algebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
 \end{definition}
+
+
+\begin{proposition}[Group-like elements form a group]
+  \label{0-grp-like-grp}
+  \uses{0-grp-like}
+  \lean{Bialgebra.GroupLike.instGroup, Bialgebra.GroupLike.instCommGroup}
+  \leanok
+
+  Group-like elements of a bi-algebra $A$ form a group under multiplication.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Check that group-like elements are closed under unit, multiplication and inverses.
+\end{proof}
 
 
 \begin{lemma}[Bialgebra homs preserve group-like elements]
   \label{0-grp-like-map}
   \uses{0-grp-like}
-  \lean{Coalgebra.IsGroupLikeElem.map}
+  \lean{Bialgebra.IsGroupLikeElem.map}
   \leanok
 
   Let $f : A \to B$ be a bi-algebra hom. If $a \in A$ is group-like, then $f(a)$ is group-like too.

@@ -3,8 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.GroupScheme.SchemeOver
+import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_

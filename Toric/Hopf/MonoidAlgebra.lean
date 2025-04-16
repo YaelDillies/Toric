@@ -16,7 +16,7 @@ This file proves that the group-like elements of the group algebra `k[G]` are pr
 of the image of the inclusion `G → k[G]`.
 -/
 
-open Coalgebra
+open Bialgebra
 
 variable {K R A G H I : Type*}
 

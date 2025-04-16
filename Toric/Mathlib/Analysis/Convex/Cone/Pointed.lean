@@ -54,7 +54,7 @@ lemma dual'_union (s t : Set E) : dual' (s ∪ t) = dual' s ⊓ dual' t := by
   exacts [hxs y hy, hxt y hy]
 
 lemma dual_span (s : Set E) : (span ℝ s).dual = dual' s := by
-  refine le_antisymm (innerDualCone_le_innerDualCone _ _ subset_span) ?_
+  refine le_antisymm (innerDualCone_le_innerDualCone subset_span) ?_
   intro x hx
   apply Submodule.span_induction
   · intro y hy
