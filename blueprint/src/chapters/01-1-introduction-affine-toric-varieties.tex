@@ -149,16 +149,6 @@
   An element is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
 \end{definition}
 
-\begin{definition}[The character-cocharacter pairing]
-  \label{1-1-char-cochar-pairing}
-  \uses{1-1-char, 1-1-cochar}
-  \lean{AlgebraicGeometry.Scheme.Over.charPairing}
-  % \leanok
-
-  Character lattice and one-parameter subgroup pairing.
-\end{definition}
-
-
 \begin{proposition}[Cocharacter lattice of the torus]
   \label{1-1-cochar-torus}
   \uses{1-1-cochar}
@@ -168,7 +158,7 @@
   $N = \Hom(M, \Z) \cong \Z^n$. For $u \in N$ we write $\lambda^u$ for the corresponding cocharacter.
 \end{proposition}
 \begin{proof}
-  \uses{1-1-char-torus, 1-1-char-cochar-pairing}
+  \uses{}
   % \leanok
 
   By Propositions \ref{1-1-torus-spec} and \ref{0-full-faithful-spec-grp-alg} in turn, we have
@@ -176,6 +166,15 @@
     \mathrm{cochar}(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm, \Gm^n) = \Hom(k[\Z^n], k[\Z]) = \Hom(\Z^n, \Z) \cong \Z^n.
   \]
 \end{proof}
+
+\begin{definition}[The character-cocharacter pairing]
+  \label{1-1-char-cochar-pairing}
+  \uses{1-1-char, 1-1-cochar}
+  \lean{AlgebraicGeometry.Scheme.Over.charPairing}
+  \leanok
+
+  Character lattice and one-parameter subgroup pairing.
+\end{definition}
 
 
 \subsection{The Definition of Affine Toric Variety}
@@ -221,9 +220,8 @@
 \begin{proposition}
   \label{1-1-8-aff-tor-var-ya}
   \uses{1-1-7-ya}
-  \uses{1-1-char}
 
-  Proposition 1.1.8
+  $Y_\MCA$ is a toric variety.
 \end{proposition}
 \begin{proof}
   \uses{1-1-1-group-hom-subtorus}
@@ -232,6 +230,21 @@
   TODO
 \end{proof}
 
+\begin{proposition}
+  \label{1-1-8-ya-char}
+  \uses{1-1-7-ya}
+  % \lean{}
+  % \leanok
+
+  The character lattice of the torus of $Y_\MCA$ is $\Z \MCA$.
+\end{proposition}
+\begin{proof}
+  \uses{1-1-char-torus}
+  % \leanok
+
+  $\Phi_\MCA: T_N \to \Gm^s$ factors through the torus of $Y_\MCA$.
+  The conclusion follows from looking at the corresponding maps of character lattices.
+\end{proof}
 
 \subsection{Toric Ideals}
 
@@ -308,22 +321,6 @@
 \end{proof}
 
 
-\begin{proposition}[The character lattice of the spectrum of an affine monoid algebra]
-  \label{1-1-14-char-spec-aff-mon-alg}
-  \uses{1-1-14-aff-tor-var-spec-aff-mon-alg, 1-1-char}
-  % \lean{}
-  % \leanok
-
-  If $S$ is an affine monoid, then the character lattice of $\Spec(\Bbbk[S])$ is $\Z S$.
-\end{proposition}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  It is what it is.
-\end{proof}
-
-
 \begin{proposition}
   \label{1-1-14-spec-aff-mon-alg-eq-ya}
   \uses{0-aff-mon, 1-1-3-aff-tor-var, 1-1-7-ya}
@@ -340,27 +337,51 @@
 \end{proof}
 
 
-\begin{definition}
-  \label{torActOnAlg}
-  \uses{1-1-torus}
+\begin{proposition}[The character lattice of the spectrum of an affine monoid algebra]
+  \label{1-1-14-char-spec-aff-mon-alg}
+  \uses{1-1-14-aff-tor-var-spec-aff-mon-alg, 1-1-char}
   % \lean{}
   % \leanok
 
-  Torus action on semigroup algebra
-\end{definition}
+  If $S$ is an affine monoid, then the character lattice of the torus of $\Spec(\Bbbk[S])$ is $\Z S$.
+\end{proposition}
+\begin{proof}
+  \uses{1-1-14-spec-aff-mon-alg-eq-ya}
+  % \leanok
+
+  It is what it is.
+\end{proof}
 
 
 \subsection{Equivalence of Constructions}
 
 
+\begin{definition}
+  \label{1-1-tor-act-alg}
+  \uses{1-1-torus}
+  % \lean{}
+  % \leanok
+
+  There is a torus action on the semigroup algebra $\bbC[M]$: given $t\in T_N$ and $f\in \bbC[M]$ define
+  \[
+    t \cdot f = (p \mapsto f(t^{-1}p)).
+  \]
+\end{definition}
+
+
 \begin{lemma}
-  \label{lmm:1-1-16}
-  \uses{torActOnAlg}
+  \label{1-1-16-total-red}
+  \uses{1-1-tor-act-alg}
+    Let $A \subseteq \bbC[M]$ be a stable subspace, then
+    \[
+      A = \bigoplus_{\chi^m \in A} \bbC \cdot \chi^m.
+    \]
 \end{lemma}
 \begin{proof}
   \uses{1-1-2-char-eigenspace-direct-sum}
   % \leanok
 
+  TODO
 \end{proof}
 
 
@@ -376,7 +397,8 @@
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-  \uses{torActOnAlg, 1-1-8-aff-tor-var-ya, 1-1-9-ideal-ya, 1-1-14-aff-tor-var-spec-aff-mon-alg, lmm:1-1-16}
+  \uses{1-1-tor-act-alg, 1-1-8-aff-tor-var-ya, 1-1-9-ideal-ya, 1-1-14-aff-tor-var-spec-aff-mon-alg, 1-1-16-total-red}
   % \leanok
 
+  TODO
 \end{proof}
