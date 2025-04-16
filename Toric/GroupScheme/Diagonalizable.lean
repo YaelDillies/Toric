@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.GroupScheme.SchemeOver
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.Hopf.GroupLike
 import Toric.Hopf.HopfAlg
