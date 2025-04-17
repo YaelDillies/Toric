@@ -32,8 +32,6 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Over.Grp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Over.Mon_
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.GroupTheory.Finiteness
