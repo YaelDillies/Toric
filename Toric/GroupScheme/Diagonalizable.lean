@@ -33,14 +33,13 @@ noncomputable instance : HopfAlgebra R (Γ.obj <| op G.left) := by
 
 end CommRing
 
-
 section Field
 variable {K : Type*} [Field K] {G : Over (Spec <| .of K)} [Grp_Class G]
 
+-- FIXME: Lean is not able to use the instance on line 30
 noncomputable instance : HopfAlgebra K (Γ.obj <| op G.left) := by sorry
--- annoyingly, Lean is not able to use the instance on line 32; must find a way to fix this
 
-/-- An affine group `G` over a field `K` is diagonalisable iff it is affine and `Γ(G)` is
+/-- An algebraic group `G` over a field `K` is diagonalisable iff it is affine and `Γ(G)` is
 `K`-spanned by its group-like elements.
 
 Note that this is more generally true over arbitrary commutative rings, but we do not prove that.

@@ -39,7 +39,13 @@ lemma mapDomainBialgHom_comp (f : N →* O) (g : M →* N) : mapDomainBialgHom R
 end MonoidAlgebra
 
 namespace AddMonoidAlgebra
-variable [CommSemiring R] [AddMonoid M] [AddMonoid N] [AddMonoid O]
+variable [CommSemiring R] [Semiring A] [Bialgebra R A] [AddMonoid M] [AddMonoid N] [AddMonoid O]
+
+variable (R A) in
+/-- Isomorphic monoids have isomorphic monoid algebras. -/
+@[simps!]
+def domCongrBialgHom (e : M ≃+ N) : A[M] ≃ₐc[R] A[N] := 
+  .ofAlgEquiv (domCongr R A e) sorry sorry
 
 -- TODO: Generalise to `A[M] →ₐc[R] A[N]` under `Bialgebra R A`
 variable (R) in

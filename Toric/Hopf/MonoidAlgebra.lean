@@ -32,17 +32,13 @@ lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
 lemma isGroupLikeElem_single_one (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlgebra A G) :=
   isGroupLikeElem_of _
 
-/--
-The group-like elements in a group algebra span the whole group algebra.
--/
+/-- A group algebra is spanned by its group-like elements. -/
 @[simp]
 lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLikeElem R a} = ⊤ :=
   eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
     simp [← Finsupp.range_linearCombination]
 
-/--
-A bialgebra isomorphic to a group algebra is spanned by its group-like elements.
--/
+/-- A bialgebra isomorphic to a group algebra is spanned by its group-like elements. -/
 lemma span_isGroupLikeElem_of_iso {F H : Type*} [Semiring H] [Bialgebra R H]
     [EquivLike F (MonoidAlgebra R G) H] [BialgEquivClass F R (MonoidAlgebra R G) H] (f : F) :
     Submodule.span R {a : H | IsGroupLikeElem R a} = ⊤ := by
