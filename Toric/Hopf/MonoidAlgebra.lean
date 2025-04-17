@@ -32,6 +32,9 @@ lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
 lemma isGroupLikeElem_single_one (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlgebra A G) :=
   isGroupLikeElem_of _
 
+/--
+The group-like elements in a monoid algebra span the whole monoid algebra.
+-/
 @[simp]
 lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLikeElem R a} = ⊤ :=
   eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
@@ -262,7 +265,7 @@ variable [CommSemiring R] [Semiring A] [Bialgebra R A]
 The `R`-algebra map from the monoid algebra on the group-like elements of `A` to `A`.
 -/
 @[simps!]
-noncomputable def lift_isGroupLikeElem_algHom :
+noncomputable def lift_groupLike_algHom :
     MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
   MonoidAlgebra.lift R (GroupLike R A) A
   {
@@ -275,12 +278,12 @@ noncomputable def lift_isGroupLikeElem_algHom :
 The `R`-bialgebra map from the monoid algebra on the group-like elements of `A` to `A`.
 -/
 @[simps!]
-noncomputable def lift_isGroupLikeElem_bialgHom (hinj : Function.Injective (algebraMap R A)) :
+noncomputable def lift_groupLike_bialgHom (hinj : Function.Injective (algebraMap R A)) :
     MonoidAlgebra R (GroupLike R A) →ₐc[R] A :=
   {
-    lift_isGroupLikeElem_algHom R A with
+    lift_groupLike_algHom R A with
     map_smul' := fun a x ↦ by
-      change (lift_isGroupLikeElem_algHom R A) (a • x) = _
+      change (lift_groupLike_algHom R A) (a • x) = _
       simp
     counit_comp := by
       ext x
@@ -292,7 +295,7 @@ noncomputable def lift_isGroupLikeElem_bialgHom (hinj : Function.Injective (alge
       ext x
       dsimp
       simp only [comul_single, CommSemiring.comul_apply, TensorProduct.map_tmul, lsingle_apply,
-        LinearMap.coe_mk, AddHom.coe_mk, lift_isGroupLikeElem_algHom_apply, liftNC_single,
+        LinearMap.coe_mk, AddHom.coe_mk, lift_groupLike_algHom_apply, liftNC_single,
         AddMonoidHom.coe_coe, map_one, one_mul]
       exact x.2.comul_eq_tmul_self.symm
   }
