@@ -16,7 +16,6 @@ import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
-import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.Algebra.Group.Torsion
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 import Toric.Mathlib.Algebra.GroupWithZero.Units.Basic
@@ -40,10 +39,12 @@ import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
+import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
