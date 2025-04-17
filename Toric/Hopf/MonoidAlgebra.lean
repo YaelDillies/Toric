@@ -268,11 +268,11 @@ noncomputable def liftGroupLikeAlgHom : MonoidAlgebra R (GroupLike R A) →ₐ[R
 
 /-- The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
-noncomputable def liftGroupLikeBialgHom (hinj : Injective (algebraMap R A)) :
+noncomputable def liftGroupLikeBialgHom :
     MonoidAlgebra R (GroupLike R A) →ₐc[R] A where
   __ := liftGroupLikeAlgHom R A
   map_smul' a x := show (liftGroupLikeAlgHom R A) (a • x) = _ by simp
-  counit_comp := by ext ⟨x, hx⟩; simpa using hx.counit_eq_one hinj
+  counit_comp := by ext ⟨x, hx⟩; simpa using hx.counit_eq_one
   map_comp_comul := by ext ⟨x, hx⟩; simpa using hx.comul_eq_tmul_self.symm
 
 end MonoidAlgebra

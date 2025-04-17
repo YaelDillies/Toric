@@ -1,12 +1,18 @@
 import Mathlib.RingTheory.Bialgebra.Basic
 
 namespace Bialgebra
-variable {R A : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Nontrivial R]
 
-variable (R A) in
-include R A in
-/-- A bialgebra over a nontrivial semiring is itself nontrivial. -/
-lemma nontrivial : Nontrivial A where
-  exists_pair_ne := ⟨0, 1, ne_of_apply_ne (Coalgebra.counit (R := R)) <| by simp⟩
+variable (R A : Type*) [CommSemiring R] [Semiring A] [Bialgebra R A]
+
+lemma algebraMap_injective : Function.Injective (algebraMap R A) :=
+  fun a b eq  ↦ by rw [← counit_algebraMap (A := A) a, ← counit_algebraMap (A := A) b, eq]
+
+include R in
+/--
+A bialgebra over a nontrivial ring is nontrivial.
+-/
+lemma nontrivial [Nontrivial R] : Nontrivial A :=
+  Set.nontrivial_of_nontrivial (s := (algebraMap R A) '' ⊤) ((Set.image_nontrivial
+  (algebraMap_injective R A)).mpr Set.nontrivial_univ)
 
 end Bialgebra
