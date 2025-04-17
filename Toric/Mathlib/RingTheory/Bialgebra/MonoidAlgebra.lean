@@ -1,12 +1,18 @@
-import Mathlib.RingTheory.Bialgebra.Hom
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 
 open Coalgebra
 
 variable {R A M N O : Type*}
 
 namespace MonoidAlgebra
-variable [CommSemiring R] [Monoid M] [Monoid N] [Monoid O]
+variable [CommSemiring R] [Semiring A] [Bialgebra R A] [Monoid M] [Monoid N] [Monoid O]
+
+variable (R A) in
+/-- Isomorphic monoids have isomorphic monoid algebras. -/
+@[simps!]
+def domCongrBialgHom (e : M ≃* N) : MonoidAlgebra A M ≃ₐc[R] MonoidAlgebra A N :=
+  .ofAlgEquiv (domCongr R A e) sorry sorry
 
 -- TODO: Generalise to `MonoidAlgebra A M →ₐc[R] MonoidAlgebra A N` under `Bialgebra R A`
 variable (R) in

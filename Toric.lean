@@ -3,12 +3,13 @@ import Toric.AffineMonoid.Irreducible
 import Toric.ConvexAnalysis.PolyhedralCone
 import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
-import Toric.GroupScheme.Diagonalizable
+import Toric.GroupScheme.Diagonalisable
 import Toric.GroupScheme.HopfAffine
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.Torus
 import Toric.Hopf.CoalgToAlg
 import Toric.Hopf.Cocomm
+import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GroupLike
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.HopfAlg
@@ -42,6 +43,7 @@ import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra

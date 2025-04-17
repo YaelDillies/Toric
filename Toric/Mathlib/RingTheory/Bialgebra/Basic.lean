@@ -1,14 +1,12 @@
 import Mathlib.RingTheory.Bialgebra.Basic
 
-universe u v
-
 namespace Bialgebra
+variable {R A : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Nontrivial R]
 
-lemma nontrivial (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] 
-    [Bialgebra R A] [Nontrivial R] : Nontrivial A where
-  exists_pair_ne := by
-    refine ⟨0, 1, fun eq ↦ ?_⟩
-    apply_fun Coalgebra.counit (R := R) (A := A) at eq
-    simp only [map_zero, counit_one, zero_ne_one] at eq
+variable (R A) in
+include R A in
+/-- A bialgebra over a nontrivial semiring is itself nontrivial. -/
+lemma nontrivial : Nontrivial A where
+  exists_pair_ne := ⟨0, 1, ne_of_apply_ne (Coalgebra.counit (R := R)) <| by simp⟩
 
 end Bialgebra

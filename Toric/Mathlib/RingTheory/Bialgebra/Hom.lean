@@ -1,6 +1,20 @@
 import Mathlib.RingTheory.Bialgebra.Hom
 
-open TensorProduct
+open Coalgebra TensorProduct
+
+namespace BialgHom
+variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Semiring B] [Bialgebra R B]
+
+/-- Construct a bialgebra hom from an algebra hom respecting counit and comultiplication. -/
+@[simps] def ofAlgHom (f : A →ₐ[R] B) (counit_comp : counit ∘ₗ f.toLinearMap = counit)
+    (map_comp_comul : map f.toLinearMap f.toLinearMap ∘ₗ comul = comul ∘ₗ f.toLinearMap) :
+    A →ₐc[R] B where
+  __ := f
+  map_smul' := map_smul f
+  counit_comp := counit_comp
+  map_comp_comul := map_comp_comul
+
+end BialgHom
 
 namespace Bialgebra
 variable {R A : Type*} [CommSemiring R]
