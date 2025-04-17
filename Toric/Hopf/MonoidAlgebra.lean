@@ -16,7 +16,7 @@ This file proves that the group-like elements of the group algebra `k[G]` are pr
 of the image of the inclusion `G → k[G]`.
 -/
 
-open Bialgebra
+open Bialgebra Function
 
 variable {K R A G H I : Type*}
 
@@ -257,43 +257,22 @@ variable (R A : Type*)
 
 variable [CommSemiring R] [Semiring A] [Bialgebra R A]
 
-/--
-The `R`-algebra map from the group algebra on the group-like elements of `A` to `A`.
--/
+/-- The `R`-algebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
-noncomputable def liftGroupLikeAlgHom :
-    MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
-  MonoidAlgebra.lift R (GroupLike R A) A
-  {
+noncomputable def liftGroupLikeAlgHom : MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
+  MonoidAlgebra.lift R (GroupLike R A) A {
     toFun g := g.1
     map_one' := by simp
     map_mul' := by simp
   }
 
-/--
-The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`.
--/
+/-- The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
-noncomputable def liftGroupLikeBialgHom (hinj : Function.Injective (algebraMap R A)) :
-    MonoidAlgebra R (GroupLike R A) →ₐc[R] A :=
-  {
-    liftGroupLikeAlgHom R A with
-    map_smul' := fun a x ↦ by
-      change (liftGroupLikeAlgHom R A) (a • x) = _
-      simp
-    counit_comp := by
-      ext x
-      dsimp
-      simp only [liftNC_single, AddMonoidHom.coe_coe, map_one, one_mul, counit_single,
-        CommSemiring.counit_apply]
-      exact IsGroupLikeElem.counit_eq_one hinj x.2
-    map_comp_comul := by
-      ext x
-      dsimp
-      simp only [comul_single, CommSemiring.comul_apply, TensorProduct.map_tmul, lsingle_apply,
-        LinearMap.coe_mk, AddHom.coe_mk, liftGroupLikeAlgHom_apply, liftNC_single,
-        AddMonoidHom.coe_coe, map_one, one_mul]
-      exact x.2.comul_eq_tmul_self.symm
-  }
+noncomputable def liftGroupLikeBialgHom (hinj : Injective (algebraMap R A)) :
+    MonoidAlgebra R (GroupLike R A) →ₐc[R] A where
+  __ := liftGroupLikeAlgHom R A
+  map_smul' a x := show (liftGroupLikeAlgHom R A) (a • x) = _ by simp
+  counit_comp := by ext ⟨x, hx⟩; simpa using hx.counit_eq_one hinj
+  map_comp_comul := by ext ⟨x, hx⟩; simpa using hx.comul_eq_tmul_self.symm
 
 end MonoidAlgebra
