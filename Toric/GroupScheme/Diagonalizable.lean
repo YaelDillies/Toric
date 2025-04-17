@@ -134,22 +134,14 @@ variable {K : Type*} [Field K] {G : Over (Spec <| .of K)} [Grp_Class G]
 noncomputable instance : HopfAlgebra K (Γ.obj <| op G.left) := by sorry
 -- annoyingly, Lean is not able to use the instance on line 37; must find a way to fix this
 
--- This is false if we do not assume that `G` is affine.
-/-- An algebraic group `G` over a field `K` is diagonalisable iff `Γ(G)` is `K`-spanned by its
-group-like elements.
+/-- An affine group `G` over a field `K` is diagonalisable iff it is affine and `Γ(G)` is
+`K`-spanned by its group-like elements.
 
 Note that this is more generally true over arbitrary commutative rings, but we do not prove that.
 See SGA III, Exposé VIII for more info. -/
 lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
-    IsDiagonalisable G ↔
-      Submodule.span K {a : Γ.obj <| op G.left | IsGroupLikeElem K a} = ⊤ := by
-  refine ⟨fun {existsIso := ⟨A, _, h⟩} ↦ ?_, ?_⟩
-  · set e : (Γ.obj <| op G.left) ≃ₐc[K] MonoidAlgebra K A := by
-      set e := Classical.choice h
-      sorry
-  -- Here we need a "global sections" functor from R-group schemes to R-Hopf algebras.
-    exact MonoidAlgebra.span_isGroupLikeElem_of_iso e.symm
-  · sorry
+    IsDiagonalisable G ↔ IsAffine G.left ∧
+      Submodule.span K {a : Γ.obj <| op G.left | IsGroupLikeElem K a} = ⊤ := sorry
 
 end Field
 end AlgebraicGeometry.Scheme
