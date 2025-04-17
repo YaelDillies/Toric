@@ -22,6 +22,7 @@ open scoped Mon_Class MonoidalCategory
 namespace AlgebraicGeometry
 universe u
 variable {R : CommRingCat.{u}} (n : ℕ)
+-- probably want to use a f.g. abelian group rather than n
 
 attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
 
