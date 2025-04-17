@@ -262,10 +262,10 @@ variable (R A : Type*)
 variable [CommSemiring R] [Semiring A] [Bialgebra R A]
 
 /--
-The `R`-algebra map from the monoid algebra on the group-like elements of `A` to `A`.
+The `R`-algebra map from the group algebra on the group-like elements of `A` to `A`.
 -/
 @[simps!]
-noncomputable def lift_groupLike_algHom :
+noncomputable def liftGroupLikeAlgHom :
     MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
   MonoidAlgebra.lift R (GroupLike R A) A
   {
@@ -275,15 +275,15 @@ noncomputable def lift_groupLike_algHom :
   }
 
 /--
-The `R`-bialgebra map from the monoid algebra on the group-like elements of `A` to `A`.
+The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`.
 -/
 @[simps!]
-noncomputable def lift_groupLike_bialgHom (hinj : Function.Injective (algebraMap R A)) :
+noncomputable def liftGroupLikeBialgHom (hinj : Function.Injective (algebraMap R A)) :
     MonoidAlgebra R (GroupLike R A) →ₐc[R] A :=
   {
-    lift_groupLike_algHom R A with
+    liftGroupLikeAlgHom R A with
     map_smul' := fun a x ↦ by
-      change (lift_groupLike_algHom R A) (a • x) = _
+      change (liftGroupLikeAlgHom R A) (a • x) = _
       simp
     counit_comp := by
       ext x
@@ -295,7 +295,7 @@ noncomputable def lift_groupLike_bialgHom (hinj : Function.Injective (algebraMap
       ext x
       dsimp
       simp only [comul_single, CommSemiring.comul_apply, TensorProduct.map_tmul, lsingle_apply,
-        LinearMap.coe_mk, AddHom.coe_mk, lift_groupLike_algHom_apply, liftNC_single,
+        LinearMap.coe_mk, AddHom.coe_mk, liftGroupLikeAlgHom_apply, liftNC_single,
         AddMonoidHom.coe_coe, map_one, one_mul]
       exact x.2.comul_eq_tmul_self.symm
   }

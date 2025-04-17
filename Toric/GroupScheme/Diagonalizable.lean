@@ -5,9 +5,9 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel
 -/
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.Hopf.GroupLike
-import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.MonoidAlgebra
@@ -66,7 +66,7 @@ lemma isDiagonalisable_of_span_isGroupLikeElem_eq_top
      left_inv g := by simp
      right_inv a := by simp}
   refine {existsIso := ⟨GroupLike K B, inferInstance, Nonempty.intro ((BialgEquiv.ofBijective
-    (lift_groupLike_bialgHom K B (RingHom.injective _)) ⟨?_, ?_⟩).symm)⟩}
+    (liftGroupLikeBialgHom K B (RingHom.injective _)) ⟨?_, ?_⟩).symm)⟩}
   · rw [RingHom.injective_iff_ker_eq_bot, RingHom.ker_eq_bot_iff_eq_zero]
     intro x hx
     refine (linearIndependent_equiv e).mpr
