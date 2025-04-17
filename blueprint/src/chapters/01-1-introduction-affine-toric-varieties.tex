@@ -339,22 +339,6 @@
 \end{proof}
 
 
-\begin{definition}
-  \label{torActOnAlg}
-  \uses{1-1-torus}
-  % \lean{}
-  % \leanok
-
-  Torus action on semigroup algebra
-\end{definition}
-
-
-\subsection{Equivalence of Constructions}
-
-
-\begin{lemma}
-
-
 \begin{proposition}[The character lattice of the spectrum of an affine monoid algebra]
   \label{1-1-14-char-spec-aff-mon-alg}
   \uses{1-1-14-aff-tor-var-spec-aff-mon-alg, 1-1-char}
@@ -372,7 +356,23 @@
 
 
 \subsection{Equivalence of Constructions}
-  \label{lmm:1-1-16}
+  
+
+\begin{definition}
+  \label{1-1-tor-act-alg}
+  \uses{1-1-torus}
+  % \lean{}
+  % \leanok
+
+  There is a torus action on the semigroup algebra $\bbC[M]$: given $t\in T_N$ and $f\in \bbC[M]$ define
+  \[
+    t \cdot f = (p \mapsto f(t^{-1}p)).
+  \]
+\end{definition}
+
+
+\begin{lemma}
+  \label{1-1-16}
   \uses{torActOnAlg}
 \end{lemma}
 \begin{proof}
