@@ -35,9 +35,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check Toric.Mathlib only imports from Mathlib or Toric.Mathlib
-        run: python3 scripts/check_mathlib_imports.py
-
       - name: Install elan
         run: curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain leanprover/lean4:4.18.0
 
