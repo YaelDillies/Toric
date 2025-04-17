@@ -21,7 +21,7 @@ jobs:
 
       - name: Files in Toric.Mathlib can't import Toric files outside Toric.Mathlib
         run: |
-          ! (diff <(find Toric/Mathlib -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Toric.Mathlib') <(find Toric/Mathlib -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Toric'))
+          ! (find Toric/Mathlib -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Toric.(?!Mathlib)')
 
   build_project:
     runs-on: ubuntu-latest
