@@ -7,7 +7,7 @@ namespace Bialgebra
 variable (R : Type u) (A : Type v)
 variable [CommSemiring R] [Semiring A] [Bialgebra R A] [Nontrivial R]
 
-def nontrivial : Nontrivial A where
+lemma nontrivial : Nontrivial A where
   exists_pair_ne := by
     refine ⟨0, 1, fun eq ↦ ?_⟩
     apply_fun Coalgebra.counit (R := R) (A := A) at eq
