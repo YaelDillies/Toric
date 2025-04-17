@@ -149,16 +149,6 @@
   An element is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
 \end{definition}
 
-\begin{definition}[The character-cocharacter pairing]
-  \label{1-1-char-cochar-pairing}
-  \uses{1-1-char, 1-1-cochar}
-  \lean{AlgebraicGeometry.Scheme.Over.charPairing}
-  % \leanok
-
-  Character lattice and one-parameter subgroup pairing.
-\end{definition}
-
-
 \begin{proposition}[Cocharacter lattice of the torus]
   \label{1-1-cochar-torus}
   \uses{1-1-cochar}
@@ -176,6 +166,15 @@
     \mathrm{cochar}(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm, \Gm^n) = \Hom(k[\Z^n], k[\Z]) = \Hom(\Z^n, \Z) \cong \Z^n.
   \]
 \end{proof}
+
+\begin{definition}[The character-cocharacter pairing]
+  \label{1-1-char-cochar-pairing}
+  \uses{1-1-char, 1-1-cochar}
+  \lean{AlgebraicGeometry.Scheme.Over.charPairing}
+  \leanok
+
+  Character lattice and one-parameter subgroup pairing.
+\end{definition}
 
 
 \subsection{The Definition of Affine Toric Variety}
