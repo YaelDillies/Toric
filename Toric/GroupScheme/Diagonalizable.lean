@@ -9,7 +9,6 @@ open AlgebraicGeometry CategoryTheory Bialgebra Opposite
 
 universe u
 
-
 namespace AlgebraicGeometry.Scheme
 section CommRing
 variable {R : CommRingCat.{u}} {G : Over (Spec R)} [Grp_Class G] {A : Type u} [CommGroup A]

@@ -3,7 +3,7 @@ import Toric.AffineMonoid.Irreducible
 import Toric.ConvexAnalysis.PolyhedralCone
 import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
-import Toric.GroupScheme.Diagonalisable
+import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.Torus
