@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Reichert, Justus Springer
 -/
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
+import Toric.Mathlib.Analysis.Convex.Extreme
 import Mathlib.Analysis.Convex.Cone.Pointed
 import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Analysis.Convex.Exposed
@@ -104,6 +105,29 @@ lemma IsPolyhedral.top [hE : FiniteDimensional 𝕜 E] : (⊤ : PointedCone 𝕜
       apply Submodule.smul_mem _ (⟨-t, by linarith⟩ : {a : 𝕜 // 0 ≤ a})
       -- We use our auxiliary statement from above
       exact neg_mem_span_R _ hx
+
+theorem IsPolyhedral.isPolyhedral_span_of_isExtreme {c : PointedCone 𝕜 E}
+    (h : IsPolyhedral c) {s : Set E} (he : IsExtreme 𝕜 c s) :
+    IsPolyhedral (span 𝕜 s) := by
+  replace he := c.mem_span_inter_of_mem_span_of_isExtreme ?_ he
+  · obtain ⟨g, hg⟩ := isPolyhedral_iff_eq_span c |>.mp h
+    refine ⟨(((g : Set E) ∪ {0}) ∩ s).toFinite.toFinset, ?_⟩
+    apply le_antisymm
+    · rw [span_le]
+      simp only [Set.union_singleton, Set.Finite.coe_toFinset]
+      intro x hx
+      exact subset_span hx.2
+    · rw [span_le]
+      intro x hxs
+      replace he := he.2 ((g : Set E) ∪ {0}) (hg ▸ subset_span) x (hg ▸ he.1 hxs) hxs
+      simp_all
+  · intro r x hx
+    exact smul_mem_of_isExtreme he x hx r.1 r.2
+
+theorem IsPolyhedral.isPolyhedral_span_of_isExposed [TopologicalSpace 𝕜] [TopologicalSpace E]
+    {c : PointedCone 𝕜 E} (h : IsPolyhedral c) {s : Set E} (he : IsExposed 𝕜 c s) :
+    IsPolyhedral (span 𝕜 s) :=
+  h.isPolyhedral_span_of_isExtreme he.isExtreme
 
 end LinearOrderedField
 
@@ -242,245 +266,5 @@ lemma IsPolyhedral.dual [FiniteDimensional ℝ E] {c : PointedCone ℝ E} (hc : 
     exact hS.inf_dual'_singleton
 
 end NormedAddCommGroup
-
-variable {𝕜 E : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]
-  [AddCommGroup E] [Module 𝕜 E]
-
-theorem smul_mem_openSegment {a b c : 𝕜} {x : E} (hab : a < b) (hbc : b < c) :
-    b • x ∈ openSegment 𝕜 (a • x) (c • x) := by
-  have hba : b - a > 0 := by simp_all
-  have hcb : c - b > 0 := by simp_all
-  have hca : c - a > 0 := by simpa using add_pos hba hcb
-  refine ⟨(c - b) / (c - a), (b - a) / (c - a), by positivity, by positivity, ?_, ?_⟩
-  · rw [← add_div, sub_add_sub_cancel, div_self]
-    positivity
-  · simp only [smul_smul, smul_smul, ← add_smul, mul_comm, mul_div, ← add_div]
-    congr
-    rw [div_eq_iff (by positivity)]
-    ring
-
-theorem smul_mem_of_isExtreme {c : PointedCone 𝕜 E} {s : Set E} (he : IsExtreme 𝕜 c s) :
-    ∀ x ∈ s, ∀ a : 𝕜, a ≥ 0 → a • x ∈ s := by
-  intro x hxs a ha
-  by_cases hcmp : a ≤ 1
-  · by_cases a = 1 <;> (try simp_all; done)
-    refine he.2 (c.smul_mem ⟨a, ha⟩ (he.1 hxs))
-      (c.smul_mem ⟨2, by positivity⟩ (he.1 hxs)) hxs ?_ |>.1
-    simpa using smul_mem_openSegment (𝕜 := 𝕜) (E := E) (b := 1) (lt_of_le_of_ne hcmp ‹_›) (by simp)
-  · refine he.2 (c.smul_mem ⟨0, le_rfl⟩ (he.1 hxs)) (c.smul_mem ⟨a, ha⟩ (he.1 hxs)) hxs ?_ |>.2
-    simpa using smul_mem_openSegment (𝕜 := 𝕜) (E := E) (a := 0) (b := 1) (by simp) (by simp_all)
-
-theorem smul_mem_convexHull {s : Set E} (h : ∀ x ∈ s, ∀ a : 𝕜, a ≥ 0 → a • x ∈ s) :
-    ∀ x ∈ convexHull 𝕜 s, ∀ a : 𝕜, a ≥ 0 → a • x ∈ convexHull 𝕜 s := by
-  let t := { x ∈ convexHull 𝕜 s | ∀ a : 𝕜, a ≥ 0 → a • x ∈ convexHull 𝕜 s }
-  have : Convex 𝕜 t := by
-    intro x hx y hy a b ha hb hab
-    refine ⟨convex_convexHull 𝕜 s hx.1 hy.1 ha hb hab, fun c hc => ?_⟩
-    rw [smul_add, smul_smul, smul_smul, mul_comm, mul_comm (b := b), mul_smul, mul_smul]
-    refine convex_convexHull 𝕜 s ?_ ?_ ha hb hab
-    · exact hx.2 c hc
-    · exact hy.2 c hc
-  intro x hx
-  rw [mem_convexHull_iff] at hx
-  replace hx := hx t
-      (fun y hy => ⟨subset_convexHull 𝕜 s hy, fun a ha => subset_convexHull 𝕜 s (h y hy a ha)⟩) this
-  exact hx.2
-
-theorem coe_span_eq_convexHull {s : Set E} (hn : s.Nonempty)
-    (h : ∀ x ∈ s, ∀ a : 𝕜, a ≥ 0 → a • x ∈ s) :
-    span 𝕜 s = convexHull 𝕜 s := by
-  obtain ⟨x, hx⟩ := hn
-  apply subset_antisymm
-  · apply Submodule.span_induction
-    · exact subset_convexHull 𝕜 s
-    · apply subset_convexHull 𝕜 s
-      simpa using h x hx 0
-    · intro y z _ _ hy hz
-      have hy₂ := smul_mem_convexHull h y hy 2 (by positivity)
-      have hz₂ := smul_mem_convexHull h z hz 2 (by positivity)
-      simpa using convex_convexHull 𝕜 s hy₂ hz₂ (a := 1 / 2) (b := 1 / 2)
-        (by positivity) (by positivity) (by ring)
-    · intro a x _ hx
-      exact smul_mem_convexHull h x hx a.1 a.2
-  · intro y hy
-    apply mem_convexHull_iff.mp hy
-    · exact subset_span
-    · exact (span 𝕜 s).toConvexCone.convex
-
-theorem coe_span_eq_convexHull' {s : Set E} (hn : s.Nonempty) :
-    span 𝕜 s = convexHull 𝕜 { x | ∃ (r : { r : 𝕜 // 0 ≤ r }) (y : E), y ∈ s ∧ x = r • y } := by
-  let t := { x | ∃ (r : { r : 𝕜 // 0 ≤ r }) (y : E), y ∈ s ∧ x = r • y }
-  rw [← coe_span_eq_convexHull]
-  · simp only [SetLike.coe_set_eq]
-    apply le_antisymm
-    · rw [Submodule.span_le]
-      intro x hx
-      apply subset_span
-      exact ⟨⟨1, by positivity⟩, x, hx, by simp⟩
-    · rw [Submodule.span_le]
-      rintro x ⟨r, x, hx, rfl⟩
-      apply Submodule.smul_mem
-      apply subset_span hx
-  · obtain ⟨x, hx⟩ := hn
-    exact ⟨x, 1, x, hx, by simp⟩
-  · simp only [Subtype.exists, Nonneg.mk_smul]
-    rintro x ⟨r, hr, y, hy, rfl⟩
-    intro r' hr'
-    rw [smul_smul]
-    refine ⟨r' * r, by positivity, y, hy, rfl⟩
-
-theorem mem_span_iff_mem_convexHull {s : Set E} (hn : s.Nonempty) {x : E} :
-    x ∈ span 𝕜 s ↔
-      x ∈ convexHull 𝕜 { x | ∃ (r : { r : 𝕜 // 0 ≤ r }) (y : E), y ∈ s ∧ x = r • y } := by
-  rw [← coe_span_eq_convexHull' hn]
-  rfl
-
-theorem span_eq_of_isExtreme_of_convex {c : PointedCone 𝕜 E} {s : Set E} (hn : s.Nonempty)
-    (he : IsExtreme 𝕜 c s) (hc : Convex 𝕜 s) :
-    span 𝕜 s = s := by
-  apply le_antisymm
-  · apply Submodule.span_induction
-    · exact fun _ h => h
-    · obtain ⟨x, hx⟩ := hn
-      simpa using smul_mem_of_isExtreme he x hx 0
-    · intro x y hx hy hxs hys
-      have hx₂ : (2 : 𝕜) • x ∈ s := smul_mem_of_isExtreme he x hxs (a := 2) (by positivity)
-      have hy₂ : (2 : 𝕜) • y ∈ s := smul_mem_of_isExtreme he y hys (a := 2) (by positivity)
-      have := hc hx₂ hy₂ (a := 1 / 2) (b := 1 / 2) (by positivity) (by positivity) (by ring)
-      simpa [smul_smul] using this
-    · intro a y _ hys
-      exact smul_mem_of_isExtreme he y hys a.1 a.2
-  · exact Submodule.subset_span
-
-theorem span_eq_of_isExposed [TopologicalSpace 𝕜] [TopologicalSpace E] {c : PointedCone 𝕜 E}
-    {s : Set E} (hn : s.Nonempty) (he : IsExposed 𝕜 c s) :
-    span 𝕜 s = s :=
-  span_eq_of_isExtreme_of_convex hn he.isExtreme (he.convex c.toConvexCone.convex)
-
-theorem _root_.isExtreme_iff_mem_convexHull_inter_of_mem_convexHull (s t : Set E) (hc : Convex 𝕜 s) :
-    IsExtreme 𝕜 s t ↔ t ⊆ s ∧ ∀ g : Set E, g ⊆ s → ∀ x ∈ convexHull 𝕜 g, x ∈ t → x ∈ convexHull 𝕜 (g ∩ t) := by
-  constructor
-  · intro he
-    refine ⟨he.1, ?_⟩
-    intro g hgs
-    have hcgs := hc.convexHull_subset_iff.mpr hgs
-    let s' := { x ∈ convexHull 𝕜 g | x ∈ t → x ∈ convexHull 𝕜 (g ∩ t) }
-    have : Convex 𝕜 s' := by
-      intro x hx y hy a b ha hb hab
-      refine ⟨convex_convexHull 𝕜 _ hx.1 hy.1 ha hb hab, ?_⟩
-      intro ht
-      by_cases h : a > 0 ∧ b > 0
-      · have := he.2 (hcgs hx.1) (hcgs hy.1) ht ?_
-        · exact convex_convexHull 𝕜 _ (hx.2 this.1) (hy.2 this.2) ha hb hab
-        · exact ⟨a, b, h.1, h.2, hab, rfl⟩
-      · simp only [not_and_or] at h
-        cases h
-        · have : a = 0 := le_antisymm (le_of_not_gt ‹_›) ha
-          simp_all only [le_refl, zero_add, zero_smul, one_smul, gt_iff_lt, lt_self_iff_false,
-            not_false_eq_true, zero_le_one]
-          exact hy.2 ht
-        · have : b = 0 := le_antisymm (le_of_not_gt ‹_›) hb
-          simp_all only [le_refl, add_zero, one_smul, zero_smul, gt_iff_lt, lt_self_iff_false,
-            not_false_eq_true, zero_le_one]
-          exact hx.2 ht
-    intro x hx
-    rw [mem_convexHull_iff] at hx
-    specialize hx s' (by intro y hyg; exact ⟨subset_convexHull 𝕜 _ hyg, fun hyt => subset_convexHull 𝕜 _ ⟨hyg, hyt⟩⟩) this
-    exact hx.2
-  · intro h
-    constructor
-    · exact h.1
-    · rintro x hx y hy _ hzt ⟨a, b, ha, hb, hab, rfl⟩
-      replace h := h.2 {x, y} ?_ _ ?_ hzt -- _ (convex_convexHull 𝕜 {x, y} (x := x) ?_)
-      · by_cases hxt : x ∈ t
-        · by_cases hyt : y ∈ t
-          · exact ⟨hxt, hyt⟩
-          · rw [Set.insert_inter_of_mem hxt, Set.singleton_inter_eq_empty.mpr hyt] at h
-            simp at h
-            replace h : y = x := by
-              rw [← eq_sub_iff_add_eq'] at h
-              rw (occs := [1]) [← one_smul 𝕜 x] at h
-              rw [← sub_smul, ← hab, add_sub_cancel_left] at h
-              replace h := congr_arg (b⁻¹ • ·) h
-              simpa [inv_smul_smul₀ (ne_of_gt hb)] using h
-            exact ⟨hxt, h ▸ hxt⟩
-        · by_cases hyt : y ∈ t
-          · rw [Set.insert_inter_of_not_mem hxt] at h
-            replace h := convexHull_mono Set.inter_subset_left h
-            simp at h
-            replace h : x = y := by
-              rw [← eq_sub_iff_add_eq] at h
-              rw (occs := [1]) [← one_smul 𝕜 y] at h
-              rw [← sub_smul, ← hab, add_sub_cancel_right] at h
-              replace h := congr_arg (a⁻¹ • ·) h
-              simpa [inv_smul_smul₀ (ne_of_gt ha)] using h
-            exact ⟨h ▸ hyt, hyt⟩
-          · rw [Set.insert_inter_of_not_mem hxt, Set.singleton_inter_eq_empty.mpr hyt] at h
-            simp at h
-      · rintro a (hax | hay)
-        · exact hax ▸ hx
-        · exact hay ▸ hy
-      · exact convex_convexHull 𝕜 {x, y}
-          (subset_convexHull 𝕜 _ (by simp)) (subset_convexHull 𝕜 _ (by simp))
-          (a := a) (by positivity) (b := b) (by positivity) hab
-
-theorem _root_.PointedCone.mem_span_inter_of_mem_span_of_isExtreme (c : PointedCone 𝕜 E)
-    (t : Set E) (h : ∀ r : { r : 𝕜 // 0 ≤ r }, ∀ x ∈ t, r • x ∈ t) (he : IsExtreme 𝕜 c t) :
-    t ⊆ c ∧ ∀ g : Set E, g ⊆ c → ∀ x ∈ span 𝕜 g, x ∈ t → x ∈ span 𝕜 (g ∩ t) := by
-  have := smul_mem_of_isExtreme he
-  simp only [isExtreme_iff_mem_convexHull_inter_of_mem_convexHull c t c.toConvexCone.convex] at he
-  refine ⟨he.1, ?_⟩
-  intro g hgc x hxg hxt
-  by_cases hg : g.Nonempty
-  · rw [mem_span_iff_mem_convexHull hg] at hxg
-    let g' := { x : E | ∃ r : { r : 𝕜 // 0 ≤ r }, ∃ y ∈ g, x = r • y }
-    replace he' := he.2 g' ?_ x hxg hxt
-    · have : g' ∩ t ⊆ { x : E | x = 0 ∨ ∃ r : { r : 𝕜 // 0 ≤ r }, ∃ y ∈ g ∩ t, x = r • y } := by
-        rintro _ ⟨⟨r, y, hyg, rfl⟩, hxt⟩
-        by_cases hr : r = 0
-        · simp_all
-        · refine Or.inr ⟨r, y, ⟨hyg, ?_⟩, rfl⟩
-          specialize h (1 / r) _ hxt
-          obtain ⟨r, hr⟩ := r
-          simp at h
-          rwa [inv_smul_smul₀] at h
-          intro h
-          apply hr
-          ext
-          exact h
-      replace he' := convexHull_mono this he'
-      by_cases h' : (g ∩ t).Nonempty
-      · rw [mem_span_iff_mem_convexHull h']
-        convert he'
-        simp only [Set.mem_inter_iff, Subtype.exists, Nonneg.mk_smul, exists_prop, iff_or_self]
-        intro h
-        obtain ⟨y, ⟨hyg, hyt⟩⟩ := h'
-        exact ⟨0, le_rfl, y, ⟨hyg, hyt⟩, by simp [h]⟩
-      · simp only [Set.not_nonempty_iff_eq_empty] at h'
-        simp [h'] at he'
-        simpa [h'] using he'
-    · rintro _ ⟨r, y, hyg, rfl⟩
-      apply Submodule.smul_mem
-      exact hgc hyg
-  · simp only [Set.not_nonempty_iff_eq_empty] at hg
-    simp_all
-
-theorem IsPolyhedral.span_eq_of_isExtreme (c : PointedCone 𝕜 E) (h : IsPolyhedral c) {s : Set E}
-    (he : IsExtreme 𝕜 c s) :
-    IsPolyhedral (span 𝕜 s) := by
-  replace he := c.mem_span_inter_of_mem_span_of_isExtreme s ?_ he
-  · obtain ⟨g, hg⟩ := isPolyhedral_iff_eq_span c |>.mp h
-    refine ⟨(((g : Set E) ∪ {0}) ∩ s).toFinite.toFinset, ?_⟩
-    apply le_antisymm
-    · rw [span_le]
-      simp only [Set.union_singleton, Set.Finite.coe_toFinset]
-      intro x hx
-      exact subset_span hx.2
-    · rw [span_le]
-      intro x hxs
-      replace he := he.2 ((g : Set E) ∪ {0}) (hg ▸ subset_span) x (hg ▸ he.1 hxs) hxs
-      simp_all
-  · intro r x hx
-    exact smul_mem_of_isExtreme he x hx r.1 r.2
 
 end PointedCone
