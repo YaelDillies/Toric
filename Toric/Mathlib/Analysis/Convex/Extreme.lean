@@ -25,18 +25,18 @@ private theorem isExtreme_iff_mem_convexHull_inter_of_mem_convexHull.aux {x y z 
 theorem isExtreme_iff_mem_convexHull_inter_of_mem_convexHull (s t : Set E) (hc : Convex 𝕜 s) :
     IsExtreme 𝕜 s t ↔
       t ⊆ s ∧ ∀ g : Set E, g ⊆ s → ∀ x ∈ convexHull 𝕜 g, x ∈ t → x ∈ convexHull 𝕜 (g ∩ t) := by
-  constructor
+  apply Iff.intro
   · intro he
-    refine ⟨he.1, ?_⟩
-    intro g hgs
-    have hcgs := hc.convexHull_subset_iff.mpr hgs
+    refine ⟨he.1, fun g hgs => ?_⟩
+    -- Induct over the convex hull of g using the good set principle
     let s' := { x ∈ convexHull 𝕜 g | x ∈ t → x ∈ convexHull 𝕜 (g ∩ t) }
     have hcs' : Convex 𝕜 s' := by
       intro x hx y hy a b ha hb hab
       refine ⟨convex_convexHull 𝕜 _ hx.1 hy.1 ha hb hab, ?_⟩
       intro ht
       by_cases h : a > 0 ∧ b > 0
-      · have := he.2 (hcgs hx.1) (hcgs hy.1) ht ?_
+      · have hcgs := hc.convexHull_subset_iff.mpr hgs
+        have := he.2 (hcgs hx.1) (hcgs hy.1) ht ?_
         · exact convex_convexHull 𝕜 _ (hx.2 this.1) (hy.2 this.2) ha hb hab
         · exact ⟨a, b, h.1, h.2, hab, rfl⟩
       · simp only [not_and_or] at h
@@ -54,19 +54,19 @@ theorem isExtreme_iff_mem_convexHull_inter_of_mem_convexHull (s t : Set E) (hc :
     refine hx s' ?_ hcs' |>.2
     exact fun y hyg => ⟨subset_convexHull 𝕜 _ hyg, fun hyt => subset_convexHull 𝕜 _ ⟨hyg, hyt⟩⟩
   · intro h
-    constructor
-    · exact h.1
-    · rintro x hx y hy _ hzt hs
-      replace h := h.2 {x, y} ?_ _ ?_ hzt
-      · let hxt : x ∈ t := isExtreme_iff_mem_convexHull_inter_of_mem_convexHull.aux hzt hs h
-        rw [Set.singleton_def, Set.insert_comm, ← Set.singleton_def] at h
-        rw [openSegment_symm] at hs
-        let hyt : y ∈ t := isExtreme_iff_mem_convexHull_inter_of_mem_convexHull.aux hzt hs h
-        exact ⟨hxt, hyt⟩
-      · rintro a (hax | hay)
-        · exact hax ▸ hx
-        · exact hay ▸ hy
-      · obtain ⟨a, b, ha, hb, hab, rfl⟩ := hs
-        exact convex_convexHull 𝕜 {x, y}
-          (subset_convexHull 𝕜 _ (by simp)) (subset_convexHull 𝕜 _ (by simp))
-          (a := a) (by positivity) (b := b) (by positivity) hab
+    -- Prove the left-hand side by applying the right-hand side to {x, y}
+    refine ⟨h.1, ?_⟩
+    rintro x hx y hy _ hzt hs
+    replace h := h.2 {x, y} ?_ _ ?_ hzt
+    · let hxt : x ∈ t := isExtreme_iff_mem_convexHull_inter_of_mem_convexHull.aux hzt hs h
+      rw [Set.singleton_def, Set.insert_comm, ← Set.singleton_def] at h
+      rw [openSegment_symm] at hs
+      let hyt : y ∈ t := isExtreme_iff_mem_convexHull_inter_of_mem_convexHull.aux hzt hs h
+      exact ⟨hxt, hyt⟩
+    · rintro a (hax | hay)
+      · exact hax ▸ hx
+      · exact hay ▸ hy
+    · obtain ⟨a, b, ha, hb, hab, rfl⟩ := hs
+      exact convex_convexHull 𝕜 {x, y}
+        (subset_convexHull 𝕜 _ (by simp)) (subset_convexHull 𝕜 _ (by simp))
+        (a := a) (by positivity) (b := b) (by positivity) hab
