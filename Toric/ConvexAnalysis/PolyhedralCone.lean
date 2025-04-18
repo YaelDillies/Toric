@@ -121,10 +121,21 @@ theorem IsPolyhedral.isPolyhedral_span_of_isExtreme {c : PointedCone 𝕜 E}
   · intro r x hx
     exact smul_mem_of_isExtreme he x hx r.1 r.2
 
+theorem IsPolyhedral.isPolyhedral_of_isExtreme {c d : PointedCone 𝕜 E}
+    (h : IsPolyhedral c) (he : IsExtreme 𝕜 c (d : Set E)) :
+    IsPolyhedral d := by
+  rw [← Submodule.span_eq (p := d)]
+  exact h.isPolyhedral_span_of_isExtreme he
+
 theorem IsPolyhedral.isPolyhedral_span_of_isExposed [TopologicalSpace 𝕜] [TopologicalSpace E]
     {c : PointedCone 𝕜 E} (h : IsPolyhedral c) {s : Set E} (he : IsExposed 𝕜 c s) :
     IsPolyhedral (span 𝕜 s) :=
   h.isPolyhedral_span_of_isExtreme he.isExtreme
+
+theorem IsPolyhedral.isPolyhedral_of_isExposed [TopologicalSpace 𝕜] [TopologicalSpace E]
+    {c d : PointedCone 𝕜 E} (h : IsPolyhedral c) (he : IsExposed 𝕜 c (d : Set E)) :
+    IsPolyhedral d :=
+  h.isPolyhedral_of_isExtreme he.isExtreme
 
 end LinearOrderedField
 
