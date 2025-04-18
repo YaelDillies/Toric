@@ -3,9 +3,9 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 
 /-!
 # The lattices of characters and cocharacters
