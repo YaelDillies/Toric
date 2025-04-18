@@ -10,6 +10,7 @@ import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.CategoryTheory.Adjunction.Opposites
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
+import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
@@ -149,7 +150,6 @@ end
 
 section Scheme
 variable {S : Scheme} {G : Over S} [Grp_Class G]
-    {A : Type} [CommGroup A]
 
 variable (G) in
 @[mk_iff]
@@ -160,15 +160,32 @@ class IsDiagonalisable : Prop where
     Over.pullback (terminal.from _)).mapGrp.obj
       (.mk' (DiagInt A))
 
+lemma IsDiagonalisable.ofIso {H : Over S} [Grp_Class H] [IsDiagonalisable H]
+    (e : Grp_.mk' G ≅ Grp_.mk' H) : IsDiagonalisable G := by
+  obtain ⟨A, _, ⟨e'⟩⟩ := ‹IsDiagonalisable H›
+  exact ⟨A, _, ⟨e.trans e'⟩⟩
+
 end Scheme
 
 section CommRing
 variable {R : CommRingCat.{u}} {A : Type u} [CommGroup A]
 
+def specCommGrpAlgebraCongPullbackDiagInt :
+    ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A) ≅
+    ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
+    Over.pullback (terminal.from _)).mapGrp.obj
+      (.mk' (DiagInt A)) := sorry
+
+instance :
+    IsDiagonalisable ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A).X :=
+  ⟨⟨A, _, Nonempty.intro specCommGrpAlgebraCongPullbackDiagInt⟩⟩
+
 instance :
     IsDiagonalisable ((hopfSpec R).obj <| Grp_.mk' <| Opposite.op <|
       CommAlg.of R (MonoidAlgebra R A)).X :=
-  ⟨⟨A, sorry, sorry⟩⟩
+  IsDiagonalisable.ofIso
+    (H := ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A).X)
+    (Iso.refl _)
 
 end CommRing
 
