@@ -4,10 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Reichert, Justus Springer
 -/
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
-import Toric.Mathlib.Analysis.Convex.Extreme
-import Mathlib.Analysis.Convex.Cone.Pointed
-import Mathlib.Analysis.Convex.Extreme
-import Mathlib.Analysis.Convex.Exposed
 
 /-!
 # Pointed cone hull and polyhedral cones
@@ -31,6 +27,7 @@ theorem span_le (c : PointedCone R E) {s : Set E} :
 def IsPolyhedral (c : PointedCone R E) : Prop := ∃ t : Finset E, PointedCone.span R t = c
 
 protected lemma IsPolyhedral.span (h : s.Finite) : (span R s).IsPolyhedral := ⟨h.toFinset, by simp⟩
+
 def isPolyhedral_iff_eq_span (c : PointedCone R E) :
     c.IsPolyhedral ↔ ∃ t : Finset E, c = PointedCone.span R (t ∪ {0}) := by
   apply Iff.intro
@@ -109,7 +106,7 @@ lemma IsPolyhedral.top [hE : FiniteDimensional 𝕜 E] : (⊤ : PointedCone 𝕜
 theorem IsPolyhedral.isPolyhedral_span_of_isExtreme {c : PointedCone 𝕜 E}
     (h : IsPolyhedral c) {s : Set E} (he : IsExtreme 𝕜 c s) :
     IsPolyhedral (span 𝕜 s) := by
-  replace he := c.mem_span_inter_of_mem_span_of_isExtreme ?_ he
+  replace he' := c.mem_span_inter_of_mem_span_of_isExtreme ?_ he
   · obtain ⟨g, hg⟩ := isPolyhedral_iff_eq_span c |>.mp h
     refine ⟨(((g : Set E) ∪ {0}) ∩ s).toFinite.toFinset, ?_⟩
     apply le_antisymm
@@ -119,7 +116,7 @@ theorem IsPolyhedral.isPolyhedral_span_of_isExtreme {c : PointedCone 𝕜 E}
       exact subset_span hx.2
     · rw [span_le]
       intro x hxs
-      replace he := he.2 ((g : Set E) ∪ {0}) (hg ▸ subset_span) x (hg ▸ he.1 hxs) hxs
+      replace he := he' ((g : Set E) ∪ {0}) (hg ▸ subset_span) x (hg ▸ he.1 hxs) hxs
       simp_all
   · intro r x hx
     exact smul_mem_of_isExtreme he x hx r.1 r.2
@@ -266,5 +263,4 @@ lemma IsPolyhedral.dual [FiniteDimensional ℝ E] {c : PointedCone ℝ E} (hc : 
     exact hS.inf_dual'_singleton
 
 end NormedAddCommGroup
-
 end PointedCone

@@ -1,5 +1,4 @@
 import Mathlib.Analysis.Convex.Exposed
-import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.Analysis.Convex.Extreme
 import Toric.Mathlib.Analysis.Convex.Hull
@@ -219,10 +218,9 @@ theorem smul_mem_of_isExtreme {c : PointedCone 𝕜 E} {s : Set E} (he : IsExtre
 
 theorem mem_span_inter_of_mem_span_of_isExtreme (c : PointedCone 𝕜 E)
     {t : Set E} (h : ∀ r : { r : 𝕜 // 0 ≤ r }, ∀ x ∈ t, r • x ∈ t) (he : IsExtreme 𝕜 c t) :
-    t ⊆ c ∧ ∀ g : Set E, g ⊆ c → ∀ x ∈ span 𝕜 g, x ∈ t → x ∈ span 𝕜 (g ∩ t) := by
+    ∀ g : Set E, g ⊆ c → ∀ x ∈ span 𝕜 g, x ∈ t → x ∈ span 𝕜 (g ∩ t) := by
   have := smul_mem_of_isExtreme he
   simp only [isExtreme_iff_mem_convexHull_inter_of_mem_convexHull c t c.toConvexCone.convex] at he
-  refine ⟨he.1, ?_⟩
   intro g hgc x hxg hxt
   by_cases hg : g.Nonempty
   · rw [mem_span_iff_mem_convexHull hg] at hxg
