@@ -13,6 +13,7 @@ import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.MvLaurentPolynomial
+import Toric.GroupScheme.Diagonalizable
 
 /-!
 # The standard algebraic torus
@@ -27,22 +28,6 @@ open CategoryTheory Opposite Limits
 namespace AlgebraicGeometry.Scheme
 
 attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
-
-def DiagInt (M : Type*) [CommMonoid M] : Scheme := Spec (.of (MonoidAlgebra (ULift ℤ) M))
-
-def DiagInt.representableBy (M : Type*) [CommMonoid M] :
-    (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-      CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget _).RepresentableBy
-      (DiagInt M) :=
-  letI e : opOp CommMonCat ⋙ yoneda.obj (op (.of M)) ≅ CommMonCat.coyoneda.obj _ ⋙ forget _ :=
-    Coyoneda.opIso.app (op _) ≪≫ CommMonCat.coyonedaForget.symm.app (op (.of M))
-  letI e' := isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat) e
-  ((ΓSpec.adjunction.comp (CommRingCat.forget₂Adj CommRingCat.isInitial).op).representableBy
-    (op (.of M))).ofIso e'
-
-instance (M : Type*) [CommMonoid M] : Mon_Class (DiagInt M) :=
-  Mon_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-    CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget₂ _ _) (DiagInt.representableBy M)
 
 def TorusInt (σ : Type*) : Scheme := DiagInt (Multiplicative (FreeAbelianGroup σ))
 
