@@ -37,7 +37,7 @@ noncomputable instance instToricVariety :
   __ := instMod_Class
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap R R[S]
   torusEmb := sorry
-    -- (splitTorusIsoSpecOver _ _).hom ≫ (Over.homMk
+    -- (torusIsoSpecOver _ _).hom ≫ (Over.homMk
     -- (Spec.map (CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S))) <| by
     -- change Spec.map _ ≫ Spec.map _ = Spec.map _
     -- simp [← Spec.map_comp, ← CommRingCat.ofHom_comp]
