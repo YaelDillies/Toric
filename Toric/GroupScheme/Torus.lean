@@ -29,7 +29,7 @@ namespace AlgebraicGeometry.Scheme
 
 attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
 
-def TorusInt (σ : Type*) : Scheme := DiagInt (Multiplicative (FreeAbelianGroup σ))
+def TorusInt (σ : Type*) : Scheme := (DiagInt (Multiplicative (FreeAbelianGroup σ))).X
 
 def TorusInt.representableBy (σ : Type*) :
     (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
