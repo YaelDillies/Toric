@@ -36,6 +36,19 @@ lemma mapDomainBialgHom_mapDomainBialgHom (f : N →* O) (g : M →* N) (x : Mon
 lemma mapDomainBialgHom_comp (f : N →* O) (g : M →* N) : mapDomainBialgHom R (f.comp g) =
     (mapDomainBialgHom R f).comp (mapDomainBialgHom R g) := by ext; simp
 
+variable (R G) in
+noncomputable def bialgEquivOfSubsingleton
+    [Group G] [Subsingleton G] : MonoidAlgebra R G ≃ₐc[R] R where
+  __ := Bialgebra.counitBialgHom R (MonoidAlgebra R G)
+  invFun := algebraMap _ _
+  left_inv r := by
+    show (Algebra.ofId _ _).comp (Bialgebra.counitAlgHom R _) r = AlgHom.id R _ r
+    congr 1
+    ext g : 2
+    obtain rfl := Subsingleton.elim g 1
+    simp [MonoidAlgebra.one_def]
+  right_inv := (Bialgebra.counitAlgHom R (MonoidAlgebra R G)).commutes
+
 end MonoidAlgebra
 
 namespace AddMonoidAlgebra
@@ -44,7 +57,7 @@ variable [CommSemiring R] [Semiring A] [Bialgebra R A] [AddMonoid M] [AddMonoid 
 variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
 @[simps!]
-def domCongrBialgHom (e : M ≃+ N) : A[M] ≃ₐc[R] A[N] := 
+def domCongrBialgHom (e : M ≃+ N) : A[M] ≃ₐc[R] A[N] :=
   .ofAlgEquiv (domCongr R A e) sorry sorry
 
 -- TODO: Generalise to `A[M] →ₐc[R] A[N]` under `Bialgebra R A`
