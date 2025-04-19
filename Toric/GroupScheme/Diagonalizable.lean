@@ -130,21 +130,9 @@ instance (M : Type*) [CommMonoid M] : Mon_Class (MonInt M) :=
   Mon_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
     CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget₂ _ _) (MonInt.representableBy M)
 
-def DiagInt (A : Type*) [CommGroup A] : Scheme := MonInt A
-
-def DiagInt.representableBy (A : Type*) [CommGroup A] :
-    (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
-    CommGrp.coyoneda.obj (op (.of A)) ⋙ forget _).RepresentableBy
-    (DiagInt A) :=
-  letI e : opOp CommGrp ⋙ yoneda.obj (op (.of A)) ≅ CommGrp.coyoneda.obj _ ⋙ forget _ :=
-    Coyoneda.opIso.app (op _) ≪≫ CommGrp.coyonedaForget.symm.app (op (.of A))
-  letI e' := isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units) e
-  ((ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
-      CommGrp.forget₂CommMonAdj.op).representableBy (op (.of A))).ofIso e'
-
-instance (A : Type*) [CommGroup A] : CommGrp_Class (DiagInt A) :=
-  CommGrp_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
-    CommGrp.coyoneda.obj (op (.of A))) (DiagInt.representableBy A)
+def DiagInt (A : Type u) [CommGroup A] : Grp_ Scheme.{u} :=
+  (Over.equivalenceOfIsTerminal specULiftZIsTerminal).functor.mapGrp.obj
+  ((specCommGrpAlgebra (.of (ULift.{u} ℤ))).obj (Opposite.op (.of A)))
 
 end
 
@@ -158,7 +146,7 @@ class IsDiagonalisable : Prop where
       Nonempty <| Grp_.mk' G ≅
       ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
     Over.pullback (terminal.from _)).mapGrp.obj
-      (.mk' (DiagInt A))
+      (DiagInt A)
 
 lemma IsDiagonalisable.ofIso {H : Over S} [Grp_Class H] [IsDiagonalisable H]
     (e : Grp_.mk' G ≅ Grp_.mk' H) : IsDiagonalisable G := by
@@ -174,7 +162,7 @@ def specCommGrpAlgebraCongPullbackDiagInt :
     ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A) ≅
     ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
     Over.pullback (terminal.from _)).mapGrp.obj
-      (.mk' (DiagInt A)) := sorry
+      (DiagInt A) := sorry
 
 instance :
     IsDiagonalisable ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A).X :=
