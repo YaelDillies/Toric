@@ -13,6 +13,30 @@
   An element $a$ of a bi-algebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
 \end{definition}
 
+\begin{lemma}[The image of a group-like element by the counit is $1$]
+  \label{0-grp-like-counit}
+  \uses{0-grp-like}
+  \lean{Bialgebra.IsGroupLikeElem.counit_eq_one}
+  \leanok
+
+  If $A$ is a bialgebra, then the counit of $A$ sends every group-like element of
+  $A$ to $1$.
+
+\end{lemma}
+
+\begin{proof}
+  \uses{}
+  \leanok 
+  
+  Let $\Delta$ be the comultiplication map and $\epsilon$ be the counit map.
+  Let $a$ be a group-like element of $A$. 
+  Using the coalgebra axioms and the fact that $\Delta(x) = x\otimes x$, we get:
+  \[x \otimes 1 = (\mathbf{1}_A\otimes\epsilon)(\Delta(x))= x \otimes\epsilon(x).\]
+  As $x$ is invertible, this implies that $1\otimes 1 = 1\otimes\epsilon(x)$ in
+  $R\otimes_R A$. But the algebra map from $R$ to $A$ is injective because $A$
+  is a bialgebra (hence the counit is a left inverse of this map), so $1=\epsilon(x)$.
+
+\end{proof}
 
 \begin{proposition}[Group-like elements form a group]
   \label{0-grp-like-grp}
@@ -49,6 +73,43 @@
   so $f(a)$ is group-like.
 \end{proof}
 
+\begin{lemma}
+  \label{0-grp-like-grp-alg-of}
+  \uses{0-grp-like}
+  \lean{MonoidAlgebra.isGroupLikeElem_of}
+  \leanok 
+
+  If $R$ is a commutative semiring, $A$ is a Hopf algebra over $R$ and 
+  $G$ is a group, then every element of the image of $G$ in $A[G]$ is group-like.
+
+\end{lemma}
+
+\begin{proof}
+  \leanok 
+
+  This is an easy check.
+
+\end{proof}
+
+\begin{lemma}
+  \label{0-grp-like-grp-alg-span}
+  \uses{0-grp-like}
+  \lean{MonoidAlgebra.span_isGroupLikeElem}
+  \leanok 
+
+  If $R$ is a commutative semiring, $A$ is a Hopf algebra over $R$ and 
+  $G$ is a group, then the group-like elements in $A[G]$ span $A[G]$ as
+  an $A$-module.
+
+\end{lemma}
+
+\begin{proof}
+  \uses{0-grp-like-grp-alg-of}
+  \leanok 
+
+  This follows immediately from \ref{0-grp-like-grp-alg-of}.
+
+\end{proof}
 
 \begin{lemma}[Independence of group-like elements]
   \label{0-grp-like-lin-indep}
@@ -56,7 +117,7 @@
   \lean{Coalgebra.linearIndepOn_isGroupLikeElem}
   \leanok
 
-  The group-like elements in $A$ are linearly independent.
+  The group-like elements in a bialgebra $A$ over a field are linearly independent.
 \end{lemma}
 \begin{proof}
   \uses{0-tensor-lin-indep}
@@ -72,6 +133,7 @@
   \lean{MonoidAlgebra.isGroupLikeElem_iff_mem_range_of}
   \leanok
 
+  Let $k$ be a field.
   The group-like elements of $k[M]$ are exactly the image of $M$.
 \end{lemma}
 \begin{proof}
@@ -80,6 +142,104 @@
 
   See Lemma 12.4 in \cite{Milne_2017}.
 \end{proof}
+
+
+\subsection{Diagonalizable bialgebras}
+
+\begin{definition}[Diagonalizable bialgebras]
+  \label{0-diag-bialg}
+  \uses{}
+  \lean{Bialgebra.IsDiagonalisable}
+  \leanok
+
+  A bialgebra is called diagonalizable if it is isomorphic to a group algebra.
+\end{definition}
+
+\begin{lemma}
+  \label{0-diag-bialg-group-like-span}
+  \uses{0-diag-bialg}
+  \uses{0-grp-like}
+  \lean{Bialgebra.span_isGroupLikeElem_eq_top_of_isDiagonalisable}
+  \leanok 
+
+  A diagonalizable bialgebra is spanned by its group-like elements.
+
+\end{lemma}
+
+\begin{proof}
+  \uses{0-grp-like-grp-alg-span} 
+  \leanok
+
+  This is true for a group algebra by \ref{0-grp-like-grp-alg-span}, and the
+  property of being spanned by its group-like elements is preserves by
+  isomorphisms of bialgebras.
+
+\end{proof}
+
+\begin{proposition}
+  \label{0-bialg-bij-of-span-group-like}
+  \uses{0-diag-bialg}
+  \uses{0-grp-like-grp}
+  \lean{Bialgebra.liftGroupLikeBialgHom_bijective_of_span_isGroupLikeElem_eq_top}
+  \leanok 
+
+  Let $A$ be a bialgebra over a field $k$, and let $G$ be the set of group-like
+  elements of $A$ (which is a group by \ref{0-grp-like-grp}). If $A$ is generated 
+  by $G$, then the unique bialgebra morphism from $k[G]$ to $A$ sending each
+  element of $G$ to iself is bijective.
+
+\end{proposition}
+
+\begin{proof}
+  \uses{0-grp-like-lin-indep}
+  \leanok   
+
+  This morphism is injective by the linear independence of group-like elements
+  (\ref{0-grp-like-lin-indep}), and surjective because the group-like elements
+  of $A$ span $A$ by assumption.
+
+\end{proof}
+  
+\begin{corollary}
+  \label{0-bialg-diag-of-span-group-like}
+  \uses{0-diag-bialg}
+  \uses{0-grp-like}
+  \lean{Bialgebra.isDiagonalisable.iff_span_isGroupLikeElem_eq_top}
+  \leanok 
+
+  A bialgebra over a field is diagonalizable if and only if it is spanned by its
+  group-like elements.
+
+\end{corollary}
+
+\begin{proof}
+  \uses{0-diag-bialg-group-like-span}
+  \uses{0-bialg-bij-of-span-group-like}
+  \leanok 
+
+  We know that a diagonalizable bialgebra is spanned by its group-like elements
+  by \ref{0-diag-bialg-group-like-span}, and that a bialgebra over a field
+  that is spanned by its group-like elements is diagonalizable by 
+  \ref{0-bialg-bij-of-span-group-like} (and by the fact that a bijective morphism
+  of bialgebras is an isomorphism).
+
+\end{proof}
+
+  Proposition \ref{0-bialg-bij-of-span-group-like} and Corollary
+  \ref{0-diag-iff-grp-like-span} are false over a general
+  commutative ring. Indeed, let $R$ be a commutative ring and let $G$ be a group.
+  Then the group-like elements of $R[G]$ correspond to locally constant maps
+   from $Spec(R)$ to $G$ (with the discrete topology), hence they are of the
+  form $e_1 g_1+\cdots+e_r g_r$, with the $g_i$ in $G$ and $e_1,\ldots,e_r$ 
+  a family of pairwise orthogonal idempotent elements of $R$ that sum to $1$.
+  So $R[G]$ is not isomorphic to the group algebra over its group-like elements
+  unless $Spec(R)$ is connected. As for the corollary, a bialgebra of the form
+  $R_1[G_1]\times\cdots\times R_n[G_n]$, seen as a bialgebra over
+  $R_1\times\cdots\times R_n$, is generated by its group-like elements but not
+  diagonalizable.
+
+  It is likely that both results are still true if the base ring has a connected
+  spectrum.
 
 
 \subsection{The group algebra functor}
