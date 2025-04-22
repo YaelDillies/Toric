@@ -3,6 +3,7 @@ Copyright (c) 2025 Patrick Luo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Luo
 -/
+import Mathlib.RingTheory.Bialgebra.Basic
 import Toric.AffineMonoid.Embedding
 import Toric.ToricVariety.Defs
 
@@ -22,15 +23,24 @@ noncomputable abbrev AffineToricVarietyFromMonoid : Over <| Spec R :=
 
 namespace AffineToricVarietyFromMonoid
 
+instance instToricVariety :
+    Mod_Class 𝔾ₘ[R, ULift <| Fin <| dim S] (.mk (Spec (.of R[S]) ↘ Spec R)) where
+
 noncomputable instance instToricVariety :
-    ToricVariety (dim S) (AffineToricVarietyFromMonoid R S) where
-  torusEmb := (splitTorusIsoSpecOver _ _).hom ≫ (Over.homMk
-    (Spec.map (CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S))) <| by
-    change Spec.map _ ≫ Spec.map _ = Spec.map _
-    simp [← Spec.map_comp, ← CommRingCat.ofHom_comp]
-    congr! 2
-    ext
-    simp)
+    ToricVariety R (ULift <| Fin <| dim S) (Spec <| .of R[S]) where
+  hom := Spec.map <| CommRingCat.ofHom <| algebraMap R R[S]
+  smul := sorry
+    -- (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
+    -- (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)
+    --   (.id _ _)).toRingHom (Bialgebra.comulAlgHom R _).toRingHom)
+  torusEmb := sorry
+    -- (splitTorusIsoSpecOver _ _).hom ≫ (Over.homMk
+    -- (Spec.map (CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S))) <| by
+    -- change Spec.map _ ≫ Spec.map _ = Spec.map _
+    -- simp [← Spec.map_comp, ← CommRingCat.ofHom_comp]
+    -- congr! 2
+    -- ext
+    -- simp)
   isOpenImmersion_torusEmb := by
     stop
     obtain ⟨s, hsgen⟩ := AddMonoid.FG.fg_top (N := S)
@@ -46,11 +56,6 @@ noncomputable instance instToricVariety :
     have img_domain := Subring.instIsDomainSubtypeMem img
     have := (AlgebraicGeometry.affine_isIntegral_iff (CommRingCat.of (AddMonoidAlgebra R S)))
     sorry
-  torusAct :=
-    sorry
-    -- (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
-    -- (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)
-    --   (.id _ _)).toRingHom (Bialgebra.comulAlgHom R _).toRingHom)
   torusMul_comp_torusEmb := by
     stop
     simp [← Spec.map_comp, ← CommRingCat.ofHom_comp, pullback.condition]

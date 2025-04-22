@@ -98,20 +98,16 @@ def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
           CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
 
-/-- The split torus of dimension `n` over `Spec R`. -/
-notation "𝔾ₘ[" R ", " n "]" => Over.mk (SplitTorus (Spec R) (ULift <| Fin n) ↘ Spec R)
+/-- The split torus of dimension `σ` over `Spec R`. -/
+notation "𝔾ₘ[" R ", " σ "]" => Over.mk (SplitTorus (Spec R) σ ↘ Spec R)
 
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
     SplitTorus (Spec R) σ ≅ Spec (.of <| MvLaurentPolynomial σ R) := sorry
 
 /-- The split torus of dimension `n` over `Spec R` is isomorphic to `Spec R[ℤⁿ]`. -/
-def splitTorusIsoSpecOver (R : CommRingCat) (n : ℕ) :
-    𝔾ₘ[R, n] ≅
-      .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R (MvLaurentPolynomial (Fin n) R) :=
-  Over.isoMk
-    ((splitTorusIsoSpec _ _).trans <| Scheme.Spec.mapIso <| .op <| RingEquiv.toCommRingCatIso <|
-      (AddMonoidAlgebra.domCongr R _ <| FreeAbelianGroup.equivOfEquiv Equiv.ulift.symm).toRingEquiv)
-    sorry
+def splitTorusIsoSpecOver (R : CommRingCat) (σ : Type*) :
+    𝔾ₘ[R, σ] ≅ .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R (MvLaurentPolynomial σ R) :=
+  Over.isoMk (splitTorusIsoSpec _ _) sorry
 
 end AlgebraicGeometry.Scheme
