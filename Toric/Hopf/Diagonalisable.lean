@@ -57,7 +57,7 @@ to the group algebra on its group-like elements.
 lemma liftGroupLikeBialgHom_bijective_of_span_isGroupLikeElem_eq_top
     (h : Submodule.span K {a : A | IsGroupLikeElem K a} = ⊤) :
     Function.Bijective (liftGroupLikeBialgHom K A) := by
-  have : Nontrivial A := Bialgebra.nontrivial K A
+  have : Nontrivial A := Bialgebra.nontrivial K
   set e : GroupLike K A ≃ {a : A | IsGroupLikeElem K a} :=
     {toFun g := ⟨g.1, g.2⟩
      invFun a := ⟨a.2.isUnit.unit, a.2⟩

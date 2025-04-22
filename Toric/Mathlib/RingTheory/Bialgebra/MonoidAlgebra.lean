@@ -1,4 +1,6 @@
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
+import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 
 open Coalgebra
@@ -12,7 +14,7 @@ variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
 @[simps!]
 def domCongrBialgHom (e : M ≃* N) : MonoidAlgebra A M ≃ₐc[R] MonoidAlgebra A N :=
-  .ofAlgEquiv (domCongr R A e) sorry sorry
+  .ofAlgEquiv (domCongr R A e) (by ext; simp) (by ext; simp [TensorProduct.map_map])
 
 -- TODO: Generalise to `MonoidAlgebra A M →ₐc[R] MonoidAlgebra A N` under `Bialgebra R A`
 variable (R) in
@@ -58,7 +60,7 @@ variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
 @[simps!]
 def domCongrBialgHom (e : M ≃+ N) : A[M] ≃ₐc[R] A[N] :=
-  .ofAlgEquiv (domCongr R A e) sorry sorry
+  .ofAlgEquiv (domCongr R A e) (by ext; simp) (by ext; simp [TensorProduct.map_map])
 
 -- TODO: Generalise to `A[M] →ₐc[R] A[N]` under `Bialgebra R A`
 variable (R) in

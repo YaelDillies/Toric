@@ -29,7 +29,7 @@ noncomputable def ofBialgHom (f :  A →ₐc[R] B) (hf : Bijective f) :  A ≃�
   right_inv := Function.rightInverse_surjInv _
   map_mul' := f.map_mul'
 
-/-- Promotes a bijective coalgebra homomorphism to a coalgebra equivalence. -/
+/-- Construct a coalgebra equivalence from a bijective coalgebra homomorphism. -/
 noncomputable def ofBijective (f : A →ₐc[R] B) (hf : Function.Bijective f) : A ≃ₐc[R] B :=
   { AlgEquiv.ofBijective (f : A →ₐ[R] B) hf, f with }
 

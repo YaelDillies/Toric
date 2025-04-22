@@ -28,7 +28,7 @@ lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 
 
 /-- The image of a group-like element by the counit is `1`, if `algebraMap R A` is injective. -/
 lemma IsGroupLikeElem.counit_eq_one (ha : IsGroupLikeElem R a) :
-    counit a = (1 : R) := (algebraMap_injective R A) <| by
+    counit a = (1 : R) := algebraMap_injective A <| by
   simpa [ha.comul_eq_tmul_self, Ring.inverse_mul_cancel _ ha.isUnit, Algebra.smul_def] using
     congr(Algebra.TensorProduct.lid R A (((1 : R) ⊗ₜ[R] (Ring.inverse a)) *
       $(rTensor_counit_comul (R := R) a)))
