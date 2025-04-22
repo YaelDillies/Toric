@@ -3,20 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Sophie Morel
 -/
-import Mathlib.Algebra.Category.Grp.Adjunctions
 import Mathlib.Algebra.Category.Ring.Adjunctions
-import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.CategoryTheory.Adjunction.Opposites
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.GroupScheme.SpecGrpAlg
-import Toric.GroupScheme.HopfAffine
-import Toric.Hopf.HopfAlg
-import Toric.Hopf.MonoidAlgebra
-import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
-import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
