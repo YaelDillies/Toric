@@ -7,4 +7,14 @@
 web/
 lean_decls
 print/
+
+# Auxiliary latex files
+*.aux
+*.bbl
+*.log
+*.fdb_latexmk
+*.out
 *.paux
+*.pdf
+*.synctex(busy)
+*.synctex.gz
