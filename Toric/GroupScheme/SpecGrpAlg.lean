@@ -20,8 +20,8 @@ section CommRingCat
 variable (R : CommRingCat)
 
 /-- The diagonalizable group scheme functor. -/
-noncomputable abbrev specCommGrpAlgebra : CommGrpᵒᵖ ⥤ Grp_ (Over (Spec R)) :=
-  commGrpAlgebra R ⋙ hopfSpec R
+noncomputable abbrev specCommGrpAlg : CommGrpᵒᵖ ⥤ Grp_ (Over (Spec R)) :=
+  commGrpAlg R ⋙ hopfSpec R
 
 end CommRingCat
 
@@ -30,11 +30,11 @@ variable {k : Type*} [Field k]
 
 /-- The diagonalizable group scheme functor over a field is fully faithful. -/
 noncomputable
-def specCommGrpAlgebra.fullyFaithful : (specCommGrpAlgebra (.of k)).FullyFaithful :=
-  commGrpAlgebra.fullyFaithful.comp hopfSpec.fullyFaithful
+def specCommGrpAlg.fullyFaithful : (specCommGrpAlg (.of k)).FullyFaithful :=
+  commGrpAlg.fullyFaithful.comp hopfSpec.fullyFaithful
 
-instance specCommGrpAlgebra.instFull : (specCommGrpAlgebra <| .of k).Full := fullyFaithful.full
-instance specCommGrpAlgebra.instFaithful : (specCommGrpAlgebra <| .of k).Faithful :=
+instance specCommGrpAlg.instFull : (specCommGrpAlg <| .of k).Full := fullyFaithful.full
+instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of k).Faithful :=
   fullyFaithful.faithful
 
 end Field
