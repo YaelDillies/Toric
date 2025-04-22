@@ -239,7 +239,7 @@ end Field
 end AddMonoidAlgebra
 
 namespace MonoidAlgebra
-variable [CommSemiring R] [Semiring A] [Bialgebra R A]
+variable (R A) [CommSemiring R] [Semiring A] [Bialgebra R A]
 
 /-- The `R`-algebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
@@ -253,7 +253,7 @@ noncomputable def liftGroupLikeAlgHom : MonoidAlgebra R (GroupLike R A) →ₐ[R
 /-- The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
 noncomputable def liftGroupLikeBialgHom : MonoidAlgebra R (GroupLike R A) →ₐc[R] A := .ofAlgHom
-  liftGroupLikeAlgHom
+  (liftGroupLikeAlgHom R A)
   (by ext ⟨x, hx⟩; simpa using hx.counit_eq_one)
   (by ext ⟨x, hx⟩; simpa using hx.comul_eq_tmul_self.symm)
 

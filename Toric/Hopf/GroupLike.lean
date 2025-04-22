@@ -40,7 +40,7 @@ lemma IsGroupLikeElem.map [FunLike F A B] [BialgHomClass F R A B] (f : F)
   comul_eq_tmul_self := by rw [← CoalgHomClass.map_comp_comul_apply, ha.comul_eq_tmul_self]; simp
 
 /-- A bialgebra equivalence preserves group-like elements. -/
-lemma isGroupLikeElem_map [EquivLike F A B] [BialgEquivClass F R A B] (f : F) :
+@[simp] lemma isGroupLikeElem_map [EquivLike F A B] [BialgEquivClass F R A B] (f : F) :
     IsGroupLikeElem R (f a) ↔ IsGroupLikeElem R a where
   mp ha := by
     rw [← (BialgEquivClass.toBialgEquiv f).symm_apply_apply a]

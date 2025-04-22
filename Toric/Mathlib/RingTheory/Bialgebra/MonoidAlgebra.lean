@@ -38,7 +38,7 @@ lemma mapDomainBialgHom_mapDomainBialgHom (f : N →* O) (g : M →* N) (x : Mon
 lemma mapDomainBialgHom_comp (f : N →* O) (g : M →* N) : mapDomainBialgHom R (f.comp g) =
     (mapDomainBialgHom R f).comp (mapDomainBialgHom R g) := by ext; simp
 
-variable (R) in
+variable (M) in
 /-- The trivial monoid algebra is isomorphic to the base ring. -/
 noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : MonoidAlgebra R M ≃ₐc[R] R where
   __ := Bialgebra.counitBialgHom ..
@@ -78,7 +78,7 @@ noncomputable def mapDomainBialgHom (f : M →+ N) : R[M] →ₐc[R] R[N] where
 lemma mapDomainBialgHom_comp (f : N →+ O) (g : M →+ N) : mapDomainBialgHom R (f.comp g) =
     (mapDomainBialgHom R f).comp (mapDomainBialgHom R g) := by ext; simp
 
-variable (R) in
+variable (M) in
 /-- The trivial monoid algebra is isomorphic to the base ring. -/
 noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : R[M] ≃ₐc[R] R where
   __ := Bialgebra.counitBialgHom ..
