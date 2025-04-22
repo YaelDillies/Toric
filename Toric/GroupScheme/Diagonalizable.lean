@@ -17,9 +17,9 @@ variable (G) in
 @[mk_iff]
 class IsDiagonalisable : Prop where
   existsIso :
-    ∃ (A : Type u) (_ : CommGroup A), Nonempty <| .mk' G ≅ (specCommGrpAlgebra R).obj (.op <| .of A)
+    ∃ (A : Type u) (_ : CommGroup A), Nonempty <| .mk' G ≅ (specCommGrpAlg R).obj (.op <| .of A)
 
-instance : IsDiagonalisable ((specCommGrpAlgebra R).obj <| .op <| .of A).X := ⟨⟨A, _, ⟨.refl _⟩⟩⟩
+instance : IsDiagonalisable ((specCommGrpAlg R).obj <| .op <| .of A).X := ⟨⟨A, _, ⟨.refl _⟩⟩⟩
 
 noncomputable instance : Algebra R (Γ.obj <| op G.left) := sorry
 
