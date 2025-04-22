@@ -7,6 +7,8 @@ import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
 
 /-!
+# Diagonalisable bialgebras
+
 We define diagonalizable bialgebras (over a commutative ring `R`) as those that are
 isomorphic to a group algebra over `R`.
 
