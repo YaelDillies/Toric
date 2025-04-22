@@ -1,6 +1,6 @@
+import Mathlib.Algebra.Group.Torsion
 import Mathlib.GroupTheory.Finiteness
 import Mathlib.GroupTheory.MonoidLocalization.Basic
-import Toric.Mathlib.Algebra.Group.Torsion
 
 open Function
 
@@ -57,14 +57,14 @@ instance instFG [Monoid.FG M] : Monoid.FG <| Localization (⊤ : Submonoid M) :=
 /-- The localization of a torsion-free monoid is torsion-free. -/
 @[to_additive "The localization of a torsion-free monoid is torsion-free."]
 instance instIsMulTorsionFree [IsMulTorsionFree M] : IsMulTorsionFree <| Localization N where
-  pow_left_injective₀ n hn a b hab := by
+  pow_left_injective n hn a b hab := by
     dsimp at hab
     induction' a using Localization.induction_on with a
     induction' b using Localization.induction_on with b
     simp only [mk_pow, mk_eq_mk_iff, r_iff_exists, SubmonoidClass.coe_pow, Subtype.exists,
       exists_prop] at hab ⊢
     obtain ⟨c, hc, hab⟩ := hab
-    refine ⟨c, hc, pow_left_injective₀ hn ?_⟩
+    refine ⟨c, hc, pow_left_injective hn ?_⟩
     obtain _ | n := n
     · simp
     · simp [mul_pow, pow_succ c, mul_assoc, hab]
