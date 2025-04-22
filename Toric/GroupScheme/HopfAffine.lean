@@ -63,6 +63,12 @@ variable (R) in
 noncomputable abbrev algSpec : (CommAlg R)ᵒᵖ ⥤ Over (Spec R) :=
   (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
+variable {A B : Type u} [CommRing A] [CommRing B] (u : A →+* B)
+
+noncomputable def algSpecBaseChange :
+    (commAlgBaseChange u).op ⋙ algSpec (.of B) ≅
+    algSpec (.of A) ⋙ (Over.pullback (Spec.map (CommRingCat.ofHom u))) := sorry
+
 -- FIXME: Neither `inferInstance` nor `by unfold algSpec; infer_instance` work in the following 3.
 -- TODO: Do a MWE once `CommAlg` is in mathlib
 instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=

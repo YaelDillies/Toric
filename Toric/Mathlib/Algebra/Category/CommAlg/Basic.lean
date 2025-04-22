@@ -307,3 +307,55 @@ def commAlgEquivUnder (R : CommRingCat) : CommAlg R ≌ Under R where
   unitIso := NatIso.ofComponents fun A ↦
     AlgEquiv.toCommAlgIso { __ := RingEquiv.refl A, commutes' _ := rfl }
   counitIso := .refl _
+
+open TensorProduct
+
+variable {R R' : Type u} [CommRing R] [CommRing R'] (u : R →+* R')
+
+noncomputable def commAlgBaseChange : CommAlg.{u} R ⥤ CommAlg R' := by
+  algebraize [u]
+  exact
+    {obj C := CommAlg.of R' (R' ⊗[R] C)
+     map f := CommAlg.ofHom (Algebra.TensorProduct.map (AlgHom.id _ _) f.hom)
+     map_id := by simp
+     map_comp _ _ := by aesop}
+
+/-
+Note: Here I add to use `CommAlg.{u} R` because the `ChosenFiniteProducts` instance is only
+defined in that case. Also, I used rings in the same universe so I could control the
+universe of the tensor product. This is annoying.
+-/
+
+instance : Limits.PreservesLimitsOfShape (Discrete Limits.WalkingPair)
+    (commAlgBaseChange u).op := sorry
+
+/-
+example :
+    letI : Algebra R R' := RingHom.toAlgebra u
+    terminalComparison (commAlgBaseChange u).op =
+    (CommAlg.ofHom (Algebra.TensorProduct.rid R R' R').symm.toAlgHom).op := by
+  letI : Algebra R R' := RingHom.toAlgebra u
+  sorry
+-/
+
+instance : IsIso (terminalComparison (commAlgBaseChange u).op) where
+  out := by sorry
+
+
+instance : Limits.PreservesLimit (Functor.empty.{0} (CommAlg R)ᵒᵖ) (commAlgBaseChange u).op :=
+  Limits.PreservesTerminal.of_iso_comparison (commAlgBaseChange u).op
+
+instance : Limits.PreservesLimitsOfShape (Discrete PEmpty.{1}) (commAlgBaseChange u).op :=
+  Limits.preservesLimitsOfShape_pempty_of_preservesTerminal _
+
+instance : Limits.PreservesFiniteProducts (commAlgBaseChange u).op where
+  preserves n :=
+    preservesFiniteProducts_of_preserves_binary_and_terminal (commAlgBaseChange u).op (Fin n)
+
+noncomputable local instance : Functor.Monoidal (commAlgBaseChange u).op :=
+  Functor.monoidalOfChosenFiniteProducts (commAlgBaseChange u).op
+
+example :
+    letI : Algebra R R' := RingHom.toAlgebra u
+    Functor.LaxMonoidal.ε (commAlgBaseChange u).op =
+    (CommAlg.ofHom (Algebra.TensorProduct.rid R R' R').symm.toAlgHom).op := sorry

@@ -16,6 +16,7 @@ import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
+import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
 
@@ -144,25 +145,48 @@ variable (G) in
 class IsDiagonalisable : Prop where
   existsIso : ∃ (A : Type u) (_ : CommGroup A),
       Nonempty <| Grp_.mk' G ≅
-      ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
-    Over.pullback (terminal.from _)).mapGrp.obj
+      ((Over.equivalenceOfIsTerminal specULiftZIsTerminal).inverse ⋙
+    Over.pullback (specULiftZIsTerminal.from _)).mapGrp.obj
       (DiagInt A)
 
 lemma IsDiagonalisable.ofIso {H : Over S} [Grp_Class H] [IsDiagonalisable H]
     (e : Grp_.mk' G ≅ Grp_.mk' H) : IsDiagonalisable G := by
   obtain ⟨A, _, ⟨e'⟩⟩ := ‹IsDiagonalisable H›
   exact ⟨A, _, ⟨e.trans e'⟩⟩
-
-end Scheme
-
 section CommRing
 variable {R : CommRingCat.{u}} {A : Type u} [CommGroup A]
 
-def specCommGrpAlgebraCongPullbackDiagInt :
+noncomputable def specCommGrpAlgebraCongPullbackDiagInt :
     ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A) ≅
-    ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
-    Over.pullback (terminal.from _)).mapGrp.obj
-      (DiagInt A) := sorry
+    ((Over.equivalenceOfIsTerminal specULiftZIsTerminal).inverse ⋙
+    Over.pullback (specULiftZIsTerminal.from _)).mapGrp.obj
+    (DiagInt A) := by
+  set e : (Over.pullback (specULiftZIsTerminal.from (Spec R))).mapGrp ≅
+      ((Over.equivalenceOfIsTerminal specULiftZIsTerminal).functor.mapGrp ⋙
+      ((Over.equivalenceOfIsTerminal specULiftZIsTerminal).inverse ⋙
+      Over.pullback (specULiftZIsTerminal.from (Spec R))).mapGrp) := by
+    refine ?_ ≪≫ isoWhiskerLeft _ (Functor.mapGrpCompIso _ _).symm
+    refine ?_ ≪≫ Functor.associator _ _ _
+    refine ?_ ≪≫ isoWhiskerRight (Functor.mapGrpCompIso _ _) _
+    refine ?_ ≪≫ isoWhiskerRight (Functor.mapGrpNatIso
+      (Over.equivalenceOfIsTerminal specULiftZIsTerminal).unitIso) _
+    refine ?_ ≪≫ isoWhiskerRight Functor.mapGrpIdIso.symm _
+    exact (Functor.leftUnitor _).symm
+  refine  ?_ ≪≫ e.app _
+  dsimp [hopfSpec]
+  refine (algSpec R).mapGrp.mapIso ((commGrpAlgebra_baseChange
+    ((Int.castRingHom R).comp ULift.ringEquiv.toRingHom)).app _) ≪≫ ?_
+  rw [Functor.comp_obj]
+  have eq : specULiftZIsTerminal.from (Spec R) = Spec.map (CommRingCat.ofHom
+      ((Int.castRingHom R).comp ULift.ringEquiv.toRingHom)) :=
+    IsTerminal.hom_ext specULiftZIsTerminal _ _
+  rw [eq]
+  refine ((Functor.mapGrpCompIso _ _).app _).symm ≪≫ ?_
+  have : PreservesFiniteProducts (algSpec (CommRingCat.of (ULift.{u, 0} ℤ))) := sorry
+  refine ?_ ≪≫ (Functor.mapGrpCompIso _ _).app _
+  set e := (Functor.mapGrpNatIso (algSpecBaseChange
+    ((Int.castRingHom R).comp ULift.ringEquiv.toRingHom))).app
+  exact e ((commGrpAlgebra (ULift.{u, 0} ℤ)).obj (op (CommGrp.of A)))
 
 instance :
     IsDiagonalisable ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A).X :=
@@ -204,4 +228,7 @@ lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
     HopfAlgebra.isDiagonalisable_iff_span_isGroupLikeElem_eq_top]
 
 end Field
+
+end Scheme
+
 end AlgebraicGeometry.Scheme

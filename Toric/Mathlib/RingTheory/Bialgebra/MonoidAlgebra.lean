@@ -1,5 +1,8 @@
 import Mathlib.RingTheory.Bialgebra.Hom
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
+
 
 open Coalgebra
 
@@ -53,3 +56,16 @@ lemma mapDomainBialgHom_comp (f : N →+ O) (g : M →+ N) : mapDomainBialgHom R
     (mapDomainBialgHom R f).comp (mapDomainBialgHom R g) := by ext; simp
 
 end AddMonoidAlgebra
+
+open TensorProduct
+
+namespace MonoidAlgebra
+
+variable {R R' M : Type*} [CommSemiring R] [CommSemiring R'] [Monoid M] [Algebra R R']
+
+lemma baseChangeAlgEquiv_symm_counit (x : R' ⊗[R] MonoidAlgebra R M) :
+    Coalgebra.counit (R := R') ((baseChangeAlgEquiv R R' M).symm x) =
+    Algebra.TensorProduct.rid R R' R' (Algebra.TensorProduct.map (AlgHom.id R' R')
+    (Bialgebra.counitAlgHom R (MonoidAlgebra R M)) x) := sorry
+
+end MonoidAlgebra
