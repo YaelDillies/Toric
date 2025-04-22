@@ -1,4 +1,3 @@
-
 /-
 Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
@@ -17,7 +16,7 @@ This file proves that the group-like elements of the group algebra `k[G]` are pr
 of the image of the inclusion `G → k[G]`.
 -/
 
-open Bialgebra
+open Bialgebra Function
 
 variable {K R A G H I : Type*}
 
@@ -33,6 +32,7 @@ lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
 lemma isGroupLikeElem_single_one (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlgebra A G) :=
   isGroupLikeElem_of _
 
+/-- A group algebra is spanned by its group-like elements. -/
 @[simp]
 lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLikeElem R a} = ⊤ :=
   eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
@@ -237,3 +237,24 @@ noncomputable def mapDomainBialgHomMulEquiv : (G →+ H) ≃+ (K[G] →ₐc[K] K
 end AddCommGroup
 end Field
 end AddMonoidAlgebra
+
+namespace MonoidAlgebra
+variable (R A) [CommSemiring R] [Semiring A] [Bialgebra R A]
+
+/-- The `R`-algebra map from the group algebra on the group-like elements of `A` to `A`. -/
+@[simps!]
+noncomputable def liftGroupLikeAlgHom : MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
+  lift R (GroupLike R A) A {
+    toFun g := g.1
+    map_one' := by simp
+    map_mul' := by simp
+  }
+
+/-- The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`. -/
+@[simps!]
+noncomputable def liftGroupLikeBialgHom : MonoidAlgebra R (GroupLike R A) →ₐc[R] A := .ofAlgHom
+  (liftGroupLikeAlgHom R A)
+  (by ext ⟨x, hx⟩; simpa using hx.counit_eq_one)
+  (by ext ⟨x, hx⟩; simpa using hx.comul_eq_tmul_self.symm)
+
+end MonoidAlgebra

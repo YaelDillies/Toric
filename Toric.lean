@@ -9,6 +9,7 @@ import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.Torus
 import Toric.Hopf.CoalgToAlg
 import Toric.Hopf.Cocomm
+import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GroupLike
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.HopfAlg
@@ -17,6 +18,7 @@ import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Module.Equiv.Defs
+import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.Analysis.Convex.Polytope
@@ -37,6 +39,7 @@ import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
