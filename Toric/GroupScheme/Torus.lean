@@ -5,15 +5,10 @@ Authors: Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Adjunctions
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
-import Mathlib.Algebra.Category.Ring.Adjunctions
-import Mathlib.AlgebraicGeometry.Limits
-import Mathlib.CategoryTheory.Adjunction.Opposites
-import Mathlib.CategoryTheory.Limits.Constructions.Over.Basic
+import Toric.GroupScheme.Diagonalizable
 import Toric.Mathlib.Algebra.Category.Grp.Basic
-import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.MvLaurentPolynomial
-import Toric.GroupScheme.Diagonalizable
 
 /-!
 # The standard algebraic torus
