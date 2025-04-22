@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
+import Toric.Hopf.HopfAlg
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
@@ -104,6 +105,17 @@ instance hopfSpec.instFaithful : (hopfSpec R).Faithful := inferInstance
 /-- `Spec` is fully faithful on `R`-Hopf algebras, with inverse `Gamma`. -/
 noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
   algSpec.fullyFaithful.mapGrp
+
+end topEdge
+
+section topEdge
+variable {R : Type u} [CommRing R] {G : Over (Spec <| .of R)} [Grp_Class G]
+
+noncomputable instance : Algebra R (Γ.obj <| op G.left) := sorry
+
+noncomputable instance : HopfAlgebra R (Γ.obj <| op G.left) := by
+  have : Grp_Class (Opposite.op (CommAlg.of R (Γ.obj <| op G.left))) := sorry
+  exact hopfAlgebra_unop (G := Opposite.op (CommAlg.of R (Γ.obj <| op G.left)))
 
 end topEdge
 

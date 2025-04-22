@@ -21,12 +21,6 @@ class IsDiagonalisable : Prop where
 
 instance : IsDiagonalisable ((specCommGrpAlg R).obj <| .op <| .of A).X := ⟨⟨A, _, ⟨.refl _⟩⟩⟩
 
-noncomputable instance : Algebra R (Γ.obj <| op G.left) := sorry
-
-noncomputable instance : HopfAlgebra R (Γ.obj <| op G.left) := by
-  have : Grp_Class (Opposite.op (CommAlg.of R (Γ.obj <| op G.left))) := sorry
-  exact hopfAlgebra_unop (G := Opposite.op (CommAlg.of R (Γ.obj <| op G.left)))
-
 end CommRing
 
 section Field

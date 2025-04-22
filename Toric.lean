@@ -18,6 +18,7 @@ import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Module.Equiv.Defs
+import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.Analysis.Convex.Polytope
