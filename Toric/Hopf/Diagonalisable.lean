@@ -6,6 +6,23 @@ Authors: Sophie Morel
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
 
+/-!
+We define diagonalizable bialgebras (over a commutative ring `R`) as those that are
+isomorphic to a group algebra over `R`.
+
+We then prove that any diagonalizable bialgebra is spanned by its group-like elements.
+
+If the base ring is a field, we prove the converse: any bialgebra spanned by its group-like
+elements is diagonalizable. The idea is that, if `A` is a bialgebra over `R` and
+`G` is its set of group-like elements, then `G` is a group (for the multiplication of `A`),
+so we get a morphism of algebras from `R[G]` to `A`, which is actually a morphism of bialgebras.
+This morphism is surjective by assumption, and, if `R` is a field, it is also injective
+because group-like elements are linearly independent.
+
+Note that the last result is false in general.
+
+-/
+
 universe u
 
 namespace Bialgebra
