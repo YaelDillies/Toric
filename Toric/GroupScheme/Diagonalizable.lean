@@ -3,17 +3,14 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Sophie Morel
 -/
-import Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.RingTheory.HopfAlgebra.Basic
-import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
+import Mathlib.Algebra.Category.Ring.Adjunctions
+import Mathlib.AlgebraicGeometry.Limits
+import Mathlib.CategoryTheory.Adjunction.Opposites
 import Toric.GroupScheme.SpecGrpAlg
-import Toric.Hopf.GroupLike
+import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Basic
-import Toric.GroupScheme.HopfAffine
-import Toric.Hopf.MonoidAlgebra
-import Toric.Hopf.HopfAlg
 
-open AlgebraicGeometry CategoryTheory Bialgebra Opposite
+open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 
 universe u v
 
@@ -103,20 +100,71 @@ end HopfAlgebra
 end Field
 
 namespace AlgebraicGeometry.Scheme
-section CommRing
-variable {R : CommRingCat.{u}} {G : Over (Spec R)} [Grp_Class G]
-    {A : Type u} [CommGroup A]
+
+attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
+
+noncomputable section
+
+def MonInt (M : Type*) [CommMonoid M] : Scheme := Spec (.of (MonoidAlgebra (ULift ℤ) M))
+
+def MonInt.representableBy (M : Type*) [CommMonoid M] :
+    (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
+      CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget _).RepresentableBy
+      (MonInt M) :=
+  letI e : opOp CommMonCat ⋙ yoneda.obj (op (.of M)) ≅ CommMonCat.coyoneda.obj _ ⋙ forget _ :=
+    Coyoneda.opIso.app (op _) ≪≫ CommMonCat.coyonedaForget.symm.app (op (.of M))
+  letI e' := isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat) e
+  ((ΓSpec.adjunction.comp (CommRingCat.forget₂Adj CommRingCat.isInitial).op).representableBy
+    (op (.of M))).ofIso e'
+
+instance (M : Type*) [CommMonoid M] : Mon_Class (MonInt M) :=
+  Mon_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
+    CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget₂ _ _) (MonInt.representableBy M)
+
+def DiagInt (A : Type u) [CommGroup A] : Grp_ Scheme.{u} :=
+  (Over.equivalenceOfIsTerminal specULiftZIsTerminal).functor.mapGrp.obj
+  ((specCommGrpAlgebra (.of (ULift.{u} ℤ))).obj (Opposite.op (.of A)))
+
+end
+
+section Scheme
+variable {S : Scheme} {G : Over S} [Grp_Class G]
 
 variable (G) in
 @[mk_iff]
 class IsDiagonalisable : Prop where
   existsIso : ∃ (A : Type u) (_ : CommGroup A),
-      Nonempty <| Grp_.mk' G ≅ ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A)
+      Nonempty <| Grp_.mk' G ≅
+      ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
+    Over.pullback (terminal.from _)).mapGrp.obj
+      (DiagInt A)
+
+lemma IsDiagonalisable.ofIso {H : Over S} [Grp_Class H] [IsDiagonalisable H]
+    (e : Grp_.mk' G ≅ Grp_.mk' H) : IsDiagonalisable G := by
+  obtain ⟨A, _, ⟨e'⟩⟩ := ‹IsDiagonalisable H›
+  exact ⟨A, _, ⟨e.trans e'⟩⟩
+
+end Scheme
+
+section CommRing
+variable {R : CommRingCat.{u}} {A : Type u} [CommGroup A]
+
+def specCommGrpAlgebraCongPullbackDiagInt :
+    ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A) ≅
+    ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
+    Over.pullback (terminal.from _)).mapGrp.obj
+      (DiagInt A) := sorry
+
+instance :
+    IsDiagonalisable ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A).X :=
+  ⟨⟨A, _, Nonempty.intro specCommGrpAlgebraCongPullbackDiagInt⟩⟩
 
 instance :
     IsDiagonalisable ((hopfSpec R).obj <| Grp_.mk' <| Opposite.op <|
       CommAlg.of R (MonoidAlgebra R A)).X :=
-  ⟨⟨A, _, Nonempty.intro (Iso.refl _)⟩⟩
+  IsDiagonalisable.ofIso
+    (H := ((specCommGrpAlgebra R).obj <| Opposite.op <| CommGrp.of A).X)
+    (Iso.refl _)
 
 end CommRing
 
