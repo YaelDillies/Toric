@@ -3,7 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
-import Toric.Mathlib.AlgebraicGeometry.Pullbacks
+import Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
@@ -69,6 +69,9 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
     (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
+noncomputable instance algSpec.instBraided : (algSpec R).Braided :=
+  (algSpec R).braidedOfChosenFiniteProducts
+
 /-- `Spec` is full on `R`-algebras. -/
 instance algSpec.instFull : (algSpec R).Full :=
   inferInstanceAs <| Functor.Full <|
@@ -83,6 +86,10 @@ instance algSpec.instFaithful : (algSpec R).Faithful :=
 noncomputable def algSpec.fullyFaithful : (algSpec R).FullyFaithful :=
   ((commAlgEquivUnder R).op.trans (Over.opEquivOpUnder R).symm).fullyFaithfulFunctor.comp <|
     Spec.fullyFaithful.over _
+
+variable (R) in
+/-- `Spec` as a functor from `R`-bialgebras to monoid schemes over `Spec R`. -/
+noncomputable abbrev bialgSpec : Mon_ (CommAlg R)ᵒᵖ ⥤ Mon_ (Over <| Spec R) := (algSpec R).mapMon
 
 variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/
