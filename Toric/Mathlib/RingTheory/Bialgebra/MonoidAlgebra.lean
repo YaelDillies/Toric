@@ -38,18 +38,17 @@ lemma mapDomainBialgHom_mapDomainBialgHom (f : N →* O) (g : M →* N) (x : Mon
 lemma mapDomainBialgHom_comp (f : N →* O) (g : M →* N) : mapDomainBialgHom R (f.comp g) =
     (mapDomainBialgHom R f).comp (mapDomainBialgHom R g) := by ext; simp
 
-variable (R G) in
-noncomputable def bialgEquivOfSubsingleton
-    [Group G] [Subsingleton G] : MonoidAlgebra R G ≃ₐc[R] R where
-  __ := Bialgebra.counitBialgHom R (MonoidAlgebra R G)
+variable (R) in
+/-- The trivial monoid algebra is isomorphic to the base ring. -/
+noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : MonoidAlgebra R M ≃ₐc[R] R where
+  __ := Bialgebra.counitBialgHom ..
   invFun := algebraMap _ _
   left_inv r := by
     show (Algebra.ofId _ _).comp (Bialgebra.counitAlgHom R _) r = AlgHom.id R _ r
     congr 1
     ext g : 2
-    obtain rfl := Subsingleton.elim g 1
-    simp [MonoidAlgebra.one_def]
-  right_inv := (Bialgebra.counitAlgHom R (MonoidAlgebra R G)).commutes
+    simp [Subsingleton.elim g 1, MonoidAlgebra.one_def]
+  right_inv := (Bialgebra.counitAlgHom R (MonoidAlgebra R M)).commutes
 
 end MonoidAlgebra
 
@@ -78,5 +77,17 @@ noncomputable def mapDomainBialgHom (f : M →+ N) : R[M] →ₐc[R] R[N] where
 @[simp]
 lemma mapDomainBialgHom_comp (f : N →+ O) (g : M →+ N) : mapDomainBialgHom R (f.comp g) =
     (mapDomainBialgHom R f).comp (mapDomainBialgHom R g) := by ext; simp
+
+variable (R) in
+/-- The trivial monoid algebra is isomorphic to the base ring. -/
+noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : R[M] ≃ₐc[R] R where
+  __ := Bialgebra.counitBialgHom ..
+  invFun := algebraMap _ _
+  left_inv r := by
+    show (Algebra.ofId _ _).comp (Bialgebra.counitAlgHom R _) r = AlgHom.id R _ r
+    congr 1
+    ext g : 2
+    simp [Subsingleton.elim g 1, AddMonoidAlgebra.one_def]
+  right_inv := (Bialgebra.counitAlgHom R R[M]).commutes
 
 end AddMonoidAlgebra

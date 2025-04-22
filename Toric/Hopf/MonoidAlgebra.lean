@@ -38,17 +38,6 @@ lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLi
   eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
     simp [← Finsupp.range_linearCombination]
 
-/-- A bialgebra isomorphic to a group algebra is spanned by its group-like elements. -/
-lemma span_isGroupLikeElem_of_iso {F H : Type*} [Semiring H] [Bialgebra R H]
-    [EquivLike F (MonoidAlgebra R G) H] [BialgEquivClass F R (MonoidAlgebra R G) H] (f : F) :
-    Submodule.span R {a : H | IsGroupLikeElem R a} = ⊤ := by
-  rw [(Set.setOf_inj.mpr (funext (fun (a : H) ↦ propext_iff.mpr
-    (isGroupLikeElem_map (a := a) (BialgEquivClass.toBialgEquiv f).symm)))).symm.trans
-    (Equiv.setOf_apply_symm_eq_image_setOf (BialgEquivClass.toBialgEquiv f).toEquiv _),
-    ← LinearEquiv.range (BialgEquivClass.toBialgEquiv f).toLinearEquiv, ← Submodule.map_top,
-    ← span_isGroupLikeElem (R := R) (A := R) (G := G), Submodule.map_span]
-  rfl
-
 end CommSemiring
 
 section Field
@@ -250,17 +239,12 @@ end Field
 end AddMonoidAlgebra
 
 namespace MonoidAlgebra
-
-open Bialgebra Coalgebra
-
-variable (R A : Type*)
-
 variable [CommSemiring R] [Semiring A] [Bialgebra R A]
 
 /-- The `R`-algebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
 noncomputable def liftGroupLikeAlgHom : MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
-  MonoidAlgebra.lift R (GroupLike R A) A {
+  lift R (GroupLike R A) A {
     toFun g := g.1
     map_one' := by simp
     map_mul' := by simp
@@ -268,11 +252,9 @@ noncomputable def liftGroupLikeAlgHom : MonoidAlgebra R (GroupLike R A) →ₐ[R
 
 /-- The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
-noncomputable def liftGroupLikeBialgHom :
-    MonoidAlgebra R (GroupLike R A) →ₐc[R] A where
-  __ := liftGroupLikeAlgHom R A
-  map_smul' a x := show (liftGroupLikeAlgHom R A) (a • x) = _ by simp
-  counit_comp := by ext ⟨x, hx⟩; simpa using hx.counit_eq_one
-  map_comp_comul := by ext ⟨x, hx⟩; simpa using hx.comul_eq_tmul_self.symm
+noncomputable def liftGroupLikeBialgHom : MonoidAlgebra R (GroupLike R A) →ₐc[R] A := .ofAlgHom
+  liftGroupLikeAlgHom
+  (by ext ⟨x, hx⟩; simpa using hx.counit_eq_one)
+  (by ext ⟨x, hx⟩; simpa using hx.comul_eq_tmul_self.symm)
 
 end MonoidAlgebra

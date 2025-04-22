@@ -14,6 +14,10 @@ variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Semiring
   counit_comp := counit_comp
   map_comp_comul := map_comp_comul
 
+attribute [simp] coe_toCoalgHom
+
+lemma toCoalgHom_apply (f : A →ₐc[R] B) (a : A) : f.toCoalgHom a = f a := rfl
+
 end BialgHom
 
 namespace Bialgebra
