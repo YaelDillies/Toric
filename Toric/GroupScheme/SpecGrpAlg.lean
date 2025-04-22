@@ -19,6 +19,10 @@ open CategoryTheory Opposite AlgebraicGeometry
 section CommRingCat
 variable (R : CommRingCat)
 
+/-- The diagonalizable monoid scheme functor. -/
+noncomputable abbrev specCommMonAlg : CommMonCatᵒᵖ ⥤ Mon_ (Over (Spec R)) :=
+  commMonAlg R ⋙ bialgSpec R
+
 /-- The diagonalizable group scheme functor. -/
 noncomputable abbrev specCommGrpAlg : CommGrpᵒᵖ ⥤ Grp_ (Over (Spec R)) :=
   commGrpAlg R ⋙ hopfSpec R
@@ -34,7 +38,6 @@ def specCommGrpAlg.fullyFaithful : (specCommGrpAlg (.of k)).FullyFaithful :=
   commGrpAlg.fullyFaithful.comp hopfSpec.fullyFaithful
 
 instance specCommGrpAlg.instFull : (specCommGrpAlg <| .of k).Full := fullyFaithful.full
-instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of k).Faithful :=
-  fullyFaithful.faithful
+instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of k).Faithful := fullyFaithful.faithful
 
 end Field

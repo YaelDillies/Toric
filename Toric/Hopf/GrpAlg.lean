@@ -21,6 +21,12 @@ open CategoryTheory Opposite
 section CommRing
 variable (R : Type*) [CommRing R]
 
+/-- The functor of commutative monoid algebras. -/
+noncomputable def commMonAlg : CommMonCatᵒᵖ ⥤ Mon_ (CommAlg R)ᵒᵖ where
+  obj M := .mk' <| op <| CommAlg.of R <| MonoidAlgebra R M.unop.carrier
+  map f := .mk' (CommAlg.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.unop.hom).op
+  map_comp f g := by ext; simp
+
 /-- The functor of commutative group algebras. -/
 noncomputable def commGrpAlg : CommGrpᵒᵖ ⥤ Grp_ (CommAlg R)ᵒᵖ where
   obj G := .mk' <| op <| CommAlg.of R <| MonoidAlgebra R G.unop.carrier

@@ -24,11 +24,11 @@ variable {R : CommRingCat.{u}}
 
 /-! ### Going from a `R`-Hopf algebra to a cogroup object in the category of `R`-algebras -/
 
-section hopfToGrp
-variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra R A] [HopfAlgebra R B]
+section bialgToMon
+variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [Bialgebra R A] [Bialgebra R B]
   {f : A →ₐc[R] B}
 
-noncomputable instance grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
+noncomputable instance Mon_Class_op_commAlgOf : Mon_Class <| op <| CommAlg.of R A where
   one := (CommAlg.ofHom <| Bialgebra.counitAlgHom R A).op
   mul := (CommAlg.ofHom <| Bialgebra.comulAlgHom R A).op
   one_mul' := by
@@ -49,6 +49,26 @@ noncomputable instance grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R 
     convert (Coalgebra.coassoc_symm_apply (R := R) x).symm
       <;> simp [-Coalgebra.coassoc_symm_apply, CommAlg.associator_hom_unop_hom,
       CommAlg.rightWhisker_hom, CommAlg.leftWhisker_hom] <;> rfl
+
+instance isMon_Hom_commAlgOfHom : IsMon_Hom (CommAlg.ofHom (f : A →ₐ[R] B)).op where
+   one_hom := by
+     apply Quiver.Hom.unop_inj
+     ext
+     simp [one]
+   mul_hom := by
+     apply Quiver.Hom.unop_inj
+     ext
+     simp only [mul, unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
+         CommAlg.tensorHom_unop_hom]
+     rw [BialgHomClass.map_comp_comulAlgHom]
+
+end bialgToMon
+
+section hopfToGrp
+variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra R A] [HopfAlgebra R B]
+  {f : A →ₐc[R] B}
+
+noncomputable instance Grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
   inv := (CommAlg.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
   left_inv' := by
     apply Quiver.Hom.unop_inj
@@ -70,18 +90,6 @@ noncomputable instance grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R 
     | zero => simp
     | tmul x y => rfl
     | add x y _ _ => simp_all
-
-instance isMon_Hom_commAlgOfHom : IsMon_Hom (CommAlg.ofHom (f : A →ₐ[R] B)).op where
-   one_hom := by
-     apply Quiver.Hom.unop_inj
-     ext
-     simp [one]
-   mul_hom := by
-     apply Quiver.Hom.unop_inj
-     ext
-     simp only [mul, unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
-         CommAlg.tensorHom_unop_hom]
-     rw [BialgHomClass.map_comp_comulAlgHom]
 
 end hopfToGrp
 
