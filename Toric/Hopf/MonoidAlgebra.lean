@@ -22,7 +22,7 @@ variable {K R A G H I : Type*}
 
 namespace MonoidAlgebra
 section CommSemiring
-variable [CommSemiring R] [Semiring A] [HopfAlgebra R A] [Group G] {x : MonoidAlgebra A G}
+variable [CommSemiring R] [Semiring A] [Bialgebra R A] [Group G] {x : MonoidAlgebra A G}
 
 lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
   isUnit := .map _ <| Group.isUnit _
