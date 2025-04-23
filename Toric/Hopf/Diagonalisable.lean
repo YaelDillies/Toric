@@ -5,7 +5,7 @@ Authors: Sophie Morel
 -/
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Module.Equiv.Defs
-import Toric.Mathlib.RingTheory.Bialgebra.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
 # Diagonalizable bialgebras
