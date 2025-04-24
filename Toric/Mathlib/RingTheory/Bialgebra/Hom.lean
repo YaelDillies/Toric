@@ -9,6 +9,9 @@ attribute [simp] coe_toCoalgHom
 
 lemma toCoalgHom_apply (f : A →ₐc[R] B) (a : A) : f.toCoalgHom a = f a := rfl
 
+/-- TODO: Replace generic coercion. -/
+abbrev toAlgHom (f : A →ₐc[R] B) : A →ₐ[R] B := f
+
 end BialgHom
 
 namespace Bialgebra
