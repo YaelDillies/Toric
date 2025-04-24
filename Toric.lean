@@ -10,10 +10,11 @@ import Toric.Hopf.CoalgToAlg
 import Toric.Hopf.Cocomm
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
-import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
+import Toric.Mathlib.Algebra.Category.CommBialg
+import Toric.Mathlib.Algebra.Category.CommHopfAlg
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
@@ -24,6 +25,7 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.CategoryTheory.Opposites
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral

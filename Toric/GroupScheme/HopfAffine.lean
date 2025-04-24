@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Hopf.HopfAlg
+import Toric.Mathlib.Algebra.Category.CommHopfAlg
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
@@ -48,7 +48,7 @@ variable {R : CommRingCat.{u}}
 ### Left edge: `R`-Hopf algebras correspond to cogroup objects under `R`
 
 Ways to turn an unbundled `R`-Hopf algebra into a bundled cogroup object under `R`, and vice versa,
-are already provided in `Toric.Hopf.HopfAlg`.
+are already provided in `Toric.Mathlib.Algebra.Category.CommHopfAlg`.
 
 ### Top edge: `Spec` as a functor on Hopf algebras
 
@@ -103,17 +103,6 @@ instance hopfSpec.instFaithful : (hopfSpec R).Faithful := inferInstance
 /-- `Spec` is fully faithful on `R`-Hopf algebras, with inverse `Gamma`. -/
 noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
   algSpec.fullyFaithful.mapGrp
-
-end topEdge
-
-section topEdge
-variable {R : Type u} [CommRing R] {G : Over (Spec <| .of R)} [Grp_Class G]
-
-noncomputable instance : Algebra R (Γ.obj <| op G.left) := sorry
-
-noncomputable instance : HopfAlgebra R (Γ.obj <| op G.left) := by
-  have : Grp_Class (Opposite.op (CommAlgCat.of R (Γ.obj <| op G.left))) := sorry
-  exact hopfAlgebra_unop (G := Opposite.op (CommAlgCat.of R (Γ.obj <| op G.left)))
 
 end topEdge
 
