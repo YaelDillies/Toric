@@ -5,11 +5,14 @@ Authors: Patrick Luo
 -/
 import Mathlib.RingTheory.Bialgebra.Basic
 import Toric.AffineMonoid.Embedding
+import Toric.GroupScheme.HopfAffine
 import Toric.ToricVariety.Defs
 
 /-!
 # Affine monoids give rise to toric varieties
 -/
+
+noncomputable section
 
 open AlgebraicGeometry Scheme CategoryTheory Limits AddMonoidAlgebra AddLocalization AffineMonoid
 
@@ -23,16 +26,20 @@ noncomputable abbrev AffineToricVarietyFromMonoid : Over <| Spec R :=
 
 namespace AffineToricVarietyFromMonoid
 
-instance instToricVariety :
-    Mod_Class 𝔾ₘ[R, ULift <| Fin <| dim S] (.mk (Spec (.of R[S]) ↘ Spec R)) where
+-- TODO: This used to be nicer when the torus was defined as `Spec _`
+instance instMod_Class :
+    Mod_Class 𝔾ₘ[R, ULift <| Fin <| dim S] ((algSpec R).obj <| .op <| .of R R[S]) where
+  smul := Over.homMk sorry sorry
+  -- (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
+  -- (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)
+  --   (.id _ _)).toRingHom (Bialgebra.comulAlgHom R _).toRingHom)
+  one_smul := sorry
+  mul_smul := sorry
 
 noncomputable instance instToricVariety :
     ToricVariety R (ULift <| Fin <| dim S) (Spec <| .of R[S]) where
+  __ := instMod_Class
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap R R[S]
-  smul := sorry
-    -- (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
-    -- (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)
-    --   (.id _ _)).toRingHom (Bialgebra.comulAlgHom R _).toRingHom)
   torusEmb := sorry
     -- (splitTorusIsoSpecOver _ _).hom ≫ (Over.homMk
     -- (Spec.map (CommRingCat.ofHom (AddMonoidAlgebra.mapDomainRingHom R <| embedding S))) <| by
