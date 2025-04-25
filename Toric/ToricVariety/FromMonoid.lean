@@ -20,10 +20,6 @@ universe u
 variable {R : CommRingCat.{u}} [IsDomain R] {S : Type u} [AddCancelCommMonoid S] [AddMonoid.FG S]
   [IsAddTorsionFree S]
 
-variable (R S) in
-noncomputable abbrev AffineToricVarietyFromMonoid : Over <| Spec R :=
-  .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R R[S]
-
 namespace AffineToricVarietyFromMonoid
 
 -- TODO: This used to be nicer when the torus was defined as `Spec _`
