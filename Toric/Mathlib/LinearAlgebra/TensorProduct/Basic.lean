@@ -1,4 +1,3 @@
-import Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 variable {R M M₁ M₂ M₃ N N₁ N₂ N₃ : Type*} [CommSemiring R]
@@ -22,10 +21,3 @@ lemma map_map (f₂ : M₂ →ₗ[R] M₃) (g₂ : N₂ →ₗ[R] N₃) (f₁ : 
   DFunLike.congr_fun (map_comp ..).symm x
 
 end TensorProduct
-
-protected lemma LinearIndependent.tmul {ι κ : Type*} {f : ι → M} {g : κ → N}
-    (hf : LinearIndependent R f) (hg : LinearIndependent R g) :
-    LinearIndependent R (fun ik : ι × κ ↦ f ik.1 ⊗ₜ[R] g ik.2) := by
-  rintro v w hvw
-  ext ⟨i, k⟩
-  sorry

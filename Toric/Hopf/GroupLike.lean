@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.Flat.Domain
 
 /-!
 # Group-like elements in a bialgebra
@@ -122,7 +122,7 @@ lemma linearIndepOn_isGroupLikeElem : LinearIndepOn K id {a : A | IsGroupLikeEle
     _ = ∑ i, ∑ j, (c i * c j) • (e i).val ⊗ₜ[K] (e j).val := by
       simp_rw [← hcea, sum_tmul, smul_tmul, Finset.smul_sum, tmul_sum, tmul_smul, mul_smul]
   simp_rw [← Fintype.sum_prod_type'] at this
-  have := (hsindep.tmul hsindep).fintypeLinearCombination_injective this
+  have := (hsindep.tmul_of_isDomain hsindep).fintypeLinearCombination_injective this
   rw [funext_iff] at this
   obtain ⟨i, -, hi⟩ := Finset.exists_ne_zero_of_sum_ne_zero <| hcea.trans_ne ha.ne_zero
   rw [smul_ne_zero_iff_left (he _).ne_zero] at hi

@@ -62,6 +62,7 @@ instance (σ : Type*) : CommGrp_Class (TorusInt σ) :=
     (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙ CommGrp.coyonedaRight.obj (op σ))
       (TorusInt.representableBy σ)
 
+attribute [local instance] Functor.Braided.ofChosenFiniteProducts in
 def CommGrp_Torus (S : Scheme) (σ : Type*) : CommGrp_ (Over S) :=
   ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
     Over.pullback (terminal.from _)).mapCommGrp.obj
