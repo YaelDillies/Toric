@@ -7,6 +7,3 @@ variable {R M N : Type*} [CommRing R] [PartialOrder R] [IsOrderedRing R] [AddCom
 
 theorem dual_dual_dual_eq_dual {s : Set M} : dual p (dual p.flip (dual p s)) = dual p s :=
   le_antisymm (dual_le_dual subset_dual_dual) subset_dual_dual
-
-
-

@@ -37,7 +37,6 @@ section LinearOrderedField
 variable {𝕜 M N : Type*} [Field 𝕜] [PartialOrder 𝕜] [IsOrderedRing 𝕜] [AddCommGroup M]
   [AddCommGroup N] [Module 𝕜 M] [Module 𝕜 N] {p : M →ₗ[𝕜] N →ₗ[𝕜] 𝕜}
 
-#check Finset.image
 /-- `⊥` is a polyhedral cone in a finite dimensional vector space over a linear
 ordered field. -/
 theorem IsPolyhedral.bot [hM : FiniteDimensional 𝕜 M] :
