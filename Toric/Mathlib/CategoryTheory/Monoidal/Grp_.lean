@@ -262,14 +262,15 @@ instance Grp_.mk'.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_
 
 end
 
-namespace CategoryTheory.Functor
-variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts.{v₁} C]
-variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts.{v₂} D]
-variable {E : Type u₃} [Category.{v₃} E] [ChosenFiniteProducts E]
-variable (F F' : C ⥤ D) [PreservesFiniteProducts F] [PreservesFiniteProducts F']
-variable (G : D ⥤ E) [PreservesFiniteProducts G]
+namespace CategoryTheory
+variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
+  {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
+  {E : Type u₃} [Category.{v₃} E] [ChosenFiniteProducts E]
 
-attribute [local instance] monoidalOfChosenFiniteProducts
+namespace Functor
+variable {F F' : C ⥤ D} [F.Monoidal] [F'.Monoidal] {G : D ⥤ E} [G.Monoidal]
+
+open LaxMonoidal Monoidal
 
 protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
   map_injective {_X _Y} _f _g hfg := F.mapMon.map_injective hfg
@@ -277,39 +278,20 @@ protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
 protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
   map_surjective := F.mapMon.map_surjective
 
-open LaxMonoidal Monoidal
-
+/-- If `F : C ⥤ D` is a fully faithful monoidal functor, then `Grp(F) : Grp C ⥤ Grp D` is fully
+faithful too. -/
 protected def FullyFaithful.mapGrp (hF : F.FullyFaithful) : F.mapGrp.FullyFaithful where
   preimage {X Y} f := Grp_.homMk <| hF.preimage f.hom
 
-@[simps!]
-noncomputable def mapGrpIdIso : mapGrp (𝟭 C) ≅ 𝟭 (Grp_ C) :=
-  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
-    (by simp [μ_of_chosenFiniteProducts]))
-
-@[simps!]
-noncomputable def mapGrpCompIso : (F ⋙ G).mapGrp ≅ F.mapGrp ⋙ G.mapGrp :=
-  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
-    (by simp [μ_of_chosenFiniteProducts]))
-
-variable {F F'} in
-@[simps!]
-noncomputable def mapGrpNatTrans (f : F ⟶ F') : F.mapGrp ⟶ F'.mapGrp where app X := .mk (f.app _)
-
-variable {F F'} in
-@[simps!]
-noncomputable def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp :=
-  NatIso.ofComponents (fun X ↦ Grp_.mkIso (e.app _)) fun {X Y} f ↦ by ext; simp
-
 open EssImageSubcategory Monoidal in
-variable {F} in
 /-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
 same on group objects as on objects. -/
 @[simp] lemma essImage_mapGrp [F.Full] [F.Faithful] {G : Grp_ D} :
     F.mapGrp.essImage G ↔ F.essImage G.X where
   mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
   mpr hG := by
-    let F' := F.toEssImage.asEquivalence
+    letI F' := F.toEssImage.asEquivalence
+    have : F'.inverse.Monoidal := .ofChosenFiniteProducts _
     refine ⟨F'.inverse.mapGrp.obj <| {
         X := ⟨G.X, hG⟩
         one := G.one
@@ -322,7 +304,7 @@ same on group objects as on objects. -/
         left_inv := by simpa only [lift_def, toUnit_def] using G.left_inv
         right_inv := by simpa only [lift_def, toUnit_def] using G.right_inv
       }, ⟨Grp_.mkIso
-        ((fullSubcategoryInclusion _).mapIso <| F'.counitIso.app ⟨G.X, hG⟩) ?_ ?_⟩⟩
+        ((ObjectProperty.ι _).mapIso <| F'.counitIso.app ⟨G.X, hG⟩) ?_ ?_⟩⟩
     · simp
       erw [F'.counitIso.hom.naturality (X := 𝟙_ F.EssImageSubcategory) (Y := ⟨G.X, hG⟩) G.one]
       have : ε F ≫ F.map (ε F'.inverse) ≫ F'.counitIso.hom.app (𝟙_ F.EssImageSubcategory) = 𝟙 _ :=
@@ -344,21 +326,49 @@ same on group objects as on objects. -/
       apply_fun (· ≫ (G.mul : (⟨G.X, hG⟩ ⊗ ⟨G.X, hG⟩ : F.EssImageSubcategory) ⟶ ⟨G.X, hG⟩)) at this
       sorry
 
-end CategoryTheory.Functor
-
-namespace CategoryTheory.Equivalence
-variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
-variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D](e : C ≌ D)
-
-attribute [local instance] Functor.monoidalOfChosenFiniteProducts
-
+/-- The identity functor is also the identity on group objects. -/
 @[simps!]
-noncomputable def mapGrp (e : C ≌ D) : Grp_ C ≌ Grp_ D where
+noncomputable def mapGrpIdIso : mapGrp (𝟭 C) ≅ 𝟭 (Grp_ C) :=
+  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
+    (by simp [μ_of_chosenFiniteProducts]))
+
+/-- The composition functor is also the composition on group objects. -/
+@[simps!]
+noncomputable def mapGrpCompIso : (F ⋙ G).mapGrp ≅ F.mapGrp ⋙ G.mapGrp :=
+  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
+    (by simp [μ_of_chosenFiniteProducts]))
+
+/-- Natural transformations between functors lift to group objects. -/
+@[simps!]
+noncomputable def mapGrpNatTrans (f : F ⟶ F') : F.mapGrp ⟶ F'.mapGrp where app X := .mk (f.app _)
+
+/-- Natural isomorphisms between functors lift to group objects. -/
+@[simps!]
+noncomputable def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp :=
+  NatIso.ofComponents fun X ↦ Grp_.mkIso (e.app _)
+
+end Functor
+
+open Functor
+
+namespace Adjunction
+variable {F : C ⥤ D} {G : D ⥤ C} (a : F ⊣ G) [F.Monoidal] [G.Monoidal]
+
+/-- An adjunction of monoidal functors lifts to an adjunction of their lifts to group objects. -/
+@[simps!] noncomputable def mapGrp : F.mapGrp ⊣ G.mapGrp where
+  unit := mapGrpIdIso.inv ≫ mapGrpNatTrans a.unit ≫ mapGrpCompIso.hom
+  counit := mapGrpCompIso.inv ≫ mapGrpNatTrans a.counit ≫ mapGrpIdIso.hom
+
+end Adjunction
+
+namespace Equivalence
+variable (e : C ≌ D) [e.functor.Monoidal] [e.inverse.Monoidal]
+
+/-- An equivalence of categories lifts to an equivalence of their group objects. -/
+@[simps!] noncomputable def mapGrp : Grp_ C ≌ Grp_ D where
   functor := e.functor.mapGrp
   inverse := e.inverse.mapGrp
-  unitIso :=
-    Functor.mapGrpIdIso.symm ≪≫ Functor.mapGrpNatIso e.unitIso ≪≫ Functor.mapGrpCompIso _ _
-  counitIso :=
-    (Functor.mapGrpCompIso _ _).symm ≪≫ Functor.mapGrpNatIso e.counitIso ≪≫ Functor.mapGrpIdIso
+  unitIso := mapGrpIdIso.symm ≪≫ mapGrpNatIso e.unitIso ≪≫ mapGrpCompIso
+  counitIso := mapGrpCompIso.symm ≪≫ mapGrpNatIso e.counitIso ≪≫ mapGrpIdIso
 
 end CategoryTheory.Equivalence

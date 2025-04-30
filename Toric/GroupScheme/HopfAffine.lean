@@ -70,8 +70,7 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
     (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
-noncomputable instance algSpec.instBraided : (algSpec R).Braided :=
-  (algSpec R).braidedOfChosenFiniteProducts
+noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
 
 /-- `Spec` is full on `R`-algebras. -/
 instance algSpec.instFull : (algSpec R).Full :=
