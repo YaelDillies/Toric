@@ -40,7 +40,6 @@ linter.style.setOption = true
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-rev = "5059cb8366a2e36511b58a520601e5608d563b92"
 
 [[require]]
 name = "checkdecls"
