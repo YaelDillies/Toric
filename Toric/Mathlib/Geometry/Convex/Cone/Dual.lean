@@ -7,6 +7,9 @@ import Mathlib.Algebra.Module.Submodule.Pointwise
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 
 /-!
+
+NOTE: Most of the content of this file is backported from the mathlib PR #24149.
+
 # The algebraic dual of a cone
 
 Given a bilinear pairing `p` between two `R`-modules `M` and `N` and a set `s` in `M`, we define
@@ -66,7 +69,25 @@ lemma dual_eq_iInter_dual_singleton (s : Set M) :
 /-- Any set is a subset of its double dual cone. -/
 lemma subset_dual_dual : s ⊆ dual' p.flip (dual' p s) := fun _x hx _y hy ↦ hy hx
 
-theorem dual_dual_dual_eq_dual {s : Set M} : dual' p (dual' p.flip (dual' p s)) = dual' p s :=
+-------------------------------------------------------------
+-- Things below this line are not part of mathlib's #24149 --
+-------------------------------------------------------------
+
+@[simp]
+lemma dual_dual_dual_eq_dual : dual' p (dual' p.flip (dual' p s)) = dual' p s :=
   le_antisymm (dual_le_dual subset_dual_dual) subset_dual_dual
+
+@[simp]
+lemma dual_span (s : Set M) : dual' p (span R s) = dual' p s := by
+  refine le_antisymm (dual_le_dual subset_span) (fun x hx y hy => ?_)
+  induction hy using Submodule.span_induction with
+  | mem _y h => exact hx h
+  | zero => simp
+  | add y z _hy _hz hy hz =>
+    rw [map_add, add_apply]
+    exact add_nonneg hy hz
+  | smul t y _hy hy =>
+    rw [map_smul_of_tower, Nonneg.mk_smul, smul_apply]
+    exact mul_nonneg t.2 hy
 
 end PointedCone
