@@ -16,17 +16,17 @@ variable {R M N : Type*} [CommRing R] [PartialOrder R] [IsOrderedRing R] [AddCom
 
 variable (p) in
 def IsPolyhedral (c : PointedCone R N) : Prop :=
-  ∃ t : Finset M, c = dual p t
+  ∃ t : Finset M, c = dual' p t
 
 theorem IsPolyhedral.dual {t : Set M} (h : t.Finite) :
-    IsPolyhedral p (dual p t) := ⟨h.toFinset, by simp⟩
+    IsPolyhedral p (dual' p t) := ⟨h.toFinset, by simp⟩
 
 @[simp]
 theorem IsPolyhedral.top : IsPolyhedral p (⊤ : PointedCone R N) := ⟨∅, by simp⟩
 
 @[simp]
 theorem IsPolyhedral.dual_dual_flip {c : PointedCone R N} (hc : IsPolyhedral p c) :
-    PointedCone.dual p (PointedCone.dual p.flip (c : Set N)) = c := by
+    dual' p (dual' p.flip (c : Set N)) = c := by
   obtain ⟨t,rfl⟩ := hc
   exact dual_dual_dual_eq_dual
 
