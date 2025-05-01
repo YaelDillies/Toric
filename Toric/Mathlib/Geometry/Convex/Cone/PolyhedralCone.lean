@@ -21,13 +21,24 @@ variable (p) in
 def IsPolyhedral (c : PointedCone R N) : Prop :=
   ∃ t : Finset M, c = dual' p t
 
-theorem IsPolyhedral.dual {t : Set M} (h : t.Finite) :
+lemma IsPolyhedral_def {c : PointedCone R N} :
+    IsPolyhedral p c ↔ ∃ t, t.Finite ∧ c = dual' p t :=
+  ⟨fun ⟨t, ht⟩ => ⟨t, t.finite_toSet, ht⟩,
+   fun ⟨_, ht1, ht2⟩ =>⟨ht1.toFinset, ht1.coe_toFinset.symm ▸ ht2⟩⟩
+
+lemma IsPolyhedral_dual_of_Finite {t : Set M} (h : t.Finite) :
     IsPolyhedral p (dual' p t) := ⟨h.toFinset, by simp⟩
 
-theorem IsPolyhedral.top : IsPolyhedral p (⊤ : PointedCone R N) := ⟨∅, by simp⟩
+lemma IsPolyhedral_dual_of_FG {c : PointedCone R M} (hc : c.FG) :
+    IsPolyhedral p (dual' p (c : Set M)) := by
+  obtain ⟨S, rfl⟩ := hc
+  rw [dual_span]
+  exact ⟨S,rfl⟩ 
+
+theorem IsPolyhedral_top : IsPolyhedral p (⊤ : PointedCone R N) := ⟨∅, by simp⟩
 
 @[simp]
-theorem IsPolyhedral.dual_dual_flip {c : PointedCone R N} (hc : IsPolyhedral p c) :
+theorem IsPolyhedral_dual_dual {c : PointedCone R N} (hc : IsPolyhedral p c) :
     dual' p (dual' p.flip (c : Set N)) = c := by
   obtain ⟨t,rfl⟩ := hc
   exact dual_dual_dual_eq_dual
@@ -39,7 +50,7 @@ section LinearOrder
 variable {R M N : Type*} [CommRing R] [LinearOrder R] [IsOrderedRing R] [AddCommGroup M]
   [AddCommGroup N] [Module R M] [Module R N] {p : M →ₗ[R] N →ₗ[R] R}
 
-theorem IsPolyhedral.bot [Module.Finite R M] (hp : Function.Injective p.flip) :
+theorem IsPolyhedral_bot [Module.Finite R M] (hp : Function.Injective p.flip) :
     IsPolyhedral p (⊥ : PointedCone R N) := by
   obtain ⟨S, hS : span R _ = ⊤⟩ := (Nonneg.isFiniteModuleOver R M).fg_top
   use S
@@ -75,12 +86,56 @@ private lemma span_singleton_le_dualSupSingletonGenSet :
     rw [mul_comm]
 
 private lemma dual_sup_span_singleton_eq_dual :
-    dual' p S ⊔ span R {w} = dual' p (dualSupSingletonGenSet p S w) := by
+    span R {w} ⊔ dual' p S = dual' p (dualSupSingletonGenSet p S w) := by
   apply le_antisymm
   · rw [←dual_span]
-    exact sup_le (dual_le_dual (dualSupSingletonGenSet_subset_span S w))
-      (span_singleton_le_dualSupSingletonGenSet S w)
-  · sorry
+    apply sup_le (span_singleton_le_dualSupSingletonGenSet S w)
+    apply dual_le_dual
+    exact dualSupSingletonGenSet_subset_span S w
+  · rw [dual_union]
+    intro x ⟨hx1, hx2⟩ 
+    sorry
+
+theorem IsPolyhedral_of_fg [Module.Finite R M] (hp : Function.Injective p.flip)
+    {c : PointedCone R N} (hc : c.FG) : IsPolyhedral p c := by
+  classical
+  obtain ⟨S, rfl⟩ := hc
+  induction S using Finset.induction with
+  | empty =>
+    rw [Finset.coe_empty, span_empty]
+    exact IsPolyhedral_bot hp
+  | @insert w A hwA hA =>
+    simp
+    rw [Submodule.span_insert]
+    obtain ⟨S, hS⟩ := hA
+    rw [hS, dual_sup_span_singleton_eq_dual]
+    apply IsPolyhedral_dual_of_Finite
+    rw [Set.finite_union]
+    refine ⟨?_, Set.Finite.image2 _ ?_ ?_⟩ <;>
+      exact Set.Finite.subset (S.finite_toSet) (fun x hx => hx.1)
+
+lemma IsPolyhedral_span [Module.Finite R M] (hp : Function.Injective p.flip) {S : Set N}
+    (hS : S.Finite) : IsPolyhedral p (span R S) :=
+  IsPolyhedral_of_fg hp (fg_span hS)
+
+lemma dual_dual_eq_span [Module.Finite R M] (hp : Function.Injective p.flip) {S : Set N}
+    (hS : S.Finite) : dual' p (dual' p.flip S) = span R S := by
+  nth_rw 2 [←dual_span]
+  exact IsPolyhedral_dual_dual (IsPolyhedral_span hp hS)
+
+theorem fg_of_IsPolyhedral [Module.Finite R N] [Module.Finite R M] (hp1 : Function.Injective p)
+    (hp2 : Function.Injective p.flip) {c : PointedCone R N} (hc : IsPolyhedral p c) : c.FG := by
+  rw [IsPolyhedral_def] at hc
+  obtain ⟨S, S_fin, rfl⟩ := hc
+  obtain ⟨T, T_fin, hT : span R S = _⟩ := IsPolyhedral_def.mp <|
+    IsPolyhedral_of_fg (LinearMap.flip_flip p ▸ hp1) (fg_span S_fin)
+  rw [←dual_span, hT, dual_dual_eq_span hp2 T_fin]
+  exact Submodule.fg_span T_fin
+
+theorem IsPolyhedral_iff_fg [Module.Finite R N] [Module.Finite R M] (hp1 : Function.Injective p)
+    (hp2 : Function.Injective p.flip) {c : PointedCone R N} : IsPolyhedral p c ↔ c.FG :=
+  ⟨fun h => fg_of_IsPolyhedral hp1 hp2 h, fun h => IsPolyhedral_of_fg hp2 h⟩
+    
 
 end LinearOrder
 
