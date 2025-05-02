@@ -1,6 +1,6 @@
 name = "Toric"
 keywords = ["math", "algebraic-geometry", "convex-geometry", "algebraic-group", "convex-cone", "hopf-algebra"]
-defaultTargets = ["Toric"]
+defaultTargets = ["Toric", "HopfAlgAffGrpSchPaper"]
 
 [leanOptions]
 autoImplicit = false        # Prevent typos to be interpreted as new free variables
@@ -48,3 +48,6 @@ git = "https://github.com/PatrickMassot/checkdecls.git"
 
 [[lean_lib]]
 name = "Toric"
+
+[[lean_lib]]
+name = "HopfAlgAffGrpSchPaper"
