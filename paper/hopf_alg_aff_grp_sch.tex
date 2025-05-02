@@ -1,10 +1,11 @@
+% !TeX program = xelatex
+% !TEX options = --shell-escape paper/hopf_alg_aff_grp_sch.tex
 \documentclass{article}
 
 \title{Correspondence of Hopf algebras and affine group schemes in Lean 4}
 \author{Yaël Dillies, Michał Mrugała, Andrew Yang}
 \date{\today}
 
-\usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
@@ -18,11 +19,40 @@
 \usepackage{relsize}
 \usepackage[hypcap=true]{caption}
 \usepackage[shortlabels]{enumitem}
-\usepackage[pdftex]{hyperref}
+\usepackage{hyperref}
 
 \usepackage[capitalise,nameinlink,noabbrev]{cleveref}
 \usepackage{nameref}
 \usepackage[margin=1.5in,a4paper]{geometry}
+
+%%% Lean listings setup %%%
+
+\usepackage{fontspec}
+\usepackage{minted}
+
+% JuliaMono has all the symbols needed for Lean code
+\setmonofont[Scale=MatchLowercase]{JuliaMono}[
+  Extension=.ttf,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ItalicFont=*-RegularItalic,
+  BoldItalicFont=*-BoldItalic,
+  RawFeature={-calt},
+]
+
+% autogobble lets us indent the lean code to distinguish it from the latex
+\setminted{frame=single}
+\newmintinline[lean]{lean}{breaklines,breakbefore={. },breakafter={_}}
+\newminted[leancode]{lean}{autogobble}
+
+% Configure the appearance of minted.
+% We adjust the spacing around minted environments, which stretches badly by default
+\fvset{listparameters=\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}}
+\AtBeginEnvironment{minted}{\vspace{4pt}}
+\renewcommand{\floatpagefraction}{.99}
+\renewcommand{\bottomfraction}{.7}
+
+%%% Lean listings setup %%%
 
 % Theorems
 \newtheorem{thm}{Theorem}[section]
