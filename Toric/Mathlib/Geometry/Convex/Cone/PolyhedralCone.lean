@@ -43,11 +43,16 @@ theorem IsPolyhedral_dual_dual {c : PointedCone R N} (hc : IsPolyhedral p c) :
   obtain ⟨t,rfl⟩ := hc
   exact dual_dual_dual_eq_dual
 
+theorem IsPolyhedral_dual_inj {c₁ c₂ : PointedCone R N} (hc₁ : IsPolyhedral p c₁)
+    (hc₂ : IsPolyhedral p c₂) (h : dual' p.flip c₁ = dual' p.flip c₂) : c₁ = c₂ := by
+  rw [← IsPolyhedral_dual_dual hc₁, ← IsPolyhedral_dual_dual hc₂, h]
+
 end PartialOrder
+
 
 section LinearOrder
 
-variable {𝕜 M N : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsOrderedRing 𝕜] [AddCommGroup M]
+variable {𝕜 M N : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [AddCommGroup M]
   [AddCommGroup N] [Module 𝕜 M] [Module 𝕜 N] {p : M →ₗ[𝕜] N →ₗ[𝕜] 𝕜}
 
 theorem IsPolyhedral_bot [Module.Finite 𝕜 M] (hp : Function.Injective p.flip) :
@@ -62,8 +67,8 @@ variable (p) in
 /-- A generating set for `dual p S ⊔ span R {w}`, see `dual_sup_span_singleton_eq_dual -/
 private noncomputable abbrev dualSupSingletonGenSet : Finset M :=
   open Classical in
-  {s ∈ S | 0 ≤ p s w} ∪
-    .image₂ (fun x y => p x w • y - p y w • x) {s ∈ S | 0 < p s w} {s ∈ S | p s w < 0}
+  {x ∈ S | 0 ≤ p x w} ∪
+    .image₂ (fun x y => p x w • y - p y w • x) {x ∈ S | 0 ≤ p x w} {y ∈ S | p y w < 0}
 
 private lemma dualSupSingletonGenSet_subset_span :
     (dualSupSingletonGenSet p S w : Set M) ⊆ span 𝕜 (S : Set M) := by
@@ -71,7 +76,7 @@ private lemma dualSupSingletonGenSet_subset_span :
     Set.image2_subset_iff, Set.mem_setOf_eq, SetLike.mem_coe, and_imp]
   refine ⟨subset_trans (fun x hx => hx.1) subset_span, ?_⟩
   intro x hxS hxw y hyS hyw
-  convert add_mem (smul_mem (span 𝕜 S) ⟨p x w, hxw.le⟩ (subset_span hyS))
+  convert add_mem (smul_mem (span 𝕜 S) ⟨p x w, hxw⟩ (subset_span hyS))
     (smul_mem _ ⟨-p y w, neg_nonneg.mpr hyw.le⟩ (subset_span hxS)) using 1
   rw [sub_eq_add_neg, Nonneg.mk_smul, Nonneg.mk_smul, neg_smul]
 
@@ -93,23 +98,62 @@ private lemma dual_sup_span_singleton_eq_dual :
     apply sup_le (span_singleton_le_dualSupSingletonGenSet S w)
     apply dual_le_dual
     exact dualSupSingletonGenSet_subset_span S w
-  · simp only [Finset.coe_union, Finset.coe_filter, Finset.coe_image₂]
-    rw [dual_union]
-    intro v ⟨hv1, hv2⟩ 
-    rw [Submodule.mem_sup]
-    simp only [SetLike.mem_coe, mem_dual', Set.mem_setOf_eq, and_imp] at hv1
-    simp only [SetLike.mem_coe, mem_dual', Set.mem_image2, Set.mem_setOf_eq, forall_exists_index,
-      and_imp] at hv2
-    by_cases h : {x ∈ S | 0 < p x w}.Nonempty
-    · let t : 𝕜 := ({x ∈ S | 0 < p x w}.image (fun x => p x v * (p x w)⁻¹)).min' <|
-        Finset.image_nonempty.mpr h
-      have ht : t ≥ 0 := sorry
-      refine ⟨t • w, ?_, v - t • w, ?_, add_sub_cancel _ _⟩
-      · rw [←Nonneg.mk_smul t ht]
-        exact Submodule.smul_mem _ _ (Submodule.subset_span rfl)
-      · sorry
-    · -- easy
-      sorry
+  · by_cases hSw : {y ∈ S | p y w < 0}.Nonempty
+    · simp only [Finset.coe_union, Finset.coe_filter, Finset.coe_image₂]
+      rw [dual_union]
+      intro v ⟨hv1, hv2⟩ 
+      rw [Submodule.mem_sup]
+      replace hv2 {x y : M} (hx : x ∈ S ∧ 0 ≤ p x w) (hy : y ∈ S ∧ p y w < 0) :
+          p y w * p x v ≤ p y v * p x w := by
+        simp only [SetLike.mem_coe, mem_dual', Set.mem_image2, Set.mem_setOf_eq,
+          forall_exists_index, and_imp] at hv2
+        specialize hv2 x hx.1 hx.2 y hy.1 hy.2 rfl
+        simp only [map_sub, map_smul, LinearMap.sub_apply, LinearMap.smul_apply, smul_eq_mul,
+          sub_nonneg] at hv2
+        nth_rw 2 [mul_comm] at hv2
+        exact hv2
+      by_cases hSv : {y ∈ S | p y w < 0 ∧ p y v < 0}.Nonempty
+      · let t : 𝕜 := ({y ∈ S | p y w < 0}.image (fun y => p y v * (p y w)⁻¹)).max' <|
+          Finset.image_nonempty.mpr hSw
+        have ht : 0 ≤ t := by
+          obtain ⟨y, hy⟩ := hSv
+          rw [Finset.mem_filter] at hy
+          refine le_trans (mul_nonneg_of_nonpos_of_nonpos hy.2.2.le (inv_nonpos.mpr hy.2.1.le))
+            (Finset.le_max' _ (p y v * (p y w)⁻¹) ?_)
+          simp only [Finset.mem_image, Finset.mem_filter]
+          exact ⟨y, ⟨⟨hy.1, hy.2.1⟩, rfl⟩⟩
+        refine ⟨t • w, ?_, v - t • w, ?_, add_sub_cancel _ _⟩
+        · rw [←Nonneg.mk_smul t ht]
+          exact Submodule.smul_mem _ _ (Submodule.subset_span rfl)
+        · intro z hzS
+          simp only [map_sub, map_smul, smul_eq_mul, sub_nonneg]
+          by_cases hzw_zero : p z w = 0
+          · rw [hzw_zero, mul_zero]
+            exact hv1 ⟨hzS, hzw_zero.symm.le⟩
+          · by_cases hzw : 0 < p z w
+            · obtain ⟨y, hy, t_eq : _ = t⟩ := Finset.mem_image.mp <|
+                ({y ∈ S | p y w < 0}.image (fun y => p y v * (p y w)⁻¹)).max'_mem <|
+                Finset.image_nonempty.mpr hSw
+              rw [Finset.mem_filter] at hy
+              rw [← t_eq, ← _root_.mul_le_mul_left_of_neg hy.2, ← mul_assoc]
+              nth_rw 4 [mul_comm]
+              rw [mul_inv_cancel_left₀ hy.2.ne]
+              apply hv2 ⟨hzS, hzw.le⟩ hy
+            · replace hzw : p z w < 0 := lt_of_le_of_ne (le_of_not_lt hzw) hzw_zero
+              rw [← _root_.mul_le_mul_right_of_neg (inv_neg''.mpr hzw),
+                mul_inv_cancel_right₀ hzw_zero]
+              exact Finset.le_max' _ ((p z) v * ((p z) w)⁻¹) <|
+                Finset.mem_image.mpr ⟨z, Finset.mem_filter.mpr ⟨hzS, hzw⟩, rfl⟩
+      · simp only [Finset.not_nonempty_iff_eq_empty, Finset.eq_empty_iff_forall_not_mem,
+          Finset.mem_filter, not_and, not_lt] at hSv
+        refine ⟨0, zero_mem _, v, fun x hx => ?_, zero_add _⟩
+        by_cases hxw : 0 ≤ p x w
+        · exact hv1 ⟨hx, hxw⟩
+        · exact hSv x hx (lt_of_not_ge hxw)
+    · simp only [Finset.not_nonempty_iff_eq_empty, Finset.eq_empty_iff_forall_not_mem, 
+        Finset.mem_filter, not_and, not_lt] at hSw
+      exact le_sup_of_le_right <| dual_le_dual fun x hx =>
+        Finset.mem_union_left _ (Finset.mem_filter.mpr ⟨hx, hSw x hx⟩)
 
 theorem IsPolyhedral_of_fg [Module.Finite 𝕜 M] (hp : Function.Injective p.flip)
     {c : PointedCone 𝕜 N} (hc : c.FG) : IsPolyhedral p c := by
@@ -151,12 +195,6 @@ theorem IsPolyhedral_dual_of_IsPolyhedral [Module.Finite 𝕜 N] [Module.Finite 
     (hp1 : Function.Injective p) (hp2 : Function.Injective p.flip) {c : PointedCone 𝕜 N}
     (hc : IsPolyhedral p c) : IsPolyhedral p.flip (dual' p.flip c) :=
   IsPolyhedral_dual_of_FG (fg_of_IsPolyhedral hp1 hp2 hc)
-
-theorem IsPolyhedral_dual_iff [Module.Finite 𝕜 N] [Module.Finite 𝕜 M]
-    (hp1 : Function.Injective p) (hp2 : Function.Injective p.flip) {c : PointedCone 𝕜 N} :
-    IsPolyhedral p.flip (dual' p.flip c) ↔ IsPolyhedral p c := by
-  refine ⟨fun h => ?_, IsPolyhedral_dual_of_IsPolyhedral hp1 hp2⟩ 
-  sorry
 
 end LinearOrder
 
