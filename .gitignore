@@ -16,5 +16,7 @@ print/
 *.out
 *.paux
 *.pdf
+*.pygstyle
+*.pygtex
 *.synctex(busy)
 *.synctex.gz
