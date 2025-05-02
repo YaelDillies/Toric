@@ -21,8 +21,6 @@ When the pairing is continuous and perfect (as a continuous pairing), this gives
 dual instead. See `Mathlib.Analysis.Convex.Cone.Dual` for that case.
 -/
 
---assert_not_exists TopologicalSpace Real Cardinal
-
 open Function LinearMap Pointwise Set
 
 namespace PointedCone
