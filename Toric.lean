@@ -1,6 +1,5 @@
 import Toric.AffineMonoid.Embedding
 import Toric.AffineMonoid.Irreducible
-import Toric.ConvexAnalysis.PolyhedralCone
 import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
@@ -22,8 +21,6 @@ import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
-import Toric.Mathlib.Analysis.Convex.Cone.Pointed
-import Toric.Mathlib.Analysis.Convex.Polytope
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mod_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
@@ -33,6 +30,10 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 import Toric.Mathlib.Data.Finset.Powerset
+import Toric.Mathlib.Geometry.Convex.Polytope
+import Toric.Mathlib.Geometry.Convex.Cone.Pointed
+import Toric.Mathlib.Geometry.Convex.Cone.Dual
+import Toric.Mathlib.Geometry.Convex.Cone.PolyhedralCone
 import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
