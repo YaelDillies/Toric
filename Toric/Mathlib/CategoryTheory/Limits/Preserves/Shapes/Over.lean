@@ -7,36 +7,50 @@ namespace CategoryTheory.Limits
 universe w w' v₁ v₂ u₁ u₂
 variable {C : Type u₁} [Category.{v₁} C]
 variable {D : Type u₂} [Category.{v₂} D]
-variable {J : Type w} [Category.{w'} J]
+variable {J : Type w} [Category.{w'} J] {X : C} {F : C ⥤ D}
 
-instance PreservesLimitsOfShape.overPost {X : C} {F : C ⥤ D}
+open WithTerminal in
+instance PreservesLimitsOfShape.overPost
     [PreservesLimitsOfShape (WithTerminal J) F] :
     PreservesLimitsOfShape J (Over.post F (X := X)) where
   preservesLimit {K} := {
-    preserves {lim} h := by
-      apply Nonempty.intro
-      let lim_C := WithTerminal.coneLift.obj lim
-      have is_limit_forget := WithTerminal.limitEquiv.symm h
-      have : Nonempty (IsLimit (F.mapCone lim_C)) :=
-        PreservesLimitsOfShape.preservesLimit.preserves is_limit_forget
-      have is_lim_D : IsLimit (F.mapCone lim_C) := Classical.choice this
-      have is_lim_D := (IsLimit.postcomposeHomEquiv (WithTerminal.extendCompose K F)
-        (F.mapCone lim_C)).symm is_lim_D
-      let same_cone_in_D := (Cones.postcompose (WithTerminal.extendCompose K F).hom).obj
-        (F.mapCone lim_C)
-      have cone_iso : same_cone_in_D ≅ WithTerminal.coneLift.obj ((Over.post F).mapCone lim) :=
-        Cones.ext (Iso.refl same_cone_in_D.pt) (fun
-        | .star => by aesop
-        | .of a => by aesop)
-      exact WithTerminal.limitEquiv.toFun (is_lim_D.ofIsoLimit cone_iso)
+    preserves {coneK} isLimitConeK := by
+      let coneC := coneEquiv.functor.obj coneK
+      obtain ⟨isLimitConeD⟩ : Nonempty (IsLimit (F.mapCone coneC)) :=
+        PreservesLimitsOfShape.preservesLimit.preserves <| limitEquiv.symm isLimitConeK
+      replace isLimitConeD :=
+        (IsLimit.postcomposeHomEquiv liftFromOverComp.symm (F.mapCone coneC)).symm isLimitConeD
+      exact ⟨limitEquiv <| isLimitConeD.ofIsoLimit <|
+        Cones.ext (.refl _) fun | .star | .of a => by aesop⟩
   }
 
-instance PreservesFiniteLimits.overPost {X : C} {F : C ⥤ D} [PreservesFiniteLimits F] :
+instance PreservesFiniteLimits.overPost [PreservesFiniteLimits F] :
     PreservesFiniteLimits (Over.post F (X := X)) where
   preservesFiniteLimits _ := inferInstance
 
-instance PreservesLimitsOfSize.overPost {X : C} {F : C ⥤ D} [PreservesLimitsOfSize.{w', w} F] :
+instance PreservesLimitsOfSize.overPost [PreservesLimitsOfSize.{w', w} F] :
     PreservesLimitsOfSize.{w', w} (Over.post F (X := X)) where
-  preservesLimitsOfShape := inferInstance
+
+open WithInitial in
+instance PreservesColimitsOfShape.underPost
+    [PreservesColimitsOfShape (WithInitial J) F] :
+    PreservesColimitsOfShape J (Under.post F (X := X)) where
+  preservesColimit {K} := {
+    preserves {coconeK} isLimitCoconeK := by
+      let coconeC := coconeEquiv.functor.obj coconeK
+      obtain ⟨isColimitCoconeD⟩ : Nonempty (IsColimit (F.mapCocone coconeC)) :=
+        PreservesColimitsOfShape.preservesColimit.preserves <| colimitEquiv.symm isLimitCoconeK
+      replace isColimitCoconeD :=
+        (IsColimit.precomposeHomEquiv liftFromUnderComp (F.mapCocone coconeC)).symm isColimitCoconeD
+      exact ⟨colimitEquiv <| isColimitCoconeD.ofIsoColimit <|
+        Cocones.ext (.refl _) fun | .star | .of a => by aesop⟩
+  }
+
+instance PreservesFiniteColimits.underPost [PreservesFiniteColimits F] :
+    PreservesFiniteColimits (Under.post F (X := X)) where
+  preservesFiniteColimits _ := inferInstance
+
+instance PreservesColimitsOfSize.underPost [PreservesColimitsOfSize.{w', w} F] :
+    PreservesColimitsOfSize.{w', w} (Under.post F (X := X)) where
 
 end CategoryTheory.Limits

@@ -3,8 +3,8 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Mathlib.RingTheory.Bialgebra.Equiv
+import Mathlib.RingTheory.Flat.Domain
 
 /-!
 # Group-like elements in a bialgebra
@@ -26,8 +26,8 @@ structure IsGroupLikeElem (a : A) where
 lemma IsGroupLikeElem.ne_zero [Nontrivial A] (ha : IsGroupLikeElem R a) : a ≠ 0 := ha.isUnit.ne_zero
 
 /-- The image of a group-like element by the counit is `1`, if `algebraMap R A` is injective. -/
-lemma IsGroupLikeElem.counit_eq_one (hinj : Injective (algebraMap R A)) (ha : IsGroupLikeElem R a) :
-    counit a = (1 : R) := hinj <| by
+lemma IsGroupLikeElem.counit_eq_one (ha : IsGroupLikeElem R a) :
+    counit a = (1 : R) := algebraMap_injective A <| by
   simpa [ha.comul_eq_tmul_self, Ring.inverse_mul_cancel _ ha.isUnit, Algebra.smul_def] using
     congr(Algebra.TensorProduct.lid R A (((1 : R) ⊗ₜ[R] (Ring.inverse a)) *
       $(rTensor_counit_comul (R := R) a)))
@@ -39,7 +39,7 @@ lemma IsGroupLikeElem.map [FunLike F A B] [BialgHomClass F R A B] (f : F)
   comul_eq_tmul_self := by rw [← CoalgHomClass.map_comp_comul_apply, ha.comul_eq_tmul_self]; simp
 
 /-- A bialgebra equivalence preserves group-like elements. -/
-lemma isGroupLikeElem_map [EquivLike F A B] [BialgEquivClass F R A B] (f : F) :
+@[simp] lemma isGroupLikeElem_map [EquivLike F A B] [BialgEquivClass F R A B] (f : F) :
     IsGroupLikeElem R (f a) ↔ IsGroupLikeElem R a where
   mp ha := by
     rw [← (BialgEquivClass.toBialgEquiv f).symm_apply_apply a]
@@ -122,7 +122,7 @@ lemma linearIndepOn_isGroupLikeElem : LinearIndepOn K id {a : A | IsGroupLikeEle
     _ = ∑ i, ∑ j, (c i * c j) • (e i).val ⊗ₜ[K] (e j).val := by
       simp_rw [← hcea, sum_tmul, smul_tmul, Finset.smul_sum, tmul_sum, tmul_smul, mul_smul]
   simp_rw [← Fintype.sum_prod_type'] at this
-  have := (hsindep.tmul hsindep).fintypeLinearCombination_injective this
+  have := (hsindep.tmul_of_isDomain hsindep).fintypeLinearCombination_injective this
   rw [funext_iff] at this
   obtain ⟨i, -, hi⟩ := Finset.exists_ne_zero_of_sum_ne_zero <| hcea.trans_ne ha.ne_zero
   rw [smul_ne_zero_iff_left (he _).ne_zero] at hi

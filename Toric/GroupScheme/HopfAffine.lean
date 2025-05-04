@@ -3,7 +3,8 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
-import Toric.Mathlib.AlgebraicGeometry.Pullbacks
+import Mathlib.AlgebraicGeometry.Pullbacks
+import Toric.Hopf.HopfAlg
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
@@ -69,6 +70,8 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
     (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
+noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
+
 /-- `Spec` is full on `R`-algebras. -/
 instance algSpec.instFull : (algSpec R).Full :=
   inferInstanceAs <| Functor.Full <|
@@ -85,6 +88,10 @@ noncomputable def algSpec.fullyFaithful : (algSpec R).FullyFaithful :=
     Spec.fullyFaithful.over _
 
 variable (R) in
+/-- `Spec` as a functor from `R`-bialgebras to monoid schemes over `Spec R`. -/
+noncomputable abbrev bialgSpec : Mon_ (CommAlg R)ᵒᵖ ⥤ Mon_ (Over <| Spec R) := (algSpec R).mapMon
+
+variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/
 noncomputable abbrev hopfSpec : Grp_ (CommAlg R)ᵒᵖ ⥤ Grp_ (Over <| Spec R) := (algSpec R).mapGrp
 
@@ -97,6 +104,17 @@ instance hopfSpec.instFaithful : (hopfSpec R).Faithful := inferInstance
 /-- `Spec` is fully faithful on `R`-Hopf algebras, with inverse `Gamma`. -/
 noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
   algSpec.fullyFaithful.mapGrp
+
+end topEdge
+
+section topEdge
+variable {R : Type u} [CommRing R] {G : Over (Spec <| .of R)} [Grp_Class G]
+
+noncomputable instance : Algebra R (Γ.obj <| op G.left) := sorry
+
+noncomputable instance : HopfAlgebra R (Γ.obj <| op G.left) := by
+  have : Grp_Class (Opposite.op (CommAlg.of R (Γ.obj <| op G.left))) := sorry
+  exact hopfAlgebra_unop (G := Opposite.op (CommAlg.of R (Γ.obj <| op G.left)))
 
 end topEdge
 

@@ -1,6 +1,18 @@
 import Mathlib.RingTheory.Bialgebra.Hom
 
-open TensorProduct
+open Coalgebra TensorProduct
+
+namespace BialgHom
+variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Semiring B] [Bialgebra R B]
+
+attribute [simp] coe_toCoalgHom
+
+lemma toCoalgHom_apply (f : A →ₐc[R] B) (a : A) : f.toCoalgHom a = f a := rfl
+
+/-- TODO: Replace generic coercion. -/
+abbrev toAlgHom (f : A →ₐc[R] B) : A →ₐ[R] B := f
+
+end BialgHom
 
 namespace Bialgebra
 variable {R A : Type*} [CommSemiring R]
