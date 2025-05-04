@@ -72,7 +72,7 @@ lemma subset_dual_dual : s ⊆ dual' p.flip (dual' p s) := fun _x hx _y hy ↦ h
 -------------------------------------------------------------
 
 @[simp]
-lemma dual_dual_dual_eq_dual : dual' p (dual' p.flip (dual' p s)) = dual' p s :=
+lemma dual_dual_flip_dual_eq_dual : dual' p (dual' p.flip (dual' p s)) = dual' p s :=
   le_antisymm (dual_le_dual subset_dual_dual) subset_dual_dual
 
 @[simp]
