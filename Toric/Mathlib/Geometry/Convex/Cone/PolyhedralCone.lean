@@ -59,7 +59,7 @@ theorem IsPolyhedral_dual_dual {c : PointedCone R N} (hc : IsPolyhedral p c) :
   exact dual_dual_dual_eq_dual
 
 theorem IsPolyhedral_dual_inj {c₁ c₂ : PointedCone R N} (hc₁ : IsPolyhedral p c₁)
-    (hc₂ : IsPolyhedral p c₂) (h : dual' p.flip c₁ = dual' p.flip c₂) : c₁ = c₂ := by
+    (hc₂ : IsPolyhedral p c₂) : dual' p.flip c₁ = dual' p.flip c₂ ↔ c₁ = c₂ := by
   rw [← IsPolyhedral_dual_dual hc₁, ← IsPolyhedral_dual_dual hc₂, h]
 
 end PartialOrder
