@@ -7,8 +7,7 @@ section Ring
 
 variable (𝕜 E : Type*) [Ring 𝕜] [LinearOrder 𝕜] [IsOrderedRing 𝕜] [AddCommMonoid E] [Module 𝕜 E]
 
-/-- A linearly ordered ring is finitely generated as a module over the non-negative scalars. -/
-instance isFiniteOver : Module.Finite {c : 𝕜 // 0 ≤ c} 𝕜 := by
+private instance isFiniteOver : Module.Finite {c : 𝕜 // 0 ≤ c} 𝕜 := by
   rw [Module.finite_def, Submodule.fg_def]
   refine ⟨{1, -1}, by simp, ?_⟩
   rw [Submodule.eq_top_iff']
