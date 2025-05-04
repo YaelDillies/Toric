@@ -63,8 +63,6 @@ theorem IsPolyhedral_dual_inj {c₁ c₂ : PointedCone R N} (hc₁ : IsPolyhedra
   rw [← IsPolyhedral_dual_dual hc₁, ← IsPolyhedral_dual_dual hc₂, h]
 
 end PartialOrder
-
-
 section LinearOrder
 
 variable {𝕜 M N : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [AddCommGroup M]
