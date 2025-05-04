@@ -76,6 +76,11 @@ lemma dual_dual_flip_dual_eq_dual : dual' p (dual' p.flip (dual' p s)) = dual' p
   le_antisymm (dual_le_dual subset_dual_dual) subset_dual_dual
 
 @[simp]
+lemma dual_flip_dual_dual_flip_eq_dual_flip {s : Set N} :
+    dual' p.flip (dual' p (dual' p.flip s)) = dual' p.flip s :=
+  dual_dual_flip_dual_eq_dual
+
+@[simp]
 lemma dual_span (s : Set M) : dual' p (span R s) = dual' p s := by
   refine le_antisymm (dual_le_dual subset_span) (fun x hx y hy => ?_)
   induction hy using Submodule.span_induction with
