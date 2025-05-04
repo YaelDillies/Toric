@@ -53,7 +53,7 @@ lemma IsPolyhedral_dual_of_FG {c : PointedCone R M} (hc : c.FG) :
 theorem IsPolyhedral_top : IsPolyhedral p (⊤ : PointedCone R N) := ⟨∅, by simp⟩
 
 @[simp]
-theorem IsPolyhedral_dual_dual {c : PointedCone R N} (hc : IsPolyhedral p c) :
+theorem IsPolyhedral.dual_dual_flip {c : PointedCone R N} (hc : IsPolyhedral p c) :
     dual' p (dual' p.flip (c : Set N)) = c := by
   obtain ⟨t,rfl⟩ := hc
   exact dual_dual_dual_eq_dual
