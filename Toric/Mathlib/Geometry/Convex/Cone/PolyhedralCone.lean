@@ -56,11 +56,12 @@ theorem IsPolyhedral_top : IsPolyhedral p (⊤ : PointedCone R N) := ⟨∅, by 
 theorem IsPolyhedral.dual_dual_flip {c : PointedCone R N} (hc : IsPolyhedral p c) :
     dual' p (dual' p.flip (c : Set N)) = c := by
   obtain ⟨t,rfl⟩ := hc
-  exact dual_dual_dual_eq_dual
+  exact dual_dual_flip_dual_eq_dual
 
 theorem IsPolyhedral_dual_inj {c₁ c₂ : PointedCone R N} (hc₁ : IsPolyhedral p c₁)
-    (hc₂ : IsPolyhedral p c₂) : dual' p.flip c₁ = dual' p.flip c₂ ↔ c₁ = c₂ := by
-  rw [← IsPolyhedral_dual_dual hc₁, ← IsPolyhedral_dual_dual hc₂, h]
+    (hc₂ : IsPolyhedral p c₂) : dual' p.flip c₁ = dual' p.flip c₂ ↔ c₁ = c₂ :=
+  ⟨fun h => by rw [← IsPolyhedral.dual_dual_flip hc₁, ← IsPolyhedral.dual_dual_flip hc₂, h],
+   fun h => by rw [h]⟩
 
 end PartialOrder
 section LinearOrder
@@ -72,7 +73,7 @@ variable {𝕜 M N : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing
 then the zero cone in `N` is polyhedral. -/
 theorem IsPolyhedral.bot [Module.Finite 𝕜 M] (hp : Function.Injective p.flip) :
     IsPolyhedral p (⊥ : PointedCone 𝕜 N) := by
-  obtain ⟨S, hS : span 𝕜 _ = ⊤⟩ := (Nonneg.isFiniteModuleOver 𝕜 M).fg_top
+  obtain ⟨S, hS : span 𝕜 _ = ⊤⟩ := (Nonneg.instModuleFinite 𝕜 M).fg_top
   use S
   rw [← dual_span, hS, Submodule.top_coe, dual_univ hp, Submodule.zero_eq_bot]
 
@@ -180,7 +181,7 @@ theorem IsPolyhedral_of_fg [Module.Finite 𝕜 M] (hp : Function.Injective p.fli
   induction S using Finset.induction with
   | empty =>
     rw [Finset.coe_empty, span_empty]
-    exact IsPolyhedral_bot hp
+    exact IsPolyhedral.bot hp
   | @insert w A hwA hA =>
     obtain ⟨S, hS⟩ := hA
     rw [Finset.coe_insert, Submodule.span_insert, hS, dual_sup_span_singleton_eq_dual]
@@ -194,7 +195,7 @@ lemma IsPolyhedral_span [Module.Finite 𝕜 M] (hp : Function.Injective p.flip) 
 lemma dual_dual_eq_span [Module.Finite 𝕜 M] (hp : Function.Injective p.flip) {S : Set N}
     (hS : S.Finite) : dual' p (dual' p.flip S) = span 𝕜 S := by
   nth_rw 2 [←dual_span]
-  exact IsPolyhedral_dual_dual (IsPolyhedral_span hp hS)
+  exact IsPolyhedral.dual_dual_flip (IsPolyhedral_span hp hS)
 
 /-- A polyhedral cone is finitely generated. -/
 theorem fg_of_IsPolyhedral [Module.Finite 𝕜 N] [Module.Finite 𝕜 M] (hp1 : Function.Injective p)
