@@ -41,7 +41,7 @@ lemma IsPolyhedral_def {c : PointedCone R N} :
   ⟨fun ⟨t, ht⟩ => ⟨t, t.finite_toSet, ht⟩,
    fun ⟨_, ht1, ht2⟩ =>⟨ht1.toFinset, ht1.coe_toFinset.symm ▸ ht2⟩⟩
 
-lemma IsPolyhedral_dual_of_Finite {t : Set M} (h : t.Finite) :
+lemma isPolyhedral_dual_of_finite {t : Set M} (h : t.Finite) :
     IsPolyhedral p (dual' p t) := ⟨h.toFinset, by simp⟩
 
 lemma IsPolyhedral_dual_of_FG {c : PointedCone R M} (hc : c.FG) :
