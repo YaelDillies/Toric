@@ -58,6 +58,10 @@ theorem IsPolyhedral.dual_dual_flip {c : PointedCone R N} (hc : IsPolyhedral p c
   obtain ⟨t,rfl⟩ := hc
   exact dual_dual_flip_dual_eq_dual
 
+@[simp]
+theorem IsPolyhedral.dual_flip_dual {c : PointedCone R M} (hc : IsPolyhedral p.flip c) :
+    dual' p.flip (dual' p (c : Set M)) = c := IsPolyhedral.dual_dual_flip hc
+
 theorem isPolyhedral_dual_inj {c₁ c₂ : PointedCone R N} (hc₁ : IsPolyhedral p c₁)
     (hc₂ : IsPolyhedral p c₂) : dual' p.flip c₁ = dual' p.flip c₂ ↔ c₁ = c₂ :=
   ⟨fun h => by rw [← IsPolyhedral.dual_dual_flip hc₁, ← IsPolyhedral.dual_dual_flip hc₂, h],
