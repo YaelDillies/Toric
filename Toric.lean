@@ -33,7 +33,7 @@ import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.Geometry.Convex.Polytope
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
-import Toric.Mathlib.Geometry.Convex.Cone.PolyhedralCone
+import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
