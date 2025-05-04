@@ -19,26 +19,10 @@ namespace PointedCone
 section OrderedSemiring
 variable [Semiring R] [PartialOrder R] [IsOrderedRing R] [AddCommMonoid E] [Module R E] {s : Set E}
 
-theorem span_le (c : PointedCone R E) {s : Set E} :
-    span R s ≤ c ↔ s ⊆ c :=
-  Submodule.span_le
-
 /-- A pointed cone is polyhedral if it is the convex hull of finitely many points. -/
 def IsPolyhedral (c : PointedCone R E) : Prop := ∃ t : Finset E, PointedCone.span R t = c
 
 protected lemma IsPolyhedral.span (h : s.Finite) : (span R s).IsPolyhedral := ⟨h.toFinset, by simp⟩
-
-def isPolyhedral_iff_eq_span (c : PointedCone R E) :
-    c.IsPolyhedral ↔ ∃ t : Finset E, c = PointedCone.span R (t ∪ {0}) := by
-  apply Iff.intro
-  · rintro ⟨g, hg⟩
-    refine ⟨g, ?_⟩
-    apply le_antisymm
-    · simp [hg]
-    · simp only [Set.union_singleton, Submodule.span_insert_zero, hg, le_refl]
-  · rintro ⟨g, hg⟩
-    refine ⟨open Classical in g ∪ {0}, ?_⟩
-    simp_all
 
 @[simp] lemma IsPolyhedral.bot : (⊥ : PointedCone R E).IsPolyhedral := ⟨{0}, by simp⟩
 
@@ -107,14 +91,18 @@ theorem IsPolyhedral.isPolyhedral_span_of_isExtreme {c : PointedCone 𝕜 E}
     (h : IsPolyhedral c) {s : Set E} (he : IsExtreme 𝕜 c s) :
     IsPolyhedral (span 𝕜 s) := by
   replace he' := c.mem_span_inter_of_mem_span_of_isExtreme ?_ he
-  · obtain ⟨g, hg⟩ := isPolyhedral_iff_eq_span c |>.mp h
+  · obtain ⟨g, hg⟩ := h
+    replace hg : c = span 𝕜 (g ∪ {0}) := by
+      apply le_antisymm
+      · simp [hg]
+      · simp only [Set.union_singleton, Submodule.span_insert_zero, hg, le_refl]
     refine ⟨(((g : Set E) ∪ {0}) ∩ s).toFinite.toFinset, ?_⟩
     apply le_antisymm
-    · rw [span_le]
+    · rw [Submodule.span_le]
       simp only [Set.union_singleton, Set.Finite.coe_toFinset]
       intro x hx
       exact subset_span hx.2
-    · rw [span_le]
+    · rw [Submodule.span_le]
       intro x hxs
       replace he := he' ((g : Set E) ∪ {0}) (hg ▸ subset_span) x (hg ▸ he.1 hxs) hxs
       simp_all
@@ -126,16 +114,6 @@ theorem IsPolyhedral.isPolyhedral_of_isExtreme {c d : PointedCone 𝕜 E}
     IsPolyhedral d := by
   rw [← Submodule.span_eq (p := d)]
   exact h.isPolyhedral_span_of_isExtreme he
-
-theorem IsPolyhedral.isPolyhedral_span_of_isExposed [TopologicalSpace 𝕜] [TopologicalSpace E]
-    {c : PointedCone 𝕜 E} (h : IsPolyhedral c) {s : Set E} (he : IsExposed 𝕜 c s) :
-    IsPolyhedral (span 𝕜 s) :=
-  h.isPolyhedral_span_of_isExtreme he.isExtreme
-
-theorem IsPolyhedral.isPolyhedral_of_isExposed [TopologicalSpace 𝕜] [TopologicalSpace E]
-    {c d : PointedCone 𝕜 E} (h : IsPolyhedral c) (he : IsExposed 𝕜 c (d : Set E)) :
-    IsPolyhedral d :=
-  h.isPolyhedral_of_isExtreme he.isExtreme
 
 end LinearOrderedField
 

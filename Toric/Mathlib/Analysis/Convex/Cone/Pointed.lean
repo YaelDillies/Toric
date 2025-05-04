@@ -271,10 +271,5 @@ theorem span_eq_of_isExtreme_of_convex {c : PointedCone 𝕜 E} {s : Set E} (hn 
       exact smul_mem_of_isExtreme he y hys a.1 a.2
   · exact Submodule.subset_span
 
-theorem span_eq_of_isExposed [TopologicalSpace 𝕜] [TopologicalSpace E] {c : PointedCone 𝕜 E}
-    {s : Set E} (hn : s.Nonempty) (he : IsExposed 𝕜 c s) :
-    span 𝕜 s = s :=
-  c.span_eq_of_isExtreme_of_convex hn he.isExtreme (he.convex c.toConvexCone.convex)
-
 end LinearOrderedField
 end PointedCone
