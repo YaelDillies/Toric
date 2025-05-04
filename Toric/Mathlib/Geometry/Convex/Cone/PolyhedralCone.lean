@@ -213,7 +213,7 @@ theorem IsPolyhedral_iff_fg [Module.Finite 𝕜 N] [Module.Finite 𝕜 M] (hp1 :
   ⟨fg_of_IsPolyhedral hp1 hp2, IsPolyhedral_of_fg hp2⟩
 
 /-- The dual of a polyhedral cone is again polyhedral. -/
-theorem IsPolyhedral_dual_of_IsPolyhedral [Module.Finite 𝕜 N] [Module.Finite 𝕜 M]
+protected theorem IsPolyhedral.dual [Module.Finite 𝕜 N] [Module.Finite 𝕜 M]
     (hp1 : Function.Injective p) (hp2 : Function.Injective p.flip) {c : PointedCone 𝕜 N}
     (hc : IsPolyhedral p c) : IsPolyhedral p.flip (dual' p.flip c) :=
   IsPolyhedral_dual_of_FG (fg_of_IsPolyhedral hp1 hp2 hc)
