@@ -70,7 +70,7 @@ variable {𝕜 M N : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing
 
 /-- If the module `M` is finite and the pairing induces an injection `N` into `M →ₗ[𝕜] 𝕜`,
 then the zero cone in `N` is polyhedral. -/
-theorem IsPolyhedral_bot [Module.Finite 𝕜 M] (hp : Function.Injective p.flip) :
+theorem IsPolyhedral.bot [Module.Finite 𝕜 M] (hp : Function.Injective p.flip) :
     IsPolyhedral p (⊥ : PointedCone 𝕜 N) := by
   obtain ⟨S, hS : span 𝕜 _ = ⊤⟩ := (Nonneg.isFiniteModuleOver 𝕜 M).fg_top
   use S
