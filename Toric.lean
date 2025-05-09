@@ -19,6 +19,7 @@ import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
+import Toric.Mathlib.Algebra.Order.Nonneg.Module
 import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.AlgebraicGeometry.Limits
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
