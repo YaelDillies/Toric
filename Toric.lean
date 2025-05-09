@@ -31,6 +31,7 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 import Toric.Mathlib.Data.Finset.Powerset
+import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
