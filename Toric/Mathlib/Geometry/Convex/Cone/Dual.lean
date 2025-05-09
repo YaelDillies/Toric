@@ -67,18 +67,14 @@ lemma dual_eq_iInter_dual_singleton (s : Set M) :
 /-- Any set is a subset of its double dual cone. -/
 lemma subset_dual_dual : s ⊆ dual' p.flip (dual' p s) := fun _x hx _y hy ↦ hy hx
 
--------------------------------------------------------------
--- Things below this line are not part of mathlib's #24149 --
--------------------------------------------------------------
-
 @[simp]
-lemma dual_dual_flip_dual_eq_dual : dual' p (dual' p.flip (dual' p s)) = dual' p s :=
+lemma dual_dual_flip_dual : dual' p (dual' p.flip (dual' p s)) = dual' p s :=
   le_antisymm (dual_le_dual subset_dual_dual) subset_dual_dual
 
 @[simp]
-lemma dual_flip_dual_dual_flip_eq_dual_flip {s : Set N} :
+lemma dual_flip_dual_dual_flip {s : Set N} :
     dual' p.flip (dual' p (dual' p.flip s)) = dual' p.flip s :=
-  dual_dual_flip_dual_eq_dual
+  dual_dual_flip_dual
 
 @[simp]
 lemma dual_span (s : Set M) : dual' p (span R s) = dual' p s := by
