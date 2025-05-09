@@ -24,6 +24,8 @@ import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.AlgebraicGeometry.Limits
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
+import Toric.Mathlib.Analysis.Convex.Extreme
+import Toric.Mathlib.Analysis.Convex.Hull
 import Toric.Mathlib.Analysis.Convex.Polytope
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_

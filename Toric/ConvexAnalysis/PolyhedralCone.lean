@@ -87,6 +87,34 @@ lemma IsPolyhedral.top [hE : FiniteDimensional 𝕜 E] : (⊤ : PointedCone 𝕜
       -- We use our auxiliary statement from above
       exact neg_mem_span_R _ hx
 
+theorem IsPolyhedral.isPolyhedral_span_of_isExtreme {c : PointedCone 𝕜 E}
+    (h : IsPolyhedral c) {s : Set E} (he : IsExtreme 𝕜 c s) :
+    IsPolyhedral (span 𝕜 s) := by
+  replace he' := c.mem_span_inter_of_mem_span_of_isExtreme ?_ he
+  · obtain ⟨g, hg⟩ := h
+    replace hg : c = span 𝕜 (g ∪ {0}) := by
+      apply le_antisymm
+      · simp [hg]
+      · simp only [Set.union_singleton, Submodule.span_insert_zero, hg, le_refl]
+    refine ⟨(((g : Set E) ∪ {0}) ∩ s).toFinite.toFinset, ?_⟩
+    apply le_antisymm
+    · rw [Submodule.span_le]
+      simp only [Set.union_singleton, Set.Finite.coe_toFinset]
+      intro x hx
+      exact subset_span hx.2
+    · rw [Submodule.span_le]
+      intro x hxs
+      replace he := he' ((g : Set E) ∪ {0}) (hg ▸ subset_span) x (hg ▸ he.1 hxs) hxs
+      simp_all
+  · intro r x hx
+    exact smul_mem_of_isExtreme he x hx r.1 r.2
+
+theorem IsPolyhedral.isPolyhedral_of_isExtreme {c d : PointedCone 𝕜 E}
+    (h : IsPolyhedral c) (he : IsExtreme 𝕜 c (d : Set E)) :
+    IsPolyhedral d := by
+  rw [← Submodule.span_eq (p := d)]
+  exact h.isPolyhedral_span_of_isExtreme he
+
 end LinearOrderedField
 
 section NormedAddCommGroup
