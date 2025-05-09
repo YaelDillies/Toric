@@ -1,7 +1,6 @@
 import Mathlib.Analysis.Convex.Extreme
 
-variable {𝕜 E : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]
-  [AddCommGroup E] [Module 𝕜 E]
+variable {𝕜 E : Type*} [Field 𝕜] [LinearOrder 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 private theorem isExtreme_iff_mem_convexHull_inter_of_mem_convexHull.aux {x y z : E} {t : Set E}
     (ht : z ∈ t) (hs : z ∈ openSegment 𝕜 x y) (hc : z ∈ convexHull 𝕜 ({x, y} ∩ t)) :

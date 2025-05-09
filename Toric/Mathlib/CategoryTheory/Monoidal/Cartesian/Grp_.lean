@@ -7,7 +7,13 @@ import Mathlib.Algebra.Category.Grp.ChosenFiniteProducts
 import Mathlib.CategoryTheory.Monoidal.FunctorCategory
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
+/-!
+# Group objects form a cartesian-monoidal category
+-/
+
 open CategoryTheory MonoidalCategory Limits ChosenFiniteProducts Mon_Class
+
+attribute [local simp] leftUnitor_hom rightUnitor_hom
 
 namespace CategoryTheory
 
@@ -60,6 +66,7 @@ instance : Grp_Class <| 𝟙_ C where
   mul := toUnit _
   inv := 𝟙 _
 
+
 /- noncomputable instance : Grp_Class <| X ⊗ Y where
   inv := ι ⊗ ι
   left_inv' := by
@@ -67,9 +74,9 @@ instance : Grp_Class <| 𝟙_ C where
     · simp
   right_inv' := _ -/
 
-noncomputable instance : Grp_Class <| X ⊗ Y :=
-  .ofRepresentableBy _ (yonedaGrpObj X ⊗ yonedaGrpObj Y) <| by
-    refine .ofIso ((yonedaGrpObjRepresentableBy _).tensorObj (yonedaGrpObjRepresentableBy _))
+noncomputable instance Grp_Class_tensorObj : Grp_Class <| X ⊗ Y :=
+  .ofRepresentableBy _ (yonedaGrpObj X ⊗ yonedaGrpObj Y) <| .ofIso
+    ((yonedaGrpObjRepresentableBy _).tensorObj (yonedaGrpObjRepresentableBy _))
       (Functor.tensorObjComp _ _ _).symm
 
 @[simp]
@@ -79,17 +86,26 @@ lemma prodObj : (Grp_.mk' (X ⊗ Y)).X = X ⊗ Y := rfl
 @[ext]
 lemma prodExt {Z : C} {f g : Z ⟶ (Grp_.mk' (X ⊗ Y)).X} (h₁ : f ≫ fst _ _ = g ≫ fst _ _)
     (h₂ : f ≫ snd _ _ = g ≫ snd _ _) : f = g := by
-    simp at f g
-    sorry
+  simp at f g
+  sorry
 
 lemma prodOne : η[X ⊗ Y] = lift η η := by
-  have := toUnit_unique (toUnit (𝟙_ C)) (𝟙 (𝟙_ C))
-  ext <;> simp [this]
+  ext <;> simp <;> sorry
 
-lemma prodInv : ι[X ⊗ Y] = (ι[X] ⊗ ι[Y]) := sorry
+lemma prodInv : ι[X ⊗ Y] = ι[X] ⊗ ι[Y] := sorry
 
-noncomputable instance : ChosenFiniteProducts <| Grp_ C where
-  product X Y := {
+noncomputable instance : ChosenFiniteProducts <| Grp_ C :=
+  .ofChosenFiniteProducts {
+    cone.pt := Grp_.mk' (𝟙_ C)
+    cone.π.app := isEmptyElim
+    cone.π.naturality := isEmptyElim
+    isLimit.lift s := {
+      hom := toUnit _
+      one_hom := toUnit_unique _ _
+      mul_hom := toUnit_unique _ _
+    }
+    isLimit.uniq s m h := by ext; exact toUnit_unique _ _
+  } fun X Y ↦ {
     cone.pt := .mk' (X.X ⊗ Y.X)
     cone.π := {
       app := by
@@ -112,14 +128,5 @@ noncomputable instance : ChosenFiniteProducts <| Grp_ C where
     isLimit.fac := sorry
     isLimit.uniq := sorry
   }
-  terminal.cone.pt := Grp_.mk' (𝟙_ C)
-  terminal.cone.π.app := isEmptyElim
-  terminal.cone.π.naturality := isEmptyElim
-  terminal.isLimit.lift s := {
-    hom := toUnit _
-    one_hom := toUnit_unique _ _
-    mul_hom := toUnit_unique _ _
-  }
-  terminal.isLimit.uniq s m h := by ext; exact toUnit_unique _ _
 
 end

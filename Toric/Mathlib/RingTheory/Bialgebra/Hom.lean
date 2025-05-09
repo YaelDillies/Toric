@@ -1,5 +1,7 @@
 import Mathlib.RingTheory.Bialgebra.Hom
 
+suppress_compilation
+
 open Coalgebra TensorProduct
 
 namespace BialgHom
@@ -41,7 +43,7 @@ variable [CommSemiring A] [Algebra R A]
 
 -- TODO: Move this somewhere more appropriate
 variable (R A) in
-noncomputable def mulAlgHom : A ⊗[R] A →ₐ[R] A :=
+def mulAlgHom : A ⊗[R] A →ₐ[R] A :=
   .ofLinearMap (.mul' R A) (by simp [Algebra.TensorProduct.one_def]) fun x y ↦ by
     induction x <;> induction y <;> simp [mul_mul_mul_comm, mul_add, add_mul, *]; sorry
 
@@ -52,7 +54,7 @@ variable [CommSemiring A] [Bialgebra R A]
 
 
 variable (R A) in
-noncomputable def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
+def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
   __ := LinearMap.mul' R A
   map_smul' a b := by induction b <;> simp
   counit_comp := by ext; simp
@@ -62,13 +64,13 @@ noncomputable def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
     sorry
 
 variable (R A) in
-noncomputable def mulBialgHom : A ⊗[R] A →ₐc[R] A where
+def mulBialgHom : A ⊗[R] A →ₐc[R] A where
   __ := mulAlgHom R A
   __ := mulCoalgHom R A
 
 -- This is false without cocommutativity of A :)
 variable (R A) in
-noncomputable def comulCoalgHom : A →ₗc[R] A ⊗[R] A where
+def comulCoalgHom : A →ₗc[R] A ⊗[R] A where
   __ := comulAlgHom R A
   map_smul' a b := by simp
   counit_comp := by ext; simp; sorry
@@ -78,7 +80,7 @@ noncomputable def comulCoalgHom : A →ₗc[R] A ⊗[R] A where
     sorry
 
 variable (R A) in
-noncomputable def comulBialgHom : A →ₐc[R] A ⊗[R] A where
+def comulBialgHom : A →ₐc[R] A ⊗[R] A where
   __ := comulAlgHom R A
   __ := comulCoalgHom R A
 

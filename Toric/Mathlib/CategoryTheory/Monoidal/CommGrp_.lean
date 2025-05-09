@@ -5,10 +5,9 @@ open CategoryTheory ChosenFiniteProducts MonoidalCategory Grp_Class Opposite
 
 universe w v u
 
-variable {C : Type u} [Category.{v} C] [ChosenFiniteProducts C]
+variable {C : Type u} [Category.{v} C] [ChosenFiniteProducts C] [BraidedCategory C]
 
-class abbrev CommGrp_Class {C : Type*} [Category C] [ChosenFiniteProducts C] (X : C) :=
-  Grp_Class X, IsCommMon X
+class abbrev CommGrp_Class (X : C) := Grp_Class X, IsCommMon X
 
 instance (X : C) [CommGrp_Class X] : CommGrp_Class (Grp_.mk' X).X := ‹_›
 

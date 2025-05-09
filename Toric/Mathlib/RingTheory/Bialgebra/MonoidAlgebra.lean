@@ -3,6 +3,8 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 
+suppress_compilation
+
 open Coalgebra
 
 variable {R A M N O : Type*}

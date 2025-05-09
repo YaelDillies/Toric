@@ -164,7 +164,7 @@ lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι
 
 lemma Grp_Class.mul_eq_comp_mul {G H : C} {f g : G ⟶ H} [Grp_Class H] : f * g = lift f g ≫ μ := rfl
 
-lemma Grp_Class.mul_inv_rev {G : C} [Grp_Class G] :
+lemma Grp_Class.mul_inv_rev [BraidedCategory C] {G : C} [Grp_Class G] :
     μ ≫ ι = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by
   calc
     _ = ((fst G G) * (snd G G)) ≫ ι := by rw [mul_eq_mul]
@@ -173,7 +173,7 @@ lemma Grp_Class.mul_inv_rev {G : C} [Grp_Class G] :
     _ = lift (fst G G ≫ ι) (snd G G ≫ ι) ≫ (β_ G G).hom ≫ μ := by simp
     _ = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by simp
 
-instance Hom.instCommGroup {G H : C} [Grp_Class H] [IsCommMon H] :
+instance Hom.instCommGroup [BraidedCategory C] {G H : C} [Grp_Class H] [IsCommMon H] :
     CommGroup (G ⟶ H) where
   __ := Hom.instCommMonoid
   inv_mul_cancel f := by simp
@@ -194,7 +194,7 @@ instance instOne : One (G ⟶ H) := inferInstanceAs <| One (G.toMon_ ⟶ H.toMon
 
 lemma hom_one : (1 : (G ⟶ H)).hom = 1 := rfl
 
-variable [IsCommMon H.X]
+variable [BraidedCategory C] [IsCommMon H.X]
 
 instance instMul : Mul (G ⟶ H) := inferInstanceAs <| Mul (G.toMon_ ⟶ H.toMon_)
 
@@ -256,7 +256,7 @@ instance instCommGroup : CommGroup (G ⟶ H) :=
 
 end Grp_.Hom
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G : C}
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] [BraidedCategory C] {G : C}
 
 instance Grp_.mk'.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
 
@@ -280,7 +280,8 @@ protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
 
 /-- If `F : C ⥤ D` is a fully faithful monoidal functor, then `Grp(F) : Grp C ⥤ Grp D` is fully
 faithful too. -/
-protected def FullyFaithful.mapGrp (hF : F.FullyFaithful) : F.mapGrp.FullyFaithful where
+protected noncomputable def FullyFaithful.mapGrp (hF : F.FullyFaithful) :
+    F.mapGrp.FullyFaithful where
   preimage {X Y} f := Grp_.homMk <| hF.preimage f.hom
 
 open EssImageSubcategory Monoidal in

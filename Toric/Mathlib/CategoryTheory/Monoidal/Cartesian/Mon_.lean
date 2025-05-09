@@ -52,7 +52,7 @@ section
 
 attribute [local instance] monoidOfMon_Class
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C} [IsCommMon N.X]
+variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}
 
 @[reassoc]
 lemma Mon_Class.comp_mul {M N O : C} (f g : M ⟶ N) (h : O ⟶ M) [Mon_Class N] :
@@ -84,6 +84,15 @@ lemma Mon_Class.one_comp {M N O : C} (h : N ⟶ O) [Mon_Class N] [Mon_Class O] [
 lemma Mon_Class.comp_one {M N O : C} (h : M ⟶ N) [Mon_Class O] :
     h ≫ (1 : N ⟶ O) = 1 := ((yonedaMon.obj (.mk' O)).map (h.op)).hom.map_one
 
+@[reassoc]
+lemma Mon_Class.comp_pow {M N O : C} (f : M ⟶ N) (n : ℕ) (h : O ⟶ M) [Mon_Class N] :
+    h ≫ f ^ n = (h ≫ f) ^ n := by
+  induction' n with n hn
+  · simp
+  simp only [pow_succ, Mon_Class.comp_mul, hn]
+
+variable [BraidedCategory C]
+
 instance Hom.instCommMonoid {M N : C} [Mon_Class N] [IsCommMon N] : CommMonoid (M ⟶ N) where
   mul_comm f g := by
     show lift _ _ ≫ _ = lift _ _ ≫ _
@@ -91,13 +100,6 @@ instance Hom.instCommMonoid {M N : C} [Mon_Class N] [IsCommMon N] : CommMonoid (
     rw [← Category.assoc]
     congr 1
     ext <;> simp
-
-@[reassoc]
-lemma Mon_Class.comp_pow {M N O : C} (f : M ⟶ N) (n : ℕ) (h : O ⟶ M) [Mon_Class N] :
-    h ≫ f ^ n = (h ≫ f) ^ n := by
-  induction' n with n hn
-  · simp
-  simp only [pow_succ, Mon_Class.comp_mul, hn]
 
 end
 
@@ -114,7 +116,7 @@ instance instOne : One (M ⟶ N) where
 
 lemma hom_one : (1 : (M ⟶ N)).hom = 1 := rfl
 
-variable [IsCommMon N.X]
+variable [BraidedCategory C] [IsCommMon N.X]
 
 instance instMul : Mul (M ⟶ N) where
   mul f g := {
