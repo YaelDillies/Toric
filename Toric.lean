@@ -1,7 +1,6 @@
 import Toric.AffineMonoid.Embedding
 import Toric.AffineMonoid.Irreducible
 import Toric.ConvexAnalysis.PolyhedralCone
-import Toric.GroupScheme.CFPGrp
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
@@ -22,14 +21,15 @@ import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
+import Toric.Mathlib.AlgebraicGeometry.Limits
+import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.Analysis.Convex.Cone.Pointed
 import Toric.Mathlib.Analysis.Convex.Polytope
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mod_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 import Toric.Mathlib.Data.Finset.Powerset
