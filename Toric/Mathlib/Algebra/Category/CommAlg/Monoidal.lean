@@ -47,10 +47,12 @@ def isInitialSelf : Limits.IsInitial (of R R) := .ofUniqueHom (fun A ↦ ofHom (
 
 open Opposite
 
-instance : ChosenFiniteProducts (CommAlg R)ᵒᵖ where
-  product A B := ⟨BinaryCofan.op <| binaryCofan (unop A) (unop B),
-    BinaryCofan.IsColimit.op <| binaryCofanIsColimit (unop A) (unop B)⟩
-  terminal := ⟨_, terminalOpOfInitial isInitialSelf⟩
+instance : ChosenFiniteProducts (CommAlg R)ᵒᵖ :=
+  .ofChosenFiniteProducts ⟨_, terminalOpOfInitial isInitialSelf⟩ fun A B ↦
+    ⟨BinaryCofan.op <| binaryCofan (unop A) (unop B),
+      BinaryCofan.IsColimit.op <| binaryCofanIsColimit (unop A) (unop B)⟩
+
+instance : BraidedCategory (CommAlg R)ᵒᵖ := .ofChosenFiniteProducts
 
 open MonoidalCategory
 

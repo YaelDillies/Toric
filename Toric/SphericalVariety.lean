@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mod_
+import Mathlib.CategoryTheory.Monoidal.Cartesian.Mod_
 
 /-!
 # Spherical varieties

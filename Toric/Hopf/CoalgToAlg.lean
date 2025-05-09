@@ -23,6 +23,8 @@ f * g = f g
 We then inherit this structure on bialgebra maps `C → A` where `C` and `A` are bialgebras.
 -/
 
+suppress_compilation
+
 open Coalgebra Bialgebra TensorProduct
 
 universe u
@@ -42,7 +44,7 @@ section Ring
 variable [Ring A] [AddCommGroup C] [Algebra R A] [Module R C] [Coalgebra R C]
 
 instance : One (C →ₗ[R] A) where one := Algebra.linearMap R A ∘ₗ counit
-noncomputable instance : Mul (C →ₗ[R] A) where mul f g := mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul
+instance : Mul (C →ₗ[R] A) where mul f g := mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul
 
 lemma one_def : (1 : C →ₗ[R] A) = Algebra.linearMap R A ∘ₗ counit := rfl
 lemma mul_def (f g : C →ₗ[R] A) : f * g = mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul := rfl
@@ -91,7 +93,7 @@ private lemma convMul_one (f : C →ₗ[R] A) : f * 1 = f := calc
     rw [lTensor_counit_comp_comul]
   _ = f := by ext; simp
 
-noncomputable instance : Ring (C →ₗ[R] A) where
+instance : Ring (C →ₗ[R] A) where
   left_distrib f g h := by ext; simp [TensorProduct.map_add_right]
   right_distrib f g h := by ext; simp [TensorProduct.map_add_left]
   zero_mul f := by ext; simp
@@ -148,7 +150,7 @@ private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := calc
       μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ
   _ = μ ∘ₗ (g ⊗ₘ f) ∘ₗ δ := sorry
 
-noncomputable instance : CommRing (C →ₗ[R] A) where
+instance : CommRing (C →ₗ[R] A) where
   mul_comm := convMul_comm
 
 end CommRing
@@ -195,11 +197,11 @@ variable [CommRing A] [Ring C] [Bialgebra R C]
 section BialgebraToAlgebra
 variable [Algebra R A]
 
-noncomputable instance : One (C →ₐ[R] A) where one := (Algebra.ofId R A).comp <| counitAlgHom R C
-noncomputable instance : Mul (C →ₐ[R] A) where
+instance : One (C →ₐ[R] A) where one := (Algebra.ofId R A).comp <| counitAlgHom R C
+instance : Mul (C →ₐ[R] A) where
   mul f g := .comp (mulAlgHom R A) <| .comp (Algebra.TensorProduct.map f g) <| comulAlgHom R C
 
-noncomputable instance : Pow (C →ₐ[R] A) ℕ := ⟨fun f n ↦ npowRec n f⟩
+instance : Pow (C →ₐ[R] A) ℕ := ⟨fun f n ↦ npowRec n f⟩
 
 lemma one_def : (1 : C →ₐ[R] A) = (Algebra.ofId R A).comp (counitAlgHom ..) := rfl
 lemma mul_def (f g : C →ₐ[R] A) : f * g =
@@ -216,7 +218,7 @@ lemma toLinearMap_pow (f : C →ₐ[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.to
   · rfl
   simp only [pow_succ, toLinearMap_mul, hn, _root_.pow_succ]
 
-noncomputable instance : CommMonoid (C →ₐ[R] A) :=
+instance : CommMonoid (C →ₐ[R] A) :=
   toLinearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
 
 lemma mul_distrib_comp {B : Type u} [Ring B] [Bialgebra R B] (f g : C →ₐ A) (h : B →ₐc[R] C) :
@@ -282,10 +284,10 @@ section Bialgebra
 variable [Bialgebra R A] [Bialgebra R C]
 
 instance : One (C →ₐc[R] A) where one := (unitBialgHom R A).comp <| counitBialgHom R C
-noncomputable instance : Mul (C →ₐc[R] A) where
+instance : Mul (C →ₐc[R] A) where
   mul f g := .comp (mulBialgHom R A) <| .comp (Bialgebra.TensorProduct.map f g) <| comulBialgHom R C
 
-noncomputable instance : Pow (C →ₐc[R] A) ℕ := ⟨fun f n ↦ npowRec n f⟩
+instance : Pow (C →ₐc[R] A) ℕ := ⟨fun f n ↦ npowRec n f⟩
 
 lemma one_def : (1 : C →ₐc[R] A) = (unitBialgHom R A).comp (counitBialgHom ..) := rfl
 lemma mul_def (f g : C →ₐc[R] A) : f * g =
@@ -306,7 +308,7 @@ lemma toLinearMap_pow (f : C →ₐc[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.t
   · rfl
   rw [pow_succ, _root_.pow_succ, toLinearMap_mul, hn]
 
-noncomputable instance : CommMonoid (C →ₐc[R] A) :=
+instance : CommMonoid (C →ₐc[R] A) :=
   coe_linearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
 
 end Bialgebra
@@ -323,7 +325,7 @@ instance : Inv (C →ₐc[R] A) where inv f := sorry
 
 private lemma inv_convMul_cancel (f : C →ₐc[R] A) : f⁻¹ * f = 1 := sorry
 
-noncomputable instance : CommGroup (C →ₐc[R] A) where inv_mul_cancel := inv_convMul_cancel
+instance : CommGroup (C →ₐc[R] A) where inv_mul_cancel := inv_convMul_cancel
 
 end HopfAlgebra
 end BialgHom

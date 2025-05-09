@@ -6,11 +6,12 @@ Authors: Andrew Yang
 import Mathlib.Algebra.Category.Grp.Adjunctions
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.Algebra.Category.Ring.Adjunctions
-import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.CategoryTheory.Adjunction.Opposites
 import Mathlib.CategoryTheory.Limits.Constructions.Over.Basic
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
+import Toric.Mathlib.AlgebraicGeometry.Limits
+import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.MvLaurentPolynomial
 
@@ -25,8 +26,6 @@ noncomputable section
 open CategoryTheory Opposite Limits
 
 namespace AlgebraicGeometry.Scheme
-
-attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
 
 def DiagInt (M : Type*) [CommMonoid M] : Scheme := Spec (.of (MonoidAlgebra (ULift ℤ) M))
 

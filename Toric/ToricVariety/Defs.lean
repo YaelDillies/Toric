@@ -5,8 +5,8 @@ Authors: Yaël Dillies, Paul Lezeau, Patrick Luo, Michał Mrugała
 -/
 import Mathlib.AlgebraicGeometry.Morphisms.UnderlyingMap
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
+import Mathlib.CategoryTheory.Monoidal.Cartesian.Mod_
 import Toric.GroupScheme.Torus
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mod_
 
 /-!
 # Toric varieties

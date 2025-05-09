@@ -17,6 +17,8 @@ one can go back and forth between `{A : Type*} [CommRing A] [HopfAlgebra R A]` a
 `A : Grp_ (CommAlg R)ᵒᵖ`.
 -/
 
+suppress_compilation
+
 open CategoryTheory Opposite Mon_Class Grp_Class
 
 universe u
@@ -28,7 +30,7 @@ section bialgToMon
 variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [Bialgebra R A] [Bialgebra R B]
   {f : A →ₐc[R] B}
 
-noncomputable instance Mon_Class_op_commAlgOf : Mon_Class <| op <| CommAlg.of R A where
+instance Mon_Class_op_commAlgOf : Mon_Class <| op <| CommAlg.of R A where
   one := (CommAlg.ofHom <| Bialgebra.counitAlgHom R A).op
   mul := (CommAlg.ofHom <| Bialgebra.comulAlgHom R A).op
   one_mul' := by
@@ -68,7 +70,7 @@ section hopfToGrp
 variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra R A] [HopfAlgebra R B]
   {f : A →ₐc[R] B}
 
-noncomputable instance Grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
+instance Grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
   inv := (CommAlg.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
   left_inv' := by
     apply Quiver.Hom.unop_inj
@@ -100,7 +102,7 @@ variable {R : Type u} [CommRing R] {G : (CommAlg.{u} R)ᵒᵖ} [Grp_Class G]
 
 open MonoidalCategory
 
-noncomputable instance bialgebra_unop : Bialgebra R G.unop :=
+instance bialgebra_unop : Bialgebra R G.unop :=
   .ofAlgHom μ[G].unop.hom η[G].unop.hom
   (by
     convert congr(($((Mon_Class.mul_assoc_flip G).symm)).unop.hom)
@@ -127,7 +129,7 @@ noncomputable instance bialgebra_unop : Bialgebra R G.unop :=
     rw [CommAlg.leftWhisker_hom]
     rfl)
 
-noncomputable instance hopfAlgebra_unop : HopfAlgebra R G.unop where
+instance hopfAlgebra_unop : HopfAlgebra R G.unop where
   antipode := ι[G].unop.hom.toLinearMap
   mul_antipode_rTensor_comul := by
     convert congr(($(Grp_Class.left_inv G)).unop.hom.toLinearMap)
