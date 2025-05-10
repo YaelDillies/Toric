@@ -12,14 +12,16 @@ import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 /-!
 # The category of Hopf algebras
 
-This file shows that `Grp_ (CommAlg R)ᵒᵖ` is the category of `R`-Hopf algebras, in the sense that
-one can go back and forth between `{A : Type*} [CommRing A] [HopfAlgebra R A]` and
-`A : Grp_ (CommAlg R)ᵒᵖ`.
+This file shows that `(Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ` is the category of `R`-Hopf algebras, in the sense
+that one can go back and forth between `{A : Type*} [CommRing A] [HopfAlgebra R A]` and
+`A : (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ`.
 -/
 
 suppress_compilation
 
 open CategoryTheory Opposite Mon_Class Grp_Class
+
+attribute [local ext] Quiver.Hom.unop_inj
 
 universe u
 variable {R : CommRingCat.{u}}
@@ -33,36 +35,17 @@ variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [Bialgebra R A]
 instance Mon_Class_op_commAlgOf : Mon_Class <| op <| CommAlg.of R A where
   one := (CommAlg.ofHom <| Bialgebra.counitAlgHom R A).op
   mul := (CommAlg.ofHom <| Bialgebra.comulAlgHom R A).op
-  one_mul' := by
-    apply Quiver.Hom.unop_inj
-    ext x
-    convert Coalgebra.rTensor_counit_comul (R := R) x
-    simp [-Coalgebra.rTensor_counit_comul, CommAlg.rightWhisker_hom]
-    rfl
-  mul_one' := by
-    apply Quiver.Hom.unop_inj
-    ext x
-    convert Coalgebra.lTensor_counit_comul (R := R) x
-    simp [-Coalgebra.lTensor_counit_comul, CommAlg.leftWhisker_hom]
-    rfl
-  mul_assoc' := by
-    apply Quiver.Hom.unop_inj
-    ext x
-    convert (Coalgebra.coassoc_symm_apply (R := R) x).symm
-      <;> simp [-Coalgebra.coassoc_symm_apply, CommAlg.associator_hom_unop_hom,
-      CommAlg.rightWhisker_hom, CommAlg.leftWhisker_hom] <;> rfl
+  one_mul' := by ext; exact Coalgebra.rTensor_counit_comul _
+  mul_one' := by ext; exact Coalgebra.lTensor_counit_comul _
+  mul_assoc' := by ext; exact (Coalgebra.coassoc_symm_apply (R := R) _).symm
 
 instance isMon_Hom_commAlgOfHom : IsMon_Hom (CommAlg.ofHom (f : A →ₐ[R] B)).op where
-   one_hom := by
-     apply Quiver.Hom.unop_inj
-     ext
-     simp [one]
+   one_hom := by ext; simp [one]
    mul_hom := by
-     apply Quiver.Hom.unop_inj
-     ext
-     simp only [mul, unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
-         CommAlg.tensorHom_unop_hom]
-     rw [BialgHomClass.map_comp_comulAlgHom]
+    ext
+    simp only [mul, unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
+      CommAlg.tensorHom_unop_hom]
+    rw [BialgHomClass.map_comp_comulAlgHom]
 
 end bialgToMon
 
@@ -104,30 +87,9 @@ open MonoidalCategory
 
 instance bialgebra_unop : Bialgebra R G.unop :=
   .ofAlgHom μ[G].unop.hom η[G].unop.hom
-  (by
-    convert congr(($((Mon_Class.mul_assoc_flip G).symm)).unop.hom)
-    · simp [-Mon_Class.mul_assoc]
-      rw [CommAlg.associator_inv_unop_hom]
-      rw [← Quiver.Hom.op_unop μ[G]]
-      rw [CommAlg.rightWhisker_hom]
-      simp
-      rfl
-    simp
-    rw [← Quiver.Hom.op_unop μ[G]]
-    rw [CommAlg.leftWhisker_hom]
-    rfl)
-  (by
-    convert congr(($(Mon_Class.one_mul G)).unop.hom)
-    simp [-Mon_Class.one_mul]
-    rw [← Quiver.Hom.op_unop η[G]]
-    rw [CommAlg.rightWhisker_hom]
-    rfl)
-  (by
-    convert congr(($(Mon_Class.mul_one G)).unop.hom)
-    simp [-Mon_Class.mul_one]
-    rw [← Quiver.Hom.op_unop η[G]]
-    rw [CommAlg.leftWhisker_hom]
-    rfl)
+    congr(($((Mon_Class.mul_assoc_flip G).symm)).unop.hom)
+    congr(($(Mon_Class.one_mul G)).unop.hom)
+    congr(($(Mon_Class.mul_one G)).unop.hom)
 
 instance hopfAlgebra_unop : HopfAlgebra R G.unop where
   antipode := ι[G].unop.hom.toLinearMap
@@ -153,14 +115,7 @@ def IsMon_Hom.toCoalgHom : H.unop →ₗc[R] G.unop where
   __ := f.unop.hom
   map_smul' := by simp
   counit_comp := congr(($(IsMon_Hom.one_hom (f := f))).unop.hom.toLinearMap)
-  map_comp_comul := by
-    convert congr(($((IsMon_Hom.mul_hom (f := f)).symm)).unop.hom.toLinearMap)
-    simp
-    rw [←Quiver.Hom.op_unop (f ⊗ f)]
-    show _ = (CommAlg.Hom.hom ((unop f).op ⊗ (unop f).op).unop).toLinearMap
-        ∘ₗ (CommAlg.Hom.hom μ[H].unop).toLinearMap
-    rw [CommAlg.tensorHom_unop_hom]
-    congr 1
+  map_comp_comul := congr(($((IsMon_Hom.mul_hom (f := f)).symm)).unop.hom.toLinearMap)
 
 /-- The Hopf algebra hom coming from a group morphism in the category of algebras. -/
 def IsMon_Hom.toBialgHom : H.unop →ₐc[R] G.unop where
