@@ -32,25 +32,3 @@ example : (M.X ◁ M.mul) ≫ M.mul = (α_ M.X M.X M.X).inv ≫ (M.mul ▷ M.X) 
   Mon_Class.mul_assoc_flip M.X
 
 end Mon_
-
-open Limits
-
-namespace CategoryTheory.Functor
-universe v₁ v₂ v₃ u₁ u₂ u₃
-variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
-variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory D]
-variable {E : Type u₃} [Category.{v₃} E] [MonoidalCategory E]
-variable (F F' : C ⥤ D) (G : D ⥤ E)
-
-open LaxMonoidal
-
-@[simps!]
-noncomputable def mapMonIdIso : mapMon (𝟭 C) ≅ 𝟭 (Mon_ C) :=
-  NatIso.ofComponents fun X ↦ Mon_.mkIso (.refl _)
-
-@[simps!]
-noncomputable def mapMonCompIso [F.LaxMonoidal] [G.LaxMonoidal] :
-    (F ⋙ G).mapMon ≅ F.mapMon ⋙ G.mapMon :=
-  NatIso.ofComponents fun X ↦ Mon_.mkIso (.refl _)
-
-end CategoryTheory.Functor

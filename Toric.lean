@@ -27,7 +27,6 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
 import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
@@ -35,7 +34,6 @@ import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
 import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
-import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
 import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID

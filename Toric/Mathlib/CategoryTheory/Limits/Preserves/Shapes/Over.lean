@@ -1,6 +1,6 @@
 import Mathlib.CategoryTheory.Limits.Preserves.Finite
 import Mathlib.CategoryTheory.WithTerminal.FinCategory
-import Toric.Mathlib.CategoryTheory.WithTerminal.Cones
+import Mathlib.CategoryTheory.WithTerminal.Cone
 
 namespace CategoryTheory.Limits
 
@@ -17,10 +17,10 @@ instance PreservesLimitsOfShape.overPost
     preserves {coneK} isLimitConeK := by
       let coneC := coneEquiv.functor.obj coneK
       obtain ⟨isLimitConeD⟩ : Nonempty (IsLimit (F.mapCone coneC)) :=
-        PreservesLimitsOfShape.preservesLimit.preserves <| limitEquiv.symm isLimitConeK
+        PreservesLimitsOfShape.preservesLimit.preserves <| isLimitEquiv.symm isLimitConeK
       replace isLimitConeD :=
         (IsLimit.postcomposeHomEquiv liftFromOverComp.symm (F.mapCone coneC)).symm isLimitConeD
-      exact ⟨limitEquiv <| isLimitConeD.ofIsoLimit <|
+      exact ⟨isLimitEquiv <| isLimitConeD.ofIsoLimit <|
         Cones.ext (.refl _) fun | .star | .of a => by aesop⟩
   }
 
@@ -39,10 +39,10 @@ instance PreservesColimitsOfShape.underPost
     preserves {coconeK} isLimitCoconeK := by
       let coconeC := coconeEquiv.functor.obj coconeK
       obtain ⟨isColimitCoconeD⟩ : Nonempty (IsColimit (F.mapCocone coconeC)) :=
-        PreservesColimitsOfShape.preservesColimit.preserves <| colimitEquiv.symm isLimitCoconeK
+        PreservesColimitsOfShape.preservesColimit.preserves <| isColimitEquiv.symm isLimitCoconeK
       replace isColimitCoconeD :=
         (IsColimit.precomposeHomEquiv liftFromUnderComp (F.mapCocone coconeC)).symm isColimitCoconeD
-      exact ⟨colimitEquiv <| isColimitCoconeD.ofIsoColimit <|
+      exact ⟨isColimitEquiv <| isColimitCoconeD.ofIsoColimit <|
         Cocones.ext (.refl _) fun | .star | .of a => by aesop⟩
   }
 

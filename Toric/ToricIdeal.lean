@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Toric.Mathlib.GroupTheory.MonoidLocalization.DivPairs
+import Mathlib.GroupTheory.MonoidLocalization.DivPairs
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 
 /-!

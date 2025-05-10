@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Paul Lezeau, Patrick Luo, Michał Mrugała
 -/
 import Mathlib.AlgebraicGeometry.Morphisms.UnderlyingMap
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.HasPullback
-import Mathlib.CategoryTheory.Monoidal.Cartesian.Mod_
+import Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.GroupScheme.Torus
 
 /-!

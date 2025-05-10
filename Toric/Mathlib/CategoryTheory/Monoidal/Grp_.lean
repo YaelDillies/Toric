@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.Limits
+import Mathlib.CategoryTheory.Adjunction.Limits
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 
@@ -327,49 +328,5 @@ same on group objects as on objects. -/
       apply_fun (· ≫ (G.mul : (⟨G.X, hG⟩ ⊗ ⟨G.X, hG⟩ : F.EssImageSubcategory) ⟶ ⟨G.X, hG⟩)) at this
       sorry
 
-/-- The identity functor is also the identity on group objects. -/
-@[simps!]
-noncomputable def mapGrpIdIso : mapGrp (𝟭 C) ≅ 𝟭 (Grp_ C) :=
-  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
-    (by simp [μ_of_chosenFiniteProducts]))
-
-/-- The composition functor is also the composition on group objects. -/
-@[simps!]
-noncomputable def mapGrpCompIso : (F ⋙ G).mapGrp ≅ F.mapGrp ⋙ G.mapGrp :=
-  NatIso.ofComponents (fun X ↦ Grp_.mkIso (.refl _) (by simp [ε_of_chosenFiniteProducts])
-    (by simp [μ_of_chosenFiniteProducts]))
-
-/-- Natural transformations between functors lift to group objects. -/
-@[simps!]
-noncomputable def mapGrpNatTrans (f : F ⟶ F') : F.mapGrp ⟶ F'.mapGrp where app X := .mk (f.app _)
-
-/-- Natural isomorphisms between functors lift to group objects. -/
-@[simps!]
-noncomputable def mapGrpNatIso (e : F ≅ F') : F.mapGrp ≅ F'.mapGrp :=
-  NatIso.ofComponents fun X ↦ Grp_.mkIso (e.app _)
-
 end Functor
-
-open Functor
-
-namespace Adjunction
-variable {F : C ⥤ D} {G : D ⥤ C} (a : F ⊣ G) [F.Monoidal] [G.Monoidal]
-
-/-- An adjunction of monoidal functors lifts to an adjunction of their lifts to group objects. -/
-@[simps!] noncomputable def mapGrp : F.mapGrp ⊣ G.mapGrp where
-  unit := mapGrpIdIso.inv ≫ mapGrpNatTrans a.unit ≫ mapGrpCompIso.hom
-  counit := mapGrpCompIso.inv ≫ mapGrpNatTrans a.counit ≫ mapGrpIdIso.hom
-
-end Adjunction
-
-namespace Equivalence
-variable (e : C ≌ D) [e.functor.Monoidal] [e.inverse.Monoidal]
-
-/-- An equivalence of categories lifts to an equivalence of their group objects. -/
-@[simps!] noncomputable def mapGrp : Grp_ C ≌ Grp_ D where
-  functor := e.functor.mapGrp
-  inverse := e.inverse.mapGrp
-  unitIso := mapGrpIdIso.symm ≪≫ mapGrpNatIso e.unitIso ≪≫ mapGrpCompIso
-  counitIso := mapGrpCompIso.symm ≪≫ mapGrpNatIso e.counitIso ≪≫ mapGrpIdIso
-
-end CategoryTheory.Equivalence
+end CategoryTheory

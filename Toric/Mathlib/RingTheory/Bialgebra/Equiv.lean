@@ -1,5 +1,4 @@
 import Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.RingTheory.Bialgebra.Hom
 
 open Coalgebra Function TensorProduct
 

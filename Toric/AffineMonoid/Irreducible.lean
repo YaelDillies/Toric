@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Patrick Luo
 -/
 import Mathlib.Algebra.Group.Irreducible.Defs
 import Mathlib.Algebra.Group.Submonoid.BigOperators
-import Mathlib.Algebra.Module.NatInt
 import Toric.Mathlib.GroupTheory.Finiteness
 
 /-!

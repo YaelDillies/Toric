@@ -3,50 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.CategoryTheory.Adjunction.Limits
 import Mathlib.CategoryTheory.Monoidal.Yoneda
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory Limits ChosenFiniteProducts Mon_Class
 
 universe v₁ v₂ u₁ u₂
-
-namespace CategoryTheory.Functor
-variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
-variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
-variable {F F' : C ⥤ D} [PreservesFiniteProducts F] [PreservesFiniteProducts F']
-
-attribute [local instance] monoidalOfChosenFiniteProducts
-
-/-- Natural transformations between functors lift to monoid objects. -/
-@[simps!]
-noncomputable def mapMonNatTrans (f : F ⟶ F') : F.mapMon ⟶ F'.mapMon where
-  app X := .mk (f.app _)
-
-/-- Natural isomorphisms between functors lift to monoid objects. -/
-@[simps!]
-noncomputable def mapMonNatIso (e : F ≅ F') : F.mapMon ≅ F'.mapMon :=
-  NatIso.ofComponents fun X ↦ Mon_.mkIso (e.app _)
-
-end CategoryTheory.Functor
-
-namespace CategoryTheory.Equivalence
-variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
-variable {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
-
-attribute [local instance] Functor.monoidalOfChosenFiniteProducts
-
--- FIXME: There is a diamond between `LaxMonoidal.id` and `Functor.monoidalOfChosenFiniteProducts`
--- noncomputable def mapMon (e : C ≌ D) : Mon_ C ≌ Mon_ D where
---   functor := e.functor.mapMon
---   inverse := e.inverse.mapMon
---   unitIso :=
---     Functor.mapMonIdIso.symm ≪≫ Functor.mapMonNatIso e.unitIso ≪≫ Functor.mapMonCompIso _ _
---   counitIso :=
---     (Functor.mapMonCompIso _ _).symm ≪≫ Functor.mapMonNatIso e.counitIso ≪≫ Functor.mapMonIdIso
---   functor_unitIso_comp := sorry
-
-end CategoryTheory.Equivalence
 
 section
 

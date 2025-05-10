@@ -1,1 +1,3 @@
-{}
+{"ignore":
+ {"Toric.Hopf.Diagonalisable": ["Toric.Mathlib.Algebra.Module.Equiv.Defs"],
+  "Toric.Hopf.Cocomm": ["Toric.Mathlib.LinearAlgebra.TensorProduct.Basic"]}}
