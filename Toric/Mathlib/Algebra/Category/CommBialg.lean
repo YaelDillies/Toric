@@ -174,35 +174,29 @@ instance reflectsIsomorphisms_forget_commBialg :
 
 end CommBialg
 
+attribute [local ext] Quiver.Hom.unop_inj
+
 variable (R) in
 /-- Commutative bialgebras over a commutative ring `R` are the same thing as comonoid
 `R`-algebras. -/
 @[simps!]
-def commBialgEquivComonAlg : CommBialg R ≌ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+def commBialgEquivComonCommAlg : CommBialg R ≌ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
   functor.obj A := .op {
     X := .op <| CommAlg.of R A
     one := (CommAlg.ofHom <| counitAlgHom R A).op
     mul := (CommAlg.ofHom <| comulAlgHom R A).op
-    one_mul := Quiver.Hom.unop_inj <| by
-      ext x
-      convert Coalgebra.rTensor_counit_comul (R := R) x
-      simp [-Coalgebra.rTensor_counit_comul, CommAlg.rightWhisker_hom]
-      rfl
-    mul_one := Quiver.Hom.unop_inj <| by
-      ext x
-      convert Coalgebra.lTensor_counit_comul (R := R) x
-      simp [-Coalgebra.lTensor_counit_comul, CommAlg.leftWhisker_hom]
-      rfl
-    mul_assoc := Quiver.Hom.unop_inj <| by
-      ext x
-      convert (Coalgebra.coassoc_symm_apply (R := R) x).symm
-        <;> simp [-Coalgebra.coassoc_symm_apply, CommAlg.associator_hom_unop_hom,
-        CommAlg.rightWhisker_hom, CommAlg.leftWhisker_hom] <;> rfl
+    one_mul := by ext; exact Coalgebra.rTensor_counit_comul _
+    mul_one := by ext; exact Coalgebra.lTensor_counit_comul _
+    mul_assoc := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
   }
   functor.map {A B} f := .op <| {
     hom := (CommAlg.ofHom f.hom).op
-    one_hom := sorry
-    mul_hom := sorry
+    one_hom := by ext; simp
+    mul_hom := by
+      ext
+      simp only [unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
+        CommAlg.tensorHom_unop_hom]
+      rw [BialgHomClass.map_comp_comulAlgHom]
   }
   inverse.obj A := {
     carrier := A.unop.X.unop
