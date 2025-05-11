@@ -20,7 +20,6 @@ import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.Algebra.Order.Nonneg.Module
-import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_

@@ -57,8 +57,7 @@ noncomputable def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
       rw [LinearMap.comp_assoc, ← LinearMap.comp_assoc _ _ (.rTensor _ _)]; simp
     _ = ε := by ext; simp
   map_comp_comul := by
-    rw [instCoalgebraStruct_comul]
-    simp only [tensorTensorTensorComm_def, TensorProduct.coe_congr,
+    simp only [comul_def, tensorTensorTensorComm_def, TensorProduct.coe_congr,
       TensorProduct.leftComm_def, LinearEquiv.coe_trans, LinearEquiv.refl_toLinearMap]
     simp only [LinearMap.comp_assoc, ← LinearMap.lTensor_def, ← LinearMap.rTensor_def,
       LinearMap.lTensor_comp]
