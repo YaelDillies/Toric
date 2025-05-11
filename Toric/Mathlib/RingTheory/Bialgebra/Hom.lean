@@ -9,8 +9,6 @@ variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Semiring
 
 attribute [simp] coe_toCoalgHom
 
-lemma toCoalgHom_apply (f : A →ₐc[R] B) (a : A) : f.toCoalgHom a = f a := rfl
-
 /-- TODO: Replace generic coercion. -/
 abbrev toAlgHom (f : A →ₐc[R] B) : A →ₐ[R] B := f
 
@@ -18,23 +16,6 @@ end BialgHom
 
 namespace Bialgebra
 variable {R A : Type*} [CommSemiring R]
-
-section Semiring
-variable [Semiring A] [Bialgebra R A]
-
-variable (R A) in
-def unitCoalgHom : R →ₗc[R] A where
-  __ := Algebra.ofId R A
-  map_smul' a b := by simp [map_mul, Algebra.smul_def, Algebra.ofId]
-  counit_comp := by ext; simp
-  map_comp_comul := by ext; simp [Algebra.TensorProduct.one_def]
-
-variable (R A) in
-def unitBialgHom : R →ₐc[R] A where
-  __ := Algebra.ofId R A
-  __ := unitCoalgHom R A
-
-end Semiring
 
 section CommSemiring
 

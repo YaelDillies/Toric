@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sophie Morel
 -/
 import Toric.Hopf.MonoidAlgebra
-import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
