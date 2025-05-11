@@ -29,6 +29,8 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Comon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Hopf_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.NaturalTransformation
+import Toric.Mathlib.CategoryTheory.Monoidal.Opposite
 import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed

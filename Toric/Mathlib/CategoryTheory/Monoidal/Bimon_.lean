@@ -7,14 +7,14 @@ open CategoryTheory MonoidalCategory Opposite
 universe v₁ v₂ u₁ u₂ u
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] [BraidedCategory C]
 
-def bimonOpEquiv : Bimon_ Cᵒᵖ ≌ (Bimon_ C)ᵒᵖ :=
-  .trans (D := Comon_ (Comon_ C)ᵒᵖ)
-  -- `Bimon_ Cᵒᵖ ≌ Comon_ (Comon_ C)ᵒᵖ`
-  (monOpEquivComonOp _).mapComon <| .trans (D := (Mon_ (Comon_ C))ᵒᵖ)
-  -- `Comon_ (Comon_ C)ᵒᵖ ≌ (Mon_ (Comon_ C))ᵒᵖ`
-  (comonOpEquivMonOp _) <|
-  -- `(Mon_ (Comon_ C))ᵒᵖ ≌ (Bimon_ C)ᵒᵖ`
-  (Bimon_.equivMon_Comon_ C).symm.op
+-- def bimonOpEquiv : Bimon_ Cᵒᵖ ≌ (Bimon_ C)ᵒᵖ :=
+--   .trans (D := Comon_ (Comon_ C)ᵒᵖ)
+--   -- `Bimon_ Cᵒᵖ ≌ Comon_ (Comon_ C)ᵒᵖ`
+--   (monOpEquivComonOp _).mapComon <| .trans (D := (Mon_ (Comon_ C))ᵒᵖ)
+--   -- `Comon_ (Comon_ C)ᵒᵖ ≌ (Mon_ (Comon_ C))ᵒᵖ`
+--   (comonOpEquivMonOp _) <|
+--   -- `(Mon_ (Comon_ C))ᵒᵖ ≌ (Bimon_ C)ᵒᵖ`
+--   (Bimon_.equivMon_Comon_ C).symm.op
 
 namespace CategoryTheory.Functor
 variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory D] [BraidedCategory D]
