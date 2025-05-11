@@ -7,10 +7,9 @@ import Mathlib.Algebra.Category.Grp.Adjunctions
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.Algebra.Category.Ring.Adjunctions
 import Mathlib.AlgebraicGeometry.Limits
-import Mathlib.CategoryTheory.Adjunction.Opposites
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
-import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.MvLaurentPolynomial
 
 /-!

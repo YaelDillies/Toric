@@ -21,10 +21,9 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.Algebra.Order.Nonneg.Module
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.CommGrp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.Data.Finset.Powerset
 import Toric.Mathlib.Geometry.Convex.Cone.Dual

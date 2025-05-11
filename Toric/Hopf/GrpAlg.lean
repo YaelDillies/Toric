@@ -7,7 +7,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
 /-!
 # The group algebra functor

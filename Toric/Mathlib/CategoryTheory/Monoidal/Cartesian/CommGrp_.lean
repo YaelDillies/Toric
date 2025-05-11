@@ -1,26 +1,12 @@
+import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Mathlib.CategoryTheory.Monoidal.CommGrp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
 open CategoryTheory ChosenFiniteProducts MonoidalCategory Grp_Class Opposite
 
 universe w v u
 
 variable {C : Type u} [Category.{v} C] [ChosenFiniteProducts C] [BraidedCategory C]
-
-class abbrev CommGrp_Class (X : C) := Grp_Class X, IsCommMon X
-
-instance (X : C) [CommGrp_Class X] : CommGrp_Class (Grp_.mk' X).X := ‹_›
-
-section Yoneda
-variable (X : C)
-
-/-- If `X` represents a presheaf of groups, then `X` is a group object. -/
-def CommGrp_Class.ofRepresentableBy (F : Cᵒᵖ ⥤ CommGrp.{w})
-    (α : (F ⋙ forget _).RepresentableBy X) : CommGrp_Class X where
-  __ := Grp_Class.ofRepresentableBy X (F ⋙ forget₂ CommGrp Grp) α
-  __ := IsCommMon.ofRepresentableBy X (F ⋙ forget₂ CommGrp CommMonCat) α
-
-end Yoneda
 
 namespace CommGrp_
 
