@@ -7,6 +7,7 @@ import Mathlib.Algebra.EuclideanDomain.Int
 import Mathlib.Algebra.FreeAbelianGroup.UniqueSums
 import Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
+import Mathlib.GroupTheory.MonoidLocalization.GrothendieckGroup
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
