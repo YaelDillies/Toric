@@ -12,13 +12,12 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 /-!
 # The group algebra functor
 
-We show that, for a field `k`, `G ↦ k[G]` forms a fully faithful functor from commutative groups to
-commutative `k`-Hopf algebras.
+We show that, for a domain `R`, `G ↦ R[G]` forms a fully faithful functor from commutative groups to
+commutative `R`-Hopf algebras.
 -/
 
 open CategoryTheory Opposite
 
-section CommRing
 variable (R : Type*) [CommRing R]
 
 /-- The functor of commutative monoid algebras. -/
@@ -33,20 +32,15 @@ noncomputable def commGrpAlg : CommGrpᵒᵖ ⥤ Grp_ (CommAlg R)ᵒᵖ where
   map f := Grp_.homMk (CommAlg.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.unop.hom).op
   map_comp f g := by ext; simp
 
-end CommRing
+variable {R} [IsDomain R]
 
-section Field
-variable {k : Type*} [Field k]
-
-/-- The group algebra functor over a field is fully faithful. -/
-noncomputable def commGrpAlg.fullyFaithful : (commGrpAlg k).FullyFaithful where
+/-- The group algebra functor over a domain is fully faithful. -/
+noncomputable def commGrpAlg.fullyFaithful : (commGrpAlg R).FullyFaithful where
   preimage {X Y} f :=
-    .op <| CommGrp.ofHom <| MonoidAlgebra.mapDomainOfBialgHom (K := k) <|
-      IsMon_Hom.toBialgHom (R := k) f.hom
+    .op <| CommGrp.ofHom <| MonoidAlgebra.mapDomainOfBialgHom (R := R) <|
+      IsMon_Hom.toBialgHom (R := R) f.hom
   map_preimage {X Y} f := by simp [commGrpAlg]; rfl
   preimage_map {X Y} f := by simp [commGrpAlg]
 
-instance commGrpAlg.instFull : (commGrpAlg k).Full := fullyFaithful.full
-instance commGrpAlg.instFaithful : (commGrpAlg k).Faithful := fullyFaithful.faithful
-
-end Field
+instance commGrpAlg.instFull : (commGrpAlg R).Full := fullyFaithful.full
+instance commGrpAlg.instFaithful : (commGrpAlg R).Faithful := fullyFaithful.faithful

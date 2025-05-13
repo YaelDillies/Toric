@@ -8,7 +8,6 @@ import Toric.GroupScheme.Torus
 import Toric.Hopf.CoalgToAlg
 import Toric.Hopf.Cocomm
 import Toric.Hopf.Diagonalisable
-import Toric.Hopf.GroupLike
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
@@ -34,9 +33,11 @@ import Toric.Mathlib.GroupTheory.Finiteness
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
 import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import Toric.Mathlib.LinearAlgebra.FreeModule.PID
+import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic

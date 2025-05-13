@@ -10,13 +10,12 @@ import Toric.Hopf.GrpAlg
 /-!
 # The spectrum of a group algebra functor
 
-We show that, for a field `k`, `G ↦ Spec k[G]` forms a fully faithful functor from commutative
-groups to group schemes over `Spec k`.
+We show that, for a domain `R`, `G ↦ Spec R[G]` forms a fully faithful functor from commutative
+groups to group schemes over `Spec R`.
 -/
 
 open CategoryTheory Opposite AlgebraicGeometry
 
-section CommRingCat
 variable (R : CommRingCat)
 
 /-- The diagonalizable monoid scheme functor. -/
@@ -27,17 +26,12 @@ noncomputable abbrev specCommMonAlg : CommMonCatᵒᵖ ⥤ Mon_ (Over (Spec R)) 
 noncomputable abbrev specCommGrpAlg : CommGrpᵒᵖ ⥤ Grp_ (Over (Spec R)) :=
   commGrpAlg R ⋙ hopfSpec R
 
-end CommRingCat
+variable {R} [IsDomain R]
 
-section Field
-variable {k : Type*} [Field k]
-
-/-- The diagonalizable group scheme functor over a field is fully faithful. -/
+/-- The diagonalizable group scheme functor over a domain is fully faithful. -/
 noncomputable
-def specCommGrpAlg.fullyFaithful : (specCommGrpAlg (.of k)).FullyFaithful :=
+def specCommGrpAlg.fullyFaithful : (specCommGrpAlg (.of R)).FullyFaithful :=
   commGrpAlg.fullyFaithful.comp hopfSpec.fullyFaithful
 
-instance specCommGrpAlg.instFull : (specCommGrpAlg <| .of k).Full := fullyFaithful.full
-instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of k).Faithful := fullyFaithful.faithful
-
-end Field
+instance specCommGrpAlg.instFull : (specCommGrpAlg <| .of R).Full := fullyFaithful.full
+instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of R).Faithful := fullyFaithful.faithful
