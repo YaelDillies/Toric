@@ -3,8 +3,8 @@ Copyright (c) 2025 Yaël Dillies, Patrick Luo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo
 -/
-import Mathlib.Algebra.Group.Irreducible.Defs
 import Mathlib.Algebra.Group.Submonoid.BigOperators
+import Toric.Mathlib.Algebra.Group.Irreducible.Defs
 import Toric.Mathlib.GroupTheory.Finiteness
 
 /-!
@@ -21,18 +21,11 @@ variable [CommMonoid M] [Subsingleton Mˣ]
 
 /-- Any set `S` contains the irreducible elements of the submonoid it generates. -/
 @[to_additive "Any set `S` contains the irreducible elements of the submonoid it generates."]
-lemma irreducible_mem_submonoidClosure_subset :
-    {p ∈ Submonoid.closure S | Irreducible p} ⊆ S := by
+lemma irreducible_mem_submonoidClosure_subset : {p ∈ Submonoid.closure S | Irreducible p} ⊆ S := by
   refine fun x hx ↦
       Submonoid.closure_induction (s := S) (motive := fun x _ ↦ (Irreducible x → x ∈ S))
       (fun _ hx _ ↦ hx) (by simp) (fun a b _ _ ha hb h ↦ ?_) hx.1 hx.2
-  obtain h₀ | h₀ := h.isUnit_or_isUnit rfl
-  · obtain rfl := isUnit_iff_eq_one.mp h₀
-    rw [one_mul] at h ⊢
-    exact hb h
-  · obtain rfl := isUnit_iff_eq_one.mp h₀
-    rw [mul_one] at h ⊢
-    exact ha h
+  obtain rfl | rfl := h.eq_one_or_eq_one rfl <;> simp_all
 
 /-- Irreducible elements lie in all sets generating a salient monoid. -/
 @[to_additive "Irreducible elements lie in all sets generating a salient monoid."]
