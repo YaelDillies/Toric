@@ -42,7 +42,7 @@ noncomputable def embedding : M →+ FreeAbelianGroup (Fin (dim M)) :=
     (addMonoidOf ⊤).toAddMonoidHom
 
 lemma embedding_injective : Injective (embedding M) := by
-  simpa [embedding] using mk_zero_injective_of_cancelAdd
+  simpa [embedding] using mk_left_injective 0
 
 end AffineMonoid
 

@@ -42,14 +42,3 @@ instance instIsMulTorsionFree [IsMulTorsionFree M] : IsMulTorsionFree <| Localiz
     · simp [mul_pow, pow_succ c, mul_assoc, hab]
 
 end Localization
-
-namespace Localization
-variable {M : Type*} [CommMonoid M] [IsCancelMul M] {N : Submonoid M}
-
-/-- The natural map from a cancellative monoid into its localization is injective. -/
-@[to_additive mk_zero_injective_of_cancelAdd
-"The natural map from a cancellative monoid into its localization is injective."]
-lemma mk_one_injective_of_cancelMul : Injective (mk · (1 : N)) := fun x y hxy ↦ by
-  obtain ⟨_, hc⟩ := r_iff_exists.mp <| mk_eq_mk_iff.mp hxy; simpa using mul_left_cancel hc
-
-end Localization
