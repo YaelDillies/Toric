@@ -7,7 +7,6 @@ import Mathlib.Algebra.Equiv.TransferInstance
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
-import Toric.Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 
 /-!
