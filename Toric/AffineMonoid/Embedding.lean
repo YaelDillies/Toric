@@ -8,10 +8,10 @@ import Mathlib.Algebra.FreeAbelianGroup.UniqueSums
 import Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Mathlib.Algebra.MonoidAlgebra.NoZeroDivisors
 import Mathlib.GroupTheory.MonoidLocalization.GrothendieckGroup
+import Mathlib.LinearAlgebra.Dimension.Free
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Toric.Mathlib.Algebra.NoZeroSMulDivisors.Defs
 import Toric.Mathlib.GroupTheory.MonoidLocalization.Basic
-import Toric.Mathlib.LinearAlgebra.FreeModule.Finite.Basic
 
 /-!
 # Affine monoids embed into `ℤⁿ`
@@ -24,7 +24,7 @@ This file proves that cancellative finitely generated torsion-free monoids (aka 
 Does this generalise to modules over rings other than `ℤ`? Probably.
 -/
 
-open AddLocalization AddMonoidAlgebra Function
+open Algebra AddLocalization AddMonoidAlgebra Function
 
 variable {M : Type*} [AddCancelCommMonoid M] [AddMonoid.FG M] [IsAddTorsionFree M]
 
@@ -32,14 +32,13 @@ namespace AffineMonoid
 
 variable (M) in
 /-- The dimension of an affine monoid `M`, namely the minimum `n` for which `M` embeds into `ℤⁿ`. -/
-noncomputable abbrev dim := Module.finrank ℤ <| AddLocalization (⊤ : AddSubmonoid M)
+noncomputable abbrev dim := Module.finrank ℤ <| GrothendieckAddGroup M
 
 variable (M) in
 /-- An embedding of `M` into `ℤ ^ dim M`. -/
 noncomputable def embedding : M →+ FreeAbelianGroup (Fin (dim M)) :=
   .comp (FreeAbelianGroup.equivFinsupp _).symm.toAddMonoidHom <|
-  .comp Finsupp.addEquivFunOnFinite.symm.toAddMonoidHom <|
-  .comp (linearEquivPiFree ℤ _).toAddMonoidHom
+  .comp (Module.finBasis ℤ _).repr.toAddMonoidHom
     (addMonoidOf ⊤).toAddMonoidHom
 
 lemma embedding_injective : Injective (embedding M) := by
