@@ -14,8 +14,6 @@ open CategoryTheory
 namespace AlgebraicGeometry.Scheme.Over
 variable {S : Scheme} {G : Over S}
 
-attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
-
 section Grp_Class
 variable [Grp_Class G]
 

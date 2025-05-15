@@ -14,13 +14,14 @@ This file defines a toric variety over a ring `R` as a scheme `X` with a structu
 `Spec R`.
 -/
 
-open CategoryTheory Mon_Class MonoidalCategory ChosenFiniteProducts Limits AlgebraicGeometry.Scheme
+open CategoryTheory Mon_Class MonoidalCategory CartesianMonoidalCategory Limits
+  AlgebraicGeometry.Scheme
 
 namespace AlgebraicGeometry
 universe u
 variable {R : CommRingCat.{u}} (σ : Type u)
 
-attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
+attribute [local instance] CartesianMonoidalCategory.ofFiniteProducts
 
 open Mon_Class
 

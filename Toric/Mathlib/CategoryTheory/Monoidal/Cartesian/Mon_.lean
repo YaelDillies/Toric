@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 
-open CategoryTheory Limits ChosenFiniteProducts Mon_Class
+open CategoryTheory Limits CartesianMonoidalCategory Mon_Class
 
 universe v₁ v₂ u₁ u₂
 
@@ -16,7 +16,8 @@ attribute [local instance] Hom.monoid
 attribute [simp] Mon_Class.one_comp Mon_Class.one_comp_assoc Mon_Class.comp_one
   Mon_Class.comp_one_assoc
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N X Y : C} [Mon_Class M] [Mon_Class N]
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
+  [Mon_Class N]
 
 lemma Mon_.one_eq_one {M : Mon_ C} : M.one = 1 := Mon_Class.one_eq_one (M := M.X)
 
@@ -42,7 +43,7 @@ end
 
 namespace Mon_.Hom
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {M N : Mon_ C}
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : Mon_ C}
 
 attribute [local instance] Hom.monoid
 

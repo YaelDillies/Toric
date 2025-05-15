@@ -3,7 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.CategoryTheory.ChosenFiniteProducts
+import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.Algebra.Category.CommAlg.Basic
 
 /-!
@@ -74,7 +74,7 @@ instance : MonoidalCategory (CommAlg.{u} R)ᵒᵖ where
   pentagon := by intros; ext <;> rfl
   triangle := by intros; ext <;> rfl
 
-instance : ChosenFiniteProducts (CommAlg.{u} R)ᵒᵖ where
+instance : CartesianMonoidalCategory (CommAlg.{u} R)ᵒᵖ where
   isTerminalTensorUnit := terminalOpOfInitial isInitialSelf
   fst := _
   snd := _

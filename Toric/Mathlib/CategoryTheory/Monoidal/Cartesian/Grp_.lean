@@ -3,7 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.Algebra.Category.Grp.ChosenFiniteProducts
+import Mathlib.Algebra.Category.Grp.CartesianMonoidal
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Mathlib.CategoryTheory.Monoidal.FunctorCategory
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
@@ -20,15 +20,15 @@ showing that it is fully faithful and its (essential) image is the representable
 
 -/
 
-open CategoryTheory Limits Mon_Class MonoidalCategory ChosenFiniteProducts Opposite
+open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
 section
 
-open ChosenFiniteProducts MonoidalCategory
+open CartesianMonoidalCategory MonoidalCategory
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] {G H : Grp_ C}
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C}
 
 attribute [local instance] Hom.group
 
@@ -144,16 +144,16 @@ instance instCommGroup : CommGroup (G ⟶ H) :=
 
 end Grp_.Hom
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C] [BraidedCategory C] {G : C}
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C] {G : C}
 
 instance Grp_.mk'.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
 
 end
 
 namespace CategoryTheory
-variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
-  {D : Type u₂} [Category.{v₂} D] [ChosenFiniteProducts D]
-  {E : Type u₃} [Category.{v₃} E] [ChosenFiniteProducts E]
+variable {C : Type u₁} [Category.{v₁} C] [CartesianMonoidalCategory C]
+  {D : Type u₂} [Category.{v₂} D] [CartesianMonoidalCategory D]
+  {E : Type u₃} [Category.{v₃} E] [CartesianMonoidalCategory E]
 
 namespace Functor
 variable {F F' : C ⥤ D} [F.Monoidal] [F'.Monoidal] {G : D ⥤ E} [G.Monoidal]
@@ -224,7 +224,7 @@ end yoneda
 # Group objects form a cartesian-monoidal category
 -/
 
-open CategoryTheory MonoidalCategory Limits ChosenFiniteProducts Mon_Class
+open CategoryTheory MonoidalCategory Limits CartesianMonoidalCategory Mon_Class
 
 attribute [local simp] leftUnitor_hom rightUnitor_hom
 
@@ -232,7 +232,7 @@ namespace CategoryTheory
 
 universe u v v₁ v₂ u₁ u₂
 
-variable {C : Type u₁} [Category.{v₁} C] [ChosenFiniteProducts C]
+variable {C : Type u₁} [Category.{v₁} C] [CartesianMonoidalCategory C]
 
 @[simps]
 def homToProd {X Y Z : C} : (Z ⟶ X ⊗ Y) ≃ (Z ⟶ X) × (Z ⟶ Y) where
@@ -242,7 +242,7 @@ def homToProd {X Y Z : C} : (Z ⟶ X ⊗ Y) ≃ (Z ⟶ X) × (Z ⟶ Y) where
   right_inv _ := by simp
 
 namespace Functor
-variable {D E : Type*} [Category D] [Category E] [ChosenFiniteProducts E]
+variable {D E : Type*} [Category D] [Category E] [CartesianMonoidalCategory E]
 
 noncomputable def tensorObjComp (F G : D ⥤ C) (H : C ⥤ E) [PreservesFiniteProducts H] :
     (F ⊗ G) ⋙ H ≅ (F ⋙ H) ⊗ (G ⋙ H) :=
@@ -270,7 +270,7 @@ end CategoryTheory.Functor
 
 section
 
-variable {C : Type*} [Category C] [ChosenFiniteProducts C]
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C]
     {X Y : C} [Grp_Class X] [Grp_Class Y]
 
 @[simps]
@@ -307,7 +307,7 @@ lemma prodOne : η[X ⊗ Y] = lift η η := by
 
 lemma prodInv : ι[X ⊗ Y] = ι[X] ⊗ ι[Y] := sorry
 
-noncomputable instance : ChosenFiniteProducts <| Grp_ C :=
+noncomputable instance : CartesianMonoidalCategory <| Grp_ C :=
   .ofChosenFiniteProducts {
     cone.pt := Grp_.mk' (𝟙_ C)
     cone.π.app := isEmptyElim

@@ -59,7 +59,7 @@ instance Grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
     apply Quiver.Hom.unop_inj
     ext (x : A)
     refine .trans ?_ (HopfAlgebra.mul_antipode_rTensor_comul_apply (R := R) x)
-    change (ChosenFiniteProducts.lift (CommAlg.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
+    change (CartesianMonoidalCategory.lift (CommAlg.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
       (𝟙 _)).unop.hom (CoalgebraStruct.comul (R := R) x) = _
     induction CoalgebraStruct.comul (R := R) x with
     | zero => simp
@@ -69,7 +69,7 @@ instance Grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
     apply Quiver.Hom.unop_inj
     ext (x : A)
     refine .trans ?_ (HopfAlgebra.mul_antipode_lTensor_comul_apply (R := R) x)
-    change (ChosenFiniteProducts.lift (𝟙 _) (CommAlg.ofHom
+    change (CartesianMonoidalCategory.lift (𝟙 _) (CommAlg.ofHom
       (HopfAlgebra.antipodeAlgHom R A)).op).unop.hom (CoalgebraStruct.comul (R := R) x) = _
     induction CoalgebraStruct.comul (R := R) x with
     | zero => simp

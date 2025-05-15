@@ -7,7 +7,7 @@ import Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory Mon_Class MonoidalCategory
 
-assert_not_exists ChosenFiniteProducts
+assert_not_exists CartesianMonoidalCategory
 
 section
 variable {C : Type*} [Category C] [MonoidalCategory C]

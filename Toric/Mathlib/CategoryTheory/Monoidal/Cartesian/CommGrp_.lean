@@ -2,11 +2,11 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
-open CategoryTheory ChosenFiniteProducts MonoidalCategory Grp_Class Opposite
+open CategoryTheory CartesianMonoidalCategory MonoidalCategory Grp_Class Opposite
 
 universe w v u
 
-variable {C : Type u} [Category.{v} C] [ChosenFiniteProducts C] [BraidedCategory C]
+variable {C : Type u} [Category.{v} C] [CartesianMonoidalCategory C] [BraidedCategory C]
 
 namespace CommGrp_
 
