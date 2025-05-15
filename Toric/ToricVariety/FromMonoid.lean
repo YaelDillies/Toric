@@ -3,7 +3,7 @@ Copyright (c) 2025 Patrick Luo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Luo
 -/
-import Toric.AffineMonoid.Embedding
+import Toric.AffineMonoid.UniqueSums
 import Toric.GroupScheme.HopfAffine
 import Toric.ToricVariety.Defs
 
@@ -11,9 +11,9 @@ import Toric.ToricVariety.Defs
 # Affine monoids give rise to toric varieties
 -/
 
-noncomputable section
+suppress_compilation
 
-open AlgebraicGeometry Scheme CategoryTheory Limits AddMonoidAlgebra AddLocalization AffineMonoid
+open AlgebraicGeometry Scheme CategoryTheory Limits AddMonoidAlgebra AddLocalization AffineAddMonoid
 
 universe u
 variable {R : CommRingCat.{u}} [IsDomain R] {S : Type u} [AddCancelCommMonoid S] [AddMonoid.FG S]

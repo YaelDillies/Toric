@@ -1,5 +1,6 @@
 import Toric.AffineMonoid.Embedding
 import Toric.AffineMonoid.Irreducible
+import Toric.AffineMonoid.UniqueSums
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
