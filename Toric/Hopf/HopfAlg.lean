@@ -56,7 +56,6 @@ variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [HopfAlgebra R 
 instance Grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
   inv := (CommAlg.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
   left_inv' := by
-    apply Quiver.Hom.unop_inj
     ext (x : A)
     refine .trans ?_ (HopfAlgebra.mul_antipode_rTensor_comul_apply (R := R) x)
     change (CartesianMonoidalCategory.lift (CommAlg.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
@@ -66,7 +65,6 @@ instance Grp_Class_op_commAlgOf : Grp_Class <| op <| CommAlg.of R A where
     | tmul x y => rfl
     | add x y _ _ => simp_all
   right_inv' := by
-    apply Quiver.Hom.unop_inj
     ext (x : A)
     refine .trans ?_ (HopfAlgebra.mul_antipode_lTensor_comul_apply (R := R) x)
     change (CartesianMonoidalCategory.lift (𝟙 _) (CommAlg.ofHom
