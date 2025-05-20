@@ -57,7 +57,7 @@ abbrev of (X : Type v) [CommRing X] [HopfAlgebra R X] : CommHopfAlgCat.{v} R := 
 variable (R) in
 lemma coe_of (X : Type v) [CommRing X] [HopfAlgebra R X] : (of R X : Type v) = X := rfl
 
-/-- The type of morphisms in `CommBialgCat R`. -/
+/-- The type of morphisms in `CommHopfAlgCat R`. -/
 @[ext]
 structure Hom (A B : CommHopfAlgCat.{v} R) where
   private mk ::
