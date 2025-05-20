@@ -20,6 +20,15 @@ noncomputable def ofBijective (f : A →ₐc[R] B) (hf : Function.Bijective f) :
   { AlgEquiv.ofBijective (f : A →ₐ[R] B) hf, f with }
 
 @[simp]
+lemma apply_symm_apply (e : A ≃ₐc[R] B) : ∀ x, e (e.symm x) = x := e.toEquiv.apply_symm_apply
+
+@[simp] 
+lemma symm_apply_apply (e : A ≃ₐc[R] B) : ∀ x, e.symm (e x) = x := e.toEquiv.symm_apply_apply
+
+@[simp] lemma comp_symm (e : A ≃ₐc[R] B) : (e : A →ₐc[R] B).comp e.symm = .id R B := by ext; simp
+@[simp] lemma symm_comp (e : A ≃ₐc[R] B) : (e.symm : B →ₐc[R] A).comp e = .id R A := by ext; simp
+
+@[simp]
 theorem coe_ofBijective {f : A →ₐc[R] B} {hf : Function.Bijective f} :
     (BialgEquiv.ofBijective f hf : A → B) = f :=
   rfl

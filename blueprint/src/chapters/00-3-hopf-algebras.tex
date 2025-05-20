@@ -270,27 +270,42 @@ diagonalizable.
 \end{proof}
 
 
-\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
-  \label{0-hopf-cogrp-alg}
+\begin{proposition}[Bialgebras are comonoid objects in the category of algebras]
+  \label{0-bialg-equiv-comon-alg}
   \uses{}
-  \lean{grp_Class_op_commAlgCatOf, isMon_Hom_commAlgCatOfHom, bialgebra_unop, hopfAlgebra_unop, IsMon_Hom.toBialgHom}
+  \lean{commBialgCatEquivComonCommAlg}
   \leanok
 
-  From a $R$-Hopf algebra, one can build a cogroup object in the category of $R$-algebras.
-
-  From a cogroup object in the category of $R$-algebras, one can build a $R$-Hopf algebra.
+  The category of $R$-bialgebras is equivalent to comonoid objects in the category of $R$-algebras.
 \end{proposition}
 \begin{proof}
-  \uses{0-hopf-antipode-antihom}
+  \uses{}
   \leanok
 
   Turn the arrows around.
 \end{proof}
 
 
+\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
+  \label{0-hopf-alg-equiv-cogrp-alg}
+  \uses{}
+  \lean{commHopfAlgCatEquivCogrpCommAlg}
+  \leanok
+
+  The category of $R$-Hopf algebras is equivalent to cogroup objects in the category of $R$-algebras.
+\end{proposition}
+\begin{proof}
+  \uses{0-bialg-equiv-comon-alg}
+  \leanok
+
+  Turn the arrows around.
+  Most of the diagrams have been turned around in Proposition \ref{0-bialg-equiv-comon-alg} already.
+\end{proof}
+
+
 \begin{definition}[The group algebra functor]
   \label{0-grp-alg}
-  \uses{0-hopf-cogrp-alg}
+  \uses{}
   \lean{commGrpAlg}
   \leanok
 

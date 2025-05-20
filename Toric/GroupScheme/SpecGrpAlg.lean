@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GrpAlg
+import Toric.Mathlib.CategoryTheory.Opposites
 
 /-!
 # The spectrum of a group algebra functor
@@ -16,22 +17,24 @@ groups to group schemes over `Spec R`.
 
 open CategoryTheory Opposite AlgebraicGeometry
 
-variable (R : CommRingCat)
+universe u
+variable (R : CommRingCat.{u})
 
 /-- The diagonalizable monoid scheme functor. -/
-noncomputable abbrev specCommMonAlg : CommMonCatᵒᵖ ⥤ Mon_ (Over (Spec R)) :=
-  commMonAlg R ⋙ bialgSpec R
+noncomputable abbrev specCommMonAlg : CommMonCat.{u}ᵒᵖ ⥤ Mon_ (Over (Spec R)) :=
+  (commMonAlg R).op ⋙ (commBialgCatEquivComonCommAlgCat R).functor.leftOp ⋙ bialgSpec R
 
 /-- The diagonalizable group scheme functor. -/
-noncomputable abbrev specCommGrpAlg : CommGrpᵒᵖ ⥤ Grp_ (Over (Spec R)) :=
-  commGrpAlg R ⋙ hopfSpec R
+noncomputable abbrev specCommGrpAlg : CommGrp.{u}ᵒᵖ ⥤ Grp_ (Over (Spec R)) :=
+  (commGrpAlg R).op ⋙ (commHopfAlgCatEquivCogrpCommAlgCat R).functor.leftOp ⋙ hopfSpec R
 
 variable {R} [IsDomain R]
 
 /-- The diagonalizable group scheme functor over a domain is fully faithful. -/
 noncomputable
 def specCommGrpAlg.fullyFaithful : (specCommGrpAlg (.of R)).FullyFaithful :=
-  commGrpAlg.fullyFaithful.comp hopfSpec.fullyFaithful
+  commGrpAlg.fullyFaithful.op.comp <|
+    (commHopfAlgCatEquivCogrpCommAlgCat R).fullyFaithfulFunctor.leftOp.comp hopfSpec.fullyFaithful
 
 instance specCommGrpAlg.instFull : (specCommGrpAlg <| .of R).Full := fullyFaithful.full
 instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of R).Faithful := fullyFaithful.faithful
