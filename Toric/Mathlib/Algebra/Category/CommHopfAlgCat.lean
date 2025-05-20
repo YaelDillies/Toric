@@ -118,7 +118,7 @@ lemma forget_obj (A : CommHopfAlgCat.{v} R) : (forget (CommHopfAlgCat.{v} R)).ob
 
 lemma forget_map (f : A ⟶ B) : (forget (CommHopfAlgCat.{v} R)).map f = f := rfl
 
-instance : Ring ((forget (CommHopfAlgCat R)).obj A) := inferInstanceAs <| Ring A
+instance : CommRing ((forget (CommHopfAlgCat R)).obj A) := inferInstanceAs <| CommRing A
 
 instance : HopfAlgebra R ((forget (CommHopfAlgCat R)).obj A) := inferInstanceAs <| HopfAlgebra R A
 
