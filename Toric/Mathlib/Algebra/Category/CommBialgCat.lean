@@ -3,7 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Toric.Mathlib.Algebra.Category.CommAlg.Monoidal
+import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 
@@ -11,7 +11,7 @@ import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 # The category of commutative bialgebras over a commutative ring
 
 This file defines the bundled category `CommBialgCat` of commutative bialgebras over a fixed
-commutative ring `R` along with the forgetful functor to `CommAlg`.
+commutative ring `R` along with the forgetful functor to `CommAlgCat`.
 -/
 
 noncomputable section
@@ -121,15 +121,15 @@ instance : Ring ((forget (CommBialgCat R)).obj A) := inferInstanceAs <| Ring A
 
 instance : Bialgebra R ((forget (CommBialgCat R)).obj A) := inferInstanceAs <| Bialgebra R A
 
-instance hasForgetToCommAlg : HasForget₂ (CommBialgCat.{v} R) (CommAlg.{v} R) where
+instance hasForgetToCommAlg : HasForget₂ (CommBialgCat.{v} R) (CommAlgCat.{v} R) where
   forget₂.obj M := .of R M
-  forget₂.map f := CommAlg.ofHom f.hom
+  forget₂.map f := CommAlgCat.ofHom f.hom
 
 @[simp] lemma forget₂_commAlg_obj (A : CommBialgCat.{v} R) :
-    (forget₂ (CommBialgCat.{v} R) (CommAlg.{v} R)).obj A = .of R A := rfl
+    (forget₂ (CommBialgCat.{v} R) (CommAlgCat.{v} R)).obj A = .of R A := rfl
 
 @[simp] lemma forget₂_commAlg_map (f : A ⟶ B) :
-    (forget₂ (CommBialgCat.{v} R) (CommAlg.{v} R)).map f = CommAlg.ofHom f.hom := rfl
+    (forget₂ (CommBialgCat.{v} R) (CommAlgCat.{v} R)).map f = CommAlgCat.ofHom f.hom := rfl
 
 /-- Forgetting to the underlying type and then building the bundled object returns the original
 bialgebra. -/
@@ -175,28 +175,28 @@ attribute [local ext] Quiver.Hom.unop_inj
 
 /-- Implementation detail of `commBialgCatEquivComonCommAlg`. -/
 @[simps! obj map]
-private def commBialgCatToComonCommAlg : CommBialgCat R ⥤ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+private def commBialgCatToComonCommAlg : CommBialgCat R ⥤ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   obj A := .op {
     X := .op <| .of R A
-    one := (CommAlg.ofHom <| counitAlgHom R A).op
-    mul := (CommAlg.ofHom <| comulAlgHom R A).op
+    one := (CommAlgCat.ofHom <| counitAlgHom R A).op
+    mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
     one_mul := by ext; exact Coalgebra.rTensor_counit_comul _
     mul_one := by ext; exact Coalgebra.lTensor_counit_comul _
     mul_assoc := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
   }
   map {A B} f := .op {
-    hom := (CommAlg.ofHom f.hom).op
+    hom := (CommAlgCat.ofHom f.hom).op
     one_hom := by ext; simp
     mul_hom := by
       ext
-      simp only [unop_comp, Quiver.Hom.unop_op, CommAlg.hom_comp, CommAlg.hom_ofHom,
-        CommAlg.tensorHom_unop_hom]
+      simp only [unop_comp, Quiver.Hom.unop_op, CommAlgCat.hom_comp, CommAlgCat.hom_ofHom,
+        CommAlgCat.tensorHom_unop_hom]
       rw [BialgHomClass.map_comp_comulAlgHom]
   }
 
 /-- Implementation detail of `commBialgCatEquivComonCommAlg`. -/
 @[simps! obj map]
-private def comonCommAlgToCommBialgCat : (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommBialgCat R where
+private def comonCommAlgToCommBialgCat : (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommBialgCat R where
   obj A := {
     carrier := A.unop.X.unop
     bialgebra := .ofAlgHom A.unop.mul.unop.hom A.unop.one.unop.hom
@@ -212,7 +212,7 @@ variable (R) in
 /-- Commutative bialgebras over a commutative ring `R` are the same thing as comonoid
 `R`-algebras. -/
 @[simps!]
-def commBialgCatEquivComonCommAlg : CommBialgCat R ≌ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+def commBialgCatEquivComonCommAlg : CommBialgCat R ≌ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   functor := commBialgCatToComonCommAlg
   inverse := comonCommAlgToCommBialgCat
   unitIso.hom := 𝟙 _

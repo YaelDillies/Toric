@@ -174,15 +174,15 @@ end CommHopfAlgCat
 
 /-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlg`. -/
 @[simps! obj map]
-private def commHopfAlgCatToCogrpAlg : CommHopfAlgCat R ⥤ (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+private def commHopfAlgCatToCogrpAlg : CommHopfAlgCat R ⥤ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   obj A := .op {
     toMon_ := ((commBialgCatEquivComonCommAlg R).functor.obj <| .of R A).unop
-    inv := (CommAlg.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
+    inv := (CommAlgCat.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
     left_inv := by
       apply Quiver.Hom.unop_inj
       ext (x : A)
       refine .trans ?_ (HopfAlgebra.mul_antipode_rTensor_comul_apply (R := R) x)
-      change (CartesianMonoidalCategory.lift (CommAlg.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
+      change (CartesianMonoidalCategory.lift (CommAlgCat.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
         (𝟙 _)).unop.hom (CoalgebraStruct.comul (R := R) x) = _
       induction CoalgebraStruct.comul (R := R) x with
       | zero => simp
@@ -192,7 +192,7 @@ private def commHopfAlgCatToCogrpAlg : CommHopfAlgCat R ⥤ (Grp_ (CommAlg R)ᵒ
       apply Quiver.Hom.unop_inj
       ext (x : A)
       refine .trans ?_ (HopfAlgebra.mul_antipode_lTensor_comul_apply (R := R) x)
-      change (CartesianMonoidalCategory.lift (𝟙 _) (CommAlg.ofHom
+      change (CartesianMonoidalCategory.lift (𝟙 _) (CommAlgCat.ofHom
         (HopfAlgebra.antipodeAlgHom R A)).op).unop.hom (CoalgebraStruct.comul (R := R) x) = _
       induction CoalgebraStruct.comul (R := R) x with
       | zero => simp
@@ -203,7 +203,7 @@ private def commHopfAlgCatToCogrpAlg : CommHopfAlgCat R ⥤ (Grp_ (CommAlg R)ᵒ
 
 /-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlg`. -/
 @[simps! obj map]
-private def cogrpAlgToCommHopfAlgCat : (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommHopfAlgCat R where
+private def cogrpAlgToCommHopfAlgCat : (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommHopfAlgCat R where
   obj A := {
     __ := (commBialgCatEquivComonCommAlg R).inverse.obj <| .op A.unop.toMon_
     hopfAlgebra := {
@@ -231,7 +231,7 @@ variable (R) in
 /-- Commutative Hopf algebras over a commutative ring `R` are the same thing as cogroup
 `R`-algebras. -/
 @[simps unitIso_inv counitIso_hom counitIso_inv]
-def commHopfAlgCatEquivCogrpCommAlg : CommHopfAlgCat R ≌ (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+def commHopfAlgCatEquivCogrpCommAlg : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   functor := commHopfAlgCatToCogrpAlg
   inverse := cogrpAlgToCommHopfAlgCat
   unitIso.hom := 𝟙 _
