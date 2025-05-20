@@ -22,21 +22,21 @@ variable (R : Type*) [CommRing R]
 
 /-- The functor of commutative monoid algebras. -/
 @[simps obj map]
-noncomputable def commMonAlg : CommMonCat ⥤ CommBialgCatCat R where
-  obj M := Cat.of R <| MonoidAlgebra R M
-  map f := CommBialgCatCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
+noncomputable def commMonAlg : CommMonCat ⥤ CommBialgCat R where
+  obj M := .of R <| MonoidAlgebra R M
+  map f := CommBialgCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
 
 /-- The functor of commutative group algebras. -/
 @[simps obj map]
-noncomputable def commGrpAlg : CommGrp ⥤ CommHopfAlgCatCat R where
-  obj G := Cat.of R <| MonoidAlgebra R G
-  map f := CommHopfAlgCatCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
+noncomputable def commGrpAlg : CommGrp ⥤ CommHopfAlgCat R where
+  obj G := .of R <| MonoidAlgebra R G
+  map f := CommHopfAlgCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
 
 variable {R} [IsDomain R]
 
 /-- The group algebra functor over a domain is fully faithful. -/
 noncomputable def commGrpAlg.fullyFaithful : (commGrpAlg R).FullyFaithful where
-  preimage {X Y} f := CommGrp.ofHom <| MonoidAlgebra.mapDomainOfBialgHom (R := R) <|  f.hom
+  preimage {X Y} f := CommGrp.ofHom <| MonoidAlgebra.mapDomainOfBialgHom f.hom
 
 instance commGrpAlg.instFull : (commGrpAlg R).Full := fullyFaithful.full
 instance commGrpAlg.instFaithful : (commGrpAlg R).Faithful := fullyFaithful.faithful
