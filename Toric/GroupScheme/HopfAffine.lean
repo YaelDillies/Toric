@@ -60,39 +60,39 @@ section topEdge
 
 variable (R) in
 /-- `Spec` as a functor from `R`-algebras to schemes over `Spec R`. -/
-noncomputable abbrev algSpec : (CommAlg R)ᵒᵖ ⥤ Over (Spec R) :=
-  (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
+noncomputable abbrev algSpec : (CommAlgCat R)ᵒᵖ ⥤ Over (Spec R) :=
+  (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 -- FIXME: Neither `inferInstance` nor `by unfold algSpec; infer_instance` work in the following 3.
--- TODO: Do a MWE once `CommAlg` is in mathlib
+-- TODO: Do a MWE once `CommAlgCat` is in mathlib
 instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
-    (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
+    (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
 
 /-- `Spec` is full on `R`-algebras. -/
 instance algSpec.instFull : (algSpec R).Full :=
   inferInstanceAs <| Functor.Full <|
-    (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
+    (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 /-- `Spec` is faithful on `R`-algebras. -/
 instance algSpec.instFaithful : (algSpec R).Faithful :=
   inferInstanceAs <| Functor.Faithful <|
-    (commAlgEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
+    (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 /-- `Spec` is fully faithful on `R`-algebras, with inverse `Gamma`. -/
 noncomputable def algSpec.fullyFaithful : (algSpec R).FullyFaithful :=
-  ((commAlgEquivUnder R).op.trans (Over.opEquivOpUnder R).symm).fullyFaithfulFunctor.comp <|
+  ((commAlgCatEquivUnder R).op.trans (Over.opEquivOpUnder R).symm).fullyFaithfulFunctor.comp <|
     Spec.fullyFaithful.over _
 
 variable (R) in
 /-- `Spec` as a functor from `R`-bialgebras to monoid schemes over `Spec R`. -/
-noncomputable abbrev bialgSpec : Mon_ (CommAlg R)ᵒᵖ ⥤ Mon_ (Over <| Spec R) := (algSpec R).mapMon
+noncomputable abbrev bialgSpec : Mon_ (CommAlgCat R)ᵒᵖ ⥤ Mon_ (Over <| Spec R) := (algSpec R).mapMon
 
 variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/
-noncomputable abbrev hopfSpec : Grp_ (CommAlg R)ᵒᵖ ⥤ Grp_ (Over <| Spec R) := (algSpec R).mapGrp
+noncomputable abbrev hopfSpec : Grp_ (CommAlgCat R)ᵒᵖ ⥤ Grp_ (Over <| Spec R) := (algSpec R).mapGrp
 
 /-- `Spec` is full on `R`-Hopf algebras. -/
 instance hopfSpec.instFull : (hopfSpec R).Full := inferInstance
@@ -112,8 +112,8 @@ variable {R : Type u} [CommRing R] {G : Over (Spec <| .of R)} [Grp_Class G]
 noncomputable instance : Algebra R (Γ.obj <| op G.left) := sorry
 
 noncomputable instance : HopfAlgebra R (Γ.obj <| op G.left) := by
-  have : Grp_Class (Opposite.op (CommAlg.of R (Γ.obj <| op G.left))) := sorry
-  exact hopfAlgebra_unop (G := Opposite.op (CommAlg.of R (Γ.obj <| op G.left)))
+  have : Grp_Class (Opposite.op (CommAlgCat.of R (Γ.obj <| op G.left))) := sorry
+  exact hopfAlgebra_unop (G := Opposite.op (CommAlgCat.of R (Γ.obj <| op G.left)))
 
 end topEdge
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
-import Toric.Mathlib.Algebra.Category.CommAlg.Basic
+import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 
 /-!
 # The cocartesian monoidal category structure on commutative `R`-algebras
@@ -14,12 +14,12 @@ noncomputable section
 
 open CategoryTheory Limits TensorProduct
 
-namespace CommAlg
+namespace CommAlgCat
 universe u v
-variable {R : Type u} [CommRing R] {A B C : CommAlg.{u} R}
+variable {R : Type u} [CommRing R] {A B C : CommAlgCat.{u} R}
 
 variable (A B) in
-/-- The explicit cocone with tensor products as the fibered product in `CommAlg`. -/
+/-- The explicit cocone with tensor products as the fibered product in `CommAlgCat`. -/
 def binaryCofan : BinaryCofan A B :=
   .mk (ofHom Algebra.TensorProduct.includeLeft)
     (ofHom (Algebra.TensorProduct.includeRight (A := A)))
@@ -50,11 +50,11 @@ def binaryCofanIsColimit : IsColimit (binaryCofan A B) :=
 def isInitialSelf : IsInitial (of R R) := .ofUniqueHom (fun A ↦ ofHom (Algebra.ofId R A))
   fun _ _ ↦ hom_ext (Algebra.ext_id _ _ _)
 
-open Opposite Algebra.TensorProduct CommAlg
+open Opposite Algebra.TensorProduct CommAlgCat
 
 attribute [local ext] Quiver.Hom.unop_inj
 
-instance : MonoidalCategory (CommAlg.{u} R)ᵒᵖ where
+instance : MonoidalCategory (CommAlgCat.{u} R)ᵒᵖ where
   tensorObj S T := op <| of R (S.unop ⊗[R] T.unop)
   whiskerLeft S {T₁ T₂} f := .op <| ofHom (Algebra.TensorProduct.map (.id _ _) f.unop.hom)
   whiskerRight {S₁ S₂} f T := .op <| ofHom (Algebra.TensorProduct.map f.unop.hom (.id _ _))
@@ -74,7 +74,7 @@ instance : MonoidalCategory (CommAlg.{u} R)ᵒᵖ where
   pentagon := by intros; ext <;> rfl
   triangle := by intros; ext <;> rfl
 
-instance : CartesianMonoidalCategory (CommAlg.{u} R)ᵒᵖ where
+instance : CartesianMonoidalCategory (CommAlgCat.{u} R)ᵒᵖ where
   isTerminalTensorUnit := terminalOpOfInitial isInitialSelf
   fst := _
   snd := _
@@ -83,7 +83,7 @@ instance : CartesianMonoidalCategory (CommAlg.{u} R)ᵒᵖ where
   fst_def S T := by ext x; show x ⊗ₜ 1 = x ⊗ₜ algebraMap R (unop T:) 1; simp
   snd_def S T := by ext x; show 1 ⊗ₜ x = algebraMap R (unop S:) 1 ⊗ₜ x; simp
 
-instance : BraidedCategory (CommAlg.{u} R)ᵒᵖ where
+instance : BraidedCategory (CommAlgCat.{u} R)ᵒᵖ where
   braiding S T := .op <| isoMk (Algebra.TensorProduct.comm R _ _)
   braiding_naturality_right := by intros; ext <;> rfl
   braiding_naturality_left := by intros; ext <;> rfl
@@ -105,7 +105,7 @@ lemma associator_hom_unop_hom :
 lemma associator_inv_unop_hom :
     (α_ (op A) (op B) (op C)).inv.unop.hom = (Algebra.TensorProduct.assoc R A B C).toAlgHom := rfl
 
-lemma tensorHom_unop_hom {D : CommAlg R} (f : A ⟶ C) (g : B ⟶ D) :
+lemma tensorHom_unop_hom {D : CommAlgCat R} (f : A ⟶ C) (g : B ⟶ D) :
     (f.op ⊗ g.op).unop.hom = (Algebra.TensorProduct.map f.hom g.hom) := rfl
 
-end CommAlg
+end CommAlgCat

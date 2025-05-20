@@ -12,8 +12,8 @@ import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.HopfAlg
 import Toric.Hopf.MonoidAlgebra
-import Toric.Mathlib.Algebra.Category.CommAlg.Basic
-import Toric.Mathlib.Algebra.Category.CommAlg.Monoidal
+import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
+import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
