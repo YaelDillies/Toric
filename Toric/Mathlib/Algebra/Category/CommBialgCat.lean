@@ -10,7 +10,7 @@ import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 /-!
 # The category of commutative bialgebras over a commutative ring
 
-This file defines the bundled category `CommBialg` of commutative bialgebras over a fixed
+This file defines the bundled category `CommBialgCat` of commutative bialgebras over a fixed
 commutative ring `R` along with the forgetful functor to `CommAlg`.
 -/
 
@@ -25,60 +25,60 @@ variable {R : Type u} [CommRing R]
 
 variable (R) in
 /-- The category of commutative `R`-bialgebras and their morphisms. -/
-structure CommBialg where
+structure CommBialgCat where
   private mk ::
   /-- The underlying type. -/
   carrier : Type v
   [commRing : CommRing carrier]
   [bialgebra : Bialgebra R carrier]
 
-namespace CommBialg
-variable {A B C : CommBialg.{v} R} {X Y Z : Type v} [CommRing X] [Bialgebra R X]
+namespace CommBialgCat
+variable {A B C : CommBialgCat.{v} R} {X Y Z : Type v} [CommRing X] [Bialgebra R X]
   [CommRing Y] [Bialgebra R Y] [CommRing Z] [Bialgebra R Z]
 
 attribute [instance] commRing bialgebra
 
-initialize_simps_projections CommBialg (-commRing, -bialgebra)
+initialize_simps_projections CommBialgCat (-commRing, -bialgebra)
 
-instance : CoeSort (CommBialg R) (Type v) := ⟨carrier⟩
+instance : CoeSort (CommBialgCat R) (Type v) := ⟨carrier⟩
 
-attribute [coe] CommBialg.carrier
+attribute [coe] CommBialgCat.carrier
 
 variable (R) in
 /-- Turn an unbundled `R`-bialgebra into the corresponding object in the category of `R`-bialgebras.
 
-This is the preferred way to construct a term of `CommBialg R`. -/
-abbrev of (X : Type v) [CommRing X] [Bialgebra R X] : CommBialg.{v} R := ⟨X⟩
+This is the preferred way to construct a term of `CommBialgCat R`. -/
+abbrev of (X : Type v) [CommRing X] [Bialgebra R X] : CommBialgCat.{v} R := ⟨X⟩
 
 variable (R) in
 lemma coe_of (X : Type v) [CommRing X] [Bialgebra R X] : (of R X : Type v) = X := rfl
 
-/-- The type of morphisms in `CommBialg R`. -/
+/-- The type of morphisms in `CommBialgCat R`. -/
 @[ext]
-structure Hom (A B : CommBialg.{v} R) where
+structure Hom (A B : CommBialgCat.{v} R) where
   private mk ::
   /-- The underlying bialgebra map. -/
   hom' : A →ₐc[R] B
 
-instance : Category (CommBialg.{v} R) where
+instance : Category (CommBialgCat.{v} R) where
   Hom A B := Hom A B
   id A := ⟨.id R A⟩
   comp f g := ⟨g.hom'.comp f.hom'⟩
 
-instance : ConcreteCategory (CommBialg.{v} R) (· →ₐc[R] ·) where
+instance : ConcreteCategory (CommBialgCat.{v} R) (· →ₐc[R] ·) where
   hom := Hom.hom'
   ofHom := Hom.mk
 
-/-- Turn a morphism in `CommBialg` back into a `BialgHom`. -/
-abbrev Hom.hom (f : Hom A B) := ConcreteCategory.hom (C := CommBialg R) f
+/-- Turn a morphism in `CommBialgCat` back into a `BialgHom`. -/
+abbrev Hom.hom (f : Hom A B) := ConcreteCategory.hom (C := CommBialgCat R) f
 
-/-- Typecheck a `BialgHom` as a morphism in `CommBialg R`. -/
+/-- Typecheck a `BialgHom` as a morphism in `CommBialgCat R`. -/
 abbrev ofHom {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : Bialgebra R X}
     {_ : Bialgebra R Y} (f : X →ₐc[R] Y) : of R X ⟶ of R Y :=
-  ConcreteCategory.ofHom (C := CommBialg R) f
+  ConcreteCategory.ofHom (C := CommBialgCat R) f
 
 /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/
-def Hom.Simps.hom (A B : CommBialg.{v} R) (f : Hom A B) := f.hom
+def Hom.Simps.hom (A B : CommBialgCat.{v} R) (f : Hom A B) := f.hom
 
 initialize_simps_projections Hom (hom' → hom)
 
@@ -89,7 +89,7 @@ The results below duplicate the `ConcreteCategory` simp lemmas, but we can keep 
 @[simp] lemma hom_id : (𝟙 A : A ⟶ A).hom = AlgHom.id R A := rfl
 
 /- Provided for rewriting. -/
-lemma id_apply (A : CommBialg.{v} R) (a : A) : (𝟙 A : A ⟶ A) a = a := by simp
+lemma id_apply (A : CommBialgCat.{v} R) (a : A) : (𝟙 A : A ⟶ A) a = a := by simp
 
 @[simp] lemma hom_comp (f : A ⟶ B) (g : B ⟶ C) : (f ≫ g).hom = g.hom.comp f.hom := rfl
 
@@ -111,34 +111,34 @@ lemma ofHom_apply (f : X →ₐc[R] Y) (x : X) : ofHom f x = f x := rfl
 lemma inv_hom_apply (e : A ≅ B) (x : A) : e.inv (e.hom x) = x := by simp [← comp_apply]
 lemma hom_inv_apply (e : A ≅ B) (x : B) : e.hom (e.inv x) = x := by simp [← comp_apply]
 
-instance : Inhabited (CommBialg R) := ⟨of R R⟩
+instance : Inhabited (CommBialgCat R) := ⟨of R R⟩
 
-lemma forget_obj (A : CommBialg.{v} R) : (forget (CommBialg.{v} R)).obj A = A := rfl
+lemma forget_obj (A : CommBialgCat.{v} R) : (forget (CommBialgCat.{v} R)).obj A = A := rfl
 
-lemma forget_map (f : A ⟶ B) : (forget (CommBialg.{v} R)).map f = f := rfl
+lemma forget_map (f : A ⟶ B) : (forget (CommBialgCat.{v} R)).map f = f := rfl
 
-instance : Ring ((forget (CommBialg R)).obj A) := inferInstanceAs <| Ring A
+instance : Ring ((forget (CommBialgCat R)).obj A) := inferInstanceAs <| Ring A
 
-instance : Bialgebra R ((forget (CommBialg R)).obj A) := inferInstanceAs <| Bialgebra R A
+instance : Bialgebra R ((forget (CommBialgCat R)).obj A) := inferInstanceAs <| Bialgebra R A
 
-instance hasForgetToCommAlg : HasForget₂ (CommBialg.{v} R) (CommAlg.{v} R) where
+instance hasForgetToCommAlg : HasForget₂ (CommBialgCat.{v} R) (CommAlg.{v} R) where
   forget₂.obj M := .of R M
   forget₂.map f := CommAlg.ofHom f.hom
 
-@[simp] lemma forget₂_commAlg_obj (A : CommBialg.{v} R) :
-    (forget₂ (CommBialg.{v} R) (CommAlg.{v} R)).obj A = .of R A := rfl
+@[simp] lemma forget₂_commAlg_obj (A : CommBialgCat.{v} R) :
+    (forget₂ (CommBialgCat.{v} R) (CommAlg.{v} R)).obj A = .of R A := rfl
 
 @[simp] lemma forget₂_commAlg_map (f : A ⟶ B) :
-    (forget₂ (CommBialg.{v} R) (CommAlg.{v} R)).map f = CommAlg.ofHom f.hom := rfl
+    (forget₂ (CommBialgCat.{v} R) (CommAlg.{v} R)).map f = CommAlg.ofHom f.hom := rfl
 
 /-- Forgetting to the underlying type and then building the bundled object returns the original
 bialgebra. -/
 @[simps]
-def ofSelfIso (M : CommBialg.{v} R) : of R M ≅ M where
+def ofSelfIso (M : CommBialgCat.{v} R) : of R M ≅ M where
   hom := 𝟙 M
   inv := 𝟙 M
 
-/-- Build an isomorphism in the category `CommBialg R` from a `BialgEquiv` between
+/-- Build an isomorphism in the category `CommBialgCat R` from a `BialgEquiv` between
 `Bialgebra`s. -/
 @[simps]
 def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : Bialgebra R X}
@@ -146,7 +146,7 @@ def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : Bialgebra R X}
   hom := ofHom (e : X →ₐc[R] Y)
   inv := ofHom (e.symm : Y →ₐc[R] X)
 
-/-- Build a `AlgEquiv` from an isomorphism in the category `CommBialg R`. -/
+/-- Build a `AlgEquiv` from an isomorphism in the category `CommBialgCat R`. -/
 @[simps]
 def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   __ := i.hom.hom
@@ -156,26 +156,26 @@ def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   right_inv x := by simp
 
 /-- Bialgebra equivalences between `Bialgebra`s are the same as (isomorphic to) isomorphisms in
-`CommBialg`. -/
+`CommBialgCat`. -/
 @[simps]
 def isoEquivalgEquiv : (of R X ≅ of R Y) ≅ (X ≃ₐc[R] Y) where
   hom := ofIso
   inv := isoMk
 
-instance reflectsIsomorphisms_forget_commBialg :
-    (forget (CommBialg.{u} R)).ReflectsIsomorphisms where
+instance reflectsIsomorphisms_forget_commBialgCat :
+    (forget (CommBialgCat.{u} R)).ReflectsIsomorphisms where
   reflects {X Y} f _ := by
-    let i := asIso ((forget (CommBialg.{u} R)).map f)
+    let i := asIso ((forget (CommBialgCat.{u} R)).map f)
     let e : X ≃ₐc[R] Y := { f.hom, i.toEquiv with }
     exact (isoMk e).isIso_hom
 
-end CommBialg
+end CommBialgCat
 
 attribute [local ext] Quiver.Hom.unop_inj
 
-/-- Implementation detail of `commBialgEquivComonCommAlg`. -/
+/-- Implementation detail of `commBialgCatEquivComonCommAlg`. -/
 @[simps! obj map]
-private def commBialgToComonCommAlg : CommBialg R ⥤ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+private def commBialgCatToComonCommAlg : CommBialgCat R ⥤ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
   obj A := .op {
     X := .op <| .of R A
     one := (CommAlg.ofHom <| counitAlgHom R A).op
@@ -194,9 +194,9 @@ private def commBialgToComonCommAlg : CommBialg R ⥤ (Mon_ (CommAlg R)ᵒᵖ)�
       rw [BialgHomClass.map_comp_comulAlgHom]
   }
 
-/-- Implementation detail of `commBialgEquivComonCommAlg`. -/
+/-- Implementation detail of `commBialgCatEquivComonCommAlg`. -/
 @[simps! obj map]
-private def comonCommAlgToCommBialg : (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommBialg R where
+private def comonCommAlgToCommBialgCat : (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommBialgCat R where
   obj A := {
     carrier := A.unop.X.unop
     bialgebra := .ofAlgHom A.unop.mul.unop.hom A.unop.one.unop.hom
@@ -204,7 +204,7 @@ private def comonCommAlgToCommBialg : (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommBia
       congr(($(Mon_Class.one_mul A.unop.X)).unop.hom)
       congr(($(Mon_Class.mul_one A.unop.X)).unop.hom)
   }
-  map {A B} f := CommBialg.ofHom <| .ofAlgHom f.unop.hom.unop.hom
+  map {A B} f := CommBialgCat.ofHom <| .ofAlgHom f.unop.hom.unop.hom
     congr(($(IsMon_Hom.one_hom (f := f.unop.hom))).unop.hom.toLinearMap)
     congr(($((IsMon_Hom.mul_hom (f := f.unop.hom)).symm)).unop.hom.toLinearMap)
 
@@ -212,9 +212,9 @@ variable (R) in
 /-- Commutative bialgebras over a commutative ring `R` are the same thing as comonoid
 `R`-algebras. -/
 @[simps!]
-def commBialgEquivComonCommAlg : CommBialg R ≌ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
-  functor := commBialgToComonCommAlg
-  inverse := comonCommAlgToCommBialg
+def commBialgCatEquivComonCommAlg : CommBialgCat R ≌ (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+  functor := commBialgCatToComonCommAlg
+  inverse := comonCommAlgToCommBialgCat
   unitIso.hom := 𝟙 _
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _

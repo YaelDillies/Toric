@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.Algebra.Category.CommHopfAlg
+import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
@@ -48,7 +48,7 @@ variable {R : CommRingCat.{u}}
 ### Left edge: `R`-Hopf algebras correspond to cogroup objects under `R`
 
 Ways to turn an unbundled `R`-Hopf algebra into a bundled cogroup object under `R`, and vice versa,
-are already provided in `Toric.Mathlib.Algebra.Category.CommHopfAlg`.
+are already provided in `Toric.Mathlib.Algebra.Category.CommHopfAlgCat`.
 
 ### Top edge: `Spec` as a functor on Hopf algebras
 

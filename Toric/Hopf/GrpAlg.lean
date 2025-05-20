@@ -6,7 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.Hopf.MonoidAlgebra
-import Toric.Mathlib.Algebra.Category.CommHopfAlg
+import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
 /-!
@@ -22,15 +22,15 @@ variable (R : Type*) [CommRing R]
 
 /-- The functor of commutative monoid algebras. -/
 @[simps obj map]
-noncomputable def commMonAlg : CommMonCat ⥤ CommBialgCat R where
+noncomputable def commMonAlg : CommMonCat ⥤ CommBialgCatCat R where
   obj M := Cat.of R <| MonoidAlgebra R M
-  map f := CommBialgCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
+  map f := CommBialgCatCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
 
 /-- The functor of commutative group algebras. -/
 @[simps obj map]
-noncomputable def commGrpAlg : CommGrp ⥤ CommHopfAlgCat R where
+noncomputable def commGrpAlg : CommGrp ⥤ CommHopfAlgCatCat R where
   obj G := Cat.of R <| MonoidAlgebra R G
-  map f := CommHopfAlgCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
+  map f := CommHopfAlgCatCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
 
 variable {R} [IsDomain R]
 

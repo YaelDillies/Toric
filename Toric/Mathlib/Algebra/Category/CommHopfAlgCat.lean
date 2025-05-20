@@ -7,15 +7,15 @@ import Mathlib.Algebra.Category.AlgebraCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Toric.Mathlib.Algebra.Category.CommBialg
+import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
 /-!
 # The category of commutative Hopf algebras over a commutative ring
 
-This file defines the bundled category `CommHopfAlg` of commutative Hopf algebras over a fixed
-commutative ring `R` along with the forgetful functor to `CommBialg`.
+This file defines the bundled category `CommHopfAlgCat` of commutative Hopf algebras over a fixed
+commutative ring `R` along with the forgetful functor to `CommBialgCat`.
 -/
 
 noncomputable section
@@ -28,60 +28,60 @@ variable {R : Type u} [CommRing R]
 
 variable (R) in
 /-- The category of commutative `R`-Hopf algebras and their morphisms. -/
-structure CommHopfAlg where
+structure CommHopfAlgCat where
   private mk ::
   /-- The underlying type. -/
   carrier : Type v
   [commRing : CommRing carrier]
   [hopfAlgebra : HopfAlgebra R carrier]
 
-namespace CommHopfAlg
-variable {A B C : CommHopfAlg.{v} R} {X Y Z : Type v} [CommRing X] [HopfAlgebra R X]
+namespace CommHopfAlgCat
+variable {A B C : CommHopfAlgCat.{v} R} {X Y Z : Type v} [CommRing X] [HopfAlgebra R X]
   [CommRing Y] [HopfAlgebra R Y] [CommRing Z] [HopfAlgebra R Z]
 
 attribute [instance] commRing hopfAlgebra
 
-initialize_simps_projections CommHopfAlg (-commRing, -hopfAlgebra)
+initialize_simps_projections CommHopfAlgCat (-commRing, -hopfAlgebra)
 
-instance : CoeSort (CommHopfAlg R) (Type v) := ⟨carrier⟩
+instance : CoeSort (CommHopfAlgCat R) (Type v) := ⟨carrier⟩
 
-attribute [coe] CommHopfAlg.carrier
+attribute [coe] CommHopfAlgCat.carrier
 
 variable (R) in
 /-- Turn an unbundled `R`-Hopf algebra into the corresponding object in the category of
 `R`-Hopf algebras.
 
-This is the preferred way to construct a term of `CommHopfAlg R`. -/
-abbrev of (X : Type v) [CommRing X] [HopfAlgebra R X] : CommHopfAlg.{v} R := ⟨X⟩
+This is the preferred way to construct a term of `CommHopfAlgCat R`. -/
+abbrev of (X : Type v) [CommRing X] [HopfAlgebra R X] : CommHopfAlgCat.{v} R := ⟨X⟩
 
 variable (R) in
 lemma coe_of (X : Type v) [CommRing X] [HopfAlgebra R X] : (of R X : Type v) = X := rfl
 
-/-- The type of morphisms in `CommBialg R`. -/
+/-- The type of morphisms in `CommBialgCat R`. -/
 @[ext]
-structure Hom (A B : CommHopfAlg.{v} R) where
+structure Hom (A B : CommHopfAlgCat.{v} R) where
   private mk ::
   /-- The underlying bialgebra map. -/
   hom' : A →ₐc[R] B
 
-instance : Category (CommHopfAlg.{v} R) where
+instance : Category (CommHopfAlgCat.{v} R) where
   Hom A B := Hom A B
   id A := ⟨.id R A⟩
   comp f g := ⟨g.hom'.comp f.hom'⟩
 
-instance : ConcreteCategory (CommHopfAlg.{v} R) (· →ₐc[R] ·) where
+instance : ConcreteCategory (CommHopfAlgCat.{v} R) (· →ₐc[R] ·) where
   hom := Hom.hom'
   ofHom := Hom.mk
 
-/-- Turn a morphism in `CommHopfAlg` back into a `BialgHom`. -/
-abbrev Hom.hom (f : Hom A B) := ConcreteCategory.hom (C := CommHopfAlg R) f
+/-- Turn a morphism in `CommHopfAlgCat` back into a `BialgHom`. -/
+abbrev Hom.hom (f : Hom A B) := ConcreteCategory.hom (C := CommHopfAlgCat R) f
 
-/-- Typecheck a `BialgHom` as a morphism in `CommHopfAlg R`. -/
+/-- Typecheck a `BialgHom` as a morphism in `CommHopfAlgCat R`. -/
 abbrev ofHom {_ : CommRing X} {_ : CommRing Y} {_ : HopfAlgebra R X} {_ : HopfAlgebra R Y}
-    (f : X →ₐc[R] Y) : of R X ⟶ of R Y := ConcreteCategory.ofHom (C := CommHopfAlg R) f
+    (f : X →ₐc[R] Y) : of R X ⟶ of R Y := ConcreteCategory.ofHom (C := CommHopfAlgCat R) f
 
 /-- Use the `ConcreteCategory.hom` projection for `@[simps]` lemmas. -/
-def Hom.Simps.hom (A B : CommHopfAlg.{v} R) (f : Hom A B) := f.hom
+def Hom.Simps.hom (A B : CommHopfAlgCat.{v} R) (f : Hom A B) := f.hom
 
 initialize_simps_projections Hom (hom' → hom)
 
@@ -92,7 +92,7 @@ The results below duplicate the `ConcreteCategory` simp lemmas, but we can keep 
 @[simp] lemma hom_id : (𝟙 A : A ⟶ A).hom = AlgHom.id R A := rfl
 
 /- Provided for rewriting. -/
-lemma id_apply (A : CommHopfAlg.{v} R) (a : A) : (𝟙 A : A ⟶ A) a = a := by simp
+lemma id_apply (A : CommHopfAlgCat.{v} R) (a : A) : (𝟙 A : A ⟶ A) a = a := by simp
 
 @[simp] lemma hom_comp (f : A ⟶ B) (g : B ⟶ C) : (f ≫ g).hom = g.hom.comp f.hom := rfl
 
@@ -112,34 +112,34 @@ lemma ofHom_apply (f : X →ₐc[R] Y) (x : X) : ofHom f x = f x := rfl
 lemma inv_hom_apply (e : A ≅ B) (x : A) : e.inv (e.hom x) = x := by simp [← comp_apply]
 lemma hom_inv_apply (e : A ≅ B) (x : B) : e.hom (e.inv x) = x := by simp [← comp_apply]
 
-instance : Inhabited (CommHopfAlg R) := ⟨of R R⟩
+instance : Inhabited (CommHopfAlgCat R) := ⟨of R R⟩
 
-lemma forget_obj (A : CommHopfAlg.{v} R) : (forget (CommHopfAlg.{v} R)).obj A = A := rfl
+lemma forget_obj (A : CommHopfAlgCat.{v} R) : (forget (CommHopfAlgCat.{v} R)).obj A = A := rfl
 
-lemma forget_map (f : A ⟶ B) : (forget (CommHopfAlg.{v} R)).map f = f := rfl
+lemma forget_map (f : A ⟶ B) : (forget (CommHopfAlgCat.{v} R)).map f = f := rfl
 
-instance : Ring ((forget (CommHopfAlg R)).obj A) := inferInstanceAs <| Ring A
+instance : Ring ((forget (CommHopfAlgCat R)).obj A) := inferInstanceAs <| Ring A
 
-instance : HopfAlgebra R ((forget (CommHopfAlg R)).obj A) := inferInstanceAs <| HopfAlgebra R A
+instance : HopfAlgebra R ((forget (CommHopfAlgCat R)).obj A) := inferInstanceAs <| HopfAlgebra R A
 
-instance hasForgetToCommBialg : HasForget₂ (CommHopfAlg.{v} R) (CommBialg.{v} R) where
+instance hasForgetToCommBialgCat : HasForget₂ (CommHopfAlgCat.{v} R) (CommBialgCat.{v} R) where
   forget₂.obj A := .of R A
-  forget₂.map f := CommBialg.ofHom f.hom
+  forget₂.map f := CommBialgCat.ofHom f.hom
 
-@[simp] lemma forget₂_commBialg_obj (A : CommHopfAlg.{v} R) :
-    (forget₂ (CommHopfAlg.{v} R) (CommBialg.{v} R)).obj A = .of R A := rfl
+@[simp] lemma forget₂_commBialgCat_obj (A : CommHopfAlgCat.{v} R) :
+    (forget₂ (CommHopfAlgCat.{v} R) (CommBialgCat.{v} R)).obj A = .of R A := rfl
 
-@[simp] lemma forget₂_commBialg_map (f : A ⟶ B) :
-    (forget₂ (CommHopfAlg.{v} R) (CommBialg.{v} R)).map f = CommBialg.ofHom f.hom := rfl
+@[simp] lemma forget₂_commBialgCat_map (f : A ⟶ B) :
+    (forget₂ (CommHopfAlgCat.{v} R) (CommBialgCat.{v} R)).map f = CommBialgCat.ofHom f.hom := rfl
 
 /-- Forgetting to the underlying type and then building the bundled object returns the original Hopf
 algebra. -/
 @[simps]
-def ofSelfIso (A : CommHopfAlg.{v} R) : of R A ≅ A where
+def ofSelfIso (A : CommHopfAlgCat.{v} R) : of R A ≅ A where
   hom := 𝟙 A
   inv := 𝟙 A
 
-/-- Build an isomorphism in the category `CommHopfAlg R` from a `BialgEquiv` between
+/-- Build an isomorphism in the category `CommHopfAlgCat R` from a `BialgEquiv` between
 `HopfAlgebra`s. -/
 @[simps]
 def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : HopfAlgebra R X}
@@ -147,7 +147,7 @@ def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : HopfAlgebra R X}
   hom := ofHom (e : X →ₐc[R] Y)
   inv := ofHom (e.symm : Y →ₐc[R] X)
 
-/-- Build a `BialgEquiv` from an isomorphism in the category `CommHopfAlg R`. -/
+/-- Build a `BialgEquiv` from an isomorphism in the category `CommHopfAlgCat R`. -/
 @[simps]
 def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   __ := i.hom.hom
@@ -157,26 +157,26 @@ def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   right_inv x := by simp
 
 /-- Commutative Hopf algebra equivalences between `HopfAlgebra`s are the same as (isomorphic to)
-isomorphisms in `CommHopfAlg R`. -/
+isomorphisms in `CommHopfAlgCat R`. -/
 @[simps]
 def isoEquivalgEquiv : (of R X ≅ of R Y) ≅ (X ≃ₐc[R] Y) where
   hom := ofIso
   inv := isoMk
 
-instance reflectsIsomorphisms_forget_commHopfAlg :
-    (forget (CommHopfAlg.{u} R)).ReflectsIsomorphisms where
+instance reflectsIsomorphisms_forget_commHopfAlgCat :
+    (forget (CommHopfAlgCat.{u} R)).ReflectsIsomorphisms where
   reflects {X Y} f _ := by
-    let i := asIso ((forget (CommHopfAlg.{u} R)).map f)
+    let i := asIso ((forget (CommHopfAlgCat.{u} R)).map f)
     let e : X ≃ₐc[R] Y := { f.hom, i.toEquiv with }
     exact (isoMk e).isIso_hom
 
-end CommHopfAlg
+end CommHopfAlgCat
 
-/-- Implementation detail of `commHopfAlgEquivCogrpCommAlg`. -/
+/-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlg`. -/
 @[simps! obj map]
-private def commHopfAlgToCogrpAlg : CommHopfAlg R ⥤ (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+private def commHopfAlgCatToCogrpAlg : CommHopfAlgCat R ⥤ (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ where
   obj A := .op {
-    toMon_ := ((commBialgEquivComonCommAlg R).functor.obj <| .of R A).unop
+    toMon_ := ((commBialgCatEquivComonCommAlg R).functor.obj <| .of R A).unop
     inv := (CommAlg.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
     left_inv := by
       apply Quiver.Hom.unop_inj
@@ -199,15 +199,15 @@ private def commHopfAlgToCogrpAlg : CommHopfAlg R ⥤ (Grp_ (CommAlg R)ᵒᵖ)�
       | tmul x y => rfl
       | add x y _ _ => simp_all
   }
-  map {A B} f := (commBialgEquivComonCommAlg R).functor.map (CommBialg.ofHom f.hom)
+  map {A B} f := (commBialgCatEquivComonCommAlg R).functor.map (CommBialgCat.ofHom f.hom)
 
-/-- Implementation detail of `commHopfAlgEquivCogrpCommAlg`. -/
+/-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlg`. -/
 @[simps! obj map]
-private def cogrpAlgToCommHopfAlg : (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommHopfAlg R where
+private def cogrpAlgToCommHopfAlgCat : (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommHopfAlgCat R where
   obj A := {
-    __ := (commBialgEquivComonCommAlg R).inverse.obj <| .op A.unop.toMon_
+    __ := (commBialgCatEquivComonCommAlg R).inverse.obj <| .op A.unop.toMon_
     hopfAlgebra := {
-      __ := ((commBialgEquivComonCommAlg R).inverse.obj <| .op A.unop.toMon_).bialgebra
+      __ := ((commBialgCatEquivComonCommAlg R).inverse.obj <| .op A.unop.toMon_).bialgebra
       antipode := A.unop.inv.unop.hom.toLinearMap
       mul_antipode_rTensor_comul := by
         convert congr(($(Grp_Class.left_inv A.unop.X)).unop.hom.toLinearMap)
@@ -225,15 +225,15 @@ private def cogrpAlgToCommHopfAlg : (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ ⥤ CommHopfA
         rfl
     }
   }
-  map {A B f} := CommHopfAlg.ofHom ((commBialgEquivComonCommAlg R).inverse.map <| .op f.unop).hom
+  map {A B f} := CommHopfAlgCat.ofHom ((commBialgCatEquivComonCommAlg R).inverse.map <| .op f.unop).hom
 
 variable (R) in
 /-- Commutative Hopf algebras over a commutative ring `R` are the same thing as cogroup
 `R`-algebras. -/
 @[simps unitIso_inv counitIso_hom counitIso_inv]
-def commHopfAlgEquivCogrpCommAlg : CommHopfAlg R ≌ (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ where
-  functor := commHopfAlgToCogrpAlg
-  inverse := cogrpAlgToCommHopfAlg
+def commHopfAlgCatEquivCogrpCommAlg : CommHopfAlgCat R ≌ (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ where
+  functor := commHopfAlgCatToCogrpAlg
+  inverse := cogrpAlgToCommHopfAlgCat
   unitIso.hom := 𝟙 _
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _

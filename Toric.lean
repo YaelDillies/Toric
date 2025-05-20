@@ -13,8 +13,8 @@ import Toric.Hopf.GrpAlg
 import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
-import Toric.Mathlib.Algebra.Category.CommBialg
-import Toric.Mathlib.Algebra.Category.CommHopfAlg
+import Toric.Mathlib.Algebra.Category.CommBialgCat
+import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs

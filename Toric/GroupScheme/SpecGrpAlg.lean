@@ -22,11 +22,11 @@ variable (R : CommRingCat.{u})
 
 /-- The diagonalizable monoid scheme functor. -/
 noncomputable abbrev specCommMonAlg : CommMonCat.{u}ᵒᵖ ⥤ Mon_ (Over (Spec R)) :=
-  (commMonAlg R).op ⋙ (commBialgEquivComonCommAlg R).functor.leftOp ⋙ bialgSpec R
+  (commMonAlg R).op ⋙ (commBialgCatEquivComonCommAlg R).functor.leftOp ⋙ bialgSpec R
 
 /-- The diagonalizable group scheme functor. -/
 noncomputable abbrev specCommGrpAlg : CommGrp.{u}ᵒᵖ ⥤ Grp_ (Over (Spec R)) :=
-  (commGrpAlg R).op ⋙ (commHopfAlgEquivCogrpCommAlg R).functor.leftOp ⋙ hopfSpec R
+  (commGrpAlg R).op ⋙ (commHopfAlgCatEquivCogrpCommAlg R).functor.leftOp ⋙ hopfSpec R
 
 variable {R} [IsDomain R]
 
@@ -34,7 +34,7 @@ variable {R} [IsDomain R]
 noncomputable
 def specCommGrpAlg.fullyFaithful : (specCommGrpAlg (.of R)).FullyFaithful :=
   commGrpAlg.fullyFaithful.op.comp <|
-    (commHopfAlgEquivCogrpCommAlg R).fullyFaithfulFunctor.leftOp.comp hopfSpec.fullyFaithful
+    (commHopfAlgCatEquivCogrpCommAlg R).fullyFaithfulFunctor.leftOp.comp hopfSpec.fullyFaithful
 
 instance specCommGrpAlg.instFull : (specCommGrpAlg <| .of R).Full := fullyFaithful.full
 instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of R).Faithful := fullyFaithful.faithful
