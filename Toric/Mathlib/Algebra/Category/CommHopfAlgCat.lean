@@ -156,15 +156,16 @@ def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   left_inv x := by simp
   right_inv x := by simp
 
-/-- Commutative Hopf algebra equivalences between `HopfAlgebra`s are the same as (isomorphic to)
-isomorphisms in `CommHopfAlgCat R`. -/
+/-- Commutative Hopf algebra equivalences between `HopfAlgebra`s are the same as isomorphisms in
+`CommHopfAlgCat R`. -/
 @[simps]
-def isoEquivalgEquiv : (of R X ≅ of R Y) ≅ (X ≃ₐc[R] Y) where
-  hom := ofIso
-  inv := isoMk
+def isoEquivBialgEquiv : (of R X ≅ of R Y) ≃ (X ≃ₐc[R] Y) where
+  toFun := ofIso
+  invFun := isoMk
+  left_inv _ := rfl
+  right_inv _ := rfl
 
-instance reflectsIsomorphisms_forget_commHopfAlgCat :
-    (forget (CommHopfAlgCat.{u} R)).ReflectsIsomorphisms where
+instance reflectsIsomorphisms_forget : (forget (CommHopfAlgCat.{u} R)).ReflectsIsomorphisms where
   reflects {X Y} f _ := by
     let i := asIso ((forget (CommHopfAlgCat.{u} R)).map f)
     let e : X ≃ₐc[R] Y := { f.hom, i.toEquiv with }
@@ -172,11 +173,11 @@ instance reflectsIsomorphisms_forget_commHopfAlgCat :
 
 end CommHopfAlgCat
 
-/-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlg`. -/
+/-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlgCat`. -/
 @[simps! obj map]
-private def commHopfAlgCatToCogrpAlg : CommHopfAlgCat R ⥤ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
+private def commHopfAlgCatToCogrpAlgCat : CommHopfAlgCat R ⥤ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   obj A := .op {
-    toMon_ := ((commBialgCatEquivComonCommAlg R).functor.obj <| .of R A).unop
+    toMon_ := ((commBialgCatEquivComonCommAlgCat R).functor.obj <| .of R A).unop
     inv := (CommAlgCat.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
     left_inv := by
       apply Quiver.Hom.unop_inj
@@ -199,15 +200,15 @@ private def commHopfAlgCatToCogrpAlg : CommHopfAlgCat R ⥤ (Grp_ (CommAlgCat R)
       | tmul x y => rfl
       | add x y _ _ => simp_all
   }
-  map {A B} f := (commBialgCatEquivComonCommAlg R).functor.map (CommBialgCat.ofHom f.hom)
+  map {A B} f := (commBialgCatEquivComonCommAlgCat R).functor.map (CommBialgCat.ofHom f.hom)
 
 /-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlg`. -/
 @[simps! obj map]
-private def cogrpAlgToCommHopfAlgCat : (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommHopfAlgCat R where
+private def cogrpAlgCatToCommHopfAlgCat : (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommHopfAlgCat R where
   obj A := {
-    __ := (commBialgCatEquivComonCommAlg R).inverse.obj <| .op A.unop.toMon_
+    __ := (commBialgCatEquivComonCommAlgCat R).inverse.obj <| .op A.unop.toMon_
     hopfAlgebra := {
-      __ := ((commBialgCatEquivComonCommAlg R).inverse.obj <| .op A.unop.toMon_).bialgebra
+      __ := ((commBialgCatEquivComonCommAlgCat R).inverse.obj <| .op A.unop.toMon_).bialgebra
       antipode := A.unop.inv.unop.hom.toLinearMap
       mul_antipode_rTensor_comul := by
         convert congr(($(Grp_Class.left_inv A.unop.X)).unop.hom.toLinearMap)
@@ -225,15 +226,16 @@ private def cogrpAlgToCommHopfAlgCat : (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ Com
         rfl
     }
   }
-  map {A B f} := CommHopfAlgCat.ofHom ((commBialgCatEquivComonCommAlg R).inverse.map <| .op f.unop).hom
+  map {A B f} :=
+    CommHopfAlgCat.ofHom ((commBialgCatEquivComonCommAlgCat R).inverse.map <| .op f.unop).hom
 
 variable (R) in
 /-- Commutative Hopf algebras over a commutative ring `R` are the same thing as cogroup
 `R`-algebras. -/
 @[simps unitIso_inv counitIso_hom counitIso_inv]
-def commHopfAlgCatEquivCogrpCommAlg : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
-  functor := commHopfAlgCatToCogrpAlg
-  inverse := cogrpAlgToCommHopfAlgCat
+def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
+  functor := commHopfAlgCatToCogrpAlgCat
+  inverse := cogrpAlgCatToCommHopfAlgCat
   unitIso.hom := 𝟙 _
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _

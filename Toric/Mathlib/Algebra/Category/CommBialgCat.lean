@@ -121,14 +121,14 @@ instance : Ring ((forget (CommBialgCat R)).obj A) := inferInstanceAs <| Ring A
 
 instance : Bialgebra R ((forget (CommBialgCat R)).obj A) := inferInstanceAs <| Bialgebra R A
 
-instance hasForgetToCommAlg : HasForget₂ (CommBialgCat.{v} R) (CommAlgCat.{v} R) where
+instance hasForgetToCommAlgCat : HasForget₂ (CommBialgCat.{v} R) (CommAlgCat.{v} R) where
   forget₂.obj M := .of R M
   forget₂.map f := CommAlgCat.ofHom f.hom
 
-@[simp] lemma forget₂_commAlg_obj (A : CommBialgCat.{v} R) :
+@[simp] lemma forget₂_commAlgCat_obj (A : CommBialgCat.{v} R) :
     (forget₂ (CommBialgCat.{v} R) (CommAlgCat.{v} R)).obj A = .of R A := rfl
 
-@[simp] lemma forget₂_commAlg_map (f : A ⟶ B) :
+@[simp] lemma forget₂_commAlgCat_map (f : A ⟶ B) :
     (forget₂ (CommBialgCat.{v} R) (CommAlgCat.{v} R)).map f = CommAlgCat.ofHom f.hom := rfl
 
 /-- Forgetting to the underlying type and then building the bundled object returns the original
@@ -146,7 +146,7 @@ def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : Bialgebra R X}
   hom := ofHom (e : X →ₐc[R] Y)
   inv := ofHom (e.symm : Y →ₐc[R] X)
 
-/-- Build a `AlgEquiv` from an isomorphism in the category `CommBialgCat R`. -/
+/-- Build a `BialgEquiv` from an isomorphism in the category `CommBialgCat R`. -/
 @[simps]
 def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   __ := i.hom.hom
@@ -155,15 +155,15 @@ def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   left_inv x := by simp
   right_inv x := by simp
 
-/-- Bialgebra equivalences between `Bialgebra`s are the same as (isomorphic to) isomorphisms in
-`CommBialgCat`. -/
+/-- Bialgebra equivalences between `Bialgebra`s are the same as isomorphisms in `CommBialgCat`. -/
 @[simps]
-def isoEquivalgEquiv : (of R X ≅ of R Y) ≅ (X ≃ₐc[R] Y) where
-  hom := ofIso
-  inv := isoMk
+def isoEquivBialgEquiv : (of R X ≅ of R Y) ≃ (X ≃ₐc[R] Y) where
+  toFun := ofIso
+  invFun := isoMk
+  left_inv _ := rfl
+  right_inv _ := rfl
 
-instance reflectsIsomorphisms_forget_commBialgCat :
-    (forget (CommBialgCat.{u} R)).ReflectsIsomorphisms where
+instance reflectsIsomorphisms_forget : (forget (CommBialgCat.{u} R)).ReflectsIsomorphisms where
   reflects {X Y} f _ := by
     let i := asIso ((forget (CommBialgCat.{u} R)).map f)
     let e : X ≃ₐc[R] Y := { f.hom, i.toEquiv with }
@@ -173,9 +173,9 @@ end CommBialgCat
 
 attribute [local ext] Quiver.Hom.unop_inj
 
-/-- Implementation detail of `commBialgCatEquivComonCommAlg`. -/
+/-- Implementation detail of `commBialgCatEquivComonCommAlgCat`. -/
 @[simps! obj map]
-private def commBialgCatToComonCommAlg : CommBialgCat R ⥤ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
+private def commBialgCatToComonCommAlgCat : CommBialgCat R ⥤ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   obj A := .op {
     X := .op <| .of R A
     one := (CommAlgCat.ofHom <| counitAlgHom R A).op
@@ -196,7 +196,7 @@ private def commBialgCatToComonCommAlg : CommBialgCat R ⥤ (Mon_ (CommAlgCat R)
 
 /-- Implementation detail of `commBialgCatEquivComonCommAlg`. -/
 @[simps! obj map]
-private def comonCommAlgToCommBialgCat : (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommBialgCat R where
+private def comonCommAlgCatToCommBialgCat : (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommBialgCat R where
   obj A := {
     carrier := A.unop.X.unop
     bialgebra := .ofAlgHom A.unop.mul.unop.hom A.unop.one.unop.hom
@@ -212,9 +212,9 @@ variable (R) in
 /-- Commutative bialgebras over a commutative ring `R` are the same thing as comonoid
 `R`-algebras. -/
 @[simps!]
-def commBialgCatEquivComonCommAlg : CommBialgCat R ≌ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
-  functor := commBialgCatToComonCommAlg
-  inverse := comonCommAlgToCommBialgCat
+def commBialgCatEquivComonCommAlgCat : CommBialgCat R ≌ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
+  functor := commBialgCatToComonCommAlgCat
+  inverse := comonCommAlgCatToCommBialgCat
   unitIso.hom := 𝟙 _
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _
