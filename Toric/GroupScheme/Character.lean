@@ -3,9 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
+import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
+import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 
 /-!
 # The lattices of characters and cocharacters
@@ -54,6 +56,31 @@ end general_base
 section IsDomain
 variable {R : CommRingCat.{u}} [IsDomain R] {σ : Type u} {G : Scheme.{u}} [G.Over (Spec R)]
 
+section AddCommGroup
+variable {G : Type u} [AddCommGroup G]
+
+/-- Characters of a diagonal group scheme over a domain are exactly the input group.
+
+Note: This is true over a general ring using Cartier duality, but we do not prove that. -/
+def charGrpAlg : X(Spec R, Spec <| .of R[G]) ≃+ G := sorry
+
+/-- Cocharacters of a diagonal group scheme over a domain are exactly the dual of the input group.
+
+Note: This is true over a general ring using Cartier duality, but we do not prove that. -/
+def cocharGrpAlg : X*(Spec R, Spec <| .of R[G]) ≃+ (G →+ ℤ) := sorry
+
+end AddCommGroup
+
+/-- Characters of the algebraic circle with dimensions `σ`over a domain `R` are exactly `ℤ^σ`.
+
+Note: This is true over a general base using Cartier duality, but we do not prove that. -/
+def charTorus : X(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) := sorry
+
+/-- Cocharacters of the algebraic circle with dimensions `σ`over a domain `R` are exactly `ℤ^σ`.
+
+Note: This is true over a general base using Cartier duality, but we do not prove that. -/
+def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) := sorry
+
 section CommGrp_Class
 variable [CommGrp_Class (asOver G (Spec R))]
 
@@ -62,7 +89,8 @@ domain.
 
 Note: This exists over a general base using Cartier duality, but we do not prove that.  -/
 noncomputable def charPairingInt : X*(Spec R, G) →+ X(Spec R, G) →+ ℤ :=
-  .comp (AddMonoidHom.postcompAddEquiv sorry).toAddMonoidHom charPairing
+  .comp (AddMonoidHom.postcompAddEquiv <|
+    (charTorus (R := R) (σ := PUnit)).trans (.piUnique _)).toAddMonoidHom charPairing
 
 end CommGrp_Class
 end IsDomain
