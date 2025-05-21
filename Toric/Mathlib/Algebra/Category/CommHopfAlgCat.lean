@@ -3,7 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.Algebra.Category.AlgebraCat.Basic
+import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.HopfAlgebra.Basic
@@ -20,10 +20,11 @@ commutative ring `R` along with the forgetful functor to `CommBialgCat`.
 
 noncomputable section
 
-open CategoryTheory Limits HopfAlgebra
+namespace CategoryTheory
+
+open Limits HopfAlgebra
 
 universe v u
-
 variable {R : Type u} [CommRing R]
 
 variable (R) in
@@ -240,3 +241,5 @@ def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat 
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
+
+end CategoryTheory

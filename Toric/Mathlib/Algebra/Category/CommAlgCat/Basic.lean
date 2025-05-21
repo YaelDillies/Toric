@@ -3,17 +3,19 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.Algebra.Category.AlgebraCat.Basic
+import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 
 /-!
 # The category of commutative algebras over a commutative ring
 
 This file defines the bundled category `CommAlgCat` of commutative algebras over a fixed commutative
-ring `R` along with the forgetful functors to `RingCat` and `AlgebraCat`.
+ring `R` along with the forgetful functors to `CommRingCat` and `AlgCat`.
 -/
 
-open CategoryTheory Limits
+namespace CategoryTheory
+
+open Limits
 
 universe v u
 
@@ -114,28 +116,27 @@ instance : Ring ((forget (CommAlgCat R)).obj A) := inferInstanceAs <| Ring A
 
 instance : Algebra R ((forget (CommAlgCat R)).obj A) := inferInstanceAs <| Algebra R A
 
-instance hasForgetToCommRing : HasForget₂ (CommAlgCat.{v} R) CommRingCat.{v} where
+instance hasForgetToCommRingCat : HasForget₂ (CommAlgCat.{v} R) CommRingCat.{v} where
   forget₂.obj A := .of A
   forget₂.map f := CommRingCat.ofHom f.hom.toRingHom
 
-instance hasForgetToAlg : HasForget₂ (CommAlgCat.{v} R) (AlgebraCat.{v} R) where
+instance hasForgetToAlgCat : HasForget₂ (CommAlgCat.{v} R) (AlgCat.{v} R) where
   forget₂.obj A := .of R A
-  forget₂.map f := AlgebraCat.ofHom f.hom
+  forget₂.map f := AlgCat.ofHom f.hom
 
-@[simp] lemma forget₂_commAlgCat_obj (A : CommAlgCat.{v} R) :
-    (forget₂ (CommAlgCat.{v} R) (AlgebraCat.{v} R)).obj A = .of R A := rfl
+@[simp] lemma forget₂_commRingCat_obj (A : CommAlgCat.{v} R) :
+    (forget₂ (CommAlgCat.{v} R) CommRingCat.{v}).obj A = .of A := rfl
 
-@[simp] lemma forget₂_commAlgCat_map (f : A ⟶ B) :
-    (forget₂ (CommAlgCat.{v} R) (AlgebraCat.{v} R)).map f = AlgebraCat.ofHom f.hom := rfl
+@[simp] lemma forget₂_commRingCat_map (f : A ⟶ B) :
+    (forget₂ (CommAlgCat.{v} R) CommRingCat.{v}).map f = CommRingCat.ofHom f.hom := rfl
 
-/-- Forgetting to the underlying type and then building the bundled object returns the original
-algebra. -/
-@[simps]
-def ofSelfIso (A : CommAlgCat.{v} R) : of R A ≅ A where
-  hom := 𝟙 A
-  inv := 𝟙 A
+@[simp] lemma forget₂_algCat_obj (A : CommAlgCat.{v} R) :
+    (forget₂ (CommAlgCat.{v} R) (AlgCat.{v} R)).obj A = .of R A := rfl
 
-/-- Build an isomorphism in the category `CommAlgCat R` from a `AlgEquiv` between `Algebra`s. -/
+@[simp] lemma forget₂_algCat_map (f : A ⟶ B) :
+    (forget₂ (CommAlgCat.{v} R) (AlgCat.{v} R)).map f = AlgCat.ofHom f.hom := rfl
+
+/-- Build an isomorphism in the category `CommAlgCat R` from an `AlgEquiv` between `Algebra`s. -/
 @[simps]
 def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : Algebra R X} {_ : Algebra R Y}
     (e : X ≃ₐ[R] Y) : of R X ≅ of R Y where
@@ -154,12 +155,13 @@ def ofIso (i : A ≅ B) : A ≃ₐ[R] B where
 /-- Algebra equivalences between `Algebra`s are the same as (isomorphic to) isomorphisms in
 `CommAlgCat`. -/
 @[simps]
-def isoEquivalgEquiv : (of R X ≅ of R Y) ≅ (X ≃ₐ[R] Y) where
-  hom := ofIso
-  inv := isoMk
+def isoEquivAlgEquiv : (of R X ≅ of R Y) ≃ (X ≃ₐ[R] Y) where
+  toFun := ofIso
+  invFun := isoMk
+  left_inv _ := rfl
+  right_inv _ := rfl
 
-instance reflectsIsomorphisms_forget_commAlgCat :
-    (forget (CommAlgCat.{u} R)).ReflectsIsomorphisms where
+instance reflectsIsomorphisms_forget : (forget (CommAlgCat.{u} R)).ReflectsIsomorphisms where
   reflects {X Y} f _ := by
     let i := asIso ((forget (CommAlgCat.{u} R)).map f)
     let e : X ≃ₐ[R] Y := { f.hom, i.toEquiv with }
@@ -167,8 +169,8 @@ instance reflectsIsomorphisms_forget_commAlgCat :
 
 end CommAlgCat
 
-/-- The category of commutative algebras over a commutative ring `R` is the same as rings under `R`.
--/
+/-- The category of commutative algebras over a commutative ring `R` is the same as commutative
+rings under `R`. -/
 @[simps]
 def commAlgCatEquivUnder (R : CommRingCat) : CommAlgCat R ≌ Under R where
   functor.obj A := R.mkUnder A
@@ -178,3 +180,5 @@ def commAlgCatEquivUnder (R : CommRingCat) : CommAlgCat R ≌ Under R where
   unitIso := NatIso.ofComponents fun A ↦
     CommAlgCat.isoMk { toRingEquiv := .refl A, commutes' _ := rfl }
   counitIso := .refl _
+
+end CategoryTheory

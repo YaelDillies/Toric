@@ -16,11 +16,12 @@ commutative ring `R` along with the forgetful functor to `CommAlgCat`.
 
 noncomputable section
 
-open Bialgebra CategoryTheory Limits
+namespace CategoryTheory
+
+open Bialgebra Limits
 open scoped Mon_Class
 
 universe v u
-
 variable {R : Type u} [CommRing R]
 
 variable (R) in
@@ -219,3 +220,5 @@ def commBialgCatEquivComonCommAlgCat : CommBialgCat R ≌ (Mon_ (CommAlgCat R)�
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
+
+end CategoryTheory

@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GrpAlg
-import Toric.Mathlib.CategoryTheory.Opposites
 
 /-!
 # The spectrum of a group algebra functor

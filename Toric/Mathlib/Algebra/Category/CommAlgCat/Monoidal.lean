@@ -12,9 +12,9 @@ import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 
 noncomputable section
 
-open CategoryTheory Limits TensorProduct
+namespace CategoryTheory.CommAlgCat
 
-namespace CommAlgCat
+open Limits TensorProduct
 universe u v
 variable {R : Type u} [CommRing R] {A B C : CommAlgCat.{u} R}
 
@@ -108,4 +108,4 @@ lemma associator_inv_unop_hom :
 lemma tensorHom_unop_hom {D : CommAlgCat R} (f : A ⟶ C) (g : B ⟶ D) :
     (f.op ⊗ g.op).unop.hom = (Algebra.TensorProduct.map f.hom g.hom) := rfl
 
-end CommAlgCat
+end CategoryTheory.CommAlgCat
