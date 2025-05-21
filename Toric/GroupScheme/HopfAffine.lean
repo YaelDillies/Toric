@@ -88,11 +88,13 @@ noncomputable def algSpec.fullyFaithful : (algSpec R).FullyFaithful :=
 
 variable (R) in
 /-- `Spec` as a functor from `R`-bialgebras to monoid schemes over `Spec R`. -/
-noncomputable abbrev bialgSpec : Mon_ (CommAlgCat R)ᵒᵖ ⥤ Mon_ (Over <| Spec R) := (algSpec R).mapMon
+noncomputable abbrev bialgSpec : (CommBialgCat R)ᵒᵖ ⥤ Mon_ (Over <| Spec R) :=
+  (commBialgCatEquivComonCommAlgCat R).functor.leftOp ⋙ (algSpec R).mapMon
 
 variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/
-noncomputable abbrev hopfSpec : Grp_ (CommAlgCat R)ᵒᵖ ⥤ Grp_ (Over <| Spec R) := (algSpec R).mapGrp
+noncomputable abbrev hopfSpec : (CommHopfAlgCat R)ᵒᵖ ⥤ Grp_ (Over <| Spec R) :=
+  (commHopfAlgCatEquivCogrpCommAlgCat R).functor.leftOp ⋙ (algSpec R).mapGrp
 
 /-- `Spec` is full on `R`-Hopf algebras. -/
 instance hopfSpec.instFull : (hopfSpec R).Full := inferInstance
@@ -102,7 +104,8 @@ instance hopfSpec.instFaithful : (hopfSpec R).Faithful := inferInstance
 
 /-- `Spec` is fully faithful on `R`-Hopf algebras, with inverse `Gamma`. -/
 noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
-  algSpec.fullyFaithful.mapGrp
+  (commHopfAlgCatEquivCogrpCommAlgCat R).fullyFaithfulFunctor.leftOp.comp
+    algSpec.fullyFaithful.mapGrp
 
 end topEdge
 
@@ -118,7 +121,7 @@ section rightEdge
 /-- The essential image of `R`-algebras under `Spec` is precisely affine schemes over `Spec R`. -/
 @[simp]
 lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffine G.left := by
-  simp [algSpec]
+  simp [algSpec, Functor.essImage_overPost]
   rw [Functor.essImage_overPost] -- not sure why `simp` doesn't use this already
   simp
 
@@ -126,7 +129,6 @@ lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffin
 `Spec R`. -/
 @[simp]
 lemma essImage_hopfSpec {G : Grp_ (Over <| Spec R)} :
-    (hopfSpec R).essImage G ↔ IsAffine G.X.left := by
-  rw [Functor.essImage_mapGrp, essImage_algSpec]
+    (hopfSpec R).essImage G ↔ IsAffine G.X.left := by simp
 
 end rightEdge
