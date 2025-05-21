@@ -284,23 +284,28 @@ section Bialgebra
 variable [Bialgebra R A] [Bialgebra R C]
 
 instance : One (C →ₐc[R] A) where one := (unitBialgHom R A).comp <| counitBialgHom R C
+
+lemma one_def : (1 : C →ₐc[R] A) = (unitBialgHom R A).comp (counitBialgHom ..) := rfl
+
+@[simp] lemma one_apply' (c : C) : (1 : C →ₐc[R] A) c = algebraMap R A (counit c) := rfl
+
+lemma toLinearMap_one : (1 : C →ₐc[R] A).toLinearMap = (1 : C →ₗ[R] A) := rfl
+
+variable [IsCocomm R C]
+
 instance : Mul (C →ₐc[R] A) where
   mul f g := .comp (mulBialgHom R A) <| .comp (Bialgebra.TensorProduct.map f g) <| comulBialgHom R C
 
 instance : Pow (C →ₐc[R] A) ℕ := ⟨fun f n ↦ npowRec n f⟩
 
-lemma one_def : (1 : C →ₐc[R] A) = (unitBialgHom R A).comp (counitBialgHom ..) := rfl
 lemma mul_def (f g : C →ₐc[R] A) : f * g =
     (.comp (mulBialgHom R A) <| .comp (Bialgebra.TensorProduct.map f g) <| comulBialgHom R C) := rfl
 
 lemma pow_succ (f : C →ₐc[R] A) (n : ℕ) : f ^ (n + 1) = (f ^ n) * f := rfl
 
-@[simp] lemma one_apply' (c : C) : (1 : C →ₐc[R] A) c = algebraMap R A (counit c) := rfl
-
 -- @[simp]
 -- lemma mul_apply'' (f g : C →ₐc[R] A) (c : C) : (f * g) c = mul' R A (.map f g (comul c)) := rfl
 
-lemma toLinearMap_one : (1 : C →ₐc[R] A).toLinearMap = (1 : C →ₗ[R] A) := rfl
 lemma toLinearMap_mul (f g : C →ₐc[R] A) :
     (f * g).toLinearMap = f.toLinearMap * g.toLinearMap := rfl
 lemma toLinearMap_pow (f : C →ₐc[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.toLinearMap ^ n := by
@@ -314,7 +319,7 @@ instance : CommMonoid (C →ₐc[R] A) :=
 end Bialgebra
 
 section HopfAlgebra
-variable [HopfAlgebra R A] [HopfAlgebra R C]
+variable [HopfAlgebra R A] [HopfAlgebra R C] [IsCocomm R C]
 
 instance : Inv (C →ₐc[R] A) where inv f := sorry
 

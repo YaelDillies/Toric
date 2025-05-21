@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.Bialgebra.Hom
+import Toric.Mathlib.RingTheory.Coalgebra.Basic
 
 suppress_compilation
 
@@ -17,8 +18,6 @@ end BialgHom
 namespace Bialgebra
 variable {R A : Type*} [CommSemiring R]
 
-section CommSemiring
-
 section Algebra
 variable [CommSemiring A] [Algebra R A]
 
@@ -32,7 +31,6 @@ end Algebra
 
 section Bialgebra
 variable [CommSemiring A] [Bialgebra R A]
-
 
 variable (R A) in
 def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
@@ -49,9 +47,8 @@ def mulBialgHom : A ⊗[R] A →ₐc[R] A where
   __ := mulAlgHom R A
   __ := mulCoalgHom R A
 
--- This is false without cocommutativity of A :)
 variable (R A) in
-def comulCoalgHom : A →ₗc[R] A ⊗[R] A where
+def comulCoalgHom [IsCocomm R A] : A →ₗc[R] A ⊗[R] A where
   __ := comulAlgHom R A
   map_smul' a b := by simp
   counit_comp := by ext; simp; sorry
@@ -61,11 +58,9 @@ def comulCoalgHom : A →ₗc[R] A ⊗[R] A where
     sorry
 
 variable (R A) in
-def comulBialgHom : A →ₐc[R] A ⊗[R] A where
+def comulBialgHom [IsCocomm R A] : A →ₐc[R] A ⊗[R] A where
   __ := comulAlgHom R A
   __ := comulCoalgHom R A
 
 end Bialgebra
-
-end CommSemiring
 end Bialgebra

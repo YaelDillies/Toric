@@ -7,7 +7,6 @@ import Toric.GroupScheme.HopfAffine
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.GroupScheme.Torus
 import Toric.Hopf.CoalgToAlg
-import Toric.Hopf.Cocomm
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.MonoidAlgebra
@@ -36,7 +35,10 @@ import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Toric.Mathlib.RingTheory.Coalgebra.Basic
+import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.RingTheory.HopfAlgebra.Hom
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
 import Toric.ToricIdeal
