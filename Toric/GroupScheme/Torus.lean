@@ -67,7 +67,7 @@ def CommGrp_Torus (S : Scheme) (σ : Type*) : CommGrp_ (Over S) :=
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
 def SplitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
 
-notation "𝔾ₘ["S"]" => SplitTorus S PUnit
+notation3 "𝔾ₘ["S"]" => SplitTorus S PUnit
 
 example (S : Scheme) (σ : Type*) :
     SplitTorus S σ = pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
@@ -76,7 +76,7 @@ instance SplitTorus.instCanonicallyOver (S : Scheme) (σ : Type*) :
     (SplitTorus S σ).CanonicallyOver S where
   hom := (CommGrp_Torus S σ).X.hom
 
-instance (S : Scheme) (σ : Type*) : CommGrp_Class (Over.mk (SplitTorus S σ ↘ S)) :=
+instance (S : Scheme) (σ : Type*) : CommGrp_Class (asOver (SplitTorus S σ) S) :=
   inferInstanceAs (CommGrp_Class (CommGrp_Torus S σ).X)
 
 def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
@@ -96,7 +96,7 @@ def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
           CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
 
 /-- The split torus of dimension `σ` over `Spec R`. -/
-notation "𝔾ₘ[" R ", " σ "]" => Over.mk (SplitTorus (Spec R) σ ↘ Spec R)
+notation "𝔾ₘ[" R ", " σ "]" => asOver (SplitTorus (Spec R) σ) (Spec R)
 
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
