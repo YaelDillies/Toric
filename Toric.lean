@@ -18,6 +18,7 @@ import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
+import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 import Toric.Mathlib.Algebra.Module.Equiv.Defs
 import Toric.Mathlib.Algebra.Order.Nonneg.Module
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
