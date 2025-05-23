@@ -12,7 +12,7 @@ import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 
 open AddMonoidAlgebra CategoryTheory
 
-namespace AlgebraicGeometry.Scheme.Over
+namespace AlgebraicGeometry.Scheme
 universe u
 variable {S G : Scheme.{u}} [G.Over S]
 
@@ -49,4 +49,4 @@ noncomputable def charPairing : X*(S, G) →+ X(S, G) →+ X(S, 𝔾ₘ[S]) wher
 def charPairingInt : X*(S, G) →+ X(S, G) →+ ℤ := sorry
 
 end CommGrp_Class
-end AlgebraicGeometry.Scheme.Over
+end AlgebraicGeometry.Scheme
