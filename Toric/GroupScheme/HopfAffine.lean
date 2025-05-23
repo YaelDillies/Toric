@@ -107,6 +107,22 @@ noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
   (commHopfAlgCatEquivCogrpCommAlgCat R).fullyFaithfulFunctor.leftOp.comp
     algSpec.fullyFaithful.mapGrp
 
+namespace AlgebraicGeometry.Scheme
+variable {R A : CommRingCat.{u}}
+
+suppress_compilation
+
+instance [Algebra R A] : (Spec A).Over (Spec R) where
+  hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
+
+instance asOver.instMon_Class [Bialgebra R A] : Mon_Class (asOver (Spec A) (Spec R)) :=
+  ((bialgSpec R).obj <| .op <| .of R A).instMon_ClassX
+
+instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class (asOver (Spec A) (Spec R)) :=
+  ((hopfSpec R).obj <| .op <| .of R A).instGrp_ClassX
+
+end AlgebraicGeometry.Scheme
+
 end topEdge
 
 /-!
