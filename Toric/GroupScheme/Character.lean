@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
 import Toric.GroupScheme.Torus
+import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 
 /-!
@@ -14,7 +15,9 @@ open AddMonoidAlgebra CategoryTheory
 
 namespace AlgebraicGeometry.Scheme
 universe u
-variable {S G : Scheme.{u}} [G.Over S]
+
+section general_base
+variable {σ : Type u} {S G : Scheme.{u}} [G.Over S]
 
 section Grp_Class
 variable [Grp_Class (asOver G S)]
@@ -45,8 +48,22 @@ noncomputable def charPairing : X*(S, G) →+ X(S, G) →+ X(S, 𝔾ₘ[S]) wher
     refine Mon_.Hom.ext ?_
     simpa using ((yonedaGrp.map f).app _).hom.map_mul χ.hom χ'.hom
 
-/-- The `ℤ`-valued perfect pairing between characters and cocharacters. -/
-def charPairingInt : X*(S, G) →+ X(S, G) →+ ℤ := sorry
+end CommGrp_Class
+end general_base
+
+section IsDomain
+variable {R : CommRingCat.{u}} [IsDomain R] {σ : Type u} {G : Scheme.{u}} [G.Over (Spec R)]
+
+section CommGrp_Class
+variable [CommGrp_Class (asOver G (Spec R))]
+
+/-- The `ℤ`-valued perfect pairing between characters and cocharacters of group schemes over a
+domain.
+
+Note: This exists over a general base using Cartier duality, but we do not prove that.  -/
+noncomputable def charPairingInt : X*(Spec R, G) →+ X(Spec R, G) →+ ℤ :=
+  .comp (AddMonoidHom.postcompAddEquiv sorry).toAddMonoidHom charPairing
 
 end CommGrp_Class
+end IsDomain
 end AlgebraicGeometry.Scheme
