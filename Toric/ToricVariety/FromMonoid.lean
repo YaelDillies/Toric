@@ -23,7 +23,8 @@ namespace AffineToricVarietyFromMonoid
 
 -- TODO: This used to be nicer when the torus was defined as `Spec _`
 instance instMod_Class :
-    Mod_Class 𝔾ₘ[R, ULift <| Fin <| dim S] ((algSpec R).obj <| .op <| .of R R[S]) where
+    Mod_Class (asOver 𝔾ₘ[Spec R, ULift <| Fin <| dim S] (Spec R))
+      (asOver (Spec <| .of R[S]) (Spec R)) where
   smul := Over.homMk sorry sorry
   -- (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
   -- (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)

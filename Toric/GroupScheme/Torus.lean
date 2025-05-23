@@ -7,6 +7,7 @@ import Mathlib.Algebra.Category.Grp.Adjunctions
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.Algebra.Category.Ring.Adjunctions
 import Mathlib.AlgebraicGeometry.Limits
+import Toric.GroupScheme.HopfAffine
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
@@ -67,8 +68,13 @@ def CommGrp_Torus (S : Scheme) (σ : Type*) : CommGrp_ (Over S) :=
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
 def splitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
 
+@[inherit_doc splitTorus]
+notation3 "𝔾ₘ[" S ", " σ "]" => splitTorus S σ
+
+/-- The (split) algebraic circle over `S`. -/
 notation3 "𝔾ₘ["S"]" => splitTorus S PUnit
 
+/-- The split torus over a general base is defined by base-changing the torus over `ℤ`. -/
 example (S : Scheme) (σ : Type*) :
     splitTorus S σ = pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
 
@@ -95,16 +101,13 @@ def splitTorus.representableBy (S : Scheme) (σ : Type*) :
         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
           CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
 
-/-- The split torus of dimension `σ` over `Spec R`. -/
-notation "𝔾ₘ[" R ", " σ "]" => asOver (splitTorus (Spec R) σ) (Spec R)
-
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
     splitTorus (Spec R) σ ≅ Spec (.of <| MvLaurentPolynomial σ R) := sorry
 
-/-- The split torus of dimension `n` over `Spec R` is isomorphic to `Spec R[ℤⁿ]`. -/
+/-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 def splitTorusIsoSpecOver (R : CommRingCat) (σ : Type*) :
-    𝔾ₘ[R, σ] ≅ .mk <| Spec.map <| CommRingCat.ofHom <| algebraMap R (MvLaurentPolynomial σ R) :=
+    asOver 𝔾ₘ[Spec R, σ] (Spec R) ≅ asOver (Spec <| .of <| MvLaurentPolynomial σ R) (Spec R) :=
   Over.isoMk (splitTorusIsoSpec _ _) sorry
 
 end AlgebraicGeometry.Scheme
