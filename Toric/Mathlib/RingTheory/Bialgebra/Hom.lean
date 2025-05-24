@@ -1,6 +1,7 @@
 import Mathlib.RingTheory.Bialgebra.Hom
 import Mathlib.RingTheory.Coalgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.Basic
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 suppress_compilation
 
@@ -19,17 +20,6 @@ end BialgHom
 namespace Bialgebra
 variable {R A : Type*} [CommSemiring R]
 
-section Algebra
-variable [CommSemiring A] [Algebra R A]
-
--- TODO: Move this somewhere more appropriate
-variable (R A) in
-def mulAlgHom : A ⊗[R] A →ₐ[R] A :=
-  .ofLinearMap (.mul' R A) (by simp [Algebra.TensorProduct.one_def]) fun x y ↦ by
-    induction x <;> induction y <;> simp [mul_mul_mul_comm, mul_add, add_mul, *]; sorry
-
-end Algebra
-
 section Bialgebra
 variable [CommSemiring A] [Bialgebra R A] {a b : A}
 
@@ -45,7 +35,7 @@ def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
 
 variable (R A) in
 def mulBialgHom : A ⊗[R] A →ₐc[R] A where
-  __ := mulAlgHom R A
+  __ := AlgHom.mul R A
   __ := mulCoalgHom R A
 
 variable (R A) in

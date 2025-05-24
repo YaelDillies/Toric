@@ -45,6 +45,7 @@ import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.Hom
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
 import Toric.ToricIdeal

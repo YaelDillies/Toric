@@ -109,12 +109,10 @@ lemma counit_comp_antipode :
   simp [LinearMap.counit_comp_antipode]
 
 private lemma inv_convMul_cancel (f : C →ₐc[R] A) :
-    (.comp (HopfAlgebra.antipodeAlgHom R A) f) * (f : C →ₐ[R] A) = 1 := calc
-  _ = (.comp (HopfAlgebra.antipodeAlgHom R A) f) * (.comp (AlgHom.id R A) (f : C →ₐ[R] A)) := by
-    simp
-  _ = (.comp (mulAlgHom R A) <|
-      .comp (Algebra.TensorProduct.map (HopfAlgebra.antipodeAlgHom R A) (AlgHom.id R A)) <|
-      .comp (Algebra.TensorProduct.map f f) (comulAlgHom R C)) := by
+    (.comp (HopfAlgebra.antipodeAlgHom R A) f : C →ₐ[R] A) * f = 1 := calc
+  _ = (.comp (HopfAlgebra.antipodeAlgHom R A) f : C →ₐ[R] A) * (.comp (.id R A) f) := by simp
+  _ = .comp (.mul R A) (.comp (Algebra.TensorProduct.map (HopfAlgebra.antipodeAlgHom R A)
+       (.id R A)) <| .comp (Algebra.TensorProduct.map f f) (comulAlgHom R C)) := by
     rw [mul_def, Algebra.TensorProduct.map_comp]
     simp only [comp_assoc]
   _ = (HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A).comp f := by
