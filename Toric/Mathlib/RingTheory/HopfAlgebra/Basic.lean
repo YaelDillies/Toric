@@ -1,5 +1,7 @@
 import Mathlib.RingTheory.HopfAlgebra.Basic
 
+export HopfAlgebraStruct (antipode)
+
 namespace HopfAlgebra
 variable {R A : Type*} [CommSemiring R]
 
@@ -22,7 +24,10 @@ lemma antipode_mul_distrib (a b : A) :
 alias antipode_mul := antipode_mul_distrib
 
 variable (R A) in
+@[simps!]
 def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap antipode antipode_one antipode_mul
+
+@[simp] lemma toLinearMap_antipodeAlgHom : (antipodeAlgHom R A).toLinearMap = antipode := rfl
 
 end CommRing
 end HopfAlgebra
