@@ -24,7 +24,7 @@ f * g = f g
 
 suppress_compilation
 
-open Coalgebra Bialgebra TensorProduct
+open Algebra Coalgebra Bialgebra TensorProduct
 
 -- TODO: Remove universe monomorphism
 -- TODO: Generalise to semirings
@@ -36,13 +36,13 @@ variable [CommSemiring A] [CommSemiring B] [Semiring C] [Bialgebra R C] [Algebra
 
 instance : One (C →ₐ[R] A) where one := (Algebra.ofId R A).comp <| counitAlgHom R C
 instance : Mul (C →ₐ[R] A) where
-  mul f g := .comp (.mul R A) <| .comp (Algebra.TensorProduct.map f g) <| comulAlgHom R C
+  mul f g := .comp (lmul' R) <| .comp (Algebra.TensorProduct.map f g) <| comulAlgHom R C
 
 instance : Pow (C →ₐ[R] A) ℕ := ⟨fun f n ↦ npowRec n f⟩
 
 lemma one_def : (1 : C →ₐ[R] A) = (Algebra.ofId R A).comp (counitAlgHom ..) := rfl
 lemma mul_def (f g : C →ₐ[R] A) : f * g =
-    (.comp (.mul R A) <| .comp (Algebra.TensorProduct.map f g) <| comulAlgHom R C) := rfl
+    (.comp (lmul' R) <| .comp (Algebra.TensorProduct.map f g) <| comulAlgHom R C) := rfl
 
 lemma pow_succ (f : C →ₐ[R] A) (n : ℕ) : f ^ (n + 1) = (f ^ n) * f := rfl
 
@@ -60,10 +60,10 @@ instance : CommMonoid (C →ₐ[R] A) :=
 
 lemma mul_distrib_comp [Bialgebra R B] (f g : C →ₐ A) (h : B →ₐc[R] C) :
     AlgHom.comp (f * g) (h : B →ₐ[R] C) = (.comp f h) * (.comp g h) := calc
-  _ = (.comp (.mul R A) <| .comp (Algebra.TensorProduct.map f g) <|
+  _ = (.comp (lmul' R) <| .comp (Algebra.TensorProduct.map f g) <|
       .comp (Algebra.TensorProduct.map (h : B →ₐ[R] C) (h : B →ₐ[R] C)) (comulAlgHom R B)) := by
     simp [mul_def, comp_assoc]
-  _ = (.comp (.mul R A) <| 
+  _ = (.comp (lmul' R) <|
       .comp (Algebra.TensorProduct.map (.comp f h) (.comp g h)) (comulAlgHom R B)) := by
     rw [Algebra.TensorProduct.map_comp]
     simp [comp_assoc]

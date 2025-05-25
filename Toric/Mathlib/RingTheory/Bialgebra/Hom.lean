@@ -1,11 +1,10 @@
 import Mathlib.RingTheory.Bialgebra.Hom
 import Mathlib.RingTheory.Coalgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
-import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 suppress_compilation
 
-open Coalgebra TensorProduct
+open Algebra Coalgebra TensorProduct
 
 namespace BialgHom
 variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Semiring B] [Bialgebra R B]
@@ -45,7 +44,7 @@ variable [CommSemiring A] [Bialgebra R A] {a b : A}
 variable (R A) in
 /-- Multiplication on a commutative bialgebra as a bialgebra hom. -/
 def mulBialgHom : A ⊗[R] A →ₐc[R] A where
-  __ := AlgHom.mul R A
+  __ := lmul' R
   __ := mulCoalgHom R A
 
 @[simp] lemma mulBialgHom_apply (a b : A) : mulBialgHom R A (a ⊗ₜ b) = a * b := rfl

@@ -24,7 +24,7 @@ f * g = f g
 
 suppress_compilation
 
-open Coalgebra Bialgebra TensorProduct
+open Algebra Coalgebra Bialgebra TensorProduct
 
 -- TODO: Remove universe monomorphism
 -- TODO: Generalise to semirings
@@ -111,7 +111,8 @@ local notation "𝑮" => (𝑺 ⊗ₘ 𝑺) ∘ₗ (β C C) ∘ₗ δ₁
 lemma comul_right_inv : δ₁ * 𝑭 = 1 := calc
     μ₂ ∘ₗ (δ₁ ⊗ₘ (δ₁ ∘ₗ 𝑺)) ∘ₗ δ₁
   _ = μ₂ ∘ₗ ((δ₁ ∘ₗ id) ⊗ₘ (δ₁ ∘ₗ 𝑺)) ∘ₗ δ₁ := rfl
-  _ = μ₂ ∘ₗ (δ₁ ⊗ₘ δ₁) ∘ₗ (id ⊗ₘ 𝑺) ∘ₗ δ₁ := by simp only [map_comp, comp_assoc]
+  _ = μ₂ ∘ₗ (δ₁ ⊗ₘ δ₁) ∘ₗ (id ⊗ₘ 𝑺) ∘ₗ δ₁ := by
+    simp only [_root_.TensorProduct.map_comp, comp_assoc]
   _ = δ₁ ∘ₗ μ₁ ∘ₗ (id ⊗ₘ 𝑺) ∘ₗ δ₁ := by
       have : μ₂ ∘ₗ (δ₁ ⊗ₘ δ₁) = δ₁ ∘ₗ μ₁ := by ext; simp
       simp [this, ← comp_assoc]
@@ -140,7 +141,7 @@ lemma counit_comp_antipode :
 private lemma inv_convMul_cancel (f : C →ₐc[R] A) :
     (.comp (HopfAlgebra.antipodeAlgHom R A) f : C →ₐ[R] A) * f = 1 := calc
   _ = (.comp (HopfAlgebra.antipodeAlgHom R A) f : C →ₐ[R] A) * (.comp (.id R A) f) := by simp
-  _ = .comp (.mul R A) (.comp (Algebra.TensorProduct.map (HopfAlgebra.antipodeAlgHom R A)
+  _ = .comp (lmul' R) (.comp (Algebra.TensorProduct.map (HopfAlgebra.antipodeAlgHom R A)
        (.id R A)) <| .comp (Algebra.TensorProduct.map f f) (comulAlgHom R C)) := by
     rw [mul_def, Algebra.TensorProduct.map_comp]
     simp only [comp_assoc]
