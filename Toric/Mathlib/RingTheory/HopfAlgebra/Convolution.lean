@@ -31,6 +31,35 @@ open Coalgebra Bialgebra TensorProduct
 universe u
 variable {R A C : Type u} [CommRing R]
 
+namespace HopfAlgebra
+variable [CommRing A] [HopfAlgebra R A]
+
+lemma antipode_mul_antidistrib (a b : A) :
+    antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
+  let α := antipode ∘ₗ .mul' R A
+  let β : A ⊗[R] A →ₗ[R] A := .mul' R A ∘ₗ map antipode antipode ∘ₗ TensorProduct.comm R A A
+  suffices α = β from congr($this (a ⊗ₜ b))
+  apply left_inv_eq_right_inv (a := LinearMap.mul' R A) <;> ext a b
+  · simp [α, ((ℛ R a).tmul (ℛ R b)).mul_apply, ← Bialgebra.counit_mul,
+      ((ℛ R a).mul (ℛ R b)).algebraMap_counit_eq_sum_antipode_mul]
+  · simp [((ℛ R a).tmul (ℛ R b)).mul_apply, mul_comm, mul_mul_mul_comm,
+      Finset.sum_mul_sum, ← Finset.sum_product', α, β, -sum_mul_antipode_eq,
+      (ℛ R a).algebraMap_counit_eq_sum_mul_antipode, (ℛ R b).algebraMap_counit_eq_sum_mul_antipode]
+
+lemma antipode_mul_distrib (a b : A) :
+    antipode (R := R) (a * b) = antipode (R := R) a * antipode (R := R) b := by
+  rw [antipode_mul_antidistrib, mul_comm]
+
+alias antipode_mul := antipode_mul_distrib
+
+variable (R A) in
+@[simps!]
+def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap antipode antipode_one antipode_mul
+
+@[simp] lemma toLinearMap_antipodeAlgHom : (antipodeAlgHom R A).toLinearMap = antipode := rfl
+
+end HopfAlgebra
+
 namespace LinearMap
 
 local notation "η" => Algebra.linearMap R A
