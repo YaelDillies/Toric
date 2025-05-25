@@ -19,6 +19,7 @@ local infix:70 " ⊗ₘ " => TensorProduct.map
 local notation "α" => TensorProduct.assoc R
 local notation "β" => TensorProduct.comm R
 
+variable (R C) in
 /-- Comultiplication as a coalgebra hom. -/
 noncomputable def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
   __ := δ

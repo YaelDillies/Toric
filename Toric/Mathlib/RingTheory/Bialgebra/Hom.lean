@@ -1,6 +1,6 @@
 import Mathlib.RingTheory.Bialgebra.Hom
 import Mathlib.RingTheory.Coalgebra.TensorProduct
-import Toric.Mathlib.RingTheory.Coalgebra.Basic
+import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 suppress_compilation
@@ -20,33 +20,35 @@ end BialgHom
 namespace Bialgebra
 variable {R A : Type*} [CommSemiring R]
 
-section Bialgebra
-variable [CommSemiring A] [Bialgebra R A] {a b : A}
+section Semiring
+variable [Semiring A] [Bialgebra R A] {a b : A}
 
 variable (R A) in
+/-- Multiplication on a bialgebra as a coalgebra hom. -/
 def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
   __ := LinearMap.mul' R A
   map_smul' a b := by induction b <;> simp
   counit_comp := by ext; simp
   map_comp_comul := by
     ext a b
-    simp
-    sorry
+    simp [← (ℛ R a).eq, ← (ℛ R b).eq]
+    simp_rw [sum_tmul, tmul_sum]
+    simp [Finset.sum_mul_sum]
+
+@[simp] lemma mulCoalgHom_apply (a b : A) : mulCoalgHom R A (a ⊗ₜ b) = a * b := rfl
+
+end Semiring
+
+section CommSemiring
+variable [CommSemiring A] [Bialgebra R A] {a b : A}
 
 variable (R A) in
+/-- Multiplication on a commutative bialgebra as a bialgebra hom. -/
 def mulBialgHom : A ⊗[R] A →ₐc[R] A where
   __ := AlgHom.mul R A
   __ := mulCoalgHom R A
 
-variable (R A) in
-def comulCoalgHom [IsCocomm R A] : A →ₗc[R] A ⊗[R] A where
-  __ := comulAlgHom R A
-  map_smul' a b := by simp
-  counit_comp := by ext; simp; sorry
-  map_comp_comul := by
-    ext a
-    simp
-    sorry
+@[simp] lemma mulBialgHom_apply (a b : A) : mulBialgHom R A (a ⊗ₜ b) = a * b := rfl
 
 variable (R A) in
 def comulBialgHom [IsCocomm R A] : A →ₐc[R] A ⊗[R] A where
@@ -81,5 +83,5 @@ protected def _root_.Coalgebra.Repr.mul (ℛ₁ : Coalgebra.Repr R a₁) (ℛ₂
 
 attribute [simps! index] Coalgebra.Repr.mul
 
-end Bialgebra
+end CommSemiring
 end Bialgebra
