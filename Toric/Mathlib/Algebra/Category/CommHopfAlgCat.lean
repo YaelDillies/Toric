@@ -9,7 +9,7 @@ import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 
 /-!
 # The category of commutative Hopf algebras over a commutative ring
