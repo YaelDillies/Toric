@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
+import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
+import Toric.Mathlib.RingTheory.Coalgebra.Basic
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -39,7 +41,7 @@ where the top `≌` comes from the essentially surjective functor `Cogrp Mod_R �
 so that in particular we do not easily know that its inverse is given by `Γ`.
 -/
 
-open AlgebraicGeometry Scheme CategoryTheory Opposite Limits Mon_Class Grp_Class
+open AlgebraicGeometry Coalgebra Scheme CategoryTheory Opposite Limits Mon_Class Grp_Class
 
 universe u
 variable {R : CommRingCat.{u}}
@@ -118,8 +120,14 @@ instance [Algebra R A] : (Spec A).Over (Spec R) where
 instance asOver.instMon_Class [Bialgebra R A] : Mon_Class (asOver (Spec A) (Spec R)) :=
   ((bialgSpec R).obj <| .op <| .of R A).instMon_ClassX
 
+instance asOver.instIsComm_Mon [Bialgebra R A] [IsCocomm R A] :
+    IsCommMon (asOver (Spec A) (Spec R)) := sorry
+
 instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class (asOver (Spec A) (Spec R)) :=
   ((hopfSpec R).obj <| .op <| .of R A).instGrp_ClassX
+
+instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
+   CommGrp_Class (asOver (Spec A) (Spec R)) where
 
 end AlgebraicGeometry.Scheme
 
