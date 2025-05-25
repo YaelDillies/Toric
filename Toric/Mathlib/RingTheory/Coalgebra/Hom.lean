@@ -17,7 +17,6 @@ local infix:90 " ◁ " => LinearMap.lTensor
 local notation:90 f:90 " ▷ " X:90 => LinearMap.rTensor X f
 local infix:70 " ⊗ₘ " => TensorProduct.map
 local notation "α" => TensorProduct.assoc R
-local notation "β" => TensorProduct.comm R
 
 variable (R C) in
 /-- Comultiplication as a coalgebra hom. -/
@@ -29,8 +28,8 @@ noncomputable def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
       rw [LinearMap.comp_assoc, ← LinearMap.comp_assoc _ _ (.rTensor _ _)]; simp
     _ = ε := by ext; simp
   map_comp_comul := by
-    simp only [comul_def, tensorTensorTensorComm_def, TensorProduct.coe_congr,
-      TensorProduct.leftComm_def, LinearEquiv.coe_trans, LinearEquiv.refl_toLinearMap]
+    simp only [comul_def, tensorTensorTensorComm, TensorProduct.coe_congr,
+      TensorProduct.leftComm, LinearEquiv.coe_trans, LinearEquiv.refl_toLinearMap]
     simp only [LinearMap.comp_assoc, ← LinearMap.lTensor_def, ← LinearMap.rTensor_def,
       LinearMap.lTensor_comp]
     rw [← LinearMap.lTensor_comp_rTensor, LinearMap.lTensor_tensor]
@@ -38,7 +37,8 @@ noncomputable def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
     rw [Coalgebra.coassoc]
     conv =>
       enter [2, 2]
-      simp only [← LinearMap.comp_assoc, ← LinearMap.lTensor_comp]
+      simp only [LinearEquiv.coe_toLinearMap_one, ← LinearMap.lTensor_def, ← LinearMap.rTensor_def,
+        ← LinearMap.comp_assoc, ← LinearMap.lTensor_comp]
       simp only [LinearMap.comp_assoc]
       rw [Coalgebra.coassoc_symm]
       rw [← LinearMap.comp_assoc comul, ← LinearMap.rTensor_comp, comul_comm]
