@@ -49,17 +49,13 @@ lemma rTensor_apply_single_tmul (e : σ) (s : S) (n : N) (d : σ) :
     rTensor (single e s ⊗ₜ[R] n) d = if e = d then s ⊗ₜ[R] n else 0 := by
   simp only [rTensor_apply_tmul_apply, single_apply, ite_tmul]
 
-/- lemma rTensor_apply_X_tmul (s : σ) (n : N) (d : σ →₀ ℕ) :
-    rTensor (X s ⊗ₜ[R] n) d = if Finsupp.single s 1 = d then (1 : S) ⊗ₜ[R] n else 0 := by
-  rw [rTensor_apply_tmul_apply, coeff_X', ite_tmul] -/
-
-/- lemma rTensor_apply (t : MonoidAlgebra S σ ⊗[R] N) (d : σ) :
-    rTensor t d = ((lsingle (R := S) (k := S) d).restrictScalars R).rTensor N t :=
-  TensorProduct.finsuppLeft_apply t d -/
+lemma rTensor_apply (t : MonoidAlgebra S σ ⊗[R] N) (d : σ) :
+    rTensor t d = ((Finsupp.lapply (R := S) d).restrictScalars R).rTensor N t :=
+  TensorProduct.finsuppLeft_apply t d
 
 @[simp]
 lemma rTensor_symm_apply_single (d : σ) (s : S) (n : N) :
-    rTensor.symm (Finsupp.single d (s ⊗ₜ n)) =
+    rTensor.symm (.single d (s ⊗ₜ n)) =
       (single d s) ⊗ₜ[R] n :=
   TensorProduct.finsuppLeft_symm_apply_single (R := R) d s n
 
@@ -81,10 +77,6 @@ lemma scalarRTensor_apply_single_tmul (e : σ) (r : R) (n : N) (d : σ) :
     scalarRTensor (single e r ⊗ₜ[R] n) d = if e = d then r • n else 0 := by
   rw [scalarRTensor_apply_tmul_apply, single_apply, ite_smul, zero_smul]
 
-/- lemma scalarRTensor_apply_X_tmul_apply (s : σ) (n : N) (d : σ →₀ ℕ) :
-    scalarRTensor (X s ⊗ₜ[R] n) d = if Finsupp.single s 1 = d then n else 0 := by
-  rw [scalarRTensor_apply_tmul_apply, coeff_X', ite_smul, one_smul, zero_smul] -/
-
 lemma scalarRTensor_symm_apply_single (d : σ →₀ ℕ) (n : N) :
     scalarRTensor.symm (Finsupp.single d n) = (single d 1) ⊗ₜ[R] n :=
   TensorProduct.finsuppScalarLeft_symm_apply_single d n
@@ -104,30 +96,30 @@ noncomputable def rTensorAlgHom :
     ((IsScalarTower.toAlgHom R (S ⊗[R] N) _).comp Algebra.TensorProduct.includeRight)
     (fun p n => by simp [commute_iff_eq, mul_comm])
 
-#exit
-
 @[simp]
-lemma coeff_rTensorAlgHom_tmul
+lemma rTensorAlgHom_tmul_apply
     (p : MonoidAlgebra S σ) (n : N) (d : σ) :
     (rTensorAlgHom (p ⊗ₜ[R] n)) d = (p d) ⊗ₜ[R] n := by
   rw [rTensorAlgHom, Algebra.TensorProduct.lift_tmul]
   rw [AlgHom.coe_comp, IsScalarTower.coe_toAlgHom', Function.comp_apply,
     Algebra.TensorProduct.includeRight_apply]
-  rw [algebraMap_eq, mul_comm, coeff_C_mul]
-  simp [mapAlgHom, coeff_map]
+  rw [coe_algebraMap, mul_comm, Function.comp, single_one_mul_apply]
+  simp 
 
 section DecidableEq
 variable [DecidableEq σ]
 
-lemma coeff_rTensorAlgHom_monomial_tmul
-    (e : σ →₀ ℕ) (s : S) (n : N) (d : σ →₀ ℕ) :
-    coeff d (rTensorAlgHom (monomial e s ⊗ₜ[R] n)) =
+--TODO
+/- lemma rTensorAlgHom_single_tmul
+    (e : σ) (s : S) (n : N) (d : σ) :
+    (rTensorAlgHom (single e s ⊗ₜ[R] n)) d =
       if e = d then s ⊗ₜ[R] n else 0 := by
-  simp [ite_tmul]
+  simp [ite_tmul] -/
+
 
 lemma rTensorAlgHom_toLinearMap :
     (rTensorAlgHom :
-      MvPolynomial σ S ⊗[R] N →ₐ[S] MvPolynomial σ (S ⊗[R] N)).toLinearMap =
+      MonoidAlgebra S σ ⊗[R] N →ₐ[S] MonoidAlgebra (S ⊗[R] N) σ).toLinearMap =
       rTensor.toLinearMap := by
   ext d n e
   dsimp only [AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
@@ -137,6 +129,8 @@ lemma rTensorAlgHom_toLinearMap :
   rw [coeff_rTensorAlgHom_tmul]
   simp only [coeff]
   exact (finsuppLeft_apply_tmul_apply _ _ _).symm
+
+#exit
 
 lemma rTensorAlgHom_apply_eq (p : MvPolynomial σ S ⊗[R] N) :
     rTensorAlgHom (S := S) p = rTensor p := by
