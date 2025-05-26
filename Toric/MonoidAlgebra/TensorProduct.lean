@@ -29,18 +29,19 @@ variable {S : Type*} [CommSemiring S] [Algebra R S]
 section Module
 
 variable [DecidableEq σ]
-variable [AddCommMonoid N] [Module R N]
+variable [Semiring N] [Algebra R N]
 
 /-- The tensor product of a polynomial ring by a module is
   linearly equivalent to a Finsupp of a tensor product -/
 noncomputable def rTensor :
-    MonoidAlgebra S σ ⊗[R] N ≃ₗ[S] σ →₀ (S ⊗[R] N) :=
+    MonoidAlgebra S σ ⊗[R] N ≃ₗ[S] MonoidAlgebra (S ⊗[R] N) σ :=
   TensorProduct.finsuppLeft' _ _ _ _ _
 
 lemma rTensor_apply_tmul (p : MonoidAlgebra S σ) (n : N) :
     rTensor (p ⊗ₜ[R] n) = p.sum (fun i m ↦ Finsupp.single i (m ⊗ₜ[R] n)) :=
   TensorProduct.finsuppLeft_apply_tmul p n
 
+@[simp]
 lemma rTensor_apply_tmul_apply (p : MonoidAlgebra S σ) (n : N) (d : σ) :
     rTensor (p ⊗ₜ[R] n) d = (p d) ⊗ₜ[R] n :=
   TensorProduct.finsuppLeft_apply_tmul_apply p n d
@@ -104,17 +105,17 @@ lemma rTensorAlgHom_tmul_apply
   rw [AlgHom.coe_comp, IsScalarTower.coe_toAlgHom', Function.comp_apply,
     Algebra.TensorProduct.includeRight_apply]
   rw [coe_algebraMap, mul_comm, Function.comp, single_one_mul_apply]
-  simp 
+  simp
 
 section DecidableEq
 variable [DecidableEq σ]
 
---TODO
-/- lemma rTensorAlgHom_single_tmul
+
+lemma rTensorAlgHom_single_tmul
     (e : σ) (s : S) (n : N) (d : σ) :
     (rTensorAlgHom (single e s ⊗ₜ[R] n)) d =
       if e = d then s ⊗ₜ[R] n else 0 := by
-  simp [ite_tmul] -/
+  simp [ite_tmul, single_apply]
 
 
 lemma rTensorAlgHom_toLinearMap :
@@ -122,17 +123,9 @@ lemma rTensorAlgHom_toLinearMap :
       MonoidAlgebra S σ ⊗[R] N →ₐ[S] MonoidAlgebra (S ⊗[R] N) σ).toLinearMap =
       rTensor.toLinearMap := by
   ext d n e
-  dsimp only [AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
-    LinearMap.coe_restrictScalars, AlgHom.toLinearMap_apply]
-  simp only [coe_comp, Function.comp_apply, AlgebraTensorModule.curry_apply, curry_apply,
-    LinearMap.coe_restrictScalars, AlgHom.toLinearMap_apply]
-  rw [coeff_rTensorAlgHom_tmul]
-  simp only [coeff]
-  exact (finsuppLeft_apply_tmul_apply _ _ _).symm
+  simp
 
-#exit
-
-lemma rTensorAlgHom_apply_eq (p : MvPolynomial σ S ⊗[R] N) :
+lemma rTensorAlgHom_apply_eq (p : MonoidAlgebra S σ ⊗[R] N) :
     rTensorAlgHom (S := S) p = rTensor p := by
   rw [← AlgHom.toLinearMap_apply, rTensorAlgHom_toLinearMap]
   rfl
@@ -140,87 +133,82 @@ lemma rTensorAlgHom_apply_eq (p : MvPolynomial σ S ⊗[R] N) :
 /-- The tensor product of a polynomial algebra by an algebra
   is algebraically equivalent to a polynomial algebra -/
 noncomputable def rTensorAlgEquiv :
-    (MvPolynomial σ S) ⊗[R] N ≃ₐ[S] MvPolynomial σ (S ⊗[R] N) := by
+    (MonoidAlgebra S σ) ⊗[R] N ≃ₐ[S] MonoidAlgebra (S ⊗[R] N) σ := by
   apply AlgEquiv.ofLinearEquiv rTensor
-  · simp only [Algebra.TensorProduct.one_def]
-    apply symm
-    rw [← LinearEquiv.symm_apply_eq]
-    exact finsuppLeft_symm_apply_single (R := R) (0 : σ →₀ ℕ) (1 : S) (1 : N)
+  · simp [← rTensorAlgHom_apply_eq]
   · intro x y
-    erw [← rTensorAlgHom_apply_eq (S := S)]
-    simp only [map_mul, rTensorAlgHom_apply_eq]
-    rfl
+    simp [← rTensorAlgHom_apply_eq (S := S)]
 
 @[simp]
-lemma rTensorAlgEquiv_apply (x : (MvPolynomial σ S) ⊗[R] N) :
-    rTensorAlgEquiv x = rTensorAlgHom x := by
-  rw [← AlgHom.coe_coe, ← AlgEquiv.toAlgHom_eq_coe]
-  congr 1
-  ext _ d <;> simpa [rTensorAlgEquiv] using rTensor_apply_tmul_apply _ _ d
+lemma rTensorAlgEquiv_apply (x : (MonoidAlgebra S σ) ⊗[R] N) :
+    rTensorAlgEquiv x = rTensorAlgHom x := (rTensorAlgHom_apply_eq x).symm
 
 /-- The tensor product of the polynomial algebra by an algebra
   is algebraically equivalent to a polynomial algebra with
-  coefficients in that algegra -/
+  coefficients in that algebra -/
 noncomputable def scalarRTensorAlgEquiv :
-    MvPolynomial σ R ⊗[R] N ≃ₐ[R] MvPolynomial σ N :=
-  rTensorAlgEquiv.trans (mapAlgEquiv σ (Algebra.TensorProduct.lid R N))
+    MonoidAlgebra R σ ⊗[R] N ≃ₐ[R] MonoidAlgebra N σ :=
+  rTensorAlgEquiv.trans (mapRangeAlgEquiv (Algebra.TensorProduct.lid R N))
 
 end DecidableEq
 
 variable (R)
-variable (A : Type*) [CommSemiring A] [Algebra R A]
+variable {A B : Type*} [CommSemiring A] [Algebra R A] [CommSemiring B] [Algebra R B]
 
+variable (A B) in
 /-- Tensoring `MvPolynomial σ R` on the left by an `R`-algebra `A` is algebraically
 equivalent to `M̀vPolynomial σ A`. -/
 noncomputable def algebraTensorAlgEquiv :
-    A ⊗[R] MvPolynomial σ R ≃ₐ[A] MvPolynomial σ A := AlgEquiv.ofAlgHom
-  (Algebra.TensorProduct.lift
-    (Algebra.ofId A (MvPolynomial σ A))
-    (MvPolynomial.mapAlgHom <| Algebra.ofId R A) (fun _ _ ↦ Commute.all _ _))
-  (aeval (fun s ↦ 1 ⊗ₜ X s))
-  (by ext s; simp)
-  (by ext s; simp)
+    A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlgebra (A ⊗[R] B) σ :=
+  AlgEquiv.ofAlgHom
+    (Algebra.TensorProduct.lift
+      ((IsScalarTower.toAlgHom A (A ⊗[R] B) _).comp Algebra.TensorProduct.includeLeft)
+      (mapRangeAlgHom Algebra.TensorProduct.includeRight)
+      (fun p n => .all _ _))
+    (MonoidAlgebra.liftNCAlgHom (Algebra.TensorProduct.map (.id _ _) singleOneAlgHom)
+        ((Algebra.TensorProduct.includeRight.toMonoidHom.comp (of B σ))) (fun _ _ ↦ .all _ _)) (by
+      classical
+      apply AlgHom.toLinearMap_injective
+      ext
+      simp [liftNCAlgHom, liftNCRingHom, single_one_mul_apply,
+        single_apply, apply_ite ((1 : A) ⊗ₜ[R] ·)]) (by
+      ext : 1
+      · ext
+      · apply AlgHom.toLinearMap_injective
+        ext
+        simp [liftNCAlgHom, liftNCRingHom, mapRangeAlgHom]
+      )
 
 @[simp]
-lemma algebraTensorAlgEquiv_tmul (a : A) (p : MvPolynomial σ R) :
-    algebraTensorAlgEquiv R A (a ⊗ₜ p) = a • MvPolynomial.map (algebraMap R A) p := by
+lemma algebraTensorAlgEquiv_tmul (a : A) (p : MonoidAlgebra B σ) :
+    algebraTensorAlgEquiv R A B (a ⊗ₜ p) =
+      a • mapRangeAlgHom (Algebra.TensorProduct.includeRight) p := by
   simp [algebraTensorAlgEquiv, Algebra.smul_def]
-  rfl
 
 @[simp]
-lemma algebraTensorAlgEquiv_symm_X (s : σ) :
-    (algebraTensorAlgEquiv R A).symm (X s) = 1 ⊗ₜ X s := by
-  simp [algebraTensorAlgEquiv]
-
-@[simp]
-lemma algebraTensorAlgEquiv_symm_monomial (m : σ →₀ ℕ) (a : A) :
-    (algebraTensorAlgEquiv R A).symm (monomial m a) = a ⊗ₜ monomial m 1 := by
-  apply @Finsupp.induction σ ℕ _ _ m
-  · simp [algebraTensorAlgEquiv]
-  · intro i n f _ _ hfa
-    simp only [algebraTensorAlgEquiv, AlgEquiv.ofAlgHom_symm_apply] at hfa ⊢
-    simp only [add_comm, monomial_add_single, map_mul, map_pow, aeval_X,
-      Algebra.TensorProduct.tmul_pow, one_pow, hfa]
-    nth_rw 2 [← mul_one a]
-    rw [Algebra.TensorProduct.tmul_mul_tmul]
-
-lemma aeval_one_tmul (f : σ → S) (p : MvPolynomial σ R) :
-    (aeval fun x ↦ (1 ⊗ₜ[R] f x : N ⊗[R] S)) p = 1 ⊗ₜ[R] (aeval f) p := by
-  induction' p using MvPolynomial.induction_on with a p q hp hq p i h
-  · simp only [map_C, algHom_C, Algebra.TensorProduct.algebraMap_apply,
-      RingHomCompTriple.comp_apply]
-    rw [← mul_one ((algebraMap R N) a), ← Algebra.smul_def, smul_tmul, Algebra.smul_def, mul_one]
-  · simp [hp, hq, tmul_add]
-  · simp [h]
+lemma algebraTensorAlgEquiv_symm_monomial (m : σ) (a : A) (b : B) :
+    (algebraTensorAlgEquiv R A B).symm (single m (a ⊗ₜ b)) = a ⊗ₜ single m b := by
+  simp [algebraTensorAlgEquiv, liftNCAlgHom, liftNCRingHom] -- TODO: BAD
 
 section Pushout
 
-attribute [local instance] algebraMvPolynomial
+attribute [local instance] algebraMonoidAlgebra
 
-instance : Algebra.IsPushout R S (MvPolynomial σ R) (MvPolynomial σ S) where
-  out := .of_equiv (algebraTensorAlgEquiv R S).toLinearEquiv fun _ ↦ by simp
+instance [Algebra S B] [Algebra A B] [Algebra R B] [IsScalarTower R A B] [IsScalarTower R S B]
+    [Algebra.IsPushout R S A B] :
+    Algebra.IsPushout R S (MonoidAlgebra A σ) (MonoidAlgebra B σ) where
+  out := .of_equiv ((algebraTensorAlgEquiv (σ := σ) R S A).trans
+      (mapRangeAlgEquiv (Algebra.IsPushout.equiv R S A B))).toLinearEquiv fun x ↦ by
+    induction x using Finsupp.induction_linear
+    · simp
+    · simp_all
+    · simp [mapRangeAlgHom, mapRangeRingHom, liftNCAlgHom, liftNCRingHom,
+        Algebra.IsPushout.equiv_tmul]
 
-instance : Algebra.IsPushout R (MvPolynomial σ R) S (MvPolynomial σ S) := .symm inferInstance
+instance [Algebra S B] [Algebra A B] [Algebra R B] [IsScalarTower R A B] [IsScalarTower R S B]
+    [Algebra.IsPushout R A S B] : Algebra.IsPushout R (MonoidAlgebra A σ) S (MonoidAlgebra B σ) :=
+  have : Algebra.IsPushout R S A B := .symm ‹_›
+  .symm inferInstance
 
 end Pushout
 
