@@ -71,3 +71,9 @@ lemma comulAlgHom_comp_mapRangeRingHom :
       (by classical ext; simp [single_apply, apply_ite f]))
       (Bialgebra.comulAlgHom R (MonoidAlgebra R M)).toRingHom := by
   ext <;> simp
+
+lemma counitAlgHom_comp_mapRangeRingHom :
+    (Bialgebra.counitAlgHom S (MonoidAlgebra S M)).toRingHom.comp
+      (mapRangeRingHom f) =
+    f.comp (Bialgebra.counitAlgHom R (MonoidAlgebra R M)).toRingHom := by
+  ext <;> simp

@@ -30,6 +30,12 @@ lemma mapRangeRingHom_single [Semiring R] [Semiring S] (f : R →+* S) (a : M) (
   ext
   simp [single_apply, apply_ite f]
 
+@[simp]
+lemma mapRangeRingHom_comp_algebraMap [CommSemiring R] [CommSemiring S] (f : R →+* S) :
+    (mapRangeRingHom (M := M) f).comp (algebraMap _ _) = (algebraMap _ _).comp f := by
+  ext
+  simp
+
 noncomputable def mapRangeAlgHom {T : Type*} [CommSemiring R] [Semiring S]
     [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) :
     MonoidAlgebra S M →ₐ[R] MonoidAlgebra T M :=
