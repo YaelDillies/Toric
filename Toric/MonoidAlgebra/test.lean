@@ -30,6 +30,7 @@ instance {R S : Type u} [CommRing R] [CommRing S] [Algebra R S] :
     (Spec (.of S)).Over (Spec (.of R)) :=
   ⟨Spec.map (CommRingCat.ofHom (algebraMap R S))⟩
 
+-- should we give `(OverClass.asOver (Spec (.of S)) (Spec (.of R)))` a name?
 instance Mon_ClassOfBialgbra {R S : Type u} [CommRing R] [CommRing S] [Bialgebra R S] :
     Mon_Class (OverClass.asOver (Spec (.of S)) (Spec (.of R))) :=
   ((bialgSpec (.of R)).obj (op (.of R S))).instMon_ClassX
@@ -227,6 +228,7 @@ lemma specCommMonAlgPullbackObjXIso_mul :
   · simp [Functor.Monoidal.μ_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
       AlgHom.toUnder, h₄, h₅, TensorProduct.algebraMap_def, pullback.condition]
 
+-- should we make something like `BialgHom.toRingHom`?
 def specCommMonAlgPullback :
     specCommMonAlg R ⋙ (Over.pullback (Spec.map f)).mapMon ≅ specCommMonAlg S :=
   NatIso.ofComponents (fun M ↦ Mon_.mkIso (specCommMonAlgPullbackObjXIso f M.unop)
@@ -236,8 +238,7 @@ def specCommMonAlgPullback :
     letI H := (CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec
     have h₁ : (mapRangeRingHom f.hom).comp (mapDomainBialgHom R φ.unop.hom) =
         (RingHomClass.toRingHom (mapDomainBialgHom S φ.unop.hom)).comp
-          (mapRangeRingHom f.hom) := by
-      sorry
+          (mapRangeRingHom f.hom) := mapRangeRingHom_comp_mapDomainBialgHom _ _
     have h₂ := (AlgHomClass.toAlgHom (mapDomainBialgHom S φ.unop.hom)).comp_algebraMap
     apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
     simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂

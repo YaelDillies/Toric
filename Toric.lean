@@ -10,6 +10,7 @@ import Toric.Hopf.CoalgToAlg
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.MonoidAlgebra
+import Toric.Hopf.TensorProduct
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Toric.Mathlib.Algebra.Category.CommBialgCat
@@ -41,6 +42,9 @@ import Toric.Mathlib.RingTheory.Coalgebra.Basic
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Hom
+import Toric.MonoidAlgebra.TensorProduct
+import Toric.MonoidAlgebra.mapRange
+import Toric.MonoidAlgebra.test
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
 import Toric.ToricIdeal

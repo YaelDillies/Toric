@@ -1,5 +1,4 @@
-import Mathlib.Algebra.Algebra.Tower
-import Mathlib.Algebra.MonoidAlgebra.Basic
+import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 -- TODO: move to Mathlib.Algebra.MonoidAlgebra.Basic
 
@@ -7,7 +6,7 @@ namespace MonoidAlgebra
 
 section mapRange
 
-variable {R S M : Type*} [Monoid M]
+variable {R S M N : Type*} [Monoid M] [Monoid N]
 
 
 noncomputable def mapRangeRingHom [Semiring R] [Semiring S] (f : R →+* S) :
@@ -35,6 +34,11 @@ lemma mapRangeRingHom_comp_algebraMap [CommSemiring R] [CommSemiring S] (f : R �
     (mapRangeRingHom (M := M) f).comp (algebraMap _ _) = (algebraMap _ _).comp f := by
   ext
   simp
+
+lemma mapRangeRingHom_comp_mapDomainBialgHom [CommSemiring R] [CommSemiring S]
+    (f : R →+* S) (g : M →* N) :
+    (mapRangeRingHom f).comp (mapDomainBialgHom R g) =
+      (RingHomClass.toRingHom (mapDomainBialgHom S g)).comp (mapRangeRingHom f) := by aesop
 
 noncomputable def mapRangeAlgHom {T : Type*} [CommSemiring R] [Semiring S]
     [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) :
