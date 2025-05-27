@@ -40,7 +40,7 @@ lemma antipode_mul_antidistrib (a b : A) :
   let β : A ⊗[R] A →ₗ[R] A := .mul' R A ∘ₗ map antipode antipode ∘ₗ TensorProduct.comm R A A
   suffices α = β from congr($this (a ⊗ₜ b))
   apply left_inv_eq_right_inv (a := LinearMap.mul' R A) <;> ext a b
-  · simp [α, ((ℛ R a).tmul (ℛ R b)).mul_apply, ← Bialgebra.counit_mul,
+  · simp [α, ((ℛ R a).tmul (ℛ R b)).mul_apply, ← Bialgebra.counit_mul, mul_comm b a,
       ((ℛ R a).mul (ℛ R b)).algebraMap_counit_eq_sum_antipode_mul]
   · simp [((ℛ R a).tmul (ℛ R b)).mul_apply, mul_comm, mul_mul_mul_comm,
       Finset.sum_mul_sum, ← Finset.sum_product', α, β, -sum_mul_antipode_eq,

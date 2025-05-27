@@ -54,7 +54,7 @@ lemma isGroupLikeElem_iff_mem_range_of {x : MonoidAlgebra R G} :
     by_contra h
     have : LinearIndepOn R id (insert x <| .range (of R G)) :=
       linearIndepOn_isGroupLikeElem.mono <| by simp [Set.subset_def, hx]
-    have : x.sum single ∉ span R (.range (of R G)) := by simpa using this.not_mem_span_of_insert h
+    have : x.sum single ∉ span R (.range (of R G)) := by simpa using this.notMem_span_of_insert h
     refine this <| sum_mem fun g hg ↦ ?_
     rw [← mul_one (x g), ← smul_eq_mul, ← smul_single]
     refine smul_mem _ _ <| subset_span <| Set.mem_range_self _
@@ -156,7 +156,7 @@ lemma isGroupLikeElem_iff_mem_range_of {x : R[G]} :
     by_contra h
     have : LinearIndepOn R id (insert x <| .range (of R G)) :=
       linearIndepOn_isGroupLikeElem.mono <| by simp [Set.subset_def, hx]
-    have : x.sum single ∉ span R (.range (of R G)) := by simpa using this.not_mem_span_of_insert h
+    have : x.sum single ∉ span R (.range (of R G)) := by simpa using this.notMem_span_of_insert h
     refine this <| sum_mem fun g hg ↦ ?_
     rw [← mul_one (x g), ← smul_eq_mul, ← smul_single]
     refine smul_mem _ _ <| subset_span <| Set.mem_range_self _

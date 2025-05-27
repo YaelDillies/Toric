@@ -3,6 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Yunzhou Xie. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
+import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.LinearAlgebra.TensorProduct.Tower
 import Mathlib.RingTheory.Coalgebra.Basic
 
@@ -40,13 +41,13 @@ variable [Semiring A] [Semiring B] [AddCommMonoid C] [Algebra R A] [Algebra R B]
   [Coalgebra R C]
 
 instance instOne : One (C →ₗ[R] A) where one := Algebra.linearMap R A ∘ₗ counit
-instance instMul : Mul (C →ₗ[R] A) where mul f g := mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul
+instance instMul : Mul (C →ₗ[R] A) where mul f g := μ ∘ₗ TensorProduct.map f g ∘ₗ comul
 
 lemma one_def : (1 : C →ₗ[R] A) = Algebra.linearMap R A ∘ₗ counit := rfl
-lemma mul_def (f g : C →ₗ[R] A) : f * g = mul' R A ∘ₗ TensorProduct.map f g ∘ₗ comul := rfl
+lemma mul_def (f g : C →ₗ[R] A) : f * g = μ ∘ₗ TensorProduct.map f g ∘ₗ comul := rfl
 
 @[simp] lemma one_apply (c : C) : (1 : C →ₗ[R] A) c = algebraMap R A (counit c) := rfl
-@[simp] lemma mul_apply (f g : C →ₗ[R] A) (c : C) : (f * g) c = mul' R A (.map f g (comul c)) := rfl
+@[simp] lemma mul_apply (f g : C →ₗ[R] A) (c : C) : (f * g) c = μ (.map f g (comul c)) := rfl
 
 lemma _root_.Coalgebra.Repr.mul_apply {a : C} (𝓡 : Coalgebra.Repr R a) (f g : C →ₗ[R] A) :
     (f * g) a = ∑ i ∈ 𝓡.index, f (𝓡.left i) * g (𝓡.right i) := by

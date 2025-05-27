@@ -27,7 +27,7 @@ variable (R A) in
 def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
   __ := LinearMap.mul' R A
   map_smul' a b := by induction b <;> simp
-  counit_comp := by ext; simp
+  counit_comp := by ext; simp [mul_comm]
   map_comp_comul := by
     ext a b
     simp [← (ℛ R a).eq, ← (ℛ R b).eq]
@@ -63,7 +63,8 @@ protected def _root_.Coalgebra.Repr.tmul (ℛa : Coalgebra.Repr R a) (ℛb : Coa
   left i := ℛa.left i.1 ⊗ₜ ℛb.left i.2
   right i := ℛa.right i.1 ⊗ₜ ℛb.right i.2
   eq := by
-    simp only [comul_def, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
+    simp only [comul_def, AlgebraTensorModule.tensorTensorTensorComm_eq_tensorTensorTensorComm,
+      AlgebraTensorModule.map_eq_map, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
       TensorProduct.map_tmul]
     rw [← ℛa.eq, ← ℛb.eq]
     simp_rw [sum_tmul, tmul_sum, ← Finset.sum_product', map_sum]
