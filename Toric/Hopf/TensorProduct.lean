@@ -46,6 +46,17 @@ lemma Algebra.TensorProduct.actualMap_tmul (s : S) (t : T) :
   · dsimp [actualMap, lift_tmul]; rfl
   · simp
 
+@[simp]
+lemma Algebra.TensorProduct.actualMap_comp_includeLeftRingHom :
+    (actualMap fR fS fT HS HT).comp (includeLeftRingHom) = includeLeftRingHom.comp fS := by
+  ext; simp
+
+@[simp]
+lemma Algebra.TensorProduct.actualMap_comp_includeRight :
+    (actualMap fR fS fT HS HT).comp (RingHomClass.toRingHom includeRight) =
+      (RingHomClass.toRingHom includeRight).comp fT := by
+  ext; simp
+
 end
 
 open TensorProduct MonoidAlgebra

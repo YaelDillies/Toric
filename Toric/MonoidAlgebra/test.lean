@@ -89,7 +89,7 @@ lemma prodComparisonIso_pullback_Spec_hom_left {R S : CommRingCat.{u}} (f : R �
 
 open CartesianMonoidalCategory in
 @[simp]
-lemma prodComparisonIso_pullback_Spec_hom_left' {R S : CommRingCat.{u}} (f : R ⟶ S)
+lemma prodComparisonIso_pullback_Spec_inv_left_fst_fst' {R S : CommRingCat.{u}} (f : R ⟶ S)
     {A B : Scheme.{u}} (fA : A ⟶ Spec R) (fB : B ⟶ Spec R) :
     (by exact (prodComparisonIso (Over.pullback (Spec.map f)) (Over.mk fA) (Over.mk fB)).inv.left) ≫
       pullback.fst (pullback.fst fA fB ≫ fA) (Spec.map f) ≫
@@ -97,14 +97,60 @@ lemma prodComparisonIso_pullback_Spec_hom_left' {R S : CommRingCat.{u}} (f : R �
           (pullback.snd fB (Spec.map f)) ≫ pullback.fst _ _ :=
   prodComparisonIso_pullback_Spec_hom_left ..
 
+open CartesianMonoidalCategory in
+@[simp]
+lemma prodComparisonIso_pullback_Spec_inv_left_fst_snd' {R S : CommRingCat.{u}} (f : R ⟶ S)
+    {A B : Scheme.{u}} (fA : A ⟶ Spec R) (fB : B ⟶ Spec R) :
+    (by exact (prodComparisonIso (Over.pullback (Spec.map f)) (Over.mk fA) (Over.mk fB)).inv.left) ≫
+      pullback.fst (pullback.fst fA fB ≫ fA) (Spec.map f) ≫
+        pullback.snd _ _ = pullback.snd _ _ ≫ pullback.fst _ _ := by
+  rw [← cancel_epi (prodComparisonIso (Over.pullback (Spec.map f)) _ _).hom.left,
+    Over.hom_left_inv_left_assoc]
+  simp [CartesianMonoidalCategory.prodComparison]
+  rfl
+
+open CartesianMonoidalCategory in
+@[simp]
+lemma prodComparisonIso_pullback_Spec_inv_left_snd' {R S : CommRingCat.{u}} (f : R ⟶ S)
+    {A B : Scheme.{u}} (fA : A ⟶ Spec R) (fB : B ⟶ Spec R) :
+    (by exact (prodComparisonIso (Over.pullback (Spec.map f)) (Over.mk fA) (Over.mk fB)).inv.left) ≫
+      pullback.snd (pullback.fst fA fB ≫ fA) (Spec.map f) =
+        pullback.snd _ _ ≫ pullback.snd _ _ := by
+  rw [← cancel_epi (prodComparisonIso (Over.pullback (Spec.map f)) _ _).hom.left,
+    Over.hom_left_inv_left_assoc]
+  simp [CartesianMonoidalCategory.prodComparison]
+
+attribute [local instance] Over.cartesianMonoidalCategory in
+open scoped MonoidalCategory in
+@[reassoc (attr := simp)]
+lemma CategoryTheory.Over.tensorHom_left_fst' {C : Type*} [Category C] [HasPullbacks C] {X : C}
+    {S U : C} {R T : Over X} (fS : S ⟶ X) (fU : U ⟶ X) (f : R ⟶ Over.mk fS) (g : T ⟶ Over.mk fU) :
+    (f ⊗ g).left ≫ pullback.fst fS fU = pullback.fst R.hom T.hom ≫ f.left :=
+  CategoryTheory.Over.tensorHom_left_fst ..
+
+attribute [local instance] Over.cartesianMonoidalCategory in
+open scoped MonoidalCategory in
+@[reassoc (attr := simp)]
+lemma CategoryTheory.Over.tensorHom_left_snd' {C : Type*} [Category C] [HasPullbacks C] {X : C}
+    {S U : C} {R T : Over X} (fS : S ⟶ X) (fU : U ⟶ X) (f : R ⟶ Over.mk fS) (g : T ⟶ Over.mk fU) :
+    (f ⊗ g).left ≫ pullback.snd fS fU = pullback.snd R.hom T.hom ≫ g.left :=
+  CategoryTheory.Over.tensorHom_left_snd ..
+
+
+lemma TensorProduct.algebraMap_def {R S T : Type*}
+    [CommSemiring R] [CommSemiring S] [CommSemiring T] [Algebra R S] [Algebra R T] :
+  (algebraMap S (TensorProduct R S T)) = Algebra.TensorProduct.includeLeftRingHom := rfl
+
+local notation3:max R:max "[" M:max "]" => MonoidAlgebra R M
+
 set_option maxHeartbeats 0 in
 attribute [local instance] Functor.Monoidal.ofChosenFiniteProducts in
 def foo {R S : CommRingCat.{u}} (f : R ⟶ S) :
     specCommMonAlg R ⋙ (Over.pullback (Spec.map f)).mapMon ≅ specCommMonAlg S :=
   NatIso.ofComponents (fun M ↦ Mon_.mkIso (Over.isoMk (by
     letI := f.hom.toAlgebra
-    exact ((CommRingCat.isPushout_of_isPushout R S (MonoidAlgebra R M.unop)
-      (MonoidAlgebra S M.unop)).op.map Scheme.Spec).isoPullback.symm) (by dsimp; simp; rfl)) /- (by
+    exact ((CommRingCat.isPushout_of_isPushout R S R[M.unop]
+      (S[M.unop])).op.map Scheme.Spec).isoPullback.symm) (by dsimp; simp; rfl)) /- (by
     ext
     dsimp
     simp only [Functor.Monoidal.ε_of_cartesianMonoidalCategory, Functor.comp_obj,
@@ -134,7 +180,7 @@ def foo {R S : CommRingCat.{u}} (f : R ⟶ S) :
       apply Finsupp.addHom_ext
       intro m r
       show f (Finsupp.lsum R _ (Finsupp.single _ _)) = Finsupp.lsum S _
-        (MonoidAlgebra.lift R M.unop (MonoidAlgebra S M.unop)
+        (MonoidAlgebra.lift R M.unop (S[M])
           (MonoidAlgebra.of S M.unop) _)
       simp [Algebra.smul_def, RingHom.algebraMap_toAlgebra]
     · simp only [CommRingCat.mkUnder, Under.mk_right, preservesTerminalIso_pullback,
@@ -151,25 +197,41 @@ def foo {R S : CommRingCat.{u}} (f : R ⟶ S) :
       ext x
       show x = Finsupp.lsum R _ (Finsupp.single _ _)
       simp) -/ sorry (by
+    obtain ⟨M⟩ := M
     letI := f.hom.toAlgebra
+    let H := (CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec
+    letI e : ((specCommMonAlg R ⋙ (Over.pullback (Spec.map f)).mapMon).obj (.op M)).X ≅
+      ((specCommMonAlg S).obj (.op M)).X := Over.isoMk H.isoPullback.symm (by dsimp; simp; rfl)
+    have hc : (MonoidAlgebra.mapRangeRingHom f.hom).comp (algebraMap R R[M]) =
+      (algebraMap S S[M]).comp f.hom := by ext; simp
+    have h₁ := congr(Spec.map (CommRingCat.ofHom
+      $(comulAlgHom_comp_mapRangeRingHom f.hom (M := M))))
+    have h₂ := congr(Spec.map (CommRingCat.ofHom
+      $(Algebra.TensorProduct.actualMap_comp_includeLeftRingHom _ _ _ hc hc)))
+    have h₃ := congr(Spec.map (CommRingCat.ofHom
+      $(Algebra.TensorProduct.actualMap_comp_includeRight _ _ _ hc hc)))
+    have h₄ := congr(Spec.map (CommRingCat.ofHom
+      $((Bialgebra.comulAlgHom S S[M]).comp_algebraMap)))
+    have h₅ := congr(Spec.map (CommRingCat.ofHom
+      $(IsScalarTower.algebraMap_eq S S[M] (TensorProduct S S[M] S[M]))))
+    simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂ h₃ h₄ h₅
+    have goal :
+      (CartesianMonoidalCategory.prodComparisonIso (Over.pullback (Spec.map f)) _ _).inv.left ≫
+          pullback.fst _ _ ≫ (pullbackSpecIso R R[M] R[M]).hom =
+      ((MonoidalCategoryStruct.tensorHom e.hom e.hom).left ≫ (pullbackSpecIso S _ _).hom) ≫
+        Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.actualMap f.hom _ _ hc hc)) := by
+      rw [← Category.assoc, ← Iso.eq_comp_inv]
+      dsimp
+      ext <;> simp [h₂, h₃, e, RingHom.algebraMap_toAlgebra]
     ext
-    rw [← cancel_mono ((CommRingCat.isPushout_of_isPushout R S (MonoidAlgebra R M.unop)
-      (MonoidAlgebra S M.unop)).op.map Scheme.Spec).isoPullback.hom]
+    rw [← cancel_mono ((CommRingCat.isPushout_of_isPushout R S R[M]
+      (S[M])).op.map Scheme.Spec).isoPullback.hom]
     ext
-    · have := congr(Spec.map (CommRingCat.ofHom
-        $(comulAlgHom_comp_mapRangeRingHom f.hom (M := M.unop))))
-      simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at this
-      simp [Functor.Monoidal.μ_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
-        AlgHom.toUnder, this]
-      simp only [← Category.assoc]
-      congr 1
-      rw [← Iso.eq_comp_inv]
-      ext
-      · simp
-        sorry
-      · simp
-        sorry
-    · sorry))
+    · simpa [Functor.Monoidal.μ_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
+        AlgHom.toUnder, h₁] using
+        congr($goal ≫ Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R R[M]).toRingHom))
+    · simp [Functor.Monoidal.μ_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
+        AlgHom.toUnder, h₄, h₅, TensorProduct.algebraMap_def, pullback.condition]))
   fun {X Y} f ↦ by
   ext : 2
   simp only [Functor.CoreMonoidal.toMonoidal_toLaxMonoidal, Functor.comp_obj, Functor.op_obj,
