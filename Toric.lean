@@ -29,6 +29,7 @@ import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
 import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
+import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Tower
