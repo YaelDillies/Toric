@@ -3,7 +3,9 @@ Copyright (c) 2025 Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Mrugała
 -/
-import Mathlib
+import Mathlib.GroupTheory.GroupAction.Ring
+import Mathlib.LinearAlgebra.DirectSum.Finsupp
+import Mathlib.RingTheory.IsTensorProduct
 import Toric.MonoidAlgebra.mapRange
 
 /-!
@@ -186,7 +188,7 @@ lemma algebraTensorAlgEquiv_tmul (a : A) (p : MonoidAlgebra B σ) :
   simp [algebraTensorAlgEquiv, Algebra.smul_def]
 
 @[simp]
-lemma algebraTensorAlgEquiv_symm_monomial (m : σ) (a : A) (b : B) :
+lemma algebraTensorAlgEquiv_symm_single (m : σ) (a : A) (b : B) :
     (algebraTensorAlgEquiv R A B).symm (single m (a ⊗ₜ b)) = a ⊗ₜ single m b := by
   simp [algebraTensorAlgEquiv, liftNCAlgHom, liftNCRingHom] -- TODO: BAD
 

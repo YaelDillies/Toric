@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Algebra.Algebra.Tower
+import Mathlib.Algebra.MonoidAlgebra.Basic
 
 -- TODO: move to Mathlib.Algebra.MonoidAlgebra.Basic
 
@@ -22,6 +23,13 @@ lemma mapRangeRingHom_apply [Semiring R] [Semiring S] (f : R →+* S) (x : Monoi
   classical
   simp [mapRangeRingHom, liftNCRingHom, single_apply, apply_ite (f := f)] --TODO: BAD
 
+@[simp]
+lemma mapRangeRingHom_single [Semiring R] [Semiring S] (f : R →+* S) (a : M) (b : R) :
+    mapRangeRingHom f (single a b) = single a (f b) := by
+  classical
+  ext
+  simp [single_apply, apply_ite f]
+
 noncomputable def mapRangeAlgHom {T : Type*} [CommSemiring R] [Semiring S]
     [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) :
     MonoidAlgebra S M →ₐ[R] MonoidAlgebra T M :=
@@ -31,6 +39,14 @@ noncomputable def mapRangeAlgHom {T : Type*} [CommSemiring R] [Semiring S]
 lemma mapRangeAlgHom_apply {T : Type*} [CommSemiring R] [Semiring S]
     [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) (x : MonoidAlgebra S M) (m : M) :
     mapRangeAlgHom f x m = f (x m) := mapRangeRingHom_apply f.toRingHom x m
+
+@[simp]
+lemma mapRangeAlgHom_single {T : Type*} [CommSemiring R] [Semiring S]
+    [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) (a : M) (b : S) :
+    mapRangeAlgHom f (single a b) = single a (f b) := by
+  classical
+  ext
+  simp [single_apply, apply_ite f]
 
 @[simps apply]
 noncomputable def mapRangeAlgEquiv {T : Type*} [CommSemiring R] [Semiring S] [Semiring T]
