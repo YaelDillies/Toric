@@ -1,6 +1,3 @@
-import Toric.AffineMonoid.Embedding
-import Toric.AffineMonoid.Irreducible
-import Toric.AffineMonoid.UniqueSums
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
@@ -9,6 +6,9 @@ import Toric.GroupScheme.Torus
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.MonoidAlgebra
+import Toric.Mathlib.Algebra.AffineMonoid.Embedding
+import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
+import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
 import Toric.Mathlib.Algebra.Algebra.Defs
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
@@ -18,6 +18,7 @@ import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
+import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.Order.Nonneg.Module
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
@@ -28,7 +29,6 @@ import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
-import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
