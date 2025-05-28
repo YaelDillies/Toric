@@ -20,7 +20,7 @@
   \lean{AlgebraicGeometry.Scheme.splitTorusIsoSpec, AlgebraicGeometry.Scheme.splitTorusIsoSpecOver}
   \leanok
 
-  The split torus over $\Spec R$ is isomorphic to $\Spec(R[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}])$.
+  The split torus over $\Spec R$ is isomorphic to $\Spec R[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}]$.
 \end{lemma}
 \begin{proof}
   \uses{}
@@ -312,14 +312,14 @@
   \lean{AffineToricVarietyFromMonoid.instToricVariety}
   \leanok
 
-  If $S$ is an affine monoid, then $\Spec(\Bbbk[S])$ is an affine toric variety.
+  If $S$ is an affine monoid, then $\Spec \Bbbk[S]$ is an affine toric variety.
 \end{proposition}
 \begin{proof}
   \uses{0-aff-mon-alg-domain, 0-full-faithful-grp-alg, 1-1-torus-spec}
   % \leanok
 
   Identify the torus with $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Lemma \ref{1-1-torus-spec}.
-  $i$ induces a morphism $T \to \Spec(\Bbbk[S])$. It's an open embedding as $i$ gives the localization of $\Bbbk[S]$ at $\chi^{a_i}$, so $\im i$ is an affine open. It's dominant as $\Spec(\Bbbk[S])$ is integral and so is irreducible, and $\im i$ is open and nonempty, so dense. The torus action is given by the natural restriction of comultiplication on $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Proposition \ref{0-full-faithful-grp-alg}.
+  $i$ induces a morphism $T \to \Spec \Bbbk[S]$. It's an open embedding as $i$ gives the localization of $\Bbbk[S]$ at $\chi^{a_i}$, so $\im i$ is an affine open. It's dominant as $\Spec \Bbbk[S]$ is integral and so is irreducible, and $\im i$ is open and nonempty, so dense. The torus action is given by the natural restriction of comultiplication on $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Proposition \ref{0-full-faithful-grp-alg}.
 \end{proof}
 
 
@@ -329,13 +329,13 @@
   % \lean{}
   % \leanok
 
-  If $S$ is an affine monoid and $\mathcal A$ is a finite set generating $S$ as a monoid, then $\Spec(\Bbbk[S]) = Y_{\mathcal A}$.
+  If $S$ is an affine monoid and $\mathcal A$ is a finite set generating $S$ as a monoid, then $\Spec \Bbbk[S] = Y_{\mathcal A}$.
 \end{proposition}
 \begin{proof}
   \uses{1-1-8-aff-tor-var-ya}
   % \leanok
 
-  We get a $\Bbbk$-algebra homomorphism $\pi : \Bbbk[x_1, \dotsc, x_s] \to \Bbbk[\Z S]$ given by $\mathcal A$; this induces a morphism $\Phi_{\mathcal A} : T \to \Bbbk^s$. The kernel of $\pi$ is the toric ideal of $Y_{\mathcal A}$ and $\pi$ is clearly surjective, so $Y_{\mathcal A} = \mathbb V(\ker(\pi)) = \Spec(\Bbbk[x_1, \dotsc, x_s] / \ker(\pi)) = \Spec(\bbC[S])$.
+  We get a $\Bbbk$-algebra homomorphism $\pi : \Bbbk[x_1, \dotsc, x_s] \to \Bbbk[\Z S]$ given by $\mathcal A$; this induces a morphism $\Phi_{\mathcal A} : T \to \Bbbk^s$. The kernel of $\pi$ is the toric ideal of $Y_{\mathcal A}$ and $\pi$ is clearly surjective, so $Y_{\mathcal A} = \mathbb V(\ker(\pi)) = \Spec \Bbbk[x_1, \dotsc, x_s] / \ker(\pi) = \Spec \bbC[S]$.
 \end{proof}
 
 
@@ -345,7 +345,7 @@
   % \lean{}
   % \leanok
 
-  If $S$ is an affine monoid, then the character lattice of the torus of $\Spec(\Bbbk[S])$ is $\Z S$.
+  If $S$ is an affine monoid, then the character lattice of the torus of $\Spec \Bbbk[S]$ is $\Z S$.
 \end{proposition}
 \begin{proof}
   \uses{1-1-14-spec-aff-mon-alg-eq-ya}

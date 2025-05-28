@@ -1,36 +1,26 @@
 import Mathlib.RingTheory.Coalgebra.Basic
 
-open Coalgebra TensorProduct
+open TensorProduct
 
-universe u
-
-variable {R C : Type*} [CommSemiring R]
+variable {R A : Type*} [CommSemiring R]
 
 namespace Coalgebra
-variable [AddCommMonoid C] [Module R C] [Coalgebra R C]
+variable [AddCommMonoid A] [Module R A] [Coalgebra R A]
 
-variable (R C) in
-/-- A coalgebra `C` is cocommutative if its comultiplication `δ : C → C ⊗ C` commutes with the
-swapping `β : C ⊗ C ≃ C ⊗ C` of the factors in the tensor product.
--/
+variable (R A) in
+/-- A coalgebra `A` is cocommutative if its comultiplication `δ : A → A ⊗ A` commutes with the
+swapping `β : A ⊗ A ≃ A ⊗ A` of the factors in the tensor product. -/
 class IsCocomm where
-  comul_comm' : (TensorProduct.comm R C C).comp (comul (R := R)) = comul (R := R) (A := C)
+  protected comm_comp_comul : (TensorProduct.comm R A A).comp comul = comul
 
-instance : IsCocomm R R where comul_comm' := by ext; simp
+variable [IsCocomm R A]
 
-local notation "ε" => counit (R := R) (A := C)
-local notation "μ" => LinearMap.mul' R R
-local notation "δ" => comul (R := R)
-local infix:90 " ◁ " => LinearMap.lTensor
-local notation:90 f:90 " ▷ " X:90 => LinearMap.rTensor X f
-local infix:70 " ⊗ₘ " => TensorProduct.map
-local notation "α" => TensorProduct.assoc R
-local notation "β" => TensorProduct.comm R
+variable (R A) in
+@[simp] lemma comm_comp_comul : (TensorProduct.comm R A A).comp comul = comul :=
+  IsCocomm.comm_comp_comul
 
-variable [IsCocomm R C]
-
-variable (R C) in
-@[simp]
-lemma comul_comm : (TensorProduct.comm R C C).comp δ = δ := IsCocomm.comul_comm'
+variable (R) in
+@[simp] lemma comm_comul (a : A) : TensorProduct.comm R A A (comul a) = comul a :=
+  congr($(comm_comp_comul R A) a)
 
 end Coalgebra

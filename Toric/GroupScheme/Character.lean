@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
-import Toric.Mathlib.Algebra.Group.TypeTags.Basic
 
 /-!
 # The lattices of characters and cocharacters

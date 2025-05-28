@@ -125,7 +125,7 @@ private lemma dual_auxGenSet (hs : s.Finite) :
     nth_rw 2 [mul_comm] at hv2
     exact hv2
   obtain hSv | hSv := {y ∈ s | p y w < 0 ∧ p y v < 0}.eq_empty_or_nonempty
-  · simp +contextual only [Set.sep_and, Set.eq_empty_iff_forall_not_mem, Set.mem_inter_iff,
+  · simp +contextual only [Set.sep_and, Set.eq_empty_iff_forall_notMem, Set.mem_inter_iff,
       Set.mem_setOf_eq, not_and, true_and, not_lt, and_imp] at hSv
     refine ⟨0, zero_mem _, v, fun x hx => ?_, zero_add _⟩
     by_cases hxw : 0 ≤ p x w
