@@ -29,14 +29,15 @@ Now let's do the top edge.
 \begin{proposition}[Sliced adjoint functors]
   \label{0-slice-adj}
   \uses{}
-  % \lean{}
-  % \leanok
+  \lean{CategoryTheory.Over.postAdjunctionRight}
+  \leanok
+  \mathlibok
 
   If $a : F \vdash G$ is an adjunction between $F : C \to D$ and $G : D \to C$ and $X : C$, then there is an adjunction between $F / X : C / X \to D / F(X)$ and $G / X : D / F(X) \to C / X$.
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
 
   See https://ncatlab.org/nlab/show/sliced+adjoint+functors+--+section.
 \end{proof}
@@ -220,7 +221,7 @@ Finally, let's do the right edge.
 
 \begin{definition}
   \label{0-spec-grp-alg}
-  \uses{0-spec-hopf}
+  \uses{0-grp-alg, 0-hopf-alg-equiv-cogrp-alg, 0-spec-hopf}
   \lean{hopfSpec, MonoidAlgebra}
   \leanok
 
@@ -257,10 +258,11 @@ Finally, let's do the right edge.
 \begin{theorem}
   \label{0-full-faithful-spec-grp-alg}
   \uses{0-spec-grp-alg}
-  \lean{specCommGrpAlgebra.fullyFaithful, specCommGrpAlgebra.instFull, specCommGrpAlgebra.instFaithful}
+  \lean{specCommGrpAlg.fullyFaithful, specCommGrpAlg.instFull, specCommGrpAlg.instFaithful}
   \leanok
 
-  For a field $k$, $D_k$ is a fully faithful contravariant functor from the category of commutative groups to the category of group schemes over $\Spec k$.
+  Let $R$ be a domain.
+  The functor $G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is fully faithful.
 \end{theorem}
 \begin{proof}
   \uses{0-full-faithful-spec-hopf, 0-full-faithful-grp-alg}
@@ -268,5 +270,5 @@ Finally, let's do the right edge.
 
   Compose Propositions \ref{0-full-faithful-spec-hopf} and \ref{0-full-faithful-grp-alg}.
 
-  Also see Theorem 12.9(a) in \cite{Milne_2017}. See SGA III Exposé VIII for a proof that works for $R$ an arbitrary commutative ring in place of $k$.
+  Also see Theorem 12.9(a) in \cite{Milne_2017}. See SGA III Exposé VIII for a proof that works for $R$ an arbitrary commutative ring.
 \end{proof}

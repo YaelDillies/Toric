@@ -1,4 +1,5 @@
 name = "Toric"
+keywords = ["math", "algebraic-geometry", "convex-geometry", "algebraic-group", "convex-cone", "hopf-algebra"]
 defaultTargets = ["Toric"]
 
 [leanOptions]
