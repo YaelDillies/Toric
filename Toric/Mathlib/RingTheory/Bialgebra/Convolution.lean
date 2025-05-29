@@ -55,9 +55,6 @@ lemma toLinearMap_pow (f : C →ₐ[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.to
   · rfl
   · simp only [pow_succ, toLinearMap_mul, hn, _root_.pow_succ]
 
-instance : CommMonoid (C →ₐ[R] A) :=
-  toLinearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
-
 lemma mul_distrib_comp [Bialgebra R B] (f g : C →ₐ A) (h : B →ₐc[R] C) :
     AlgHom.comp (f * g) (h : B →ₐ[R] C) = (.comp f h) * (.comp g h) := calc
   _ = (.comp (lmul' R) <| .comp (Algebra.TensorProduct.map f g) <|
@@ -73,6 +70,14 @@ lemma comp_mul_distrib [Algebra R B] (f g : C →ₐ[R] A) (h : A →ₐ[R] B) :
     h.comp (f * g) = h.comp f * h.comp g := by
   apply toLinearMap_injective
   simp [toLinearMap_mul, LinearMap.comp_mul_distrib]
+
+instance : Monoid (C →ₐ[R] A) :=
+  toLinearMap_injective.monoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
+
+variable [IsCocomm R C]
+
+instance : CommMonoid (C →ₐ[R] A) :=
+  toLinearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
 
 end AlgHom
 

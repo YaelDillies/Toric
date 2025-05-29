@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.LinearAlgebra.TensorProduct.Tower
-import Mathlib.RingTheory.Coalgebra.Basic
+import Toric.Mathlib.RingTheory.Coalgebra.Basic
 
 /-!
 # Convolution product on linear maps from a coalgebra to an algebra
@@ -112,6 +112,7 @@ end Semiring
 
 section CommSemiring
 variable [CommSemiring A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
+  [IsCocomm R C]
 
 private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := calc
       μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ
@@ -130,7 +131,7 @@ instance : Ring (C →ₗ[R] A) where
 end Ring
 
 section CommRing
-variable [CommRing A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
+variable [CommRing A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C] [IsCocomm R C]
 
 instance : CommRing (C →ₗ[R] A) where
 
