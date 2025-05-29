@@ -3,8 +3,7 @@
   "Toric.Mathlib.RingTheory.HopfAlgebra.Hom":
   ["Toric.Mathlib.RingTheory.Coalgebra.Basic"],
   "Toric.Mathlib.RingTheory.HopfAlgebra.Convolution":
-  ["Toric.Mathlib.Algebra.Algebra.Defs",
-   "Toric.Mathlib.RingTheory.Bialgebra.Basic"],
+  ["Toric.Mathlib.Algebra.Algebra.Defs"],
   "Toric.Mathlib.RingTheory.Coalgebra.Hom":
   ["Toric.Mathlib.LinearAlgebra.TensorProduct.Basic"],
   "Toric.Mathlib.Algebra.Group.Equiv.Basic": ["Mathlib.Tactic.Spread"]}}

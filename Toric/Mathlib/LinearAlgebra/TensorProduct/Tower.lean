@@ -1,5 +1,11 @@
 import Mathlib.LinearAlgebra.TensorProduct.Tower
 
+/-!
+# TODO
+
+Replace the `TensorProduct` definitions with the `Algebra.TensorModule` ones.
+-/
+
 namespace TensorProduct.AlgebraTensorModule
 
 universe uR uA uB uM uN uP uQ uP' uQ'
@@ -29,7 +35,7 @@ lemma assoc_eq_assoc  :
   sorry
 
 lemma tensorTensorTensorComm_eq_tensorTensorTensorComm :
-    tensorTensorTensorComm R R M N P Q = TensorProduct.tensorTensorTensorComm R M N P Q := by
+    tensorTensorTensorComm R R R R M N P Q = TensorProduct.tensorTensorTensorComm R M N P Q := by
   sorry
 
 end TensorProduct.AlgebraTensorModule

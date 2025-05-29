@@ -9,7 +9,7 @@ variable {R C : Type*} [CommSemiring R] [Semiring C] [HopfAlgebra R C] [IsCocomm
 
 /-- The antipode as a coalgebra hom. -/
 def antipodeCoalgHom : C →ₗc[R] C where
-  __ := antipode (R := R) (A := C)
+  __ := antipode R (A := C)
   counit_comp := by ext a; exact antipode_counit _
   map_comp_comul := sorry
 

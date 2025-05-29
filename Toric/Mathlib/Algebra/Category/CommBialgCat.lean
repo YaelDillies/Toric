@@ -19,7 +19,7 @@ noncomputable section
 namespace CategoryTheory
 
 open Bialgebra Limits
-open scoped Mon_Class
+open scoped Mon_Class MonoidalCategory
 
 universe v u
 variable {R : Type u} [CommRing R]
@@ -183,7 +183,10 @@ private def commBialgCatToComonCommAlgCat : CommBialgCat R ⥤ (Mon_ (CommAlgCat
     mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
     one_mul := by ext; exact Coalgebra.rTensor_counit_comul _
     mul_one := by ext; exact Coalgebra.lTensor_counit_comul _
-    mul_assoc := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
+    mul_assoc := by
+      -- TODO: Things are extremely bad here. Best solution is to bust `TensorProduct` and replace
+      -- it with `TensorProduct.AlgebraTensorModule`.
+      ext; stop exact (Coalgebra.coassoc_symm_apply _).symm
   }
   map {A B} f := .op {
     hom := (CommAlgCat.ofHom f.hom).op

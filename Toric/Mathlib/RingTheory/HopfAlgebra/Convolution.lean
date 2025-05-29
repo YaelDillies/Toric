@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
 import Toric.Mathlib.Algebra.Algebra.Defs
-import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
@@ -35,9 +34,9 @@ namespace HopfAlgebra
 variable [CommRing A] [HopfAlgebra R A]
 
 lemma antipode_mul_antidistrib (a b : A) :
-    antipode (R := R) (a * b) = antipode (R := R) b * antipode (R := R) a := by
-  let α := antipode ∘ₗ .mul' R A
-  let β : A ⊗[R] A →ₗ[R] A := .mul' R A ∘ₗ map antipode antipode ∘ₗ TensorProduct.comm R A A
+    antipode R (a * b) = antipode R b * antipode R a := by
+  let α := antipode R ∘ₗ .mul' R A
+  let β : A ⊗[R] A →ₗ[R] A := .mul' R A ∘ₗ map (antipode R) (antipode R) ∘ₗ TensorProduct.comm R A A
   suffices α = β from congr($this (a ⊗ₜ b))
   apply left_inv_eq_right_inv (a := LinearMap.mul' R A) <;> ext a b
   · simp [α, ((ℛ R a).tmul (ℛ R b)).mul_apply, ← Bialgebra.counit_mul, mul_comm b a,
@@ -47,16 +46,16 @@ lemma antipode_mul_antidistrib (a b : A) :
       (ℛ R a).algebraMap_counit_eq_sum_mul_antipode, (ℛ R b).algebraMap_counit_eq_sum_mul_antipode]
 
 lemma antipode_mul_distrib (a b : A) :
-    antipode (R := R) (a * b) = antipode (R := R) a * antipode (R := R) b := by
+    antipode R (a * b) = antipode R a * antipode R b := by
   rw [antipode_mul_antidistrib, mul_comm]
 
 alias antipode_mul := antipode_mul_distrib
 
 variable (R A) in
 @[simps!]
-def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap antipode antipode_one antipode_mul
+def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap (antipode R) antipode_one antipode_mul
 
-@[simp] lemma toLinearMap_antipodeAlgHom : (antipodeAlgHom R A).toLinearMap = antipode := rfl
+@[simp] lemma toLinearMap_antipodeAlgHom : (antipodeAlgHom R A).toLinearMap = antipode R := rfl
 
 end HopfAlgebra
 
@@ -71,16 +70,16 @@ local infix:70 " ⊗ₘ " => TensorProduct.map
 
 variable [Ring C] [HopfAlgebra R C]
 
-@[simp] lemma antipode_mul_id : antipode (R := R) (A := C) * id = 1 := by
+@[simp] lemma antipode_mul_id : antipode R (A := C) * id = 1 := by
   ext; simp [mul_def, ← LinearMap.rTensor_def]
 
-@[simp] lemma id_mul_antipode : id * antipode (R := R) (A := C) = 1 := by
+@[simp] lemma id_mul_antipode : id * antipode R (A := C) = 1 := by
   ext; simp [mul_def, ← LinearMap.lTensor_def]
 
-lemma counit_comp_antipode : ε ∘ₗ antipode (R := R) (A := C) = ε := calc
-  _ = 1 * (ε ∘ₗ antipode (R := R) (A := C)) := (one_mul _).symm
-  _ = (ε ∘ₗ id) * (ε ∘ₗ antipode (R := R) (A := C)) := rfl
-  _ = (counitAlgHom R C).toLinearMap ∘ₗ (id * antipode (R := R) (A := C)) := by
+lemma counit_comp_antipode : ε ∘ₗ antipode R (A := C) = ε := calc
+  _ = 1 * (ε ∘ₗ antipode R (A := C)) := (one_mul _).symm
+  _ = (ε ∘ₗ id) * (ε ∘ₗ antipode R (A := C)) := rfl
+  _ = (counitAlgHom R C).toLinearMap ∘ₗ (id * antipode R (A := C)) := by
     simp only [comp_id, comp_mul_distrib]
     simp
   _ = ε ∘ₗ 1 := by simp
@@ -104,7 +103,7 @@ local notation:90 f:90 " ▷ " X:90 => LinearMap.rTensor X f
 local infix:70 " ⊗ₘ " => TensorProduct.map
 local notation "α" => TensorProduct.assoc R
 local notation "β" => TensorProduct.comm R
-local notation "𝑺" => antipode (R := R) (A := C)
+local notation "𝑺" => antipode R (A := C)
 local notation "𝑭" => δ₁ ∘ₗ 𝑺
 local notation "𝑮" => (𝑺 ⊗ₘ 𝑺) ∘ₗ (β C C) ∘ₗ δ₁
 

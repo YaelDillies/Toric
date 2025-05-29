@@ -60,7 +60,7 @@ instance : MonoidalCategory (CommAlgCat.{u} R)ᵒᵖ where
   whiskerRight {S₁ S₂} f T := .op <| ofHom (Algebra.TensorProduct.map f.unop.hom (.id _ _))
   tensorHom {S₁ S₂ T₁ T₂} f g := .op <| ofHom (map f.unop.hom g.unop.hom)
   tensorUnit := .op (.of R R)
-  associator {S T U} := .op <| isoMk (Algebra.TensorProduct.assoc R _ _ _).symm
+  associator {S T U} := .op <| isoMk (Algebra.TensorProduct.assoc R R _ _ _).symm
   leftUnitor S := .op <| isoMk (Algebra.TensorProduct.lid R _).symm
   rightUnitor _ := .op <| isoMk (Algebra.TensorProduct.rid R R _).symm
   tensorHom_def := by intros; ext <;> rfl
@@ -92,20 +92,20 @@ instance : BraidedCategory (CommAlgCat.{u} R)ᵒᵖ where
 
 open MonoidalCategory
 
-lemma rightWhisker_hom (f : A ⟶ B) :
+@[simp] lemma rightWhisker_hom (f : A ⟶ B) :
     (f.op ▷ op C).unop.hom = Algebra.TensorProduct.map f.hom (.id _ _) := rfl
 
-lemma leftWhisker_hom (f : A ⟶ B) :
+@[simp] lemma leftWhisker_hom (f : A ⟶ B) :
     (op C ◁ f.op).unop.hom = Algebra.TensorProduct.map (.id _ _) f.hom := rfl
 
-lemma associator_hom_unop_hom :
+@[simp] lemma associator_hom_unop_hom :
     (α_ (op A) (op B) (op C)).hom.unop.hom =
-      (Algebra.TensorProduct.assoc R A B C).symm.toAlgHom := rfl
+      (Algebra.TensorProduct.assoc R R A B C).symm.toAlgHom := rfl
 
-lemma associator_inv_unop_hom :
-    (α_ (op A) (op B) (op C)).inv.unop.hom = (Algebra.TensorProduct.assoc R A B C).toAlgHom := rfl
+@[simp] lemma associator_inv_unop_hom :
+    (α_ (op A) (op B) (op C)).inv.unop.hom = (Algebra.TensorProduct.assoc R R A B C).toAlgHom := rfl
 
-lemma tensorHom_unop_hom {D : CommAlgCat R} (f : A ⟶ C) (g : B ⟶ D) :
-    (f.op ⊗ g.op).unop.hom = (Algebra.TensorProduct.map f.hom g.hom) := rfl
+@[simp] lemma tensorHom_unop_hom {D : CommAlgCat R} (f : A ⟶ C) (g : B ⟶ D) :
+    (f.op ⊗ g.op).unop.hom = Algebra.TensorProduct.map f.hom g.hom := rfl
 
 end CategoryTheory.CommAlgCat
