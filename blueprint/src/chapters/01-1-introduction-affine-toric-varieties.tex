@@ -29,10 +29,25 @@
   Ask any toddler on the street.
 \end{proof}
 
+\begin{lemma}[The split torus is commutative]
+  \label{1-1-torus-comm}
+  \uses{1-1-torus}
+  % \lean{}
+  % \leanok
+
+  The split torus is a commutative group scheme.
+\end{lemma}
+\begin{proof}
+  \uses{1-1-torus-spec, 0-cocomm-hopf-spec-comm}
+  % \leanok
+
+  Follows immediately from \ref{1-1-torus-spec} and \ref{0-cocomm-hopf-spec-comm}.
+\end{proof}
+
 
 \begin{definition}[Characters of a group scheme]
   \label{1-1-char}
-  \uses{1-1-torus}
+  \uses{1-1-torus, 1-1-torus-comm}
   \lean{AlgebraicGeometry.Scheme.char}
   \leanok
 
@@ -151,7 +166,7 @@
 
 \begin{proposition}[Cocharacter lattice of the torus]
   \label{1-1-cochar-torus}
-  \uses{1-1-cochar}
+  \uses{1-1-cochar, 1-1-torus-comm}
   % \lean{}
   % \leanok
 
