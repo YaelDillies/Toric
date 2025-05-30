@@ -25,13 +25,10 @@ suppress_compilation
 
 open Algebra Coalgebra Bialgebra TensorProduct
 
--- TODO: Remove universe monomorphism
--- TODO: Generalise to semirings
-universe u
-variable {R A C : Type u} [CommRing R]
+variable {R A C : Type*} [CommSemiring R]
 
 namespace HopfAlgebra
-variable [CommRing A] [HopfAlgebra R A]
+variable [CommSemiring A] [HopfAlgebra R A]
 
 lemma antipode_mul_antidistrib (a b : A) :
     antipode R (a * b) = antipode R b * antipode R a := by
@@ -68,7 +65,7 @@ local notation "δ" => comul
 local infix:70 " ⊗ₘ " => TensorProduct.map
 -- local notation "α" => TensorProduct.assoc _ _ _
 
-variable [Ring C] [HopfAlgebra R C]
+variable [Semiring C] [HopfAlgebra R C]
 
 @[simp] lemma antipode_mul_id : antipode R (A := C) * id = 1 := by
   ext; simp [mul_def, ← LinearMap.rTensor_def]
@@ -88,7 +85,7 @@ lemma counit_comp_antipode : ε ∘ₗ antipode R (A := C) = ε := calc
 end LinearMap
 
 namespace LinearMap
-variable [Ring C] [HopfAlgebra R C]
+variable [Semiring C] [HopfAlgebra R C]
 
 local notation "ε₁" => counit (R := R) (A := C)
 local notation "ε₂" => counit (R := R) (A := C ⊗[R] C)
@@ -124,7 +121,7 @@ lemma comul_right_inv : δ₁ * 𝑭 = 1 := calc
 end LinearMap
 
 namespace AlgHom
-variable [CommRing A] [Ring C] [Bialgebra R C] [HopfAlgebra R A]
+variable [CommSemiring A] [Semiring C] [Bialgebra R C] [HopfAlgebra R A]
 
 lemma antipode_id_cancel : HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A = 1 := by
   apply AlgHom.toLinearMap_injective
@@ -152,7 +149,7 @@ private lemma inv_convMul_cancel (f : C →ₐc[R] A) :
 end AlgHom
 
 namespace BialgHom
-variable [CommRing A] [CommRing C]
+variable [CommSemiring A] [CommSemiring C]
 
 section HopfAlgebra
 variable [HopfAlgebra R A] [HopfAlgebra R C] [IsCocomm R C]

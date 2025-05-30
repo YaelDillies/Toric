@@ -69,11 +69,8 @@ protected def _root_.Coalgebra.Repr.tmul (ℛa : Coalgebra.Repr R a) (ℛb : Coa
     simp_rw [sum_tmul, tmul_sum, ← Finset.sum_product', map_sum]
     simp
 
--- TODO: Remove universe monomorphism
--- TODO: Generalise to semirings
-universe u
-variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [Bialgebra R A] [Bialgebra R B]
-  {a a₁ a₂ : A} {b : B}
+variable {R A B : Type*} [CommSemiring R] [CommSemiring A] [CommSemiring B] [Bialgebra R A]
+  [Bialgebra R B] {a a₁ a₂ : A} {b : B}
 
 /-- Representations of `a₁` and `a₂` yield a representation of `a₁ * a₂`. -/
 @[simps!]

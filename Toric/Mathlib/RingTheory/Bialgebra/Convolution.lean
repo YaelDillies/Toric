@@ -26,10 +26,7 @@ suppress_compilation
 
 open Algebra Coalgebra Bialgebra TensorProduct
 
--- TODO: Remove universe monomorphism
--- TODO: Generalise to semirings
-universe u
-variable {R A B C : Type u} [CommRing R]
+variable {R A B C : Type*} [CommSemiring R]
 
 namespace AlgHom
 variable [CommSemiring A] [CommSemiring B] [Semiring C] [Bialgebra R C] [Algebra R A]
@@ -82,7 +79,7 @@ instance : CommMonoid (C →ₐ[R] A) :=
 end AlgHom
 
 namespace BialgHom
-variable [CommRing A] [CommRing C] [Bialgebra R A] [Bialgebra R C]
+variable [CommSemiring A] [CommSemiring C] [Bialgebra R A] [Bialgebra R C]
 
 instance : One (C →ₐc[R] A) where one := (unitBialgHom R A).comp <| counitBialgHom R C
 
