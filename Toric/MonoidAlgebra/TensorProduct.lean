@@ -7,6 +7,7 @@ import Mathlib.GroupTheory.GroupAction.Ring
 import Mathlib.LinearAlgebra.DirectSum.Finsupp
 import Mathlib.RingTheory.IsTensorProduct
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 
 /-!
 In this file we show that monoid algebras are stable under pushout.
@@ -190,7 +191,7 @@ lemma algebraTensorAlgEquiv_tmul (a : A) (p : MonoidAlgebra B σ) :
 @[simp]
 lemma algebraTensorAlgEquiv_symm_single (m : σ) (a : A) (b : B) :
     (algebraTensorAlgEquiv R A B).symm (single m (a ⊗ₜ b)) = a ⊗ₜ single m b := by
-  simp [algebraTensorAlgEquiv, liftNCAlgHom, liftNCRingHom] -- TODO: BAD
+  simp [algebraTensorAlgEquiv]
 
 section Pushout
 

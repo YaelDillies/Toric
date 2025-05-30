@@ -1,6 +1,7 @@
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 
 suppress_compilation
 
@@ -72,11 +73,11 @@ noncomputable def mapRangeRingHom [Semiring R] [Semiring S] (f : R →+* S) :
 @[simp]
 lemma mapRangeRingHom_apply [Semiring R] [Semiring S] (f : R →+* S) (x : MonoidAlgebra R M)
     (m : M) : mapRangeRingHom f x m = f (x m) := by
-  induction x using Finsupp.induction_linear
+  induction x using MonoidAlgebra.induction_linear
   · simp
-  · simp_all [MonoidAlgebra] -- TODO: BAD
+  · simp_all
   classical
-  simp [mapRangeRingHom, liftNCRingHom, single_apply, apply_ite (f := f)] --TODO: BAD
+  simp [mapRangeRingHom, single_apply, apply_ite (f := f)]
 
 @[simp]
 lemma mapRangeRingHom_single [Semiring R] [Semiring S] (f : R →+* S) (a : M) (b : R) :
