@@ -1,20 +1,9 @@
-import Mathlib.RingTheory.Bialgebra.Hom
-import Mathlib.RingTheory.Coalgebra.TensorProduct
+import Mathlib.RingTheory.Bialgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
 
 suppress_compilation
 
 open Algebra Coalgebra TensorProduct
-
-namespace BialgHom
-variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Semiring B] [Bialgebra R B]
-
-attribute [simp] coe_toCoalgHom
-
-/-- TODO: Replace generic coercion. -/
-abbrev toAlgHom (f : A →ₐc[R] B) : A →ₐ[R] B := f
-
-end BialgHom
 
 namespace Bialgebra
 variable {R A : Type*} [CommSemiring R]
