@@ -32,7 +32,7 @@ variable {R} [IsDomain R]
 /-- The diagonalizable group scheme functor over a domain is fully faithful. -/
 noncomputable
 def specCommGrpAlg.fullyFaithful : (specCommGrpAlg (.of R)).FullyFaithful :=
-  commGrpAlg.fullyFaithful.op.comp hopfSpec.fullyFaithful
+  commGrpAlg.fullyFaithful.op.comp fullyFaithfulHopfSpec
 
 instance specCommGrpAlg.instFull : (specCommGrpAlg <| .of R).Full := fullyFaithful.full
 instance specCommGrpAlg.instFaithful : (specCommGrpAlg <| .of R).Faithful := fullyFaithful.faithful
