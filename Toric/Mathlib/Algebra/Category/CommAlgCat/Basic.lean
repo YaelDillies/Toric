@@ -112,7 +112,7 @@ lemma forget_obj (A : CommAlgCat.{v} R) : (forget (CommAlgCat.{v} R)).obj A = A 
 
 lemma forget_map (f : A ⟶ B) : (forget (CommAlgCat.{v} R)).map f = f := rfl
 
-instance : Ring ((forget (CommAlgCat R)).obj A) := inferInstanceAs <| Ring A
+instance : CommRing ((forget (CommAlgCat R)).obj A) := inferInstanceAs <| CommRing A
 
 instance : Algebra R ((forget (CommAlgCat R)).obj A) := inferInstanceAs <| Algebra R A
 
@@ -136,14 +136,15 @@ instance hasForgetToAlgCat : HasForget₂ (CommAlgCat.{v} R) (AlgCat.{v} R) wher
 @[simp] lemma forget₂_algCat_map (f : A ⟶ B) :
     (forget₂ (CommAlgCat.{v} R) (AlgCat.{v} R)).map f = AlgCat.ofHom f.hom := rfl
 
-/-- Build an isomorphism in the category `CommAlgCat R` from an `AlgEquiv` between `Algebra`s. -/
+/-- Build an isomorphism in the category `CommAlgCat R` from an `AlgEquiv` between commutative
+`Algebra`s. -/
 @[simps]
 def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : Algebra R X} {_ : Algebra R Y}
     (e : X ≃ₐ[R] Y) : of R X ≅ of R Y where
   hom := ofHom (e : X →ₐ[R] Y)
   inv := ofHom (e.symm : Y →ₐ[R] X)
 
-/-- Build a `AlgEquiv` from an isomorphism in the category `CommAlgCat R`. -/
+/-- Build an `AlgEquiv` from an isomorphism in the category `CommAlgCat R`. -/
 @[simps]
 def ofIso (i : A ≅ B) : A ≃ₐ[R] B where
   __ := i.hom.hom
@@ -152,8 +153,7 @@ def ofIso (i : A ≅ B) : A ≃ₐ[R] B where
   left_inv x := by simp
   right_inv x := by simp
 
-/-- Algebra equivalences between `Algebra`s are the same as (isomorphic to) isomorphisms in
-`CommAlgCat`. -/
+/-- Algebra equivalences between `Algebra`s are the same as isomorphisms in `CommAlgCat`. -/
 @[simps]
 def isoEquivAlgEquiv : (of R X ≅ of R Y) ≃ (X ≃ₐ[R] Y) where
   toFun := ofIso
