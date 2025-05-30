@@ -48,8 +48,8 @@ noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : R[M] ≃ₐc[R] R 
   left_inv r := by
     show (Algebra.ofId _ _).comp (Bialgebra.counitAlgHom R _) r = AlgHom.id R _ r
     congr 1
-    ext g : 2
-    simp [Subsingleton.elim g 1, AddMonoidAlgebra.one_def]
+    ext g : 3
+    simp [Subsingleton.elim g 0, AddMonoidAlgebra.one_def]
   right_inv := (Bialgebra.counitAlgHom R R[M]).commutes
 
 end AddMonoidAlgebra
