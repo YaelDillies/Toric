@@ -1,14 +1,19 @@
+/-
+Copyright (c) 2025 Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Andrew Yang
+-/
 import Mathlib.LinearAlgebra.TensorProduct.Tower
 import Mathlib.RingTheory.Coalgebra.Basic
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 
+/-!
+# Tactic to reassociate comultiplication in a coalgebra
+-/
 
 open TensorProduct
 
 namespace Coalgebra
-
-section
-
 variable {R A M N P M' N' P' Q Q' : Type*} [CommSemiring R] [AddCommMonoid A] [Module R A]
     [Coalgebra R A]
     [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [AddCommMonoid P] [Module R P]
@@ -41,8 +46,7 @@ lemma map_comul_right_comp_comul (f : A →ₗ[R] M) :
   congr; ext; rfl
 
 @[coassoc_simps]
-lemma map_comul_right_comp_comul_assoc
-    (f : A →ₗ[R] M) (h : M ⊗[R] A ⊗[R] A →ₗ[R] P) :
+lemma map_comul_right_comp_comul_assoc (f : A →ₗ[R] M) (h : M ⊗[R] A ⊗[R] A →ₗ[R] P) :
     (h ∘ₗ map f δ) ∘ₗ δ = h ∘ₗ α M A A ∘ₗ (f ▷ A) ▷ A ∘ₗ δ ▷ A ∘ₗ δ := by
   simp [LinearMap.comp_assoc, map_comul_right_comp_comul]
 
@@ -113,7 +117,7 @@ attribute [coassoc_simps] LinearMap.comp_id LinearMap.id_comp
   map_id_id TensorProduct.AlgebraTensorModule.map_eq
 
 open Lean.Parser.Tactic in
-/-- `hopf_tensor_induction x with x₁ x₂` attempts to replace `x` by
+/-- `coassoc_simps` reassociates attempts to replace `x` by
 `x₁ ⊗ₜ x₂` via linearity. This is an implementation detail that is used to set up tensor products
 of coalgebras, bialgebras, and hopf algebras, and shouldn't be relied on downstream. -/
 scoped macro "coassoc_simps" : tactic =>
@@ -123,4 +127,4 @@ scoped macro "coassoc_simps" : tactic =>
       repeat congr 1; guard_goal_nums 1
       ext; rfl))
 
-end
+end Coalgebra
