@@ -40,6 +40,7 @@ import Toric.Mathlib.RingTheory.Coalgebra.Basic
 import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
 import Toric.Mathlib.RingTheory.Coalgebra.Convolution
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
+import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution

@@ -2,10 +2,9 @@ import Mathlib.RingTheory.Coalgebra.Basic
 
 open TensorProduct
 
-variable {R A : Type*} [CommSemiring R]
+variable {ι R A : Type*} [CommSemiring R] [AddCommMonoid A] [Module R A] [Coalgebra R A]
 
 namespace Coalgebra
-variable [AddCommMonoid A] [Module R A] [Coalgebra R A]
 
 variable (R A) in
 /-- A coalgebra `A` is cocommutative if its comultiplication `δ : A → A ⊗ A` commutes with the
@@ -24,3 +23,16 @@ variable (R) in
   congr($(comm_comp_comul R A) a)
 
 end Coalgebra
+
+open Coalgebra
+
+namespace Finsupp
+
+instance instIsCocomm [IsCocomm R A] : IsCocomm R (ι →₀ A) where
+  comm_comp_comul := by
+    ext i : 1
+    simp [comul_comp_lsingle, LinearMap.comp_assoc]
+    simp [← LinearMap.comp_assoc, ← TensorProduct.map_comp_comm_eq]
+    simp [LinearMap.comp_assoc]
+
+end Finsupp
