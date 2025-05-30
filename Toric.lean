@@ -30,9 +30,7 @@ import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Tower
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike

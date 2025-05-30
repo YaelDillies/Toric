@@ -63,9 +63,8 @@ protected def _root_.Coalgebra.Repr.tmul (ℛa : Coalgebra.Repr R a) (ℛb : Coa
   left i := ℛa.left i.1 ⊗ₜ ℛb.left i.2
   right i := ℛa.right i.1 ⊗ₜ ℛb.right i.2
   eq := by
-    simp only [comul_def, AlgebraTensorModule.tensorTensorTensorComm_eq_tensorTensorTensorComm,
-      AlgebraTensorModule.map_eq_map, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      TensorProduct.map_tmul]
+    simp only [comul_def, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
+      AlgebraTensorModule.map_tmul]
     rw [← ℛa.eq, ← ℛb.eq]
     simp_rw [sum_tmul, tmul_sum, ← Finset.sum_product', map_sum]
     simp

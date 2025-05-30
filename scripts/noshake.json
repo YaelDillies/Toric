@@ -4,6 +4,13 @@
   ["Toric.Mathlib.RingTheory.Coalgebra.Basic"],
   "Toric.Mathlib.RingTheory.HopfAlgebra.Convolution":
   ["Toric.Mathlib.Algebra.Algebra.Defs"],
+  "Toric.Mathlib.RingTheory.Coalgebra.SimpAttr":
+  ["Init",
+   "Lean.LabelAttribute",
+   "Lean.Meta.Tactic.Simp.RegisterCommand",
+   "Mathlib.Init"],
   "Toric.Mathlib.RingTheory.Coalgebra.Hom":
   ["Toric.Mathlib.LinearAlgebra.TensorProduct.Basic"],
+  "Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps":
+  ["Toric.Mathlib.RingTheory.Coalgebra.SimpAttr"],
   "Toric.Mathlib.Algebra.Group.Equiv.Basic": ["Mathlib.Tactic.Spread"]}}
