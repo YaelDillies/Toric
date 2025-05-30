@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.Bialgebra.TensorProduct
+import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
 
 suppress_compilation
@@ -6,7 +7,7 @@ suppress_compilation
 open Algebra Coalgebra TensorProduct
 
 namespace Bialgebra
-variable {R A : Type*} [CommSemiring R]
+variable {R A B : Type*} [CommSemiring R]
 
 section Semiring
 variable [Semiring A] [Bialgebra R A] {a b : A}
@@ -28,7 +29,17 @@ def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
 end Semiring
 
 section CommSemiring
-variable [CommSemiring A] [Bialgebra R A] {a b : A}
+variable [CommSemiring A] [CommSemiring B] [Bialgebra R A] [Bialgebra R B] {a b : A}
+
+variable (R A B) in
+/-- The tensor product of `R`-bialgebras is commutative, up to bialgebra isomorphism. -/
+def comm : A ⊗[R] B ≃ₐc[R] B ⊗[R] A :=
+  .ofAlgEquiv (Algebra.TensorProduct.comm R A B) (by ext; simp [mul_comm]) <| by
+    ext a b
+    dsimp
+    rw [← (ℛ R a).eq, ← (ℛ R b).eq]
+    simp [tmul_sum, sum_tmul]
+    rw [Finset.sum_comm]
 
 variable (R A) in
 /-- Multiplication on a commutative bialgebra as a bialgebra hom. -/
@@ -42,6 +53,11 @@ variable (R A) in
 def comulBialgHom [IsCocomm R A] : A →ₐc[R] A ⊗[R] A where
   __ := comulAlgHom R A
   __ := comulCoalgHom R A
+
+variable (R A) in
+lemma comm_comp_comulBialgHom [IsCocomm R A] :
+    (comm R A A).toBialgHom.comp (comulBialgHom R A) = comulBialgHom R A := by
+  ext; exact comm_comul _ _
 
 /-- Representations of `a` and `b` yield a representation of `a ⊗ b`. -/
 @[simps]
