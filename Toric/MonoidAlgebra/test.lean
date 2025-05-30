@@ -41,6 +41,7 @@ instance Mon_ClassOverMkPullbackSnd
     Mon_Class (Over.mk (pullback.snd f g)) :=
   ((Over.pullback g).mapMon.obj (Mon_.mk' (Over.mk f))).instMon_ClassX
 
+/-- The spectrum of a monoid algebra over `ℤ`. -/
 def Mon (S : Scheme.{max u v}) (M : Type v) [CommMonoid M] : Scheme :=
     pullback ((Spec (.of (MonoidAlgebra (ULift.{max u v} ℤ) M))) ↘ _)
       (specULiftZIsTerminal.from S)
@@ -229,6 +230,7 @@ lemma specCommMonAlgPullbackObjXIso_mul :
       AlgHom.toUnder, h₄, h₅, TensorProduct.algebraMap_def, pullback.condition]
 
 -- should we make something like `BialgHom.toRingHom`?
+/-- `specCommMonAlg` commutes with base change. -/
 def specCommMonAlgPullback :
     specCommMonAlg R ⋙ (Over.pullback (Spec.map f)).mapMon ≅ specCommMonAlg S :=
   NatIso.ofComponents (fun M ↦ Mon_.mkIso (specCommMonAlgPullbackObjXIso f M.unop)
@@ -268,7 +270,8 @@ noncomputable def _root_.CategoryTheory.Functor.FullyFaithful.cancelRight {C : T
   NatIso.ofComponents (fun X => HH.preimageIso (comp_iso.app X)) fun f =>
     HH.map_injective (by simpa using comp_iso.hom.naturality f)
 
--- should we make something like `BialgHom.toRingHom`?
+
+/-- `specCommGrpAlg` commutes with base change. -/
 def specCommGrpAlgPullback :
     specCommGrpAlg R ⋙ (Over.pullback (Spec.map f)).mapGrp ≅ specCommGrpAlg S :=
   (Grp_.fullyFaithfulForget₂Mon_ _).cancelRight
