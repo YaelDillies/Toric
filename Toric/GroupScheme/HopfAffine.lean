@@ -68,24 +68,48 @@ noncomputable abbrev algSpec : (CommAlgCat R)ᵒᵖ ⥤ Over (Spec R) :=
 
 -- FIXME: Neither `inferInstance` nor `by unfold algSpec; infer_instance` work in the following 3.
 -- TODO: Do a MWE once `CommAlgCat` is in mathlib
-instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
+instance preservesLimits_algSpec : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
-noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
+noncomputable instance braidedAlgSpec : (algSpec R).Braided := .ofChosenFiniteProducts _
+
+@[simp]
+lemma δ_algSpec_inv_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (OplaxMonoidal.δ (algSpec R) A B).left = (pullbackSpecIso R A.unop B.unop).inv := rfl
+
+-- arguably this should be defeq.
+lemma μ_algSpec_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (LaxMonoidal.μ (algSpec R) A B).left = (pullbackSpecIso R A.unop B.unop).hom := by
+  rw [← Iso.comp_inv_eq_id, ← δ_algSpec_inv_left, ← Over.comp_left, Monoidal.μ_δ, Over.id_left]
+
+-- arguably this should be defeq.
+@[simp]
+lemma η_algSpec_inv_left : (OplaxMonoidal.η (algSpec R)).left = 𝟙 (Spec R) := by
+  refine (Category.comp_id _).symm.trans ((OplaxMonoidal.η (algSpec R)).w.trans ?_)
+  simp
+  rfl
+
+-- arguably this should be defeq.
+@[simp]
+lemma ε_algSpec_left : (LaxMonoidal.ε (algSpec R)).left = 𝟙 (Spec R) := by
+  rw [← Category.comp_id (CommaMorphism.left _)]
+  dsimp [CommRingCat.mkUnder]
+  rw [← η_algSpec_inv_left, ← Over.comp_left]
+  exact congr($(Monoidal.ε_η (F := algSpec R)).left)
 
 /-- `Spec` is full on `R`-algebras. -/
-instance algSpec.instFull : (algSpec R).Full :=
+instance full_algSpec : (algSpec R).Full :=
   inferInstanceAs <| Functor.Full <|
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 /-- `Spec` is faithful on `R`-algebras. -/
-instance algSpec.instFaithful : (algSpec R).Faithful :=
+instance faithful_algSpec : (algSpec R).Faithful :=
   inferInstanceAs <| Functor.Faithful <|
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 /-- `Spec` is fully faithful on `R`-algebras, with inverse `Gamma`. -/
-noncomputable def algSpec.fullyFaithful : (algSpec R).FullyFaithful :=
+noncomputable def fullyFaithfulAlgSpec : (algSpec R).FullyFaithful :=
   ((commAlgCatEquivUnder R).op.trans (Over.opEquivOpUnder R).symm).fullyFaithfulFunctor.comp <|
     Spec.fullyFaithful.over _
 
@@ -100,50 +124,52 @@ noncomputable abbrev hopfSpec : (CommHopfAlgCat R)ᵒᵖ ⥤ Grp_ (Over <| Spec 
   (commHopfAlgCatEquivCogrpCommAlgCat R).functor.leftOp ⋙ (algSpec R).mapGrp
 
 /-- `Spec` is full on `R`-Hopf algebras. -/
-instance hopfSpec.instFull : (hopfSpec R).Full := inferInstance
+instance full_hopfSpec : (hopfSpec R).Full := inferInstance
 
 /-- `Spec` is faithful on `R`-Hopf algebras. -/
-instance hopfSpec.instFaithful : (hopfSpec R).Faithful := inferInstance
+instance faithful_hopfSpec : (hopfSpec R).Faithful := inferInstance
 
 /-- `Spec` is fully faithful on `R`-Hopf algebras, with inverse `Gamma`. -/
-noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
+noncomputable def fullyFaithfulHopfSpec : (hopfSpec R).FullyFaithful :=
   (commHopfAlgCatEquivCogrpCommAlgCat R).fullyFaithfulFunctor.leftOp.comp
-    algSpec.fullyFaithful.mapGrp
+    fullyFaithfulAlgSpec.mapGrp
 
 namespace AlgebraicGeometry.Scheme
-variable {R A : CommRingCat.{u}}
+variable {R A : Type u} [CommRing R] [CommRing A]
 
 suppress_compilation
 
-instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
+instance SpecOverSpec [Algebra R A] : (Spec <| .of A).Over (Spec <| .of R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 
-instance asOver.instMon_Class [Bialgebra R A] : Mon_Class (asOver (Spec A) (Spec R)) :=
-  ((bialgSpec R).obj <| .op <| .of R A).instMon_ClassX
+lemma over_Spec_Spec [Algebra R A] :
+  Spec (.of A) ↘ Spec (.of R) = Spec.map (CommRingCat.ofHom (algebraMap R A)) := rfl
 
-lemma μIso_algSpec_inv_left [Algebra R A] :
-    (μIso (algSpec R) (op (.of R A)) (op (.of R A))).inv.left = (pullbackSpecIso R A A).inv := rfl
+instance Mon_ClassAsOverSpecSpec [Bialgebra R A] :
+    Mon_Class (asOver (Spec (.of A)) (Spec (.of R))) :=
+  ((bialgSpec (.of R)).obj <| .op <| .of R A).instMon_ClassX
 
--- arguably this should be defeq.
-lemma μ_algSpec_left [Algebra R A] :
-    (LaxMonoidal.μ (algSpec R) (op (.of R A)) (op (.of R A))).left =
-      (pullbackSpecIso R A A).hom := by
-  rw [← Iso.comp_inv_eq_id, ← μIso_algSpec_inv_left, ← Over.comp_left, Monoidal.μIso_inv,
-    Monoidal.μ_δ, Over.id_left]
+lemma one_left [Bialgebra R A] :
+    η[asOver (Spec (.of A)) (Spec (.of R))].left =
+      Spec.map (CommRingCat.ofHom (Bialgebra.counitAlgHom R A)) := by
+  show _ ≫ _ = _
+  rw [ε_algSpec_left]
+  rfl
 
 lemma mul_left [Bialgebra R A] :
-    μ[asOver (Spec A) (Spec R)].left =
-      (pullbackSpecIso R A A).hom ≫ Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R A)) := by
-  rw [← μ_algSpec_left]; rfl
+    μ[asOver (Spec (.of A)) (Spec (.of R))].left = (pullbackSpecIso R A A).hom ≫
+        Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R A)) := by
+  show _ ≫ _ = _
+  rw [μ_algSpec_left]
+  rfl
 
-instance asOver.instIsComm_Mon [Bialgebra R A] [IsCocomm R A] :
-    IsCommMon (asOver (Spec A) (Spec R)) where
+instance isCommMon_asOver_Spec_Spec [Bialgebra R A] [IsCocomm R A] :
+    IsCommMon (asOver (Spec (.of A)) (Spec (.of R))) where
   mul_comm' := by
     ext
-    have := LaxMonoidal.μ (algSpec R) (.op <| .of R A) (.op <| .of R A)
-    have := congr((pullbackSpecIso R A A).hom ≫ ((bialgSpec R).map <| .op <| CommBialgCat.ofHom <|
-      $(Bialgebra.comm_comp_comulBialgHom R A)).hom.left)
-    dsimp at this ⊢
+    have := congr((pullbackSpecIso R A A).hom ≫ ((bialgSpec (.of R)).map <| .op <|
+      CommBialgCat.ofHom <| $(Bialgebra.comm_comp_comulBialgHom R A)).hom.left)
+    dsimp [AlgHom.toUnder, AlgHom.comp_toRingHom] at this ⊢
     have h₁ : (Algebra.TensorProduct.includeRight : A →ₐ[R] A ⊗[R] A) =
       (RingHomClass.toRingHom (Bialgebra.comm R A A)).comp
         Algebra.TensorProduct.includeLeftRingHom := by ext; rfl
@@ -155,15 +181,20 @@ instance asOver.instIsComm_Mon [Bialgebra R A] [IsCocomm R A] :
       congr 1
       rw [← Iso.eq_comp_inv, Category.assoc, ← Iso.inv_comp_eq]
       ext
-      · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₁]; rfl
-      · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₂]; rfl
+      · simp [AlgHom.toUnder, over_Spec_Spec, h₁]; rfl
+      · simp [AlgHom.toUnder, over_Spec_Spec, h₂]; rfl
     · exact mul_left ..
 
-instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class (asOver (Spec A) (Spec R)) :=
-  ((hopfSpec R).obj <| .op <| .of R A).instGrp_ClassX
+instance asOver.instGrp_Class [HopfAlgebra R A] :
+    Grp_Class (asOver (Spec (.of A)) (Spec (.of R))) :=
+  ((hopfSpec (.of R)).obj <| .op <| .of R A).instGrp_ClassX
+
+lemma neg_left [HopfAlgebra R A] :
+    ι[asOver (Spec (.of A)) (Spec (.of R))].left =
+      Spec.map (CommRingCat.ofHom (HopfAlgebra.antipodeAlgHom R A)) := rfl
 
 instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
-   CommGrp_Class (asOver (Spec A) (Spec R)) where
+   CommGrp_Class (asOver (Spec (.of A)) (Spec (.of R))) where
 
 end AlgebraicGeometry.Scheme
 

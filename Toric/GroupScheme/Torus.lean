@@ -106,8 +106,9 @@ def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
     splitTorus (Spec R) σ ≅ Spec (.of <| MvLaurentPolynomial σ R) := sorry
 
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-def splitTorusIsoSpecOver (R : CommRingCat) (σ : Type*) :
-    asOver 𝔾ₘ[Spec R, σ] (Spec R) ≅ asOver (Spec <| .of <| MvLaurentPolynomial σ R) (Spec R) :=
+def splitTorusIsoSpecOver (R : Type _) [CommRing R] (σ : Type*) :
+    asOver 𝔾ₘ[Spec (.of R), σ] (Spec (.of R)) ≅
+      asOver (Spec <| .of <| MvLaurentPolynomial σ R) (Spec (.of R)) :=
   Over.isoMk (splitTorusIsoSpec _ _) sorry
 
 end AlgebraicGeometry.Scheme
