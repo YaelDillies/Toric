@@ -172,7 +172,7 @@ abbrev specCommMonAlgPullbackObjXIso :
       ((specCommMonAlg S).obj (.op M)).X :=
   letI := f.hom.toAlgebra
   let H := (CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec
-  Over.isoMk H.isoPullback.symm (by dsimp; simp; rfl)
+  Over.isoMk H.isoPullback.symm (by dsimp; simp?; rfl)
 
 lemma specCommMonAlgPullbackObjXIso_one :
     Mon_.one _ ≫ (specCommMonAlgPullbackObjXIso f M).hom = Mon_.one _ := by
@@ -245,6 +245,55 @@ def specCommMonAlgPullback :
     ext
     apply ((CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec).hom_ext
     · simp [RingHom.algebraMap_toAlgebra,AlgHom.toUnder, Iso.eq_inv_comp, h₁]
+    · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, Iso.eq_inv_comp, ← h₂]
+
+end
+
+section
+
+attribute [local instance] Functor.Monoidal.ofChosenFiniteProducts
+
+local notation3:max R:max "[" M:max "]" => MonoidAlgebra R M
+
+variable {R S : CommRingCat.{u}} (f : R ⟶ S) (M : CommGrp.{u})
+
+open MonoidalCategory MonoidAlgebra
+
+abbrev specCommGrpAlgPullbackObjXIso :
+    ((specCommGrpAlg R ⋙ (Over.pullback (Spec.map f)).mapGrp).obj (.op M)).X ≅
+      ((specCommGrpAlg S).obj (.op M)).X :=
+  letI := f.hom.toAlgebra
+  let H := (CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec
+  Over.isoMk H.isoPullback.symm (by dsimp; simp; rfl)
+
+lemma specCommGrpAlgPullbackObjXIso_one :
+    Mon_.one _ ≫ (specCommGrpAlgPullbackObjXIso f M).hom = Mon_.one _ :=
+  specCommMonAlgPullbackObjXIso_one f <| (forget₂ CommGrp CommMonCat).obj M
+
+set_option maxHeartbeats 0 in
+lemma specCommGrpAlgPullbackObjXIso_mul :
+    Mon_.mul _ ≫ (specCommGrpAlgPullbackObjXIso f M).hom =
+    ((specCommGrpAlgPullbackObjXIso f M).hom ⊗ (specCommGrpAlgPullbackObjXIso f M).hom) ≫
+      Mon_.mul _ := by
+  exact specCommMonAlgPullbackObjXIso_mul f <| (forget₂ CommGrp CommMonCat).obj M
+
+-- should we make something like `BialgHom.toRingHom`?
+def specCommGrpAlgPullback :
+    specCommGrpAlg R ⋙ (Over.pullback (Spec.map f)).mapGrp ≅ specCommGrpAlg S :=
+  NatIso.ofComponents (fun M ↦ Grp_.mkIso (specCommGrpAlgPullbackObjXIso f M.unop)
+   (specCommGrpAlgPullbackObjXIso_one f M.unop) (specCommGrpAlgPullbackObjXIso_mul f M.unop))
+  fun {M N} φ ↦ by
+    letI := f.hom.toAlgebra
+    letI H := (CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec
+    have h₁ : (mapRangeRingHom f.hom).comp (mapDomainBialgHom R φ.unop.hom) =
+        (RingHomClass.toRingHom (mapDomainBialgHom S φ.unop.hom)).comp
+          (mapRangeRingHom f.hom) := mapRangeRingHom_comp_mapDomainBialgHom _ _
+    have h₂ := (AlgHomClass.toAlgHom (mapDomainBialgHom S φ.unop.hom)).comp_algebraMap
+    apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
+    simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂
+    ext
+    apply ((CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec).hom_ext
+    · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, Iso.eq_inv_comp, h₁]
     · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, Iso.eq_inv_comp, ← h₂]
 
 end
