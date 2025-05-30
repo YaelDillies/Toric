@@ -110,13 +110,13 @@ Now let's do the top edge.
   \lean{hopfSpec}
   \leanok
 
-  Spec is a fully faithful contravariant functor from the category of $R$-algebras to the category of group schemes over $\Spec_R$.
+  Spec is a contravariant functor from the category of $R$-Hopf algebras to the category of group schemes over $\Spec_R$.
 \end{definition}
 
 
 \begin{proposition}[Spec as a functor on Hopf algebras is fully faithful]
   \label{0-full-faithful-spec-hopf}
-  \uses{0-spec-alg}
+  \uses{0-spec-hopf}
   \lean{hopfSpec.instFull, hopfSpec.instFaithful, hopfSpec.fullyFaithful}
   \leanok
 
@@ -127,6 +127,22 @@ Now let's do the top edge.
   \leanok
 
   $\Spec : \Ring_R \to \Sch_{\Spec R}$ is a fully faithful contravariant functor preserving all limits according to Proposition \ref{0-spec-alg}, therefore $\Spec : \Hopf_R \to \GrpSch_{\Spec R}$ too is fully faithful according to \ref{0-full-faithful-grp}.
+\end{proof}
+
+
+\begin{proposition}[Spec sends cocommutative Hopf algebras to commutative group schemes]
+  \label{0-spec-cocomm-hopf}
+  \uses{0-spec-hopf}
+  \lean{AlgebraicGeometry.Scheme.asOver.instIsComm_Mon, AlgebraicGeometry.Scheme.asOver.instCommGrp_Class}
+  \leanok
+
+  If $A$ is a cocommutative Hopf algebra over $R$, then $\Spec A$ is a commutative group scheme.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Diagrams are the same up to identifying $\Spec (A \otimes A)$ with $\Spec A \otimes \Spec A$.
 \end{proof}
 
 
