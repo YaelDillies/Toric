@@ -14,6 +14,19 @@
 \begin{proof}
   \uses{}
   \leanok
+  We will prove the equivalent statement:
 
-  TODO(Andrew)
+  Let $P, Q$ be two free $R$ modules, $f : P \to M$ and $g : Q \to N$ be two $R$-linear injective maps.
+  Then $f \ox g : P \ox_R Q \to M \ox_R N$ is injective.
+
+  Let $K$ be the field of fractions of $R$.
+
+  The map
+  \[ P \ox_R Q \to (K \ox_R P) \ox_R (K \ox_R Q) = (K \ox_R P) \ox_K (K \ox_R Q) \]
+  is injective because $R \to K$ is injective and all the modules involved are flat.
+  The map
+  \[ (K \ox_R P) \ox_K (K \ox_R Q) \to (K \ox_R M) \ox_K (K \ox_R N) \]
+  is injective because all the modules involved are $K$-flat (as $K$ is a field).
+
+  $P \ox_R Q \to M \ox_R N$ is now a factor of the composition of the two injections above, and is thus is injective.
 \end{proof}
