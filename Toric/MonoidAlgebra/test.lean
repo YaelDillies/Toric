@@ -172,7 +172,7 @@ abbrev specCommMonAlgPullbackObjXIso :
       ((specCommMonAlg S).obj (.op M)).X :=
   letI := f.hom.toAlgebra
   let H := (CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec
-  Over.isoMk H.isoPullback.symm (by dsimp; simp?; rfl)
+  Over.isoMk H.isoPullback.symm (by dsimp; simp; rfl)
 
 lemma specCommMonAlgPullbackObjXIso_one :
     Mon_.one _ ≫ (specCommMonAlgPullbackObjXIso f M).hom = Mon_.one _ := by
@@ -259,42 +259,20 @@ variable {R S : CommRingCat.{u}} (f : R ⟶ S) (M : CommGrp.{u})
 
 open MonoidalCategory MonoidAlgebra
 
-abbrev specCommGrpAlgPullbackObjXIso :
-    ((specCommGrpAlg R ⋙ (Over.pullback (Spec.map f)).mapGrp).obj (.op M)).X ≅
-      ((specCommGrpAlg S).obj (.op M)).X :=
-  letI := f.hom.toAlgebra
-  let H := (CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec
-  Over.isoMk H.isoPullback.symm (by dsimp; simp; rfl)
-
-lemma specCommGrpAlgPullbackObjXIso_one :
-    Mon_.one _ ≫ (specCommGrpAlgPullbackObjXIso f M).hom = Mon_.one _ :=
-  specCommMonAlgPullbackObjXIso_one f <| (forget₂ CommGrp CommMonCat).obj M
-
-set_option maxHeartbeats 0 in
-lemma specCommGrpAlgPullbackObjXIso_mul :
-    Mon_.mul _ ≫ (specCommGrpAlgPullbackObjXIso f M).hom =
-    ((specCommGrpAlgPullbackObjXIso f M).hom ⊗ (specCommGrpAlgPullbackObjXIso f M).hom) ≫
-      Mon_.mul _ := by
-  exact specCommMonAlgPullbackObjXIso_mul f <| (forget₂ CommGrp CommMonCat).obj M
+/-- Given a natural isomorphism between `F ⋙ H` and `G ⋙ H` for a fully faithful functor `H`, we
+can 'cancel' it to give a natural iso between `F` and `G`.
+-/
+noncomputable def _root_.CategoryTheory.Functor.FullyFaithful.cancelRight {C : Type*} [Category C]
+  {D : Type*} [Category D] {E : Type*} [Category E] {F G : C ⥤ D} {H : D ⥤ E}
+    (HH : H.FullyFaithful) (comp_iso : F ⋙ H ≅ G ⋙ H) : F ≅ G :=
+  NatIso.ofComponents (fun X => HH.preimageIso (comp_iso.app X)) fun f =>
+    HH.map_injective (by simpa using comp_iso.hom.naturality f)
 
 -- should we make something like `BialgHom.toRingHom`?
 def specCommGrpAlgPullback :
     specCommGrpAlg R ⋙ (Over.pullback (Spec.map f)).mapGrp ≅ specCommGrpAlg S :=
-  NatIso.ofComponents (fun M ↦ Grp_.mkIso (specCommGrpAlgPullbackObjXIso f M.unop)
-   (specCommGrpAlgPullbackObjXIso_one f M.unop) (specCommGrpAlgPullbackObjXIso_mul f M.unop))
-  fun {M N} φ ↦ by
-    letI := f.hom.toAlgebra
-    letI H := (CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec
-    have h₁ : (mapRangeRingHom f.hom).comp (mapDomainBialgHom R φ.unop.hom) =
-        (RingHomClass.toRingHom (mapDomainBialgHom S φ.unop.hom)).comp
-          (mapRangeRingHom f.hom) := mapRangeRingHom_comp_mapDomainBialgHom _ _
-    have h₂ := (AlgHomClass.toAlgHom (mapDomainBialgHom S φ.unop.hom)).comp_algebraMap
-    apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
-    simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂
-    ext
-    apply ((CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec).hom_ext
-    · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, Iso.eq_inv_comp, h₁]
-    · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, Iso.eq_inv_comp, ← h₂]
+  (Grp_.fullyFaithfulForget₂Mon_ _).cancelRight
+    (isoWhiskerLeft (forget₂ CommGrp CommMonCat).op (specCommMonAlgPullback f))
 
 end
 
