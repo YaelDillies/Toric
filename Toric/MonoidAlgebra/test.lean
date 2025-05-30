@@ -192,7 +192,7 @@ lemma specCommMonAlgPullbackObjIso_mul_aux :
       pullback.fst _ _ ≫ (pullbackSpecIso R R[M] R[M]).hom =
     ((specCommMonAlgPullbackObjXIso f M).hom ⊗ (specCommMonAlgPullbackObjXIso f M).hom).left ≫
       (pullbackSpecIso S _ _).hom ≫
-        Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.actualMap f.hom _ _
+        Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.mapRingHom f.hom _ _
           (mapRangeRingHom_comp_algebraMap f.hom (M := M))
           (mapRangeRingHom_comp_algebraMap f.hom (M := M)))) := by
   letI := f.hom.toAlgebra
@@ -200,8 +200,8 @@ lemma specCommMonAlgPullbackObjIso_mul_aux :
   letI e : ((specCommMonAlg R ⋙ (Over.pullback (Spec.map f)).mapMon).obj (.op M)).X ≅
     ((specCommMonAlg S).obj (.op M)).X := Over.isoMk H.isoPullback.symm (by dsimp; simp; rfl)
   letI hc := mapRangeRingHom_comp_algebraMap f.hom (M := M)
-  have h₂ := Algebra.TensorProduct.actualMap_comp_includeLeftRingHom _ _ _ hc hc
-  have h₃ := Algebra.TensorProduct.actualMap_comp_includeRight _ _ _ hc hc
+  have h₂ := Algebra.TensorProduct.mapRingHom_comp_includeLeftRingHom _ _ _ hc hc
+  have h₃ := Algebra.TensorProduct.mapRingHom_comp_includeRight _ _ _ hc hc
   apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₂ h₃
   simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₂ h₃
   rw [← Category.assoc, ← Iso.eq_comp_inv]

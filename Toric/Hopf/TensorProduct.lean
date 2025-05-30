@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Mrugała
 -/
 
-import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
-import Toric.MonoidAlgebra.mapRange
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
 
@@ -24,8 +23,10 @@ variable {R S T R' S' T' : Type*}
   (HS : fS.comp (algebraMap _ _) = (algebraMap _ _).comp fR)
   (HT : fT.comp (algebraMap _ _) = (algebraMap _ _).comp fR)
 
+
+/-- Heterobasic version of `Algebra.TensorProduct.map` as a ring homomorphism. -/
 noncomputable
-def Algebra.TensorProduct.actualMap : S ⊗[R] T →+* S' ⊗[R'] T' :=
+def Algebra.TensorProduct.mapRingHom : S ⊗[R] T →+* S' ⊗[R'] T' :=
   letI := fR.toAlgebra
   letI := ((algebraMap R' S').comp fR).toAlgebra
   letI := ((algebraMap R' T').comp fR).toAlgebra
@@ -40,20 +41,20 @@ def Algebra.TensorProduct.actualMap : S ⊗[R] T →+* S' ⊗[R'] T' :=
     (fun _ _ ↦ .all _ _)).toRingHom
 
 @[simp]
-lemma Algebra.TensorProduct.actualMap_tmul (s : S) (t : T) :
-    actualMap fR fS fT HS HT (s ⊗ₜ t) = fS s ⊗ₜ fT t := by
+lemma Algebra.TensorProduct.mapRingHom_tmul (s : S) (t : T) :
+    mapRingHom fR fS fT HS HT (s ⊗ₜ t) = fS s ⊗ₜ fT t := by
   trans (fS s * 1 : S') ⊗ₜ[R'] (1 * fT t : T')
-  · dsimp [actualMap, lift_tmul]; rfl
+  · dsimp [mapRingHom, lift_tmul]; rfl
   · simp
 
 @[simp]
-lemma Algebra.TensorProduct.actualMap_comp_includeLeftRingHom :
-    (actualMap fR fS fT HS HT).comp (includeLeftRingHom) = includeLeftRingHom.comp fS := by
+lemma Algebra.TensorProduct.mapRingHom_comp_includeLeftRingHom :
+    (mapRingHom fR fS fT HS HT).comp (includeLeftRingHom) = includeLeftRingHom.comp fS := by
   ext; simp
 
 @[simp]
-lemma Algebra.TensorProduct.actualMap_comp_includeRight :
-    (actualMap fR fS fT HS HT).comp (RingHomClass.toRingHom includeRight) =
+lemma Algebra.TensorProduct.mapRingHom_comp_includeRight :
+    (mapRingHom fR fS fT HS HT).comp (RingHomClass.toRingHom includeRight) =
       (RingHomClass.toRingHom includeRight).comp fT := by
   ext; simp
 
@@ -66,7 +67,7 @@ variable {R S M : Type*} [CommSemiring R] [CommSemiring S] (f : R →+* S) [Comm
 lemma comulAlgHom_comp_mapRangeRingHom :
     (Bialgebra.comulAlgHom S (MonoidAlgebra S M)).toRingHom.comp
       (mapRangeRingHom f) =
-    .comp (Algebra.TensorProduct.actualMap f (mapRangeRingHom f) (mapRangeRingHom f)
+    .comp (Algebra.TensorProduct.mapRingHom f (mapRangeRingHom f) (mapRangeRingHom f)
       (by classical ext; simp [single_apply, apply_ite f])
       (by classical ext; simp [single_apply, apply_ite f]))
       (Bialgebra.comulAlgHom R (MonoidAlgebra R M)).toRingHom := by

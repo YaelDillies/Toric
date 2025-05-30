@@ -47,7 +47,6 @@ import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.Hom
 import Toric.MonoidAlgebra.TensorProduct
-import Toric.MonoidAlgebra.mapRange
 import Toric.MonoidAlgebra.test
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety

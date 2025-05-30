@@ -6,7 +6,7 @@ Authors: Michał Mrugała
 import Mathlib.GroupTheory.GroupAction.Ring
 import Mathlib.LinearAlgebra.DirectSum.Finsupp
 import Mathlib.RingTheory.IsTensorProduct
-import Toric.MonoidAlgebra.mapRange
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
 In this file we show that monoid algebras are stable under pushout.
@@ -33,8 +33,8 @@ section Module
 variable [DecidableEq σ]
 variable [Semiring N] [Algebra R N]
 
-/-- The tensor product of a polynomial ring by a module is
-  linearly equivalent to a Finsupp of a tensor product -/
+/-- The tensor product of a monoid algebra by a module is
+  linearly equivalent to a Finsupp of a tensor product. -/
 noncomputable def rTensor :
     MonoidAlgebra S σ ⊗[R] N ≃ₗ[S] MonoidAlgebra (S ⊗[R] N) σ :=
   TensorProduct.finsuppLeft' _ _ _ _ _
@@ -62,8 +62,8 @@ lemma rTensor_symm_apply_single (d : σ) (s : S) (n : N) :
       (single d s) ⊗ₜ[R] n :=
   TensorProduct.finsuppLeft_symm_apply_single (R := R) d s n
 
-/-- The tensor product of the polynomial algebra by a module
-  is linearly equivalent to a Finsupp of that module -/
+/-- The tensor product of the monoid algebra by a module
+  is linearly equivalent to a Finsupp of that module. -/
 noncomputable def scalarRTensor :
     MonoidAlgebra R σ ⊗[R] N ≃ₗ[R] σ →₀ N :=
   TensorProduct.finsuppScalarLeft _ _ _
@@ -90,8 +90,8 @@ section Algebra
 
 variable [CommSemiring N] [Algebra R N] [CommMonoid σ]
 
-/-- The algebra morphism from a tensor product of a polynomial algebra
-  by an algebra to a polynomial algebra -/
+/-- The algebra morphism from a tensor product of a monoid algebra
+  by an algebra to a monoid algebra. -/
 noncomputable def rTensorAlgHom :
     (MonoidAlgebra S σ) ⊗[R] N →ₐ[S] MonoidAlgebra (S ⊗[R] N) σ :=
   Algebra.TensorProduct.lift
@@ -132,8 +132,8 @@ lemma rTensorAlgHom_apply_eq (p : MonoidAlgebra S σ ⊗[R] N) :
   rw [← AlgHom.toLinearMap_apply, rTensorAlgHom_toLinearMap]
   rfl
 
-/-- The tensor product of a polynomial algebra by an algebra
-  is algebraically equivalent to a polynomial algebra -/
+/-- The tensor product of a monoid algebra by an algebra
+  is algebraically equivalent to a monoid algebra. -/
 noncomputable def rTensorAlgEquiv :
     (MonoidAlgebra S σ) ⊗[R] N ≃ₐ[S] MonoidAlgebra (S ⊗[R] N) σ := by
   apply AlgEquiv.ofLinearEquiv rTensor
@@ -145,9 +145,9 @@ noncomputable def rTensorAlgEquiv :
 lemma rTensorAlgEquiv_apply (x : (MonoidAlgebra S σ) ⊗[R] N) :
     rTensorAlgEquiv x = rTensorAlgHom x := (rTensorAlgHom_apply_eq x).symm
 
-/-- The tensor product of the polynomial algebra by an algebra
-  is algebraically equivalent to a polynomial algebra with
-  coefficients in that algebra -/
+/-- The tensor product of the monoid algebra by an algebra `N`
+  is algebraically equivalent to a monoid algebra with
+  coefficients in `N`. -/
 noncomputable def scalarRTensorAlgEquiv :
     MonoidAlgebra R σ ⊗[R] N ≃ₐ[R] MonoidAlgebra N σ :=
   rTensorAlgEquiv.trans (mapRangeAlgEquiv (Algebra.TensorProduct.lid R N))
@@ -158,8 +158,8 @@ variable (R)
 variable {A B : Type*} [CommSemiring A] [Algebra R A] [CommSemiring B] [Algebra R B]
 
 variable (A B) in
-/-- Tensoring `MvPolynomial σ R` on the left by an `R`-algebra `A` is algebraically
-equivalent to `M̀vPolynomial σ A`. -/
+/-- Tensoring `MonoidAlgebra R σ` on the left by an `R`-algebra `A` is algebraically
+equivalent to `MonoidAlgebra A σ`. -/
 noncomputable def algebraTensorAlgEquiv :
     A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlgebra (A ⊗[R] B) σ :=
   AlgEquiv.ofAlgHom
