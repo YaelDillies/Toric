@@ -188,3 +188,105 @@ Finally, let's do the right edge.
 
   Also see Theorem 12.9(a) in \cite{Milne_2017}. See SGA III Exposé VIII for a proof that works for $R$ an arbitrary commutative ring.
 \end{proof}
+
+
+\subsection{The Torus}
+
+
+\begin{definition}[The split torus]
+  \label{0-torus}
+  \lean{AlgebraicGeometry.Scheme.splitTorus, AlgebraicGeometry.Scheme.splitTorus.instCanonicallyOver}
+  \leanok
+
+  The split torus $\Gm^n$ over a scheme $S$ is the pullback of
+  $\Spec \Z[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}]$ along the unique map $S \to \Spec \Z$.
+\end{definition}
+
+
+\begin{lemma}[The split torus over $\Spec R$]
+  \label{0-torus-spec}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.Scheme.splitTorusIsoSpec, AlgebraicGeometry.Scheme.splitTorusIsoSpecOver}
+  \leanok
+
+  The split torus over $\Spec R$ is isomorphic to $\Spec R[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}]$.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Ask any toddler on the street.
+\end{proof}
+
+
+\begin{definition}[Characters of a group scheme]
+  \label{0-char}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.Scheme.char}
+  \leanok
+
+  For a group scheme $G$ over $S$, the {\bf character lattice} of $G$ is
+  \[
+    X(G) := \Hom_{\mathsf{GrpSch}_S}(G, \Gm).
+  \]
+  An element $X(G)$ is (unsurprisingly) called a {\bf character}.
+\end{definition}
+
+
+\begin{proposition}[Character lattice of the torus]
+  \label{0-char-torus}
+  \uses{0-char}
+  % \lean{}
+  % \leanok
+
+  Characters of the torus over a field $k$ are isomorphic to $\Z^n$. $X(\Gm^n) = \Z^n$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-spec-grp-alg, 0-torus-spec}
+  % \leanok
+
+  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-spec-grp-alg} in turn, we have
+  \[
+    X(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm) = \Hom(k[\Z], k[\Z^n]) = \Hom(\Z, \Z^n) = \Z^n.
+  \]
+\end{proof}
+
+
+\begin{definition}
+  \label{0-cochar}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.Scheme.cochar}
+  \leanok
+
+  For a group scheme $G$, the {\bf cocharacter lattice} of $G$ is $\Hom_{\mathsf{GrpSch}_S}(\Gm, G)$.
+  An element is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
+\end{definition}
+
+
+\begin{proposition}[Cocharacter lattice of the torus]
+  \label{0-cochar-torus}
+  \uses{0-cochar}
+  % \lean{}
+  % \leanok
+
+  $N = \Hom(M, \Z) \cong \Z^n$. For $u \in N$ we write $\lambda^u$ for the corresponding cocharacter.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-spec-grp-alg, 0-torus-spec}
+  % \leanok
+
+  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-spec-grp-alg} in turn, we have
+  \[
+    \mathrm{cochar}(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm, \Gm^n) = \Hom(k[\Z^n], k[\Z]) = \Hom(\Z^n, \Z) \cong \Z^n.
+  \]
+\end{proof}
+
+
+\begin{definition}[The character-cocharacter pairing]
+  \label{0-char-cochar-pairing}
+  \uses{0-char, 0-cochar}
+  \lean{AlgebraicGeometry.Scheme.charPairing}
+  \leanok
+
+  Character lattice and one-parameter subgroup pairing.
+\end{definition}
