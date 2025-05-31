@@ -1,7 +1,6 @@
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.RingTheory.Coalgebra.TensorProduct
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
-import Toric.Mathlib.RingTheory.Coalgebra.Basic
 import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
 
 open TensorProduct

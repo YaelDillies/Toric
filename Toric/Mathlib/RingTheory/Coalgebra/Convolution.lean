@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.LinearAlgebra.TensorProduct.Tower
-import Toric.Mathlib.RingTheory.Coalgebra.Basic
 import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
 
 /-!

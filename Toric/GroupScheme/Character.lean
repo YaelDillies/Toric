@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
-import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 
 /-!
 # The lattices of characters and cocharacters

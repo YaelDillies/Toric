@@ -1,7 +1,5 @@
 {"ignore":
  {"Toric.Util.TrackSorry": ["Init", "Mathlib.Init"],
-  "Toric.Mathlib.RingTheory.HopfAlgebra.Hom":
-  ["Toric.Mathlib.RingTheory.Coalgebra.Basic"],
   "Toric.Mathlib.RingTheory.HopfAlgebra.Convolution":
   ["Toric.Mathlib.Algebra.Algebra.Defs"],
   "Toric.Mathlib.RingTheory.Coalgebra.SimpAttr":

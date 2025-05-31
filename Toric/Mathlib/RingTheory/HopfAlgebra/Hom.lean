@@ -1,5 +1,4 @@
 import Mathlib.RingTheory.Coalgebra.Hom
-import Toric.Mathlib.RingTheory.Coalgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
 open Coalgebra TensorProduct
