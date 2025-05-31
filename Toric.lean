@@ -6,7 +6,6 @@ import Toric.GroupScheme.Torus
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
 import Toric.Hopf.MonoidAlgebra
-import Toric.Hopf.TensorProduct
 import Toric.Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
 import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
@@ -49,8 +48,10 @@ import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.Hom
+import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.TensorProduct.Basic
 import Toric.MonoidAlgebra.TensorProduct
+import Toric.MonoidAlgebra.test
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
 import Toric.ToricIdeal
