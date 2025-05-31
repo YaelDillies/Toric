@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 
-open CategoryTheory Limits CartesianMonoidalCategory Mon_Class
+open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
 
 universe v₁ v₂ u₁ u₂
 
@@ -41,9 +42,33 @@ instance Hom.instCommMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
 
 end
 
-namespace Mon_.Hom
+namespace Mon_
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N N₁ N₂ : Mon_ C}
 
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : Mon_ C}
+section Braided
+variable [BraidedCategory C]
+
+instance : CartesianMonoidalCategory (Mon_ C) where
+  isTerminalTensorUnit :=
+    .ofUniqueHom (fun M ↦ .mk (toUnit _) (toUnit_unique ..))
+      fun M f ↦ by ext; exact toUnit_unique ..
+  fst M N := .mk (fst M.X N.X) (by simp [toUnit_unique _ (𝟙 _)])
+  snd M N := .mk (snd M.X N.X) (by simp [toUnit_unique _ (𝟙 _)])
+  tensorProductIsBinaryProduct M N :=
+    BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom)
+      (by simp; ext <;> simp [toUnit_unique _ (𝟙 _)])
+      (by simp; ext <;> simp [toUnit_unique _ (𝟙 _), ← tensor_comp_assoc]))
+      (by aesop_cat) (by aesop_cat) (by aesop_cat)
+  fst_def M N := by ext; simp [fst_def]; congr
+  snd_def M N := by ext; simp [snd_def]; congr
+
+@[simp] lemma lift_hom (f : M ⟶ N₁) (g : M ⟶ N₂) : (lift f g).hom = lift f.hom g.hom := rfl
+@[simp] lemma fst_hom (M N : Mon_ C) : (fst M N).hom = fst M.X N.X := rfl
+@[simp] lemma snd_hom (M N : Mon_ C) : (snd M N).hom = snd M.X N.X := rfl
+
+end Braided
+
+namespace Hom
 
 attribute [local instance] Hom.monoid
 
