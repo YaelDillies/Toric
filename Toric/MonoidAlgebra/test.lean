@@ -3,18 +3,11 @@ Copyright (c) 2025 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathlib.Algebra.Category.Grp.Adjunctions
-import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
-import Mathlib.Algebra.Category.Ring.Adjunctions
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.SpecGrpAlg
-import Toric.Mathlib.Algebra.Category.Grp.Basic
-import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
-import Toric.MvLaurentPolynomial
 
 noncomputable section
 

@@ -3,10 +3,7 @@ Copyright (c) 2025 Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michał Mrugała
 -/
-import Mathlib.GroupTheory.GroupAction.Ring
-import Mathlib.LinearAlgebra.DirectSum.Finsupp
 import Mathlib.RingTheory.IsTensorProduct
-import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 
 /-!

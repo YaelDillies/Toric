@@ -1,5 +1,5 @@
-import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
-import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
+import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 open TensorProduct MonoidAlgebra
