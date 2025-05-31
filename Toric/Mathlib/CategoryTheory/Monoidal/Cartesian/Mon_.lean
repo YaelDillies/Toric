@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Functor
+import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
-open scoped Hom
+open scoped Hom Obj
 
 scoped[Hom] attribute [instance] Hom.monoid
 
@@ -18,8 +21,31 @@ section
 attribute [simp] Mon_Class.one_comp Mon_Class.one_comp_assoc Mon_Class.comp_one
   Mon_Class.comp_one_assoc
 
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
-  [Mon_Class N]
+namespace CategoryTheory.Functor
+variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
+  [CartesianMonoidalCategory D] {M X : C} [Mon_Class M] (F : C ⥤ D) [F.Monoidal]
+
+lemma map_mul (f g : X ⟶ M) : F.map (f * g) = F.map f * F.map g := by
+  simp only [Hom.mul_def, map_comp, obj.μ_def, ← Category.assoc]
+  congr 1
+  rw [← IsIso.comp_inv_eq]
+  ext <;> simp
+
+variable [BraidedCategory C] [BraidedCategory D]
+
+instance [F.LaxBraided] : F.mapMon.LaxBraided where
+  braided M N := by ext; exact LaxBraided.braided ..
+
+open OplaxMonoidal
+
+instance [F.Braided] : F.mapMon.Braided where
+  η' := .mk («η» F)
+  δ' M N := .mk  (δ F M.X N.X) sorry sorry
+
+end CategoryTheory.Functor
+
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C}
+  [Mon_Class M] [Mon_Class N]
 
 lemma Mon_.one_eq_one (M : Mon_ C) : M.one = 1 := Mon_Class.one_eq_one (M := M.X)
 
@@ -46,10 +72,8 @@ scoped[Hom] attribute [instance] Hom.commMonoid
 end
 
 namespace Mon_
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N N₁ N₂ : Mon_ C}
-
-section Braided
-variable [BraidedCategory C]
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
+  {M N N₁ N₂ : Mon_ C}
 
 instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) where
   isTerminalTensorUnit :=
@@ -69,40 +93,31 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) wher
 @[simp] lemma fst_hom (M N : Mon_ C) : (fst M N).hom = fst M.X N.X := rfl
 @[simp] lemma snd_hom (M N : Mon_ C) : (snd M N).hom = snd M.X N.X := rfl
 
-end Braided
+/-- A commutative monoid object is a monoid object in the category of monoid objects. -/
+instance [IsCommMon M.X] : Mon_Class M where
+  one :=
+    .mk M.one (by simp [Mon_.one_eq_one]) (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom])
+  mul := .mk M.mul (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]) <| by
+    simp
+    sorry
+  one_mul' := by ext; simp
+  mul_one' := by ext; simp
+  mul_assoc' := by ext; simp
+
+@[simp] lemma hom_η (M : Mon_ C) [IsCommMon M.X] : η[M].hom = η[M.X] := rfl
+@[simp] lemma hom_μ (M : Mon_ C) [IsCommMon M.X] : μ[M].hom = μ[M.X] := rfl
+
+/-- A commutative monoid object is a commutative monoid object in the category of monoid objects. -/
+instance [IsCommMon M.X] : IsCommMon M where mul_comm' := by ext; simp
 
 namespace Hom
+variable [IsCommMon N.X]
 
-instance instOne : One (M ⟶ N) where
-  one.hom := 1
-  one.one_hom := by simp [one_eq_one]
-  one.mul_hom := by simp [mul_eq_mul, Mon_Class.comp_mul]
+@[simp] lemma hom_one : (1 : M ⟶ N).hom = 1 := rfl
 
-lemma hom_one : (1 : (M ⟶ N)).hom = 1 := rfl
+@[simp] lemma hom_mul (f g : M ⟶ N) : (f * g).hom = f.hom * g.hom := rfl
 
-variable [BraidedCategory C] [IsCommMon N.X]
-
-instance instMul : Mul (M ⟶ N) where
-  mul f g := {
-    hom := f.hom * g.hom
-    one_hom := by simp [Mon_.one_eq_one, Mon_Class.comp_mul, Mon_Class.one_comp]
-    mul_hom := by simp [mul_eq_mul, comp_mul, mul_comp, mul_mul_mul_comm]
-  }
-
-@[simp]
-lemma hom_mul (f g : M ⟶ N) : (f * g).hom = f.hom * g.hom := rfl
-
-instance instPow : Pow (M ⟶ N) ℕ where
-  pow f n := {
-    hom := f.hom ^ n
-    one_hom := by simp [Mon_.one_eq_one, Mon_Class.one_comp, Mon_Class.comp_pow]
-    mul_hom := by
-      simp [mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, Mon_Class.comp_pow, mul_pow]
-  }
-
-@[simp] lemma hom_pow (f : M ⟶ N) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
-
-instance : CommMonoid (M ⟶ N) :=
-  Function.Injective.commMonoid hom (fun _ _ ↦ ext) hom_one hom_mul hom_pow
+@[simp] lemma hom_pow (f : M ⟶ N) (n : ℕ) : (f ^ n).hom = f.hom ^ n := by
+  induction n <;> simp [pow_succ, *]
 
 end Mon_.Hom
