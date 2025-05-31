@@ -21,15 +21,14 @@ attribute [simp] Mon_Class.one_comp Mon_Class.one_comp_assoc Mon_Class.comp_one
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
   [Mon_Class N]
 
-lemma Mon_.one_eq_one {M : Mon_ C} : M.one = 1 := Mon_Class.one_eq_one (M := M.X)
+lemma Mon_.one_eq_one (M : Mon_ C) : M.one = 1 := Mon_Class.one_eq_one (M := M.X)
 
-lemma Mon_.mul_eq_mul {M : Mon_ C} : M.mul = (fst _ _ * snd _ _) := Mon_Class.mul_eq_mul (M := M.X)
+lemma Mon_.mul_eq_mul (M : Mon_ C) : M.mul = fst M.X M.X * snd M.X M.X :=
+  Mon_Class.mul_eq_mul (M := M.X)
 
 @[reassoc]
 lemma Mon_Class.comp_pow (f : X ⟶ M) (n : ℕ) (h : Y ⟶ X) : h ≫ f ^ n = (h ≫ f) ^ n := by
-  induction' n with n hn
-  · simp
-  simp only [pow_succ, Mon_Class.comp_mul, hn]
+  induction n <;> simp [pow_succ, Mon_Class.comp_mul, *]
 
 variable [BraidedCategory C]
 
@@ -52,7 +51,7 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N N₁ N₂ :
 section Braided
 variable [BraidedCategory C]
 
-instance : CartesianMonoidalCategory (Mon_ C) where
+instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) where
   isTerminalTensorUnit :=
     .ofUniqueHom (fun M ↦ .mk (toUnit _) (toUnit_unique ..))
       fun M f ↦ by ext; exact toUnit_unique ..
