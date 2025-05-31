@@ -135,8 +135,8 @@ Finally, let's do the right edge.
 \subsection{Diagonalisable groups}
 
 
-\begin{definition}
-  \label{0-spec-grp-alg}
+\begin{definition}[The diagonalisable group scheme functor]
+  \label{0-diag}
   \uses{0-grp-alg, 0-hopf-alg-equiv-cogrp-alg, 0-spec-hopf}
   \lean{hopfSpec, MonoidAlgebra}
   \leanok
@@ -145,9 +145,9 @@ Finally, let's do the right edge.
 \end{definition}
 
 
-\begin{definition}
-  \label{0-diag}
-  \uses{0-spec-grp-alg}
+\begin{definition}[Diagonalisable group schemes]
+  \label{0-is-diag}
+  \uses{0-diag}
   \lean{AlgebraicGeometry.Scheme.IsDiagonalisable}
   % \leanok
 
@@ -157,7 +157,7 @@ Finally, let's do the right edge.
 
 \begin{theorem}
   \label{0-diag-iff-grp-like-span}
-  \uses{0-spec-grp-alg, 0-diag}
+  \uses{0-diag, 0-is-diag}
   \lean{AlgebraicGeometry.Scheme.isDiagonalisable_iff_span_isGroupLikeElem_eq_top}
   \leanok
 
@@ -172,8 +172,8 @@ Finally, let's do the right edge.
 
 
 \begin{theorem}
-  \label{0-full-faithful-spec-grp-alg}
-  \uses{0-spec-grp-alg}
+  \label{0-full-faithful-diag}
+  \uses{0-diag}
   \lean{specCommGrpAlg.fullyFaithful, specCommGrpAlg.instFull, specCommGrpAlg.instFaithful}
   \leanok
 
@@ -242,10 +242,10 @@ Finally, let's do the right edge.
   Characters of the torus over a field $k$ are isomorphic to $\Z^n$. $X(\Gm^n) = \Z^n$.
 \end{proposition}
 \begin{proof}
-  \uses{0-full-faithful-spec-grp-alg, 0-torus-spec}
+  \uses{0-full-faithful-diag, 0-torus-spec}
   % \leanok
 
-  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-spec-grp-alg} in turn, we have
+  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
   \[
     X(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm) = \Hom(k[\Z], k[\Z^n]) = \Hom(\Z, \Z^n) = \Z^n.
   \]
@@ -272,10 +272,10 @@ Finally, let's do the right edge.
   $N = \Hom(M, \Z) \cong \Z^n$. For $u \in N$ we write $\lambda^u$ for the corresponding cocharacter.
 \end{proposition}
 \begin{proof}
-  \uses{0-full-faithful-spec-grp-alg, 0-torus-spec}
+  \uses{0-full-faithful-diag, 0-torus-spec}
   % \leanok
 
-  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-spec-grp-alg} in turn, we have
+  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
   \[
     \mathrm{cochar}(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm, \Gm^n) = \Hom(k[\Z^n], k[\Z]) = \Hom(\Z^n, \Z) \cong \Z^n.
   \]
