@@ -68,8 +68,7 @@ Warning: This produces a diamond for
 `Algebra (MonoidAlgebra R σ) (MonoidAlgebra (MonoidAlgebra S σ) σ)`. That's why it is not a
 global instance.
 -/
-noncomputable def algebraMonoidAlgebra :
-  Algebra (MonoidAlgebra R M) (MonoidAlgebra S M) :=
+noncomputable abbrev algebraMonoidAlgebra : Algebra (MonoidAlgebra R M) (MonoidAlgebra S M) :=
   (mapRangeRingHom (algebraMap R S)).toAlgebra
 
 attribute [local instance] algebraMonoidAlgebra
