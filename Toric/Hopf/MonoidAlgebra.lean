@@ -6,14 +6,14 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.Algebra.Equiv.TransferInstance
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Toric.Mathlib.LinearAlgebra.Finsupp.LinearCombination
+import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 
 /-!
 # Characterisation of group-like elements in group algebras
 
-This file proves that the group-like elements of the group algebra `R[G]` are precisely the elements
-of the image of the inclusion `G → R[G]`.
+This file proves that the group-like elements of the group algebra `R[G]` over a domain `R` are
+precisely the elements of the image of the inclusion `G → R[G]`.
 -/
 
 open Bialgebra Function

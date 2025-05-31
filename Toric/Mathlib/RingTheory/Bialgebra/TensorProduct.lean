@@ -1,23 +1,13 @@
-import Mathlib.RingTheory.Bialgebra.Hom
-import Mathlib.RingTheory.Coalgebra.TensorProduct
+import Mathlib.RingTheory.Bialgebra.TensorProduct
+import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
 
 suppress_compilation
 
 open Algebra Coalgebra TensorProduct
 
-namespace BialgHom
-variable {R A B : Type*} [CommSemiring R] [Semiring A] [Bialgebra R A] [Semiring B] [Bialgebra R B]
-
-attribute [simp] coe_toCoalgHom
-
-/-- TODO: Replace generic coercion. -/
-abbrev toAlgHom (f : A →ₐc[R] B) : A →ₐ[R] B := f
-
-end BialgHom
-
 namespace Bialgebra
-variable {R A : Type*} [CommSemiring R]
+variable {R A B : Type*} [CommSemiring R]
 
 section Semiring
 variable [Semiring A] [Bialgebra R A] {a b : A}
@@ -39,7 +29,17 @@ def mulCoalgHom : A ⊗[R] A →ₗc[R] A where
 end Semiring
 
 section CommSemiring
-variable [CommSemiring A] [Bialgebra R A] {a b : A}
+variable [CommSemiring A] [CommSemiring B] [Bialgebra R A] [Bialgebra R B] {a b : A}
+
+variable (R A B) in
+/-- The tensor product of `R`-bialgebras is commutative, up to bialgebra isomorphism. -/
+def comm : A ⊗[R] B ≃ₐc[R] B ⊗[R] A :=
+  .ofAlgEquiv (Algebra.TensorProduct.comm R A B) (by ext; simp [mul_comm]) <| by
+    ext a b
+    dsimp
+    rw [← (ℛ R a).eq, ← (ℛ R b).eq]
+    simp [tmul_sum, sum_tmul]
+    rw [Finset.sum_comm]
 
 variable (R A) in
 /-- Multiplication on a commutative bialgebra as a bialgebra hom. -/
@@ -54,6 +54,11 @@ def comulBialgHom [IsCocomm R A] : A →ₐc[R] A ⊗[R] A where
   __ := comulAlgHom R A
   __ := comulCoalgHom R A
 
+variable (R A) in
+lemma comm_comp_comulBialgHom [IsCocomm R A] :
+    (comm R A A).toBialgHom.comp (comulBialgHom R A) = comulBialgHom R A := by
+  ext; exact comm_comul _ _
+
 /-- Representations of `a` and `b` yield a representation of `a ⊗ b`. -/
 @[simps]
 protected def _root_.Coalgebra.Repr.tmul (ℛa : Coalgebra.Repr R a) (ℛb : Coalgebra.Repr R b) :
@@ -63,18 +68,14 @@ protected def _root_.Coalgebra.Repr.tmul (ℛa : Coalgebra.Repr R a) (ℛb : Coa
   left i := ℛa.left i.1 ⊗ₜ ℛb.left i.2
   right i := ℛa.right i.1 ⊗ₜ ℛb.right i.2
   eq := by
-    simp only [comul_def, AlgebraTensorModule.tensorTensorTensorComm_eq_tensorTensorTensorComm,
-      AlgebraTensorModule.map_eq_map, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-      TensorProduct.map_tmul]
+    simp only [comul_def, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
+      AlgebraTensorModule.map_tmul]
     rw [← ℛa.eq, ← ℛb.eq]
     simp_rw [sum_tmul, tmul_sum, ← Finset.sum_product', map_sum]
     simp
 
--- TODO: Remove universe monomorphism
--- TODO: Generalise to semirings
-universe u
-variable {R A B : Type u} [CommRing R] [CommRing A] [CommRing B] [Bialgebra R A] [Bialgebra R B]
-  {a a₁ a₂ : A} {b : B}
+variable {R A B : Type*} [CommSemiring R] [CommSemiring A] [CommSemiring B] [Bialgebra R A]
+  [Bialgebra R B] {a a₁ a₂ : A} {b : B}
 
 /-- Representations of `a₁` and `a₂` yield a representation of `a₁ * a₂`. -/
 @[simps!]

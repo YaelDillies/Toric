@@ -5,7 +5,8 @@ Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.LinearAlgebra.TensorProduct.Tower
-import Mathlib.RingTheory.Coalgebra.Basic
+import Toric.Mathlib.RingTheory.Coalgebra.Basic
+import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
 
 /-!
 # Convolution product on linear maps from a coalgebra to an algebra
@@ -53,24 +54,13 @@ lemma _root_.Coalgebra.Repr.mul_apply {a : C} (𝓡 : Coalgebra.Repr R a) (f g :
     (f * g) a = ∑ i ∈ 𝓡.index, f (𝓡.left i) * g (𝓡.right i) := by
   simp [mul_def, ← 𝓡.eq]
 
-private lemma convMul_assoc (f g h : C →ₗ[R] A) : f * g * h = f * (g * h) := calc
-      μ ∘ₗ (μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ ⊗ₘ h) ∘ₗ δ
-  _ = (μ ∘ₗ .rTensor _ μ) ∘ₗ ((f ⊗ₘ g) ⊗ₘ h) ∘ₗ (.rTensor _ δ ∘ₗ δ) := by
-    rw [comp_assoc, ← comp_assoc _ _ (rTensor _ _), rTensor_comp_map,
-      ← comp_assoc _ (rTensor _ _), map_comp_rTensor, comp_assoc]
-  _ = (μ ∘ₗ rTensor _ μ)
-      ∘ₗ (((f ⊗ₘ g) ⊗ₘ h) ∘ₗ (TensorProduct.assoc R C C C).symm) ∘ₗ lTensor C δ ∘ₗ δ := by
-    simp only [comp_assoc, coassoc_symm]
-  _ = (μ ∘ₗ rTensor A μ ∘ₗ ↑(TensorProduct.assoc R A A A).symm)
-      ∘ₗ (f ⊗ₘ (g ⊗ₘ h)) ∘ₗ lTensor C δ ∘ₗ δ := by
-    simp only [map_map_comp_assoc_symm_eq, comp_assoc]
-  _ = (μ ∘ₗ .lTensor _ μ) ∘ₗ (f ⊗ₘ (g ⊗ₘ h)) ∘ₗ (lTensor C δ ∘ₗ δ) := by
-    congr 1
+private lemma convMul_assoc (f g h : C →ₗ[R] A) : f * g * h = f * (g * h) := by
+  trans (((μ ∘ₗ (id ⊗ₘ μ)) ∘ₗ ↑(TensorProduct.assoc R A A A)) ∘ₗ ((f ⊗ₘ g) ∘ₗ δ ⊗ₘ h)) ∘ₗ δ
+  · simp only [mul_def, map_comp_left, ← LinearMap.comp_assoc]
+    congr 3
     ext
-    simp [mul_assoc]
-  _ = μ ∘ₗ (f ⊗ₘ μ ∘ₗ (g ⊗ₘ h) ∘ₗ δ) ∘ₗ δ := by
-    rw [comp_assoc, ← comp_assoc _ _ (lTensor _ _), lTensor_comp_map,
-      ← comp_assoc _ (lTensor _ _), map_comp_lTensor, comp_assoc]
+    exact mul_assoc _ _ _
+  · simp [mul_def, coassoc_simps]
 
 private lemma one_convMul (f : C →ₗ[R] A) : 1 * f = f := calc
       μ ∘ₗ ((η ∘ₗ ε) ⊗ₘ f) ∘ₗ δ
@@ -112,10 +102,13 @@ end Semiring
 
 section CommSemiring
 variable [CommSemiring A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
+  [IsCocomm R C]
 
-private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := calc
-      μ ∘ₗ (f ⊗ₘ g) ∘ₗ δ
-  _ = μ ∘ₗ (g ⊗ₘ f) ∘ₗ δ := sorry
+private lemma convMul_comm (f g : C →ₗ[R] A) : f * g = g * f := by
+  rw [mul_def, ← comm_comp_comul, ← LinearMap.comp_assoc δ, map_comp_comm_eq, mul_def,
+    ← LinearMap.comp_assoc, ← LinearMap.comp_assoc, ← LinearMap.comp_assoc]
+  congr 3
+  ext; exact mul_comm _ _
 
 instance : CommSemiring (C →ₗ[R] A) where
   mul_comm := convMul_comm
@@ -130,7 +123,7 @@ instance : Ring (C →ₗ[R] A) where
 end Ring
 
 section CommRing
-variable [CommRing A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C]
+variable [CommRing A] [AddCommMonoid C] [Algebra R A] [Module R C] [Coalgebra R C] [IsCocomm R C]
 
 instance : CommRing (C →ₗ[R] A) where
 

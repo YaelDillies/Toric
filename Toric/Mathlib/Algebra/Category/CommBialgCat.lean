@@ -19,7 +19,7 @@ noncomputable section
 namespace CategoryTheory
 
 open Bialgebra Limits
-open scoped Mon_Class
+open scoped Mon_Class MonoidalCategory
 
 universe v u
 variable {R : Type u} [CommRing R]
