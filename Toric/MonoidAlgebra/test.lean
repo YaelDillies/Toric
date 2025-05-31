@@ -9,22 +9,19 @@ import Mathlib.Algebra.Category.Ring.Adjunctions
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
+import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
-import Toric.MvLaurentPolynomial
 import Toric.GroupScheme.SpecGrpAlg
 import Toric.MonoidAlgebra.TensorProduct
-import Toric.Hopf.TensorProduct
+import Toric.MvLaurentPolynomial
+
+noncomputable section
 
 universe v u
 
 open CategoryTheory Limits Opposite
 
-
 namespace AlgebraicGeometry.Scheme
-
--- attribute [local instance] ChosenFiniteProducts.ofFiniteProducts
-
-noncomputable section
 
 instance {R S : Type u} [CommRing R] [CommRing S] [Algebra R S] :
     (Spec (.of S)).Over (Spec (.of R)) :=
@@ -240,7 +237,7 @@ def specCommMonAlgPullback :
     letI H := (CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec
     have h₁ : (mapRangeRingHom f.hom).comp (mapDomainBialgHom R φ.unop.hom) =
         (RingHomClass.toRingHom (mapDomainBialgHom S φ.unop.hom)).comp
-          (mapRangeRingHom f.hom) := mapRangeRingHom_comp_mapDomainBialgHom _ _
+          (mapRangeRingHom f.hom) := mapRangeRingHom_comp_mapDomainRingHom _ _
     have h₂ := (AlgHomClass.toAlgHom (mapDomainBialgHom S φ.unop.hom)).comp_algebraMap
     apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
     simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂
@@ -276,8 +273,6 @@ def specCommGrpAlgPullback :
     specCommGrpAlg R ⋙ (Over.pullback (Spec.map f)).mapGrp ≅ specCommGrpAlg S :=
   (Grp_.fullyFaithfulForget₂Mon_ _).cancelRight
     (isoWhiskerLeft (forget₂ CommGrp CommMonCat).op (specCommMonAlgPullback f))
-
-end
 
 end
 

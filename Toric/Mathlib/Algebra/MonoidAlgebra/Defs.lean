@@ -53,3 +53,33 @@ theorem liftNCRingHom_single (f : k →+* R) (g : G →* R) (h_comm) (a : G) (b 
   liftNC_single _ _ _ _
 
 end MonoidAlgebra
+
+namespace MonoidAlgebra
+
+section mapRange
+
+variable {R S M N : Type*} [Monoid M] [Monoid N]
+
+/-- The ring homomorphism of monoid algebras induced by a homomorphism of the base rings. -/
+noncomputable def mapRangeRingHom [Semiring R] [Semiring S] (f : R →+* S) :
+    MonoidAlgebra R M →+* MonoidAlgebra S M :=
+  liftNCRingHom (singleOneRingHom.comp f) (of S M) (by intro x y; simp [commute_iff_eq])
+
+@[simp]
+lemma mapRangeRingHom_apply [Semiring R] [Semiring S] (f : R →+* S) (x : MonoidAlgebra R M)
+    (m : M) : mapRangeRingHom f x m = f (x m) := by
+  induction x using MonoidAlgebra.induction_linear
+  · simp
+  · simp_all
+  classical
+  simp [mapRangeRingHom, single_apply, apply_ite (f := f)]
+
+@[simp]
+lemma mapRangeRingHom_single [Semiring R] [Semiring S] (f : R →+* S) (a : M) (b : R) :
+    mapRangeRingHom f (single a b) = single a (f b) := by
+  classical
+  ext
+  simp [single_apply, apply_ite f]
+
+end mapRange
+end MonoidAlgebra
