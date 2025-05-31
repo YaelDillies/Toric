@@ -27,6 +27,21 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 scoped[Hom] attribute [instance] Hom.group
 
+namespace CategoryTheory.Functor
+variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
+  [CartesianMonoidalCategory D] {G : C} [Grp_Class G] (F : C ⥤ D) [F.Monoidal]
+
+scoped[Obj] attribute [instance] CategoryTheory.Functor.obj.instMon_Class
+
+open scoped Obj
+
+/-- The image of a group object under a monoidal functor is a group object. -/
+noncomputable abbrev grp_ClassObj : Grp_Class (F.obj G) := (F.mapGrp.obj (.mk' G)).instGrp_ClassX
+
+scoped[Obj] attribute [instance] CategoryTheory.Functor.grp_ClassObj
+
+end CategoryTheory.Functor
+
 section
 
 open CartesianMonoidalCategory MonoidalCategory
