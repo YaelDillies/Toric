@@ -5,9 +5,11 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
+import Toric.Mathlib.CategoryTheory.Monoidal.Functor
+import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
-open scoped Hom
+open scoped Hom Obj
 
 scoped[Hom] attribute [instance] Hom.monoid
 
@@ -15,6 +17,28 @@ universe v₁ v₂ u₁ u₂
 
 attribute [simp] Mon_Class.one_comp Mon_Class.one_comp_assoc Mon_Class.comp_one
   Mon_Class.comp_one_assoc
+
+namespace CategoryTheory.Functor
+variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
+  [CartesianMonoidalCategory D] {M X : C} [Mon_Class M] (F : C ⥤ D) [F.Monoidal]
+
+lemma map_mul (f g : X ⟶ M) : F.map (f * g) = F.map f * F.map g := by
+  simp only [Hom.mul_def, map_comp, obj.μ_def, ← Category.assoc]
+  congr 1
+  rw [← IsIso.comp_inv_eq]
+  ext <;> simp
+
+@[simp]
+lemma map_one : F.map (1 : X ⟶ M) = 1 := by
+  simp [Hom.one_def]
+
+/-- `Functor.map` as a `MonoidHom`. -/
+def mapMonoidHom : (X ⟶ M) →* (F.obj X ⟶ F.obj M) where
+  toFun := _
+  map_one' := map_one F
+  map_mul' := map_mul F
+
+end CategoryTheory.Functor
 
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
   [Mon_Class N]
