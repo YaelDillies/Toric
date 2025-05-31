@@ -233,7 +233,7 @@ private def cogrpAlgCatToCommHopfAlgCat : (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ 
 variable (R) in
 /-- Commutative Hopf algebras over a commutative ring `R` are the same thing as cogroup
 `R`-algebras. -/
-@[simps!? functor_obj unitIso_inv counitIso_hom counitIso_inv]
+@[simps! functor_obj unitIso_inv counitIso_hom counitIso_inv]
 def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   functor := commHopfAlgCatToCogrpAlgCat
   inverse := cogrpAlgCatToCommHopfAlgCat
