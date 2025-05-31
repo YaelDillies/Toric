@@ -52,7 +52,6 @@ import Toric.Mathlib.RingTheory.HopfAlgebra.Hom
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.TensorProduct.Basic
 import Toric.MonoidAlgebra.TensorProduct
-import Toric.MonoidAlgebra.test
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety
 import Toric.ToricIdeal
