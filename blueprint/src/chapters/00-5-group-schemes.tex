@@ -161,7 +161,7 @@ Finally, let's do the right edge.
   \lean{AlgebraicGeometry.Scheme.isDiagonalisable_iff_span_isGroupLikeElem_eq_top}
   \leanok
 
-  An algebraic group $G$ over a field $k$ is diagonalizable if and only if group-like elements span $\Gamma(G)$.
+  An algebraic group $G$ over a field $k$ is diagonalizable if and only if $\Gamma(G)$ is spanned by its group-like elements.
 \end{theorem}
 \begin{proof}
   \uses{0-grp-like-lin-indep}
@@ -219,6 +219,23 @@ Finally, let's do the right edge.
 \end{proof}
 
 
+\begin{lemma}[Diag is a group isomorphism on hom sets]
+  \label{0-diag-hom}
+  \uses{0-diag}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a domain.
+  The functor $G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is a group isomorphism on hom sets.
+\end{lemma}
+\begin{proof}
+  \uses{0-full-faithful-diag, 0-full-faithful-grp-hom}
+  % \leanok
+
+  Toddlers and streets by Lemmas \ref{0-full-faithful-diag} and \ref{0-full-faithful-grp-hom}.
+\end{proof}
+
+
 \begin{definition}[Characters of a group scheme]
   \label{0-char}
   \uses{0-torus}
@@ -229,8 +246,62 @@ Finally, let's do the right edge.
   \[
     X(G) := \Hom_{\mathsf{GrpSch}_S}(G, \Gm).
   \]
-  An element $X(G)$ is (unsurprisingly) called a {\bf character}.
+  An element of $X(G)$ is called a {\bf character}.
 \end{definition}
+
+
+\begin{definition}[Cocharacters of a group scheme]
+  \label{0-cochar}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.Scheme.cochar}
+  \leanok
+
+  For a group scheme $G$ over $S$, the {\bf cocharacter lattice} of $G$ is
+  \[
+    X^*(G) := \Hom_{\mathsf{GrpSch}_S}(\Gm, G).
+  \]
+  An element of $X^*(G)$ is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
+\end{definition}
+
+
+\begin{proposition}[Character lattice of a diagonalisable group scheme]
+  \label{0-char-diag}
+  \uses{0-char}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a domain and $G$ be a commutative group.
+  Then $X(\Spec R[G]) = G$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-diag}
+  % \leanok
+
+  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
+  \[
+    X(G) = \Hom_{\mathsf{GrpSch}}(G, \Gm) = \Hom(k[\Z], k[G]) = \Hom(\Z, G) = G.
+  \]
+\end{proof}
+
+
+\begin{proposition}[Cocharacter lattice of a diagonalisable group scheme]
+  \label{0-cochar-diag}
+  \uses{0-cochar}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a domain and $G$ be a commutative group.
+  Then $X^*(\Spec R[G]) = \Hom(G, \Z)$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-diag}
+  % \leanok
+
+  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
+  \[
+    X^*(G) = \Hom_{\mathsf{GrpSch}}(\Gm, G) = \Hom(k[G], k[\Z]) = \Hom(G, \Z).
+  \]
+\end{proof}
 
 
 \begin{proposition}[Character lattice of the torus]
@@ -239,28 +310,15 @@ Finally, let's do the right edge.
   % \lean{}
   % \leanok
 
-  Characters of the torus over a field $k$ are isomorphic to $\Z^n$. $X(\Gm^n) = \Z^n$.
+  Let $G$ be a torus of dimension $n$ over a domain $R$.
+  Then $X(G) = \Z^n$.
 \end{proposition}
 \begin{proof}
   \uses{0-full-faithful-diag, 0-torus-spec}
   % \leanok
 
-  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
-  \[
-    X(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm^n, \Gm) = \Hom(k[\Z], k[\Z^n]) = \Hom(\Z, \Z^n) = \Z^n.
-  \]
+  Immediate from Propositions \ref{0-torus-spec} and \ref{0-char-diag}.
 \end{proof}
-
-
-\begin{definition}
-  \label{0-cochar}
-  \uses{0-torus}
-  \lean{AlgebraicGeometry.Scheme.cochar}
-  \leanok
-
-  For a group scheme $G$, the {\bf cocharacter lattice} of $G$ is $\Hom_{\mathsf{GrpSch}_S}(\Gm, G)$.
-  An element is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
-\end{definition}
 
 
 \begin{proposition}[Cocharacter lattice of the torus]
@@ -269,24 +327,23 @@ Finally, let's do the right edge.
   % \lean{}
   % \leanok
 
-  $N = \Hom(M, \Z) \cong \Z^n$. For $u \in N$ we write $\lambda^u$ for the corresponding cocharacter.
+  Let $G$ be a torus of dimension $n$ over a domain $R$.
+  Then $X^*(G) = \Hom(\Z^n, \Z)$.
 \end{proposition}
 \begin{proof}
   \uses{0-full-faithful-diag, 0-torus-spec}
   % \leanok
 
-  By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
-  \[
-    \mathrm{cochar}(\Gm^n) = \Hom_{\mathsf{GrpSch}}(\Gm, \Gm^n) = \Hom(k[\Z^n], k[\Z]) = \Hom(\Z^n, \Z) \cong \Z^n.
-  \]
+  Immediate from Propositions \ref{0-torus-spec} and \ref{0-cochar-diag}.
 \end{proof}
 
 
 \begin{definition}[The character-cocharacter pairing]
   \label{0-char-cochar-pairing}
   \uses{0-char, 0-cochar}
-  \lean{AlgebraicGeometry.Scheme.charPairing}
-  \leanok
+  \lean{AlgebraicGeometry.Scheme.charPairing, AlgebraicGeometry.Scheme.charPairingInt}
+  % \leanok
 
-  Character lattice and one-parameter subgroup pairing.
+  Let $R$ be a domain and $G$ a group scheme over $\Spec R$.
+  Then there is a $\Z$-valued perfect pairing between $X(G)$ and $X^*(G)$.
 \end{definition}
