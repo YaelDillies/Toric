@@ -1,11 +1,8 @@
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 
 suppress_compilation
-
-section
 
 open Coalgebra
 
@@ -56,5 +53,3 @@ noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : R[M] ≃ₐc[R] R 
   right_inv := (Bialgebra.counitAlgHom R R[M]).commutes
 
 end AddMonoidAlgebra
-
-end
