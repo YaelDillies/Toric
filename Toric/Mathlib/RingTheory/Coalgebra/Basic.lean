@@ -22,6 +22,8 @@ variable (R) in
 @[simp] lemma comm_comul (a : A) : TensorProduct.comm R A A (comul a) = comul a :=
   congr($(comm_comp_comul R A) a)
 
+instance : IsCocomm R R where comm_comp_comul := by ext; simp
+
 end Coalgebra
 
 open Coalgebra
