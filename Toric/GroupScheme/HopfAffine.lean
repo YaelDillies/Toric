@@ -8,7 +8,6 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
-import Toric.Mathlib.RingTheory.Coalgebra.Basic
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
