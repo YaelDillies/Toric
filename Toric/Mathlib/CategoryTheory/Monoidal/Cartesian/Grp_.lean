@@ -21,16 +21,17 @@ showing that it is fully faithful and its (essential) image is the representable
 -/
 
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
+open scoped Hom
 
 universe v₁ v₂ v₃ u₁ u₂ u₃
+
+scoped[Hom] attribute [instance] Hom.group
 
 section
 
 open CartesianMonoidalCategory MonoidalCategory
 
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C}
-
-attribute [local instance] Hom.group
 
 @[simps]
 def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f] :
@@ -61,10 +62,13 @@ lemma Grp_Class.mul_inv_rev [BraidedCategory C] {G : C} [Grp_Class G] :
     _ = lift (fst G G ≫ ι) (snd G G ≫ ι) ≫ (β_ G G).hom ≫ μ := by simp
     _ = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by simp
 
-instance Hom.instCommGroup [BraidedCategory C] {G H : C} [Grp_Class H] [IsCommMon H] :
+/-- If `G` is a commutative group object, then `Hom(X, G)` has a commutative group structure. -/
+abbrev Hom.commGroup [BraidedCategory C] {G H : C} [Grp_Class H] [IsCommMon H] :
     CommGroup (G ⟶ H) where
-  __ := Hom.instCommMonoid
+  __ := Hom.commMonoid
   inv_mul_cancel f := by simp
+
+scoped[Hom] attribute [instance] Hom.commGroup
 
 @[reassoc]
 lemma Grp_Class.comp_zpow {G H K : C} [Grp_Class H] (f : G ⟶ H) (h : K ⟶ G) :

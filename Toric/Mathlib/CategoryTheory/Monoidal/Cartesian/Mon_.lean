@@ -7,12 +7,13 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
+open scoped Hom
+
+scoped[Hom] attribute [instance] Hom.monoid
 
 universe v₁ v₂ u₁ u₂
 
 section
-
-attribute [local instance] Hom.monoid
 
 attribute [simp] Mon_Class.one_comp Mon_Class.one_comp_assoc Mon_Class.comp_one
   Mon_Class.comp_one_assoc
@@ -32,13 +33,16 @@ lemma Mon_Class.comp_pow (f : X ⟶ M) (n : ℕ) (h : Y ⟶ X) : h ≫ f ^ n = (
 
 variable [BraidedCategory C]
 
-instance Hom.instCommMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
+/-- If `M` is a commutative monoid object, then `Hom(X, M)` has a commutative monoid structure. -/
+abbrev Hom.commMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
   mul_comm f g := by
     show lift _ _ ≫ _ = lift _ _ ≫ _
     conv_lhs => rw [← IsCommMon.mul_comm]
     rw [← Category.assoc]
     congr 1
     ext <;> simp
+
+scoped[Hom] attribute [instance] Hom.commMonoid
 
 end
 
@@ -69,8 +73,6 @@ instance : CartesianMonoidalCategory (Mon_ C) where
 end Braided
 
 namespace Hom
-
-attribute [local instance] Hom.monoid
 
 instance instOne : One (M ⟶ N) where
   one.hom := 1
