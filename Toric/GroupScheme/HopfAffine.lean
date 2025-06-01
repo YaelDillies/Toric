@@ -110,7 +110,7 @@ noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
     algSpec.fullyFaithful.mapGrp
 
 namespace AlgebraicGeometry.Scheme
-variable {R A : CommRingCat.{u}}
+variable {R A : CommRingCat.{u}} {M G : Scheme.{u}}
 
 suppress_compilation
 
@@ -163,6 +163,16 @@ instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class ((Spec A).asOver (Sp
 
 instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
    CommGrp_Class ((Spec A).asOver (Spec R)) where
+
+/-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
+prove that. -/
+noncomputable instance [M.Over (Spec R)] [Mon_Class (M.asOver (Spec R))] [IsAffine M] :
+    Bialgebra R Γ(M, ⊤) := by sorry
+
+/-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
+prove that. -/
+noncomputable instance [G.Over (Spec R)] [Grp_Class (G.asOver (Spec R))] [IsAffine G] :
+    HopfAlgebra R Γ(G, ⊤) := by sorry
 
 end AlgebraicGeometry.Scheme
 

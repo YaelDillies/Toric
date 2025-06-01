@@ -6,37 +6,38 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel
 import Toric.GroupScheme.SpecGrpAlg
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite
+open scoped AddMonoidAlgebra
 
 universe u
 
 namespace AlgebraicGeometry.Scheme
 section CommRing
-variable {R : CommRingCat.{u}} {G : Over (Spec R)} [Grp_Class G] {A : Type u} [CommGroup A]
+variable {R : CommRingCat.{u}} {G : Scheme.{u}} [G.Over (Spec R)] [Grp_Class (G.asOver (Spec R))]
+  {A : Type u} [AddCommGroup A]
 
-variable (G) in
+variable (R G) in
 @[mk_iff]
 class IsDiagonalisable : Prop where
   existsIso :
-    ∃ (A : Type u) (_ : CommGroup A), Nonempty <| .mk' G ≅ (specCommGrpAlg R).obj (.op <| .of A)
+    ∃ (A : Type u) (_ : AddCommGroup A),
+      Nonempty <| .mk' (G.asOver (Spec R)) ≅ (specCommGrpAlg R).obj (.op <| .of <| Multiplicative A)
 
-instance : IsDiagonalisable ((specCommGrpAlg R).obj <| .op <| .of A).X := ⟨⟨A, _, ⟨.refl _⟩⟩⟩
+instance : IsDiagonalisable R (Spec <| .of R[A]) := ⟨⟨A, _, ⟨.refl _⟩⟩⟩
 
-end CommRing
+variable [IsDomain R]
 
-section Field
-variable {K : Type*} [Field K] {G : Over (Spec <| .of K)} [Grp_Class G]
-
--- FIXME: Lean is not able to use the instance on line 30
-noncomputable instance : HopfAlgebra K (Γ.obj <| op G.left) := by sorry
-
-/-- An algebraic group `G` over a field `K` is diagonalisable iff it is affine and `Γ(G)` is
-`K`-spanned by its group-like elements.
+/-- An affine algebraic group `G` over a domain `R` is diagonalisable iff it is affine and `Γ(G)` is
+`R`-spanned by its group-like elements.
 
 Note that this is more generally true over arbitrary commutative rings, but we do not prove that.
-See SGA III, Exposé VIII for more info. -/
-lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top :
-    IsDiagonalisable G ↔ IsAffine G.left ∧
-      Submodule.span K {a : Γ.obj <| op G.left | IsGroupLikeElem K a} = ⊤ := sorry
+See SGA III, Exposé VIII for more info.
 
-end Field
+Note that more generally a not necessarily affine algebraic group `G` over a field `K` is
+diagonalisable iff it is affine and `Γ(G)` is `K`-spanned by its group-like elements, but we do not
+prove that. -/
+lemma isDiagonalisable_iff_span_isGroupLikeElem_eq_top [IsAffine G] :
+    IsDiagonalisable R G ↔ Submodule.span R {a : Γ(G, ⊤) | IsGroupLikeElem R a} = ⊤ :=
+  sorry
+
+end CommRing
 end AlgebraicGeometry.Scheme
