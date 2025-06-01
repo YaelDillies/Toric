@@ -26,6 +26,7 @@ import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.FunctorCategory
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_

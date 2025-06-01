@@ -38,3 +38,19 @@ lemma lift_id_tensorHom (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) :
   ext <;> simp [tensorδ]
 
 end CategoryTheory.CartesianMonoidalCategory
+
+namespace CategoryTheory
+universe u v
+variable {C : Type u} [Category.{v} C] [CartesianMonoidalCategory C]
+variable {D E : Type*} [Category D] [Category E] [CartesianMonoidalCategory E]
+
+open CategoryTheory MonoidalCategory Limits CartesianMonoidalCategory
+
+@[simps]
+def CartesianMonoidalCategory.homToProd {X Y Z : C} : (Z ⟶ X ⊗ Y) ≃ (Z ⟶ X) × (Z ⟶ Y) where
+  toFun f := ⟨f ≫ fst _ _, f ≫ snd _ _⟩
+  invFun f := lift f.1 f.2
+  left_inv _ := by simp
+  right_inv _ := by simp
+
+end CategoryTheory
