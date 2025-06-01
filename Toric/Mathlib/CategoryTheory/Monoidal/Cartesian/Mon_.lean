@@ -98,39 +98,14 @@ instance [IsCommMon M.X] : Mon_Class M where
 @[simp] lemma hom_μ (M : Mon_ C) [IsCommMon M.X] : μ[M].hom = μ[M.X] := rfl
 
 namespace Hom
-
-instance instOne : One (M ⟶ N) where
-  one.hom := 1
-  one.one_hom := by simp [one_eq_one]
-  one.mul_hom := by simp [mul_eq_mul, Mon_Class.comp_mul]
-
-omit [BraidedCategory C] in
-lemma hom_one : (1 : (M ⟶ N)).hom = 1 := rfl
-
 variable [IsCommMon N.X]
 
-instance instMul : Mul (M ⟶ N) where
-  mul f g := {
-    hom := f.hom * g.hom
-    one_hom := by simp [Mon_.one_eq_one, Mon_Class.comp_mul, Mon_Class.one_comp]
-    mul_hom := by simp [mul_eq_mul, comp_mul, mul_comp, mul_mul_mul_comm]
-  }
+@[simp] lemma hom_one : (1 : M ⟶ N).hom = 1 := rfl
 
-@[simp]
-lemma hom_mul (f g : M ⟶ N) : (f * g).hom = f.hom * g.hom := rfl
+@[simp] lemma hom_mul (f g : M ⟶ N) : (f * g).hom = f.hom * g.hom := rfl
 
-instance instPow : Pow (M ⟶ N) ℕ where
-  pow f n := {
-    hom := f.hom ^ n
-    one_hom := by simp [Mon_.one_eq_one, Mon_Class.one_comp, Mon_Class.comp_pow]
-    mul_hom := by
-      simp [mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, Mon_Class.comp_pow, mul_pow]
-  }
-
-@[simp] lemma hom_pow (f : M ⟶ N) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
-
-instance : CommMonoid (M ⟶ N) :=
-  Function.Injective.commMonoid hom (fun _ _ ↦ ext) hom_one hom_mul hom_pow
+@[simp] lemma hom_pow (f : M ⟶ N) (n : ℕ) : (f ^ n).hom = f.hom ^ n := by
+  induction n <;> simp [pow_succ, *]
 
 end Hom
 

@@ -184,70 +184,39 @@ instance instBraided : BraidedCategory (Grp_ C) where braiding G H := Grp_.mkIso
 @[simp] lemma braiding_hom_hom (G H : Grp_ C) : (β_ G H).hom.hom = (β_ G.X H.X).hom := rfl
 @[simp] lemma braiding_inv_hom (G H : Grp_ C) : (β_ G H).inv.hom = (β_ G.X H.X).inv := rfl
 
+variable [IsCommMon H.X]
+
 namespace Hom
 
-omit [BraidedCategory C]
+instance : Mon_Class H where
+  one := η[H.toMon_]
+  mul := μ[H.toMon_]
+  one_mul' := Mon_Class.one_mul H.toMon_
+  mul_one' := Mon_Class.mul_one H.toMon_
+  mul_assoc' := Mon_Class.mul_assoc H.toMon_
 
-instance instOne : One (G ⟶ H) := inferInstanceAs <| One (G.toMon_ ⟶ H.toMon_)
+@[simp] lemma hom_one : (1 : G ⟶ H).hom = 1 := rfl
 
-lemma hom_one : (1 : (G ⟶ H)).hom = 1 := rfl
+@[simp] lemma hom_mul (f g : G ⟶ H) : (f * g).hom = f.hom * g.hom := rfl
 
-variable [BraidedCategory C] [IsCommMon H.X]
+@[simp] lemma hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := by
+  induction n <;> simp [pow_succ, *]
 
-instance instMul : Mul (G ⟶ H) := inferInstanceAs <| Mul (G.toMon_ ⟶ H.toMon_)
-
-@[simp]
-lemma hom_mul (f g : G ⟶ H) : (f * g).hom = f.hom * g.hom := rfl
-
-instance instPow : Pow (G ⟶ H) ℕ := inferInstanceAs <| Pow (G.toMon_ ⟶ H.toMon_) ℕ
-
-@[simp]
-lemma hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := rfl
-
-instance {G : C} [Grp_Class G] [IsCommMon G] : IsMon_Hom (ι : G ⟶ G) where
-  one_hom := by simp only [one_eq_one]; exact inv_one
-  mul_hom := by
-    simp [Grp_Class.mul_inv_rev]
+/-- A commutative group object is a group object in the category of group objects. -/
+instance : Grp_Class H where inv := .mk H.inv
 
 instance {f : G ⟶ H} [IsCommMon H.X] : IsMon_Hom f.hom⁻¹ where
 
-instance instInv : Inv (G ⟶ H) where
-  inv f := {
-    hom := f.hom⁻¹
-    one_hom := by simp only [Mon_.one_eq_one, one_comp_assoc]; rw [one_comp]
-    mul_hom := by simp [Mon_.mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp]
-  }
+@[simp] lemma hom_inv (f : G ⟶ H) : f⁻¹.hom = f.hom⁻¹ := rfl
+@[simp] lemma hom_div (f g : G ⟶ H) : (f / g).hom = f.hom / g.hom := rfl
+@[simp] lemma hom_zpow (f : G ⟶ H) (n : ℤ) : (f ^ n).hom = f.hom ^ n := by cases n <;> simp
 
-@[simp]
-lemma hom_inv (f : G ⟶ H) : (f⁻¹).hom = f.hom⁻¹ := rfl
+end Hom
 
-instance instDiv : Div (G ⟶ H) where
-  div f g :=
-  { hom := f.hom / g.hom
-    one_hom := by simp [Mon_.one_eq_one, Grp_Class.comp_div, Mon_Class.one_comp]
-    mul_hom := by
-      simp [Mon_.mul_eq_mul, Grp_Class.comp_div, Mon_Class.comp_mul, Mon_Class.mul_comp,
-          mul_div_mul_comm] }
+/-- A commutative group object is a commutative group object in the category of group objects. -/
+instance : IsCommMon H where
 
-@[simp]
-lemma hom_div (f g : G ⟶ H) : (f / g).hom = f.hom / g.hom := rfl
-
-instance instPowInt : Pow (G ⟶ H) ℤ where
-  pow f i := {
-    hom := f.hom ^ i
-    one_hom := by simp [Mon_.one_eq_one, Mon_Class.one_comp, Grp_Class.comp_zpow]
-    mul_hom := by
-      simp [Mon_.mul_eq_mul, Mon_Class.comp_mul, Mon_Class.mul_comp, Grp_Class.comp_zpow, mul_zpow]
-  }
-
-@[simp]
-lemma hom_zpow (f : G ⟶ H) (n : ℤ) : (f ^ n).hom = f.hom ^ n := rfl
-
-instance instCommGroup : CommGroup (G ⟶ H) :=
-  Function.Injective.commGroup Mon_.Hom.hom (fun _ _ ↦ Mon_.Hom.ext)
-    hom_one hom_mul hom_inv hom_div hom_pow hom_zpow
-
-end Grp_.Hom
+end Grp_
 
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C] {G : C}
 

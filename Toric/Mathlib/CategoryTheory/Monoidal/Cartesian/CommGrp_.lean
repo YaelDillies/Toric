@@ -3,6 +3,7 @@ import Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
 open CategoryTheory CartesianMonoidalCategory MonoidalCategory Grp_Class Opposite
+open scoped Hom
 
 universe w v u
 

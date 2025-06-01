@@ -12,6 +12,7 @@ import Toric.Mathlib.Algebra.Group.Equiv.Basic
 -/
 
 open AddMonoidAlgebra CategoryTheory
+open scoped Hom
 
 namespace AlgebraicGeometry.Scheme
 universe u
