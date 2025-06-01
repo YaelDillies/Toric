@@ -73,6 +73,33 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
 
 noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
 
+@[simp]
+lemma prodComparisonIso_algSpec_hom_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).hom.left =
+      (pullbackSpecIso R A.unop B.unop).inv := rfl
+
+@[simp]
+lemma prodComparisonIso_algSpec_inv_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).inv.left =
+      (pullbackSpecIso R A.unop B.unop).hom := by
+  rw [← Iso.comp_inv_eq_id, ← prodComparisonIso_algSpec_hom_left, ← Over.comp_left,
+    Iso.inv_hom_id, Over.id_left]
+
+lemma preservesTerminalIso_algSpec :
+  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)) =
+    Over.isoMk (Iso.refl (Spec R)) (by dsimp; simp [MonoidalCategoryStruct.tensorUnit]) := by
+  ext1; exact CartesianMonoidalCategory.toUnit_unique _ _
+
+@[simp]
+lemma preservesTerminalIso_algSpec_inv_left :
+  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).inv.left = 𝟙 (Spec R) := by
+  simp [preservesTerminalIso_algSpec]
+
+@[simp]
+lemma preservesTerminalIso_algSpec_hom_left :
+  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).hom.left = 𝟙 (Spec R) := by
+  simp [preservesTerminalIso_algSpec]
+
 /-- `Spec` is full on `R`-algebras. -/
 instance algSpec.instFull : (algSpec R).Full :=
   inferInstanceAs <| Functor.Full <|
@@ -114,6 +141,7 @@ variable {R A : CommRingCat.{u}} {M G : Scheme.{u}}
 
 suppress_compilation
 
+@[simps -isSimp]
 instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 

@@ -138,10 +138,12 @@ Finally, let's do the right edge.
 \begin{definition}[The diagonalisable group scheme functor]
   \label{0-diag}
   \uses{0-grp-alg, 0-hopf-alg-equiv-cogrp-alg, 0-spec-hopf}
-  \lean{hopfSpec, MonoidAlgebra}
+  \lean{Diag}
   \leanok
 
-  For a commutative group $G$ we define $D_R(G)$ as the spectrum $\Spec R[G]$ of the group algebra $R[G]$.
+  Let $G$ be a commutative group and $S$ a base scheme.
+  The diagonalisable group scheme $D_S(G)$ is defined as the base-change of $\Spec \Z[G]$ to $S$.
+  For a commutative ring $R$, we write $D_R(G) := D_{\Spec R}(G)$.
 \end{definition}
 
 
@@ -174,11 +176,11 @@ Finally, let's do the right edge.
 \begin{theorem}
   \label{0-full-faithful-diag}
   \uses{0-diag}
-  \lean{specCommGrpAlg.fullyFaithful, specCommGrpAlg.instFull, specCommGrpAlg.instFaithful}
+  \lean{}
   \leanok
 
   Let $R$ be a domain.
-  The functor $G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is fully faithful.
+  The functor $D_R(G) := G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is fully faithful.
 \end{theorem}
 \begin{proof}
   \uses{0-full-faithful-spec-hopf, 0-full-faithful-grp-alg}
