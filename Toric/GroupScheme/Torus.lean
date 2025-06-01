@@ -66,29 +66,29 @@ def CommGrp_Torus (S : Scheme) (σ : Type*) : CommGrp_ (Over S) :=
       (.mk' (TorusInt σ))
 
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
-def splitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
+def SplitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
 
-@[inherit_doc splitTorus]
-notation3 "𝔾ₘ[" S ", " σ "]" => splitTorus S σ
+@[inherit_doc SplitTorus]
+notation3 "𝔾ₘ[" S ", " σ "]" => SplitTorus S σ
 
 /-- The (split) algebraic circle over `S`. -/
-notation3 "𝔾ₘ["S"]" => splitTorus S PUnit
+notation3 "𝔾ₘ["S"]" => SplitTorus S PUnit
 
 /-- The split torus over a general base is defined by base-changing the torus over `ℤ`. -/
 example (S : Scheme) (σ : Type*) :
-    splitTorus S σ = pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
+    SplitTorus S σ = pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
 
-instance splitTorus.instCanonicallyOver (S : Scheme) (σ : Type*) :
-    (splitTorus S σ).CanonicallyOver S where
+instance SplitTorus.instCanonicallyOver (S : Scheme) (σ : Type*) :
+    (SplitTorus S σ).CanonicallyOver S where
   hom := (CommGrp_Torus S σ).X.hom
 
-instance (S : Scheme) (σ : Type*) : CommGrp_Class (asOver (splitTorus S σ) S) :=
+instance (S : Scheme) (σ : Type*) : CommGrp_Class (asOver (SplitTorus S σ) S) :=
   inferInstanceAs (CommGrp_Class (CommGrp_Torus S σ).X)
 
-def splitTorus.representableBy (S : Scheme) (σ : Type*) :
+def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
     ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
       CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
-      (Over.mk (splitTorus S σ ↘ S)) :=
+      (Over.mk (SplitTorus S σ ↘ S)) :=
   ((((Over.mapPullbackAdj (terminal.from S)).comp
     (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
     (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
@@ -103,7 +103,7 @@ def splitTorus.representableBy (S : Scheme) (σ : Type*) :
 
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
-    splitTorus (Spec R) σ ≅ Spec (.of <| MvLaurentPolynomial σ R) := sorry
+    SplitTorus (Spec R) σ ≅ Spec (.of <| MvLaurentPolynomial σ R) := sorry
 
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 def splitTorusIsoSpecOver (R : CommRingCat) (σ : Type*) :
