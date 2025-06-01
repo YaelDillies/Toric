@@ -29,14 +29,20 @@ lemma map_mul (f g : X ⟶ M) : F.map (f * g) = F.map f * F.map g := by
   ext <;> simp
 
 @[simp]
-lemma map_one : F.map (1 : X ⟶ M) = 1 := by
-  simp [Hom.one_def]
+lemma map_one : F.map (1 : X ⟶ M) = 1 := by simp [Hom.one_def]
 
-/-- `Functor.map` as a `MonoidHom`. -/
-def mapMonoidHom : (X ⟶ M) →* (F.obj X ⟶ F.obj M) where
-  toFun := _
+/-- `Functor.map` of a monoidal functor as a `MonoidHom`. -/
+@[simps]
+def homMonoidHom : (X ⟶ M) →* (F.obj X ⟶ F.obj M) where
+  toFun := F.map
   map_one' := map_one F
   map_mul' := map_mul F
+
+/-- `Functor.map` of a fully faithful monoidal functor as a `MulEquiv`. -/
+@[simps!]
+def FullyFaithful.homMulEquiv (hF : F.FullyFaithful) : (X ⟶ M) ≃* (F.obj X ⟶ F.obj M) where
+  __ := hF.homEquiv
+  __ := F.homMonoidHom
 
 end CategoryTheory.Functor
 
