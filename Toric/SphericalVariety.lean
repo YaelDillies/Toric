@@ -26,8 +26,8 @@ variable (R n)
 /-- A spherical variety over `B` over a ring `R` is a scheme `X` equipped with an action `B × X → X`
 with an open dense orbit. -/
 -- TODO: Add correct assumptions on `B`
-class SphericalVariety (B X : Scheme) [B.Over (Spec R)] [Mon_Class (Over.mk (B ↘ Spec R))]
-  extends X.Over (Spec R), Mod_Class (Over.mk (B ↘ Spec R)) (Over.mk (X ↘ Spec R)) where
+class SphericalVariety (B X : Scheme) [B.Over (Spec R)] [Mon_Class (B.asOver (Spec R))]
+  extends X.Over (Spec R), Mod_Class (B.asOver (Spec R)) (X.asOver (Spec R)) where
   -- TODO: Add the open dense orbit assumption
 
 end AlgebraicGeometry

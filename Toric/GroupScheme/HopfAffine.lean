@@ -117,7 +117,7 @@ suppress_compilation
 instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 
-instance asOver.instMon_Class [Bialgebra R A] : Mon_Class (asOver (Spec A) (Spec R)) :=
+instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
   ((bialgSpec R).obj <| .op <| .of R A).instMon_ClassX
 
 lemma μIso_algSpec_inv_left [Algebra R A] :
@@ -131,12 +131,12 @@ lemma μ_algSpec_left [Algebra R A] :
     Monoidal.μ_δ, Over.id_left]
 
 lemma mul_left [Bialgebra R A] :
-    μ[asOver (Spec A) (Spec R)].left =
+    μ[(Spec A).asOver (Spec R)].left =
       (pullbackSpecIso R A A).hom ≫ Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R A)) := by
   rw [← μ_algSpec_left]; rfl
 
 instance asOver.instIsComm_Mon [Bialgebra R A] [IsCocomm R A] :
-    IsCommMon (asOver (Spec A) (Spec R)) where
+    IsCommMon ((Spec A).asOver (Spec R)) where
   mul_comm' := by
     ext
     have := LaxMonoidal.μ (algSpec R) (.op <| .of R A) (.op <| .of R A)
@@ -158,11 +158,11 @@ instance asOver.instIsComm_Mon [Bialgebra R A] [IsCocomm R A] :
       · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₂]; rfl
     · exact mul_left ..
 
-instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class (asOver (Spec A) (Spec R)) :=
+instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class ((Spec A).asOver (Spec R)) :=
   ((hopfSpec R).obj <| .op <| .of R A).instGrp_ClassX
 
 instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
-   CommGrp_Class (asOver (Spec A) (Spec R)) where
+   CommGrp_Class ((Spec A).asOver (Spec R)) where
 
 end AlgebraicGeometry.Scheme
 

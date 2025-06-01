@@ -20,15 +20,15 @@ section general_base
 variable {σ : Type u} {S G : Scheme.{u}} [G.Over S]
 
 section Grp_Class
-variable [Grp_Class (asOver G S)]
+variable [Grp_Class (G.asOver S)]
 
 variable (S G) in
 /-- The characters of the group scheme `G` over `S` are the group morphisms `G ⟶/S 𝔾ₘ[S]`. -/
-abbrev char := Additive <| Grp_.mk' (asOver G S) ⟶ .mk' <| asOver 𝔾ₘ[S] S
+abbrev char := Additive <| Grp_.mk' (G.asOver S) ⟶ .mk' <| 𝔾ₘ[S].asOver S
 
 variable (S G) in
 /-- The cocharacters of the group scheme `G` over `S` are the group morphisms `𝔾ₘ[S] ⟶/S G`. -/
-abbrev cochar := Additive <| Grp_.mk' (asOver 𝔾ₘ[S] S) ⟶ .mk' (asOver G S)
+abbrev cochar := Additive <| Grp_.mk' (𝔾ₘ[S].asOver S) ⟶ .mk' (G.asOver S)
 
 @[inherit_doc] notation "X("S", "G")" => char S G
 @[inherit_doc] notation "X*("S", "G")" => cochar S G
@@ -36,12 +36,12 @@ abbrev cochar := Additive <| Grp_.mk' (asOver 𝔾ₘ[S] S) ⟶ .mk' (asOver G S
 end Grp_Class
 
 section CommGrp_Class
-variable [CommGrp_Class (asOver G S)]
+variable [CommGrp_Class (G.asOver S)]
 
 /-- The perfect pairing between characters and cocharacters, valued in the characters of the
 algebraic torus. -/
 noncomputable def charPairing : X*(S, G) →+ X(S, G) →+ X(S, 𝔾ₘ[S]) where
-  toFun χ := ((CommGrp_.yonedaCommGrpGrp.obj (.mk' <| asOver 𝔾ₘ[S] S)).map χ.op).hom.toAdditive
+  toFun χ := ((CommGrp_.yonedaCommGrpGrp.obj (.mk' <| 𝔾ₘ[S].asOver S)).map χ.op).hom.toAdditive
   map_zero' := by ext f; dsimp; ext : 1; exact ((yonedaGrp.map f).app _).hom.map_one
   map_add' χ χ' := by
     ext f : 2
@@ -80,7 +80,7 @@ Note: This is true over a general base using Cartier duality, but we do not prov
 def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) := sorry
 
 section CommGrp_Class
-variable [CommGrp_Class (asOver G (Spec R))]
+variable [CommGrp_Class (G.asOver (Spec R))]
 
 /-- The `ℤ`-valued perfect pairing between characters and cocharacters of group schemes over a
 domain.

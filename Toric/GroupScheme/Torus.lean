@@ -82,13 +82,13 @@ instance SplitTorus.instCanonicallyOver (S : Scheme) (σ : Type*) :
     𝔾ₘ[S, σ].CanonicallyOver S where
   hom := (CommGrp_Torus S σ).X.hom
 
-instance (S : Scheme) (σ : Type*) : CommGrp_Class (asOver 𝔾ₘ[S, σ] S) :=
+instance (S : Scheme) (σ : Type*) : CommGrp_Class (𝔾ₘ[S, σ].asOver S) :=
   inferInstanceAs (CommGrp_Class (CommGrp_Torus S σ).X)
 
 def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
     ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
       CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
-      (Over.mk (𝔾ₘ[S, σ] ↘ S)) :=
+      (𝔾ₘ[S, σ].asOver S) :=
   ((((Over.mapPullbackAdj (terminal.from S)).comp
     (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
     (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
@@ -107,7 +107,7 @@ def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
 
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 def splitTorusIsoSpecOver (R : CommRingCat) (σ : Type*) :
-    asOver 𝔾ₘ[Spec R, σ] (Spec R) ≅ asOver (Spec <| .of <| MvLaurentPolynomial σ R) (Spec R) :=
+    𝔾ₘ[Spec R, σ].asOver (Spec R) ≅ (Spec <| .of <| MvLaurentPolynomial σ R).asOver (Spec R) :=
   Over.isoMk (splitTorusIsoSpec _ _) sorry
 
 end AlgebraicGeometry.Scheme

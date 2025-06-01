@@ -27,17 +27,17 @@ variable (R) in
 /-- A toric variety of dimension `n` over a ring `R` is a scheme `X` equipped with a dense embedding
 `Tⁿ → X` and an action `T × X → X` extending the standard action `T × T → T`. -/
 class ToricVariety (X : Scheme)
-    extends X.Over (Spec R), Mod_Class (asOver 𝔾ₘ[Spec R, σ] (Spec R)) (asOver X (Spec R)) where
+    extends X.Over (Spec R), Mod_Class (𝔾ₘ[Spec R, σ].asOver (Spec R)) (X.asOver (Spec R)) where
   /-- The torus embedding. -/
-  torusEmb : asOver 𝔾ₘ[Spec R, σ] (Spec R) ⟶ asOver X (Spec R)
+  torusEmb : 𝔾ₘ[Spec R, σ].asOver (Spec R) ⟶ X.asOver (Spec R)
   /-- The torus embedding is an open immersion. -/
   [isOpenImmersion_torusEmb : IsOpenImmersion torusEmb.left]
   /-- The torus embedding is dominant. -/
   [isDominant_torusEmb : IsDominant torusEmb.left]
   /-- The torus action extends the torus multiplication morphism. -/
   torusMul_comp_torusEmb :
-    (𝟙 (asOver 𝔾ₘ[Spec R, σ] (Spec R)) ⊗ torusEmb) ≫ γ =
-      μ[asOver 𝔾ₘ[Spec R, σ] (Spec R)] ≫ torusEmb := by aesop_cat
+    (𝟙 (𝔾ₘ[Spec R, σ].asOver (Spec R)) ⊗ torusEmb) ≫ γ =
+      μ[𝔾ₘ[Spec R, σ].asOver (Spec R)] ≫ torusEmb := by aesop_cat
 
 noncomputable instance : ToricVariety R σ 𝔾ₘ[Spec R, σ] where
   toMod_Class := .regular _
