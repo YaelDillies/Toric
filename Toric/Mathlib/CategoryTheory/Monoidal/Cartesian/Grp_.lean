@@ -41,6 +41,8 @@ def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f]
 
 @[simp] lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) : homMk f.hom = f := rfl
 
+lemma Grp_.inv_eq_inv {G : Grp_ C} : G.inv = (𝟙 G.X)⁻¹ := Grp_Class.inv_eq_inv (G := G.X)
+
 @[reassoc]
 lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H] :
     h ≫ (f / g) = h ≫ f / h ≫ g :=
@@ -55,14 +57,22 @@ lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι
 
 lemma Grp_Class.mul_eq_comp_mul {G H : C} {f g : G ⟶ H} [Grp_Class H] : f * g = lift f g ≫ μ := rfl
 
+attribute [local simp] mul_eq_mul Grp_Class.inv_eq_inv comp_mul comp_mul_assoc
+  mul_comp mul_comp_assoc Grp_Class.comp_inv one_eq_one Grp_.inv_eq_inv Mon_.one_eq_one
+  Mon_.mul_eq_mul Grp_Class.div_comp Grp_Class.div_comp_assoc one_comp
+
 lemma Grp_Class.mul_inv_rev [BraidedCategory C] {G : C} [Grp_Class G] :
     μ ≫ ι = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by
-  calc
-    _ = ((fst G G) * (snd G G)) ≫ ι := by rw [mul_eq_mul]
-    _ = (snd G G)⁻¹ * (fst G G)⁻¹ := by rw [Grp_Class.inv_eq_comp_inv]; simp
-    _ = lift (snd G G ≫ ι) (fst G G ≫ ι) ≫ μ := rfl
-    _ = lift (fst G G ≫ ι) (snd G G ≫ ι) ≫ (β_ G G).hom ≫ μ := by simp
-    _ = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by simp
+  simp
+
+@[reassoc (attr := simp)]
+lemma Grp_Class.one_inv [BraidedCategory C] {G : C} [Grp_Class G] :
+    η[G] ≫ ι[G] = η[G] := by
+  simp
+
+attribute [local simp] mul_comm mul_div_mul_comm
+
+instance [BraidedCategory C] {G : C} [Grp_Class G] [IsCommMon G] : IsMon_Hom ι[G] where
 
 /-- If `G` is a commutative group object, then `Hom(X, G)` has a commutative group structure. -/
 abbrev Hom.commGroup [BraidedCategory C] {G H : C} [Grp_Class H] [IsCommMon H] :
@@ -78,11 +88,105 @@ lemma Grp_Class.comp_zpow {G H K : C} [Grp_Class H] (f : G ⟶ H) (h : K ⟶ G) 
   | (n : ℕ) => by simp [comp_pow]
   | .negSucc n => by simp [comp_pow, comp_inv]
 
+namespace Grp_Class
+variable [BraidedCategory C]
+
+instance : Grp_Class (𝟙_ C) where
+  inv := 𝟙 _
+  left_inv' := toUnit_unique _ _
+  right_inv' := toUnit_unique _ _
+
+namespace tensorObj
+
+@[simps inv]
+instance {G H : C} [Grp_Class G] [Grp_Class H] : Grp_Class (G ⊗ H) where
+  inv := ι ⊗ ι
+  left_inv' := by
+    have H : ((𝟙 G)⁻¹ ⊗ (𝟙 H)⁻¹) * 𝟙 (G ⊗ H) = 1 := by
+      simp only [← tensor_id, ← mul_tensor_mul, inv_mul_cancel, one_tensor_one]
+    simpa [mul_tensor_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensor_one]
+  right_inv' := by
+    have H : 𝟙 (G ⊗ H) * ((𝟙 G)⁻¹ ⊗ (𝟙 H)⁻¹) = 1 := by
+      simp only [← tensor_id, ← mul_tensor_mul, mul_inv_cancel, one_tensor_one]
+    simpa [mul_tensor_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensor_one]
+
+end tensorObj
+end Grp_Class
+
 namespace Grp_
 
 @[simp] lemma mk'_X (G : C) [Grp_Class G] : (mk' G).X = G := rfl
 
+variable [BraidedCategory C] {G H H₁ H₂ : Grp_ C}
+
+@[simps! tensorObj_X tensorHom_hom]
+instance instMonoidalCategoryStruct : MonoidalCategoryStruct (Grp_ C) where
+  tensorObj G H := mk' (G.X ⊗ H.X)
+  tensorHom := tensorHom (C := Mon_ C)
+  whiskerRight f _ := whiskerRight (C := Mon_ C) f _
+  whiskerLeft _ _ _ := whiskerLeft (C := Mon_ C) _
+  tensorUnit := mk' (𝟙_ C)
+  associator _ _ _ := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (associator _ _ _)
+  leftUnitor _ := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (leftUnitor _)
+  rightUnitor _ := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (rightUnitor _)
+
+@[simp] lemma tensorUnit_X : (𝟙_ (Grp_ C)).X = 𝟙_ C := rfl
+
+@[simp] lemma tensorUnit_one : (𝟙_ (Grp_ C)).one = 𝟙 (𝟙_ C) := rfl
+
+@[simp] lemma tensorUnit_mul : (𝟙_ (Grp_ C)).mul = (λ_ (𝟙_ C)).hom := rfl
+
+@[simp] lemma tensorObj_one (G H : Grp_ C) : (G ⊗ H).one = (λ_ (𝟙_ C)).inv ≫ (G.one ⊗ H.one) := rfl
+
+@[simp] lemma tensorObj_mul (G H : Grp_ C) :
+    (G ⊗ H).mul = tensorμ G.X H.X G.X H.X ≫ (G.mul ⊗ H.mul) := rfl
+
+@[simp] lemma whiskerLeft_hom {G H : Grp_ C} (f : G ⟶ H) (I : Grp_ C) :
+    (f ▷ I).hom = f.hom ▷ I.X := rfl
+
+@[simp] lemma whiskerRight_hom (G : Grp_ C) {H I : Grp_ C} (f : H ⟶ I) :
+    (G ◁ f).hom = G.X ◁ f.hom := rfl
+
+@[simp] lemma leftUnitor_hom_hom (G : Grp_ C) : (λ_ G).hom.hom = (λ_ G.X).hom := rfl
+@[simp] lemma leftUnitor_inv_hom (G : Grp_ C) : (λ_ G).inv.hom = (λ_ G.X).inv := rfl
+@[simp] lemma rightUnitor_hom_hom (G : Grp_ C) : (ρ_ G).hom.hom = (ρ_ G.X).hom := rfl
+@[simp] lemma rightUnitor_inv_hom (G : Grp_ C) : (ρ_ G).inv.hom = (ρ_ G.X).inv := rfl
+
+@[simp] lemma associator_hom_hom (G H I : Grp_ C) : (α_ G H I).hom.hom = (α_ G.X H.X I.X).hom := rfl
+@[simp] lemma associator_inv_hom (G H I : Grp_ C) : (α_ G H I).inv.hom = (α_ G.X H.X I.X).inv := rfl
+
+@[simp] lemma tensor_one (G H : Grp_ C) : (G ⊗ H).one = (λ_ (𝟙_ C)).inv ≫ (G.one ⊗ H.one) := rfl
+
+@[simp] lemma tensor_mul (G H : Grp_ C) :
+    (G ⊗ H).mul = tensorμ G.X H.X G.X H.X ≫ (G.mul ⊗ H.mul) := rfl
+
+instance instMonoidalCategory : MonoidalCategory (Grp_ C) where
+  tensorHom_def := by intros; ext; simp [tensorHom_def]
+  triangle _ _ := by ext; exact triangle _ _
+
+instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Grp_ C) where
+  isTerminalTensorUnit :=
+    .ofUniqueHom (fun G ↦ toUnit G.toMon_) fun G f ↦ by ext; exact toUnit_unique ..
+  fst G H := fst G.toMon_ H.toMon_
+  snd G H := snd G.toMon_ H.toMon_
+  tensorProductIsBinaryProduct G H :=
+    BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom)
+      (by aesop_cat) (by aesop_cat)) (by aesop_cat) (by aesop_cat) (by aesop_cat)
+  fst_def G H := Mon_.ext <| fst_def _ _
+  snd_def G H := Mon_.ext <| snd_def _ _
+
+@[simp] lemma lift_hom (f : G ⟶ H₁) (g : G ⟶ H₂) : (lift f g).hom = lift f.hom g.hom := rfl
+@[simp] lemma fst_hom (G H : Grp_ C) : (fst G H).hom = fst G.X H.X := rfl
+@[simp] lemma snd_hom (G H : Grp_ C) : (snd G H).hom = snd G.X H.X := rfl
+
+instance instBraided : BraidedCategory (Grp_ C) where braiding G H := Grp_.mkIso (β_ G.X H.X)
+
+@[simp] lemma braiding_hom_hom (G H : Grp_ C) : (β_ G H).hom.hom = (β_ G.X H.X).hom := rfl
+@[simp] lemma braiding_inv_hom (G H : Grp_ C) : (β_ G H).inv.hom = (β_ G.X H.X).inv := rfl
+
 namespace Hom
+
+omit [BraidedCategory C]
 
 instance instOne : One (G ⟶ H) := inferInstanceAs <| One (G.toMon_ ⟶ H.toMon_)
 
@@ -106,11 +210,6 @@ instance {G : C} [Grp_Class G] [IsCommMon G] : IsMon_Hom (ι : G ⟶ G) where
     simp [Grp_Class.mul_inv_rev]
 
 instance {f : G ⟶ H} [IsCommMon H.X] : IsMon_Hom f.hom⁻¹ where
-  one_hom := by
-    change _ ≫ _ ≫ _ = _
-    simp [Mon_Class.one_eq_one, one_comp]
-  mul_hom := by
-    simp [← Grp_Class.inv_eq_comp_inv]
 
 instance instInv : Inv (G ⟶ H) where
   inv f := {
