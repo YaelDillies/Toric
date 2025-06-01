@@ -22,6 +22,7 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.Order.Nonneg.Module
+import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
