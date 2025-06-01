@@ -71,7 +71,7 @@ def SplitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
 @[inherit_doc SplitTorus]
 notation3 "𝔾ₘ[" S ", " σ "]" => SplitTorus S σ
 
-/-- The (split) algebraic circle over `S`. -/
+/-- The multiplicative group over `S`. -/
 notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 
 /-- The split torus over a general base is defined by base-changing the torus over `ℤ`. -/
