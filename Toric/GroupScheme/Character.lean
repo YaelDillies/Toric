@@ -45,9 +45,7 @@ noncomputable def charPairing : X*(S, G) →+ X(S, G) →+ X(S, 𝔾ₘ[S]) wher
   toFun χ := ((CommGrp_.yonedaCommGrpGrp.obj (.mk' <| 𝔾ₘ[S].asOver S)).map χ.op).hom.toAdditive
   map_zero' := by ext f; dsimp; ext : 1; exact ((yonedaGrp.map f).app _).hom.map_one
   map_add' χ χ' := by
-    ext f : 2
-    refine Mon_.Hom.ext ?_
-    simpa using ((yonedaGrp.map f).app _).hom.map_mul χ.hom χ'.hom
+    ext f : 2; exact Mon_.Hom.ext <| ((yonedaGrp.map f).app _).hom.map_mul χ.hom χ'.hom
 
 end CommGrp_Class
 end general_base
