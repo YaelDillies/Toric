@@ -13,8 +13,6 @@ scoped[Hom] attribute [instance] Hom.monoid
 
 universe v₁ v₂ u₁ u₂
 
-section
-
 attribute [simp] Mon_Class.one_comp Mon_Class.one_comp_assoc Mon_Class.comp_one
   Mon_Class.comp_one_assoc
 
@@ -32,6 +30,11 @@ lemma Mon_Class.comp_pow (f : X ⟶ M) (n : ℕ) (h : Y ⟶ X) : h ≫ f ^ n = (
 
 variable [BraidedCategory C]
 
+attribute [local simp]  one_eq_one
+
+instance : IsMon_Hom (fst M N) where
+instance : IsMon_Hom (snd M N) where
+
 /-- If `M` is a commutative monoid object, then `Hom(X, M)` has a commutative monoid structure. -/
 abbrev Hom.commMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
   mul_comm f g := by
@@ -43,25 +46,20 @@ abbrev Hom.commMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
 
 scoped[Hom] attribute [instance] Hom.commMonoid
 
-end
+attribute [local simp] mul_eq_mul comp_mul mul_comp one_eq_one Mon_.one_eq_one Mon_.mul_eq_mul
 
 namespace Mon_
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N N₁ N₂ : Mon_ C}
-
-section Braided
-variable [BraidedCategory C]
+variable {M N N₁ N₂ : Mon_ C}
 
 instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) where
   isTerminalTensorUnit :=
     .ofUniqueHom (fun M ↦ .mk (toUnit _) (toUnit_unique ..))
       fun M f ↦ by ext; exact toUnit_unique ..
-  fst M N := .mk (fst M.X N.X) (by simp [toUnit_unique _ (𝟙 _)])
-  snd M N := .mk (snd M.X N.X) (by simp [toUnit_unique _ (𝟙 _)])
+  fst M N := .mk (fst M.X N.X)
+  snd M N := .mk (snd M.X N.X)
   tensorProductIsBinaryProduct M N :=
-    BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom)
-      (by simp; ext <;> simp [toUnit_unique _ (𝟙 _)])
-      (by simp; ext <;> simp [toUnit_unique _ (𝟙 _), ← tensor_comp_assoc]))
-      (by aesop_cat) (by aesop_cat) (by aesop_cat)
+    BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom)) (by aesop_cat) (by aesop_cat)
+      (by aesop_cat)
   fst_def M N := by ext; simp [fst_def]; congr
   snd_def M N := by ext; simp [snd_def]; congr
 
@@ -69,7 +67,25 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) wher
 @[simp] lemma fst_hom (M N : Mon_ C) : (fst M N).hom = fst M.X N.X := rfl
 @[simp] lemma snd_hom (M N : Mon_ C) : (snd M N).hom = snd M.X N.X := rfl
 
-end Braided
+@[simp] lemma mul_comm [IsCommMon M.X] : (β_ _ _).hom ≫ M.mul = M.mul := IsCommMon.mul_comm _
+
+/-- A commutative monoid object is a monoid object in the category of monoid objects. -/
+instance [IsCommMon M.X] : Mon_Class M where
+  one :=
+    .mk M.one (by simp [Mon_.one_eq_one]) (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom])
+  mul := .mk M.mul (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]) <| by
+    simp only [monMonoidalStruct_tensorObj_X, tensorObj_mul, tensorμ, Category.assoc,
+      tensorHom_def'_assoc, ← associator_inv_naturality_right_assoc,
+      (Iso.inv_comp_eq _).mpr M.mul_assoc, ← MonoidalCategory.whiskerLeft_comp_assoc,
+      ← M.mul_assoc, ← comp_whiskerRight_assoc]
+    simp only [mul_comm, mul_assoc, Iso.inv_hom_id_assoc, MonoidalCategory.whiskerLeft_comp,
+      Category.assoc, tensor_whiskerLeft]
+  one_mul' := by ext; simp [leftUnitor_hom]
+  mul_one' := by ext; simp [rightUnitor_hom]
+  mul_assoc' := by ext; simp [_root_.mul_assoc]
+
+@[simp] lemma hom_η (M : Mon_ C) [IsCommMon M.X] : η[M].hom = η[M.X] := rfl
+@[simp] lemma hom_μ (M : Mon_ C) [IsCommMon M.X] : μ[M].hom = μ[M.X] := rfl
 
 namespace Hom
 
@@ -78,9 +94,10 @@ instance instOne : One (M ⟶ N) where
   one.one_hom := by simp [one_eq_one]
   one.mul_hom := by simp [mul_eq_mul, Mon_Class.comp_mul]
 
+omit [BraidedCategory C] in
 lemma hom_one : (1 : (M ⟶ N)).hom = 1 := rfl
 
-variable [BraidedCategory C] [IsCommMon N.X]
+variable [IsCommMon N.X]
 
 instance instMul : Mul (M ⟶ N) where
   mul f g := {
@@ -105,4 +122,9 @@ instance instPow : Pow (M ⟶ N) ℕ where
 instance : CommMonoid (M ⟶ N) :=
   Function.Injective.commMonoid hom (fun _ _ ↦ ext) hom_one hom_mul hom_pow
 
-end Mon_.Hom
+end Hom
+
+/-- A commutative monoid object is a commutative monoid object in the category of monoid objects. -/
+instance [IsCommMon M.X] : IsCommMon M where mul_comm' := by ext; simp [_root_.mul_comm]
+
+end Mon_
