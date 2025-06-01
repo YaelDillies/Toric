@@ -11,24 +11,23 @@ variable {C : Type u} [Category.{v} C] [CartesianMonoidalCategory C] [BraidedCat
 
 namespace CommGrp_
 
-def mk' (X : C) [Grp_Class X] [IsCommMon X] : CommGrp_ C where
-  __ := Grp_.mk' X
-  mul_comm := IsCommMon.mul_comm X
+def mk' (G : C) [Grp_Class G] [IsCommMon G] : CommGrp_ C where
+  __ := Grp_.mk' G
+  mul_comm := IsCommMon.mul_comm G
 
-instance (X : CommGrp_ C) : CommGrp_Class X.X where
-  mul_comm' := X.mul_comm
+instance (G : CommGrp_ C) : CommGrp_Class G.X where mul_comm' := G.mul_comm
 
 section GrpGrp
 
 /-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
 @[simps]
-def yonedaCommGrpGrpObj (X : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrp where
-  obj Y := .of (unop Y ⟶ X.toGrp_)
-  map {Y Z} f := CommGrp.ofHom {
+def yonedaCommGrpGrpObj (G : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrp where
+  obj H := .of (unop H ⟶ G.toGrp_)
+  map {H I} f := CommGrp.ofHom {
     toFun := (f.unop ≫ ·)
-    map_one' := by ext; simp [Grp_.Hom.hom_one]
-    map_mul' g h := by ext; simpa using ((yonedaGrpObj X.X).map f.unop.1.op).hom.map_mul g.hom h.hom
-    }
+    map_one' := by ext; simp [Mon_.Hom.hom_one]
+    map_mul' g h := by ext; simpa using ((yonedaGrpObj G.X).map f.unop.1.op).hom.map_mul g.hom h.hom
+  }
 
 /-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
 @[simps]
