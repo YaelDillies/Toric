@@ -3,8 +3,8 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.Algebra.Category.CommAlgCat.Basic
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
-import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 
 /-!
 # The cocartesian monoidal category structure on commutative `R`-algebras
