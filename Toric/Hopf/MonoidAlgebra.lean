@@ -24,22 +24,7 @@ variable {R A G H I M N : Type*}
 
 namespace MonoidAlgebra
 section CommSemiring
-variable [CommSemiring R] [Semiring A] [Bialgebra R A]
-
-section CommMonoid
-variable [CommMonoid M] [CommMonoid N]
-
-open MonoidAlgebra in
-@[simp]
-lemma mapDomainBialgHom_mul (f g : M →* N) :
-    mapDomainBialgHom R (f * g) = mapDomainBialgHom R f * mapDomainBialgHom R g := by
-  ext x : 2
-  simp
-
-end CommMonoid
-
-section Group
-variable [Group G] {x : MonoidAlgebra A G}
+variable [CommSemiring R] [Semiring A] [Bialgebra R A] [Group G] {x : MonoidAlgebra A G}
 
 lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
   isUnit := .map _ <| Group.isUnit _
@@ -55,14 +40,13 @@ lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLi
   eq_top_mono (Submodule.span_mono <| Set.range_subset_iff.2 isGroupLikeElem_of) <| by
     simp [← Finsupp.range_linearCombination]
 
-end Group
 end CommSemiring
 
 section CommRing
-variable [CommRing R] [IsDomain R] [Group G]
+variable [CommRing R] [IsDomain R]
 
 section Group
-variable [Group H]
+variable [Group G] [Group H]
 
 open Submodule in
 @[simp]
@@ -130,22 +114,14 @@ noncomputable def mapDomainBialgHomEquiv :
 end Group
 
 section CommGroup
-variable [CommGroup H]
-
--- TODO(Yaël): Fix diamond with multiplication as composition
-noncomputable
-instance : CommGroup <| MonoidAlgebra R G →ₐc[R] MonoidAlgebra R H :=
-  mapDomainBialgHomEquiv.symm.commGroup
+variable [CommGroup G] [CommGroup H]
 
 /-- The group isomorphism between group homs `G → H` and bialgebra homs `R[G] → R[H]` of group
 algebras over a domain. -/
 noncomputable def mapDomainBialgHomMulEquiv :
     (G →* H) ≃* (MonoidAlgebra R G →ₐc[R] MonoidAlgebra R H) where
   toEquiv := mapDomainBialgHomEquiv
-  map_mul' f g := by
-    simp
-    sorry
-    -- have := mapDomainBialgHom_mul f g
+  map_mul' f g := by simp
 
 end CommGroup
 end CommRing

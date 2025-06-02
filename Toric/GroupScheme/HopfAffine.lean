@@ -163,7 +163,7 @@ lemma mul_left [Bialgebra R A] :
       (pullbackSpecIso R A A).hom ≫ Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R A)) := by
   rw [← μ_algSpec_left]; rfl
 
-instance asOver.instIsComm_Mon [Bialgebra R A] [IsCocomm R A] :
+instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
     IsCommMon ((Spec A).asOver (Spec R)) where
   mul_comm' := by
     ext

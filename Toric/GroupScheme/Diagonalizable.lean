@@ -97,13 +97,6 @@ lemma AddMonoidHom.toMultiplicative_add
     {M N : Type*} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
     (f + g).toMultiplicative = f.toMultiplicative * g.toMultiplicative := rfl
 
-open MonoidAlgebra in
-@[simp]
-lemma MonoidAlgebra.mapDomainBialgHom_mul {R M N : Type*} [CommSemiring R] [CommMonoid M]
-    [CommMonoid N] (f g : M →* N) :
-    mapDomainBialgHom R (f * g) = mapDomainBialgHom R f * mapDomainBialgHom R g := by
-  sorry
-
 instance {R S : Type u} [CommRing R] [CommRing S] [HopfAlgebra R S] [Coalgebra.IsCocomm R S] :
     IsCommMon (unop ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj
       (CommHopfAlgCat.of R S))).X := by

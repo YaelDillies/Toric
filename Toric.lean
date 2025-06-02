@@ -43,11 +43,13 @@ import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
+import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
 import Toric.Mathlib.RingTheory.Coalgebra.Convolution
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
+import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
