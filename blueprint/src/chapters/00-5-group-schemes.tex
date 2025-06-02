@@ -215,7 +215,7 @@ Finally, let's do the right edge.
 \end{lemma}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
 
   Ask any toddler on the street.
 \end{proof}
@@ -224,15 +224,15 @@ Finally, let's do the right edge.
 \begin{lemma}[Diag is a group isomorphism on hom sets]
   \label{0-diag-hom}
   \uses{0-diag}
-  % \lean{}
-  % \leanok
+  \lean{AlgebraicGeometry.Scheme.diagHomEquiv}
+  \leanok
 
   Let $R$ be a domain.
   The functor $G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is a group isomorphism on hom sets.
 \end{lemma}
 \begin{proof}
   \uses{0-full-faithful-diag, 0-full-faithful-grp-hom}
-  % \leanok
+  \leanok
 
   Toddlers and streets by Lemmas \ref{0-full-faithful-diag} and \ref{0-full-faithful-grp-hom}.
 \end{proof}
@@ -277,7 +277,7 @@ Finally, let's do the right edge.
 \end{proposition}
 \begin{proof}
   \uses{0-full-faithful-diag}
-  % \leanok
+  \leanok
 
   By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
   \[
@@ -297,7 +297,7 @@ Finally, let's do the right edge.
 \end{proposition}
 \begin{proof}
   \uses{0-full-faithful-diag}
-  % \leanok
+  \leanok
 
   By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
   \[
@@ -309,15 +309,15 @@ Finally, let's do the right edge.
 \begin{proposition}[Character lattice of the torus]
   \label{0-char-torus}
   \uses{0-char}
-  % \lean{}
-  % \leanok
+  \lean{AlgebraicGeometry.Scheme.charTorus}
+  \leanok
 
   Let $G$ be a torus of dimension $n$ over a domain $R$.
   Then $X(G) = \Z^n$.
 \end{proposition}
 \begin{proof}
   \uses{0-full-faithful-diag, 0-torus-spec}
-  % \leanok
+  \leanok
 
   Immediate from Propositions \ref{0-torus-spec} and \ref{0-char-diag}.
 \end{proof}
@@ -326,8 +326,8 @@ Finally, let's do the right edge.
 \begin{proposition}[Cocharacter lattice of the torus]
   \label{0-cochar-torus}
   \uses{0-cochar}
-  % \lean{}
-  % \leanok
+  \lean{AlgebraicGeometry.Scheme.cocharTorus}
+  \leanok
 
   Let $G$ be a torus of dimension $n$ over a domain $R$.
   Then $X^*(G) = \Hom(\Z^n, \Z)$.
@@ -343,8 +343,8 @@ Finally, let's do the right edge.
 \begin{definition}[The character-cocharacter pairing]
   \label{0-char-cochar-pairing}
   \uses{0-char, 0-cochar}
-  \lean{AlgebraicGeometry.Scheme.charPairing, AlgebraicGeometry.Scheme.charPairingInt}
-  % \leanok
+  \lean{AlgebraicGeometry.Scheme.charPairing}
+  \leanok
 
   Let $R$ be a domain and $G$ a group scheme over $\Spec R$.
   Then there is a $\Z$-valued perfect pairing between $X(G)$ and $X^*(G)$.
@@ -354,14 +354,14 @@ Finally, let's do the right edge.
 \begin{proposition}[The character-cocharacter pairing is perfect]
   \label{0-char-cochar-pairing-perfect}
   \uses{0-char-cochar-pairing}
-  % \lean{}
-  % \leanok
+  \lean{AlgebraicGeometry.Scheme.isPerfPair_charPairing}
+  \leanok
 
   The character-cocharacter pairing on a torus is perfect.
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
 
   Transfer everything across the isos $X(\Gm^n) = \Z^n, X*(\Gm^n) = \Hom(\Z^n, \Z)$.
 \end{proof}
