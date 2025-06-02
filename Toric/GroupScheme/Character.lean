@@ -112,6 +112,7 @@ def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) :=
 section CommGrp_Class
 variable [CommGrp_Class (G.asOver (Spec R))]
 
+variable (R G) in
 attribute [local instance 1000000] AddEquivClass.instAddHomClass AddMonoidHomClass.toAddHomClass
   AddEquivClass.instAddMonoidHomClass in
 attribute [-simp] charPairingAux_apply_apply in
@@ -129,7 +130,7 @@ noncomputable def charPairing : X*(Spec R, G) →ₗ[ℤ] X(Spec R, G) →ₗ[�
   map_smul' _ _ := by ext; simp only [map_zsmul, AddMonoidHom.coe_smul, Pi.smul_apply, smul_eq_mul,
     LinearMap.coe_mk, AddHom.coe_mk, eq_intCast, Int.cast_eq, LinearMap.smul_apply]
 
-instance isPerfPair_charPairing [Finite σ] : (charPairing (R := R) (G := 𝔾ₘ[Spec R, σ])).IsPerfPair := by
+instance isPerfPair_charPairing [Finite σ] : (charPairing R 𝔾ₘ[Spec R, σ]).IsPerfPair := by
   refine .congr (.id (R := ℤ) (M := Module.Dual ℤ (σ →₀ ℤ)))
     ((cocharTorus (R := R) (σ := σ)).trans (Finsupp.lift ..)).toIntLinearEquiv
     (charTorus (R := R) (σ := σ)).toIntLinearEquiv _ ?_
