@@ -1,6 +1,7 @@
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.RingTheory.Bialgebra.Hom
 
 suppress_compilation
 
@@ -10,6 +11,19 @@ variable {R A M N O : Type*}
 
 namespace MonoidAlgebra
 variable [CommSemiring R] [Semiring A] [Bialgebra R A] [Monoid M] [Monoid N] [Monoid O]
+
+/-- A `k`-algebra homomorphism from `MonoidAlgebra R M` is uniquely defined by its
+values on the functions `single a 1`. -/
+lemma bialgHom_ext ⦃φ₁ φ₂ : MonoidAlgebra R M →ₐc[R] A⦄
+    (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
+  BialgHom.toAlgHom_injective <| algHom_ext h
+
+-- The priority must be `high`.
+/-- See note [partially-applied ext lemmas]. -/
+@[ext high]
+lemma bialgHom_ext' ⦃φ₁ φ₂ : MonoidAlgebra R M →ₐc[R] A⦄
+    (h : (φ₁ : MonoidAlgebra R M →* A).comp (of R M) = .comp φ₂ (of R M)) : φ₁ = φ₂ :=
+  bialgHom_ext fun x ↦ congr($h x)
 
 variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
