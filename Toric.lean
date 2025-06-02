@@ -18,6 +18,7 @@ import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.Algebra.Group.Irreducible.Defs
+import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
@@ -43,11 +44,13 @@ import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
+import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
 import Toric.Mathlib.RingTheory.Coalgebra.Convolution
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
+import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
