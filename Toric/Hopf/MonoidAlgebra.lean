@@ -3,13 +3,10 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.Algebra.Equiv.TransferInstance
-import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
-import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 
 /-!
 # Characterisation of group-like elements in group algebras

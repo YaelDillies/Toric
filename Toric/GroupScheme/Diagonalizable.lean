@@ -41,13 +41,13 @@ def diagSpecIso : Diag (Spec R) M ≅ Spec (.of <| MonoidAlgebra R <| Multiplica
     (specULiftZIsTerminal.hom_ext _ _)) (Mon_.forget _ ⋙ Over.forget _)).app <|
       .op <| .of <| Multiplicative M
 
-instance : (diagSpecIso M R).hom.IsOver (Spec R) where
+instance isOver_diagSpecIso_hom : (diagSpecIso M R).hom.IsOver (Spec R) where
   comp_over := by
     rw [← Iso.eq_inv_comp]
     exact (specCommMonAlgPullback_inv_app_hom_left_snd _ _ (specULiftZIsTerminal.hom_ext _ _) <|
       .op <| .of <| Multiplicative M).symm
 
-instance : (diagSpecIso M R).inv.IsOver (Spec R) where
+instance isOver_diagSpecIso_inv : (diagSpecIso M R).inv.IsOver (Spec R) where
   comp_over := specCommMonAlgPullback_inv_app_hom_left_snd _ _
       (specULiftZIsTerminal.hom_ext _ _) <| .op <| .of <| Multiplicative M
 
