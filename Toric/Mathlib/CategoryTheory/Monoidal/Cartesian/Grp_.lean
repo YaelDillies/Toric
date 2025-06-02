@@ -3,9 +3,9 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.CategoryTheory.Adjunction.Limits
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 open scoped Hom
@@ -246,21 +246,6 @@ protected noncomputable def FullyFaithful.mapGrp (hF : F.FullyFaithful) :
     F.mapGrp.FullyFaithful where
   preimage {X Y} f := Grp_.homMk <| hF.preimage f.hom
 
-lemma id_tensor_id {X Y : C} : (𝟙 X ⊗ 𝟙 Y) = 𝟙 _ := by simp
-
-def _root_.Mon_Class.ofIso {X Y : C} (e : X ≅ Y) [Mon_Class X] : Mon_Class Y where
-  one := η[X] ≫ e.hom
-  mul := (e.inv ⊗ e.inv) ≫ μ[X] ≫ e.hom
-  one_mul' := by simpa [← id_tensorHom, ← tensorHom_id, ← tensor_comp_assoc, id_tensor_id,
-      -Iso.cancel_iso_hom_right_assoc, ← leftUnitor_naturality] using
-      congr(_ ◁ e.inv ≫ $(Mon_Class.one_mul X) ≫ e.hom)
-  mul_one' := by simpa [← id_tensorHom, ← tensorHom_id, ← tensor_comp_assoc, id_tensor_id,
-      -Iso.cancel_iso_hom_right_assoc, ← rightUnitor_naturality] using
-      congr(e.inv ▷ _ ≫ $(Mon_Class.mul_one X) ≫ e.hom)
-  mul_assoc' := by simpa [← id_tensorHom, ← tensorHom_id, ← tensor_comp_assoc,
-      -associator_conjugation, associator_naturality_assoc] using
-      congr(((e.inv ⊗ e.inv) ⊗ e.inv) ≫ $(Mon_Class.mul_assoc X) ≫ e.hom)
-
 def _root_.Grp_Class.ofIso {X Y : C} (e : X ≅ Y) [Grp_Class X] : Grp_Class Y where
   __ := Mon_Class.ofIso e
   inv := e.inv ≫ ι[X] ≫ e.hom
@@ -284,19 +269,6 @@ def FullyFaithful.Grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)]
     (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
   right_inv' := hF.map_injective
     (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
-
-open Monoidal in
-/-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
-same on group objects as on objects. -/
-@[simp] lemma essImage_mapMon [F.Full] [F.Faithful] {G : Mon_ D} :
-    F.mapMon.essImage G ↔ F.essImage G.X where
-  mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Mon_.forget _).mapIso e⟩⟩
-  mpr hG := by
-    obtain ⟨G', ⟨e⟩⟩ := hG
-    letI h₁ := Mon_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.Mon_Class (.ofFullyFaithful F) (X := G')
-    refine ⟨.mk' G', ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;>
-      simp [Mon_Class.ofIso, FullyFaithful.Mon_Class, h₁, h₂] <;> rfl
 
 open EssImageSubcategory Monoidal in
 /-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
