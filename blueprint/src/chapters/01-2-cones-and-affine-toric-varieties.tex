@@ -63,61 +63,34 @@ which every nonzero element has a multiplicative inverse.
 \end{definition}
 
 \begin{proposition}
-  \label{1-2-1-cone-span-le-span}
-  \uses{1-2-1-cone-span}
-  % \lean{}
-  % \leanok
-  For subsets \( S, T \subseteq N \), we have \( \Cone(S) \subseteq
-  \Cone(T) \).
-\end{proposition}
-\begin{proof}
-  \uses{}
-  % \leanok
-  Easy.
-\end{proof}
-
-\begin{proposition}
-  \label{1-2-1-dual-le-dual}
-  \uses{1-2-1-cone-dual}
-  % \lean{}
-  % \leanok
-  For subsets \( S, T \subseteq M \), we have \( T^\vee \subseteq
-  S^\vee \).
-\end{proposition}
-\begin{proof}
-  \uses{}
-  % \leanok
-  Easy.
-\end{proof}
-
-\begin{proposition}
   \label{1-2-1-dual-polyhedral}
-  \uses{}
-  % \lean{}
-  % \leanok
+  \uses{1-2-1-polyhedral-cone, 1-2-1-cone-finitely-generated}
+  \lean{PointedCone.IsPolyhedral.dual_of_fg}
+  \leanok
   If \( \sigma \subset N \) is finitely generated, then \( \sigma^\vee
   \subset M \) is polyhedral.
 \end{proposition}
 \begin{proof}
-  \uses{1-2-1-dual-le-dual}
-  % \leanok
+  \uses{}
+  \leanok
   Let \( \sigma = \Cone(S) \) for \( S \subseteq N \). We need to show
   \( \Cone(S)^\vee = S^\vee \). The inclusion ``\( \subseteq \)'' is
-  follows from~\ref{1-2-1-dual-le-dual}. The opposite inclusion can be
-  proved by induction.
+  obvious, as \( S \subseteq \Cone(S) \). The opposite inclusion can
+  be shown by induction on the general element of \( \Cone(S) \).
 \end{proof}
 
 \begin{proposition}[Double dual]
   \label{1-2-1-double-dual-polyhedral-cone}
-  \uses{1-2-1-polyhedral-cone, 1-2-2-dual-cone}
-  % \lean{}
-  % \leanok
+  \uses{1-2-1-polyhedral-cone}
+  \lean{PointedCone.IsPolyhedral.dual_dual_flip,
+  PointedCone.IsPolyhedral.dual_flip_dual}
+  \leanok
   If \( \sigma \subseteq N \) is polyhedral, then \( \sigma^{\vee\vee}
   = \sigma \).
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
   The inclusion \( \sigma \subseteq \sigma^{\vee\vee} \) is
   easy, it even holds for any set \( S \subset N \). For the reverse
   inclusion, write \( \sigma = S^\vee \) for some set \( S \subset M
@@ -128,156 +101,94 @@ which every nonzero element has a multiplicative inverse.
   S^{\vee} = \sigma \).
 \end{proof}
 
-
-
-\begin{proposition}
-  \label{1-2-1-top-finitely-generated}
-  \uses{1-2-1-cone-finitely-generated}
-  % \lean{PointedCone.top_fg}
-  % \leanok
-  The whole space \( N \) is a finitely generated cone.
-\end{proposition}
-\begin{proof}
-  \uses{}
-  \leanok
-  If \( S \subseteq N \) is a finite \( \Bbbk \)-basis of \( N \).
-  Then \( S \cup -S \) is a finite \( \Bbbk_{\geq 0} \)-basis of \( N
-  \).
-\end{proof}
-
 \begin{proposition}
   \label{1-2-1-bot-polyhedral}
   \uses{1-2-1-polyhedral-cone}
-  % \lean{}
-  % \leanok
+  \lean{PointedCone.IsPolyhedral.bot}
+  \leanok
   The zero-space \( \{0\} \subseteq N \) is a polyhedral cone.
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
+  \leanok
   If \( S \subseteq M \) is a finite \( \Bbbk \)-basis of \( M \),
   then \( \{0\} = (S \cup -S)^\vee \).
 \end{proof}
 
-\begin{proposition}
-  \label{1-2-1-span-union}
-  \uses{1-2-1-cone-span}
-  % \lean{}
-  % \leanok
-  For two sets \( S, T \subseteq N \), we have \( \Cone(S \cup T) =
-  \Cone(S) + \Cone(T) \).
-\end{proposition}
-\begin{proof}
-  \uses{1-2-1-cone-span-le-span}
-  % \leanok
-  Easy.
-\end{proof}
-
-\begin{proposition}
-  \label{1-2-1-dual-union}
-  \uses{1-2-1-dual-cone}
-  \lean{PointedCone.dual'_union}
-  \leanok
-  For two sets \( S, T \subseteq M \), we have \( (S \cup T)^\vee =
-  S^\vee \cap T^\vee \)
-\end{proposition}
-
-\begin{proof}
-  \uses{}
-  \leanok
-  Easy.
-\end{proof}
-
-\begin{proposition}[Fourier-Motzkin elimination 1]
-  \label{1-2-1-fourier-motzkin-fg}
-  \uses{1-2-1-cone-finitely-generated}
-  % \lean{PointedCone.IsPolyhedral.inf_dual'_singleton}
-  % \leanok
-  If \( \sigma \subseteq N \) is a finitely generated cone and \( w
-  \in M \), then \( \sigma \cap \{w\}^\vee \) is finitely generated too.
-\end{proposition}
-
-\begin{proof}
-  % \uses{1-2-1-dual-union}
-  % \leanok
-  Let \( S \subseteq N \) such that \( \sigma = \Cone(S) \). Let's
-  write \( S_{\geq 0} := \{s \in S \mid \langle s, w \rangle \geq 0 \}
-  \) and analogously for \( S_{\leq 0} \) and \( S_{<0} \). We set
-  \[
-      T := S_{\geq 0} \cup \{\langle x,w \rangle y - \langle y,w
-      \rangle x \mid y \in S_{\leq 0}, x \in S_{\geq 0} \} \subseteq
-      M.
-  \]
-  We claim that \( \sigma \cap \{w\}^\vee = \Cone(T) \). For ``\(
-  \supseteq \)'', note that all elements of \( T \) are \( \Bbbk_{\geq
-  0} \)-linear combinations of elements of \( S \) and all \( z \in T
-  \) satisfy \( \langle z,w \rangle \geq 0 \). To show ``\( \subseteq
-  \)'', consider an arbitrary \( v \in \sigma \cap \{w\}^\vee \).
-  Since \( S = S_{\geq 0} \cup S_{<0} \), we may write \( v = x + y \)
-  where \( x \in \Cone(S_{\geq 0}) \) and \( y \in \Cone(S_{<0}) \).
-  In particular, we have \( \langle x,w \rangle \geq 0 \) and \(
-  \langle y,w \rangle \leq 0 \), where \( \langle y,w \rangle = 0 \)
-  can only happen for \( y = 0 \). The condition \( v \in \{w\}^\vee
-  \) means that \(0 \leq \langle x,w \rangle + \langle y,w \rangle \).
-  Now consider first the case \( \langle x,w \rangle = 0 \), then \( 0
-  \leq \langle y,w \rangle \leq 0 \), hence \( \langle y,w \rangle = 0 \)
-  and we must have \( y = 0 \). Thus \( v = x \in \Cone(T) \) as
-  claimed. Now assume \( \langle x,w \rangle > 0 \). Setting \( t_1 :=
-  1 + \langle y,w \rangle / \langle x,w \rangle \geq 0\) and \( t_2 :=
-  1 / \langle x,w \rangle \geq 0\) as well as \( u := \langle x,w
-  \rangle y - \langle y,w \rangle x \in \Cone(T) \), we have
-  \[
-      v = x + y = t_1 x + t_2 u \in \Cone(T).
-  \]
-\end{proof}
-
-\begin{proposition}[Fourier-Motkin elimination 2]
-  \label{1-2-1-fourier-motzkin-polyhedral}
+\begin{proposition}[Fourier-Motkin elimination]
+  \label{1-2-1-fourier-motzkin}
   \uses{1-2-1-polyhedral-cone}
-  % \lean{}
-  % \leanok
-  If \( \sigma \subseteq N \) is a polyhedral cone and \( w \in M \),
+  \lean{PointedCone.dual_auxGenSet}
+  \leanok
+  If \( \sigma \subseteq N \) is a polyhedral cone and \( w \in N \),
   then \( \sigma + \Cone(\{w\}) \) is polyhedral too.
 \end{proposition}
 \begin{proof}
-  % \uses{1-2-1-span-union}
-  % \leanok
-  Let \( S \subseteq M \) such that \( \sigma = S^\vee \). Define \( T
-  \subseteq M \) exactly as in the proof
-  of~\ref{1-2-1-fourier-motzkin-fg}. Then one can show \( S^\vee +
-  \Cone(\{w\}) = T^\vee \) using very similar (but dual) arguments as
-  in~\ref{1-2-1-fourier-motzkin-fg}.
+  \leanok
+\end{proof}
+
+\begin{proposition}
+  \label{1-2-1-polyhedral-of-fg}
+  \uses{PointedCone.IsPolyhedral.of_fg}
+  \lean{}
+  \leanok
+  If \( \sigma \in N \) is finitely generated, then it is polyhedral.
+\end{proposition}
+\begin{proof}
+  \uses{1-2-1-bot-polyhedral, 1-2-1-fourier-motzkin}
+  \leanok
+  Write \( \sigma = \Cone(S) \) and use induction on the size of \( S
+  \): For \( S = \emptyset \), we use use~\ref{1-2-1-bot-polyhedral}
+  and the induction step is~\ref{1-2-1-fourier-motzkin}.
+\end{proof}
+
+\begin{proposition}
+  \label{1-2-1-double-dual-finite-set}
+  \uses{}
+  \lean{PointedCone.dual_dual_eq_span}
+  \leanok
+  For a finite set \( S \subseteq N \), we have \( S^{\vee\vee} =
+  \Cone(S) \).
+\end{proposition}
+\begin{proof}
+  \uses{1-2-1-polyhedral-of-fg, 1-2-1-double-dual-polyhedral-cone}
+  \leanok
+  The cone \( \sigma := \Cone(S) \) is finitely generated, hence
+  polyhedral by~\ref{1-2-1-polyhedral-of-fg}. Furthermore, we have \(
+  \sigma^{\vee\vee} = S^{\vee\vee} \). Now
+  apply~\ref{1-2-1-double-dual-polyhedral-cone}.
 \end{proof}
 
 \begin{proposition}[Polyhedral = Finitely generated]
   \label{1-2-1-polyhedral-iff-fg}
   \uses{}
-  % \lean{}
-  % \leanok
-  A pointed cone \( \sigma \subseteq N \) is polyhedral iff it is
-  finetely generated.
+  \lean{PointedCone.IsPolyhedral_iff_fg}
+  \leanok
+  A pointed cone \( \sigma \subseteq N \) is finitely generated iff it is
+  polyhedral.
 \end{proposition}
 \begin{proof}
-  \uses{1-2-1-top-finitely-generated, 1-2-1-bot-polyhedral,
-  1-2-1-fourier-motzkin-fg, 1-2-1-fourier-motzkin-polyhedral}
-  % \leanok
-  Assume \( \sigma \subseteq N \) is polyhedral, i.e. \( \sigma =
-  S^\vee \) for a finite set \( S \subseteq N \). The claim follows by
-  induction on the size of \( S \), where we use
-  \ref{1-2-1-top-finitely-generated} for the case \( S = \emptyset \)
-  and \ref{1-2-1-fourier-motzkin-fg} for the induction step.
-  Conversely, if \( \sigma = \Cone(S) \) is finitely generated, we
-  proceed again by induction on the size of \( S \): For \( S =
-  \emptyset \), we use~\ref{1-2-1-bot-polyhedral} and the induction
-  step is~\ref{1-2-1-fourier-motzkin-polyhedral}.
+  \uses{1-2-1-polyhedral-of-fg}
+  \leanok
+  The implication ``\( \Rightarrow \)'' is
+  Proposition~\ref{1-2-1-polyhedral-of-fg}. For the converse, assume
+  \( \sigma = S^{\vee} \) for some finite \( S \subseteq M \). Then \(
+  \Cone(S) \) is finitely generated, hence polyhedral
+  by~\ref{1-2-1-polyhedral-of-fg}. Thus we find a finite \( T
+  \subseteq N \) with \( \Cone(S) = T^\vee \). We obtain
+  \[
+      \sigma = S^{\vee} = \Cone(S)^\vee = T^{\vee\vee} = \Cone(T),
+  \]
+  where the last equality is due
+  to~\ref{1-2-1-double-dual-finite-set}. Thus \( \sigma \) is finitely
+  generated.
 \end{proof}
-
 
 \begin{proposition}
   \label{1-2-2-dual-polyhedral-cone}
   \uses{1-2-1-polyhedral-cone}
-  % \lean{PointedCone.IsPolyhedral.dual}
-  % \leanok
+  \lean{PointedCone.IsPolyhedral.dual}
+  \leanok
   If \( \sigma \subseteq \)
   polyhedral, then \( \sigma^\vee \subseteq M \) is polyhedral too.
 \end{proposition}
@@ -286,18 +197,6 @@ which every nonzero element has a multiplicative inverse.
   \leanok
   \ref{1-2-1-dual-polyhedral} \( + \) \ref{1-2-1-polyhedral-iff-fg}.
 \end{proof}
-
-
-
-\begin{definition}
-  \label{1-2-1-cone-dimension}
-  \uses{}
-  % \lean{}
-  % \leanok
-  The {\bf dimension} of a pointed cone \( \sigma \subseteq N \) is
-  the dimension of \( \Span_{\Bbbk}(\sigma) \) as a linear subspace of
-  \( N \).
-\end{definition}
 
 
 \subsection{Faces, edges and facets}
