@@ -242,4 +242,20 @@ def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat 
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
 
+open Bialgebra  Coalgebra
+open scoped TensorProduct
+
+instance {A : CommHopfAlgCat.{u} R} [IsCocomm R A] :
+    IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X where
+  mul_comm' := by
+    have := comm_comp_comulBialgHom R A
+    have : CommHopfAlgCat.ofHom (comulBialgHom R A) = CommHopfAlgCat.ofHom (comulBialgHom R A) := _
+    have := congr(CommHopfAlgCat.ofHom (R := R) (X := A) (Y := A ⊗[R] A) $this)
+    convert congr(($(Grp_Class.left_inv A.unop.X)).unop.hom.toLinearMap)
+    simp [-Grp_Class.left_inv]
+    rw [← LinearMap.comp_assoc]
+    congr 1
+    ext
+    rfl
+
 end CategoryTheory

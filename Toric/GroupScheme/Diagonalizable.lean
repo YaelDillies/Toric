@@ -3,10 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Sophie Morel. All rights res
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Sophie Morel
 -/
+import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.MonoidAlgebra
-import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
+import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra Hom
@@ -93,18 +94,7 @@ instance (M : AddCommGrpᵒᵖ) : IsCommMon ((diagFunctor S).obj M).X :=
   inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
 
 @[simp]
-lemma AddMonoidHom.toMultiplicative_add
-    {M N : Type*} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
-    (f + g).toMultiplicative = f.toMultiplicative * g.toMultiplicative := rfl
-
-instance {R S : Type u} [CommRing R] [CommRing S] [HopfAlgebra R S] [Coalgebra.IsCocomm R S] :
-    IsCommMon (unop ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj
-      (CommHopfAlgCat.of R S))).X := by
-  sorry
-
-@[simp]
-lemma commHopfAlgCatEquivCogrpCommAlgCat_foo {R S T : Type u}
-    [CommRing R] [CommRing S] [CommRing T]
+lemma commHopfAlgCatEquivCogrpCommAlgCat_foo {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
     [HopfAlgebra R S] [HopfAlgebra R T] [Coalgebra.IsCocomm R S] (f g : S →ₐc[R] T) :
     (commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom (f * g)) =
       (((commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom f)).unop *
