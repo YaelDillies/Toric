@@ -118,29 +118,26 @@ lemma commHopfAlgCatEquivCogrpCommAlgCat_foo {R S T : Type u}
       ((commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom g)).unop).op := by
   sorry
 
-open Functor.LaxMonoidal Functor.OplaxMonoidal Functor.Monoidal in
-instance {C D : Type*}
-    [Category C] [Category D] [CartesianMonoidalCategory C] [CartesianMonoidalCategory D] (F : C ⥤ D)
-    [BraidedCategory C] [BraidedCategory D] [F.Braided] : F.mapGrp.Monoidal := sorry
-attribute [local instance] Functor.Monoidal.ofChosenFiniteProducts in
+open Functor.LaxMonoidal Functor.Monoidal in
 set_option maxHeartbeats 0 in
+instance {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
+    [CartesianMonoidalCategory D] (F : C ⥤ D)
+    [BraidedCategory C] [BraidedCategory D] [F.Braided] : F.mapGrp.Monoidal :=
+  Functor.CoreMonoidal.toMonoidal
+  { εIso := (Grp_.fullyFaithfulForget₂Mon_ _).preimageIso (εIso F.mapMon)
+    μIso X Y := (Grp_.fullyFaithfulForget₂Mon_ _).preimageIso (μIso F.mapMon X.toMon_ Y.toMon_)
+    μIso_hom_natural_left f Z := by convert μ_natural_left F.mapMon f Z.toMon_ using 1
+    μIso_hom_natural_right Z f := by convert μ_natural_right F.mapMon Z.toMon_ f using 1
+    associativity X Y Z := by convert associativity F.mapMon X.toMon_ Y.toMon_ Z.toMon_ using 1
+    left_unitality X := by convert left_unitality F.mapMon X.toMon_
+    right_unitality X := by convert right_unitality F.mapMon X.toMon_ }
+
 lemma diagFunctor_map_add {M N : Type u} [AddCommGroup M] [AddCommGroup N]
     (f g : M →+ N) :
     (diagFunctor S).map (AddCommGrp.ofHom (f + g)).op =
       (diagFunctor S).map (AddCommGrp.ofHom f).op *
         (diagFunctor S).map (AddCommGrp.ofHom g).op := by
-  have : PreservesFiniteProducts (algSpec (CommRingCat.of (ULift.{u, 0} ℤ))) := sorry
-  -- have : (algSpec (CommRingCat.of (ULift.{u, 0} ℤ))).mapGrp.Monoidal := sorry
-  simp only [diagFunctor, commGroupAddCommGroupEquivalence_inverse, Functor.comp_obj,
-    Functor.op_obj, commGrpAlg_obj, AddCommGrp.toCommGrp_obj_coe, Functor.leftOp_obj,
-    commHopfAlgCatEquivCogrpCommAlgCat_functor_obj, Functor.comp_map, Functor.op_map,
-    Quiver.Hom.unop_op, AddCommGrp.toCommGrp_map, AddCommGrp.hom_ofHom,
-    AddMonoidHom.toMultiplicative_add, commGrpAlg_map, CommGrp.hom_ofHom,
-    MonoidAlgebra.mapDomainBialgHom_mul, Functor.leftOp_map, commHopfAlgCatEquivCogrpCommAlgCat_foo,
-    Functor.map_mul]
-  congr
-  -- rw [Functor.map_mul]
-  sorry
+  simp [diagFunctor, Functor.map_mul]
 
 variable (R) in
 def diagMonFunctorIso :
