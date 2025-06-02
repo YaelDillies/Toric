@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Sophie Morel. All rights reserved.
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Sophie Morel, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yaël Dillies, Michał Mrugała, Sophie Morel
+Authors: Yaël Dillies, Michał Mrugała, Sophie Morel, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits

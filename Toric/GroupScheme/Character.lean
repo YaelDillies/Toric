@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yaël Dillies, Michał Mrugała
+Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.FreeAbelianGroup.Finsupp
