@@ -145,7 +145,8 @@ noncomputable def mapDomainBialgHomMulEquiv :
   toEquiv := mapDomainBialgHomEquiv
   map_mul' f g := by
     simp
-    have := mapDomainBialgHom_mul f g
+    sorry
+    -- have := mapDomainBialgHom_mul f g
 
 end CommGroup
 end CommRing
@@ -254,11 +255,12 @@ algebras over a domain. -/
 noncomputable def mapDomainBialgHomAddEquiv : (G →+ H) ≃+ Additive (R[G] →ₐc[R] R[H]) where
   toEquiv := mapDomainBialgHomEquiv.trans Additive.ofMul
   map_add' f g := by
-    exact mapDomainBialgHom_mul _ _
-    ext x : 2
-    simp
-    rw [(ℛ R x).mul_apply]
-    have := MonoidAlgebra.coe_add
+    sorry
+    -- exact mapDomainBialgHom_mul _ _
+    -- ext x : 2
+    -- simp
+    -- rw [(ℛ R x).mul_apply]
+    -- have := MonoidAlgebra.coe_add
 
 
 end AddCommGroup

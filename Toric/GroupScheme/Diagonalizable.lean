@@ -129,8 +129,8 @@ instance {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
     μIso_hom_natural_left f Z := by convert μ_natural_left F.mapMon f Z.toMon_ using 1
     μIso_hom_natural_right Z f := by convert μ_natural_right F.mapMon Z.toMon_ f using 1
     associativity X Y Z := by convert associativity F.mapMon X.toMon_ Y.toMon_ Z.toMon_ using 1
-    left_unitality X := by convert left_unitality F.mapMon X.toMon_
-    right_unitality X := by convert right_unitality F.mapMon X.toMon_ }
+    left_unitality X := by convert left_unitality F.mapMon X.toMon_ using 1
+    right_unitality X := by convert right_unitality F.mapMon X.toMon_ using 1 }
 
 lemma diagFunctor_map_add {M N : Type u} [AddCommGroup M] [AddCommGroup N]
     (f g : M →+ N) :
