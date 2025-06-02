@@ -9,7 +9,6 @@ import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Functor.FullyFaithful
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
 
@@ -141,9 +140,9 @@ lemma specCommMonAlgPullback_inv_app_hom_left_snd (M) :
 
 /-- The spectrum of a group algebra functor commutes with base change. -/
 def specCommGrpAlgPullback :
-    (commGrpAlg R).op ⋙ hopfSpec R ⋙ (Over.pullback (Spec.map f)).mapGrp ≅
+    (commGrpAlg R).op ⋙ hopfSpec R ⋙ (Over.pullback Sf).mapGrp ≅
       (commGrpAlg S).op ⋙ hopfSpec S :=
   (Grp_.fullyFaithfulForget₂Mon_ _).cancelRight
-    (isoWhiskerLeft (forget₂ CommGrp CommMonCat).op (specCommMonAlgPullback f _ rfl))
+    (isoWhiskerLeft (forget₂ CommGrp CommMonCat).op (specCommMonAlgPullback f _ H))
 
 end AlgebraicGeometry.Scheme

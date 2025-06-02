@@ -3,11 +3,10 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.Algebra.Equiv.TransferInstance
-import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
 # Characterisation of group-like elements in group algebras
@@ -16,9 +15,9 @@ This file proves that the group-like elements of the group algebra `R[G]` over a
 precisely the elements of the image of the inclusion `G → R[G]`.
 -/
 
-open Bialgebra Function
+open Bialgebra Coalgebra Function
 
-variable {R A G H I : Type*}
+variable {R A G H I M N : Type*}
 
 namespace MonoidAlgebra
 section CommSemiring
@@ -41,10 +40,10 @@ lemma span_isGroupLikeElem : Submodule.span A {a : MonoidAlgebra A G | IsGroupLi
 end CommSemiring
 
 section CommRing
-variable [CommRing R] [IsDomain R] [Group G]
+variable [CommRing R] [IsDomain R]
 
 section Group
-variable [Group H]
+variable [Group G] [Group H]
 
 open Submodule in
 @[simp]
@@ -101,6 +100,7 @@ lemma mapDomainBialgHom_mapDomainOfBialgHom (f : MonoidAlgebra R G →ₐc[R] Mo
 
 /-- The equivalence between group homs `G → H` and bialgebra homs `R[G] → R[H]` of group algebras
 over a domain. -/
+@[simps]
 noncomputable def mapDomainBialgHomEquiv :
     (G →* H) ≃ (MonoidAlgebra R G →ₐc[R] MonoidAlgebra R H) where
   toFun := mapDomainBialgHom R
@@ -111,18 +111,14 @@ noncomputable def mapDomainBialgHomEquiv :
 end Group
 
 section CommGroup
-variable [CommGroup H]
-
--- TODO(Yaël): Fix diamond with multiplication as composition
-noncomputable
-instance : CommGroup <| MonoidAlgebra R G →ₐc[R] MonoidAlgebra R H :=
-  mapDomainBialgHomEquiv.symm.commGroup
+variable [CommGroup G] [CommGroup H]
 
 /-- The group isomorphism between group homs `G → H` and bialgebra homs `R[G] → R[H]` of group
 algebras over a domain. -/
 noncomputable def mapDomainBialgHomMulEquiv :
-    (G →* H) ≃* (MonoidAlgebra R G →ₐc[R] MonoidAlgebra R H) :=
-  mapDomainBialgHomEquiv.symm.mulEquiv.symm
+    (G →* H) ≃* (MonoidAlgebra R G →ₐc[R] MonoidAlgebra R H) where
+  toEquiv := mapDomainBialgHomEquiv
+  map_mul' f g := by simp
 
 end CommGroup
 end CommRing
@@ -143,10 +139,10 @@ lemma isGroupLikeElem_single (g : G) : IsGroupLikeElem R (single g 1 : A[G]) := 
 end CommSemiring
 
 section CommRing
-variable [CommRing R] [IsDomain R] [AddGroup G]
+variable [CommRing R] [IsDomain R]
 
 section AddGroup
-variable [AddGroup H] [AddGroup I]
+variable [AddGroup G] [AddGroup H] [AddGroup I]
 
 open Submodule in
 @[simp]
@@ -214,8 +210,8 @@ lemma mapDomainBialgHom_mapDomainOfBialgHom (f : R[G] →ₐc[R] R[H]) :
 
 /-- The equivalence between group homs `G → H` and bialgebra homs `R[G] → R[H]` of group algebras
 over a domain. -/
-noncomputable def mapDomainBialgHomEquiv :
-    (G →+ H) ≃ (R[G] →ₐc[R] R[H]) where
+@[simps]
+noncomputable def mapDomainBialgHomEquiv : (G →+ H) ≃ (R[G] →ₐc[R] R[H]) where
   toFun := mapDomainBialgHom R
   invFun := mapDomainOfBialgHom
   left_inv := mapDomainOfBialgHom_mapDomainBialgHom
@@ -224,16 +220,13 @@ noncomputable def mapDomainBialgHomEquiv :
 end AddGroup
 
 section AddCommGroup
-variable [AddCommGroup H]
-
--- TODO(Yaël): Fix diamond with multiplication as composition
-noncomputable
-instance : AddCommGroup <| R[G] →ₐc[R] R[H] := mapDomainBialgHomEquiv.symm.addCommGroup
+variable [AddCommGroup G] [AddCommGroup H]
 
 /-- The group isomorphism between group homs `G → H` and bialgebra homs `R[G] → R[H]` of group
 algebras over a domain. -/
-noncomputable def mapDomainBialgHomMulEquiv : (G →+ H) ≃+ (R[G] →ₐc[R] R[H]) :=
-  mapDomainBialgHomEquiv.symm.addEquiv.symm
+noncomputable def mapDomainBialgHomAddEquiv : (G →+ H) ≃+ Additive (R[G] →ₐc[R] R[H]) where
+  toEquiv := mapDomainBialgHomEquiv.trans Additive.ofMul
+  map_add' f g := by simp
 
 end AddCommGroup
 end CommRing

@@ -1,15 +1,33 @@
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.RingTheory.Bialgebra.Hom
 
 suppress_compilation
 
 open Coalgebra
 
-variable {R A M N O : Type*}
+variable {R A G M N : Type*}
 
 namespace MonoidAlgebra
-variable [CommSemiring R] [Semiring A] [Bialgebra R A] [Monoid M] [Monoid N] [Monoid O]
+variable [CommSemiring R]
+
+section Semiring
+variable [Semiring A] [Bialgebra R A] [Monoid M] [Monoid N]
+
+/-- A `R`-algebra homomorphism from `MonoidAlgebra R M` is uniquely defined by its
+values on the functions `single a 1`. -/
+lemma bialgHom_ext ⦃φ₁ φ₂ : MonoidAlgebra R M →ₐc[R] A⦄
+    (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
+  BialgHom.toAlgHom_injective <| algHom_ext h
+
+-- The priority must be `high`.
+/-- See note [partially-applied ext lemmas]. -/
+@[ext high]
+lemma bialgHom_ext' ⦃φ₁ φ₂ : MonoidAlgebra R M →ₐc[R] A⦄
+    (h : (φ₁ : MonoidAlgebra R M →* A).comp (of R M) = .comp φ₂ (of R M)) : φ₁ = φ₂ :=
+  bialgHom_ext fun x ↦ congr($h x)
 
 variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
@@ -29,10 +47,54 @@ noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : MonoidAlgebra R M 
     simp [Subsingleton.elim g 1, MonoidAlgebra.one_def]
   right_inv := (Bialgebra.counitAlgHom R (MonoidAlgebra R M)).commutes
 
+end Semiring
+
+section CommSemiring
+variable [CommSemiring A]
+
+@[simp]
+lemma convMul_algHom_single [Algebra R A] [Monoid M] (f g : MonoidAlgebra R M →ₐ[R] A) (x : M) :
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
+  simp [← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_mul]
+
+@[simp]
+lemma convMul_bialgHom_single [Bialgebra R A] [CommMonoid M] (f g : MonoidAlgebra R M →ₐc[R] A)
+    (x : M) : (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
+  simp [← BialgHom.toLinearMap_apply, -CoalgHom.toLinearMap_eq_coe, BialgHom.toLinearMap_mul]
+
+end CommSemiring
+
+section CommMonoid
+variable [CommMonoid M] [CommMonoid N]
+
+@[simp]
+lemma mapDomainBialgHom_mul (f g : M →* N) :
+    mapDomainBialgHom R (f * g) = mapDomainBialgHom R f * mapDomainBialgHom R g := by
+  ext x : 2; simp
+
+end CommMonoid
 end MonoidAlgebra
 
 namespace AddMonoidAlgebra
-variable [CommSemiring R] [Semiring A] [Bialgebra R A] [AddMonoid M] [AddMonoid N] [AddMonoid O]
+variable [CommSemiring R]
+
+section Semiring
+variable [Semiring A] [Bialgebra R A]
+
+section AddMonoid
+variable [AddMonoid M] [AddMonoid N]
+
+/-- A `R`-algebra homomorphism from `R[M]` is uniquely defined by its values on the functions
+`single a 1`. -/
+lemma bialgHom_ext ⦃φ₁ φ₂ : R[M] →ₐc[R] A⦄ (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
+  BialgHom.toAlgHom_injective <| algHom_ext h
+
+-- The priority must be `high`.
+/-- See note [partially-applied ext lemmas]. -/
+@[ext high]
+lemma bialgHom_ext' ⦃φ₁ φ₂ : R[M] →ₐc[R] A⦄
+    (h : (φ₁ : R[M] →* A).comp (of R M) = .comp φ₂ (of R M)) : φ₁ = φ₂ :=
+  bialgHom_ext fun x ↦ congr($h x)
 
 variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
@@ -52,4 +114,31 @@ noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : R[M] ≃ₐc[R] R 
     simp [Subsingleton.elim g 0, AddMonoidAlgebra.one_def]
   right_inv := (Bialgebra.counitAlgHom R R[M]).commutes
 
+end AddMonoid
+end Semiring
+
+section CommSemiring
+variable [CommSemiring A]
+
+@[simp]
+lemma convMul_algHom_single [Algebra R A] [AddMonoid M] (f g : R[M] →ₐ[R] A) (x : M) :
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
+  simp [← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_mul]
+
+@[simp]
+lemma convMul_bialgHom_single [Bialgebra R A] [AddCommMonoid M] (f g : R[M] →ₐc[R] A) (x : M) :
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
+  simp [← BialgHom.toLinearMap_apply, -CoalgHom.toLinearMap_eq_coe, BialgHom.toLinearMap_mul]
+
+end CommSemiring
+
+section AddCommMonoid
+variable [AddCommMonoid M] [AddCommMonoid N]
+
+@[simp]
+lemma mapDomainBialgHom_add (f g : M →+ N) :
+    mapDomainBialgHom R (f + g) = mapDomainBialgHom R f * mapDomainBialgHom R g :=
+  MonoidAlgebra.mapDomainBialgHom_mul f.toMultiplicative g.toMultiplicative
+
+end AddCommMonoid
 end AddMonoidAlgebra

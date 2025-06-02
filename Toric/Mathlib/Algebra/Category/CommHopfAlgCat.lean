@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
@@ -22,7 +21,7 @@ noncomputable section
 
 namespace CategoryTheory
 
-open Limits HopfAlgebra
+open Coalgebra HopfAlgebra Limits
 
 universe v u
 variable {R : Type u} [CommRing R]
@@ -241,5 +240,9 @@ def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat 
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
+
+instance isCommMon_commHopfAlgCatEquivCogrpCommAlgCat_functor_obj_unop_X {A : CommHopfAlgCat.{u} R}
+    [IsCocomm R A] : IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X :=
+  isCommMon_commBialgCatEquivComonCommAlgCat_functor_obj_unop_X
 
 end CategoryTheory

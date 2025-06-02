@@ -7,8 +7,13 @@
    "Lean.LabelAttribute",
    "Lean.Meta.Tactic.Simp.RegisterCommand",
    "Mathlib.Init"],
-  "Toric.Mathlib.RingTheory.Coalgebra.Hom":
-  ["Toric.Mathlib.LinearAlgebra.TensorProduct.Basic"],
   "Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps":
   ["Toric.Mathlib.RingTheory.Coalgebra.SimpAttr"],
-  "Toric.Mathlib.Algebra.Group.Equiv.Basic": ["Mathlib.Tactic.Spread"]}}
+  "Toric.Mathlib.RingTheory.Bialgebra.TensorProduct":
+  ["Mathlib.RingTheory.Bialgebra.TensorProduct"],
+  "Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_":
+  ["Toric.Mathlib.CategoryTheory.Monoidal.CommMon_"],
+  "Toric.Mathlib.Algebra.Group.Equiv.Basic": ["Mathlib.Tactic.Spread"],
+  "Toric.GroupScheme.MonoidAlgebra": ["Toric.Mathlib.Algebra.Algebra.Hom"],
+  "Toric.GroupScheme.Diagonalizable":
+  ["Toric.Mathlib.Algebra.Group.TypeTags.Hom"]}}

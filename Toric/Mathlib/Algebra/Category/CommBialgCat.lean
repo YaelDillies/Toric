@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
 
 /-!
 # The category of commutative bialgebras over a commutative ring
@@ -13,6 +14,8 @@ import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 This file defines the bundled category `CommBialgCat` of commutative bialgebras over a fixed
 commutative ring `R` along with the forgetful functor to `CommAlgCat`.
 -/
+
+open Bialgebra Coalgebra
 
 noncomputable section
 
@@ -220,5 +223,12 @@ def commBialgCatEquivComonCommAlgCat : CommBialgCat R ≌ (Mon_ (CommAlgCat R)�
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
+
+instance isCommMon_commBialgCatEquivComonCommAlgCat_functor_obj_unop_X {A : CommBialgCat.{u} R}
+    [IsCocomm R A] : IsCommMon ((commBialgCatEquivComonCommAlgCat R).functor.obj A).unop.X where
+  mul_comm' := by
+    ext : 2
+    exact congr(AlgHomClass.toAlgHom ((commBialgCatEquivComonCommAlgCat R).functor.map <|
+      CommBialgCat.ofHom $(comm_comp_comulBialgHom R A)).unop.hom.unop.hom)
 
 end CategoryTheory

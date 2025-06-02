@@ -1,8 +1,9 @@
 /-
-Copyright (c) 2025 Andrew Yang. All rights reserved.
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Andrew Yang
+Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
 import Toric.MvLaurentPolynomial
 
@@ -91,7 +92,7 @@ lemma IsTorus.of_isIso [IsTorus k H]
 end IsTorus
 
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
-abbrev SplitTorus (S : Scheme) (σ : Type u) : Scheme.{u} := Diag S <| ULift <| FreeAbelianGroup σ
+abbrev SplitTorus (S : Scheme) (σ : Type u) : Scheme.{u} := Diag S <| FreeAbelianGroup σ
 
 @[inherit_doc SplitTorus]
 notation3 "𝔾ₘ[" S ", " σ "]" => SplitTorus S σ
@@ -115,13 +116,11 @@ notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 --         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
 --           CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
 
-/-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
-    𝔾ₘ[Spec R, σ] ≅ Spec (.of <| MvLaurentPolynomial σ R) := sorry
+variable {R : CommRingCat} {σ : Type*}
 
+variable (R σ) in
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-def splitTorusIsoSpecOver (R : CommRingCat) (σ : Type*) :
-    𝔾ₘ[Spec R, σ].asOver (Spec R) ≅ (Spec <| .of <| MvLaurentPolynomial σ R).asOver (Spec R) :=
-  Over.isoMk (splitTorusIsoSpec _ _) sorry
+abbrev splitTorusIso (R : CommRingCat) (σ : Type*) :
+    𝔾ₘ[Spec R, σ] ≅ Spec (.of <| MvLaurentPolynomial σ R) := diagSpecIso _ _
 
 end AlgebraicGeometry.Scheme
