@@ -91,7 +91,7 @@ lemma IsTorus.of_isIso [IsTorus k H]
 end IsTorus
 
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
-abbrev SplitTorus (S : Scheme) (σ : Type u) : Scheme.{u} := Diag S <| ULift <| FreeAbelianGroup σ
+abbrev SplitTorus (S : Scheme) (σ : Type u) : Scheme.{u} := Diag S <| FreeAbelianGroup σ
 
 @[inherit_doc SplitTorus]
 notation3 "𝔾ₘ[" S ", " σ "]" => SplitTorus S σ

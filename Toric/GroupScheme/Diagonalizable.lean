@@ -78,8 +78,8 @@ def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
     (commGrpAlg (ULift.{u} ℤ)).op ⋙ hopfSpec (.of <| ULift.{u} ℤ) ⋙
       (Over.pullback (specULiftZIsTerminal.from S)).mapGrp
 
-@[simp] lemma diagFunctor_obj (M : AddCommMonCatᵒᵖ) :
-    (diagMonFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
+@[simp] lemma diagFunctor_obj (M : AddCommGrpᵒᵖ) :
+    (diagFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
 
 instance {C : Type*} [Category C] {X : C} [CartesianMonoidalCategory C] [BraidedCategory C]
     [Grp_Class X] [IsCommMon X] : IsCommMon (Grp_.mk' X) :=
@@ -181,11 +181,89 @@ instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor (Spec (.of R))).Fa
   have : (hopfSpec (CommRingCat.of R)).Faithful := hopfSpec.instFaithful
   .of_iso (diagFunctorIso (.of R)).symm
 
+section
+
+variable {G G' G'' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S]
+  [Grp_Class (G.asOver S)] [Grp_Class (G'.asOver S)] [Grp_Class (G''.asOver S)]
+
+variable (G G' S) in
+def HomGrp : Type u := Additive (Grp_.mk' (G.asOver S) ⟶ Grp_.mk' (G'.asOver S))
+
+instance [IsCommMon (G'.asOver S)] : AddCommGroup (HomGrp G G' S) := by
+  delta HomGrp; infer_instance
+
+def HomGrp.ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] : HomGrp G G' S :=
+  Additive.ofMul (Grp_.homMk (f.asOver S))
+
+def HomGrp.hom (f : HomGrp G G' S) : G ⟶ G' := f.toMul.hom.left
+
+@[ext]
+lemma HomGrp.toHom_injective : Function.Injective (HomGrp.hom (G := G) (G' := G') (S := S)) := by
+  intros _ _ H; delta HomGrp; ext; exact H
+
+def HomGrp.comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) : HomGrp G G'' S :=
+  .ofMul (f.toMul ≫ g.toMul)
+
+instance {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
+    {X Y : Grp_ C} [IsCommMon X.X] [IsCommMon Y.X] (f : X ⟶ Y) :
+    IsMon_Hom f where
+  one_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
+  mul_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
+
+lemma HomGrp.comp_add [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
+    (f f' : HomGrp G G' S) (g : HomGrp G' G'' S) :
+    (f + f').comp g = f.comp g + f'.comp g := by
+  apply Additive.toMul.injective
+  dsimp [HomGrp.comp, HomGrp]
+  exact Mon_Class.mul_comp f.toMul f'.toMul g.toMul
+
+@[simp]
+lemma HomGrp.comp_zero [IsCommMon (G''.asOver S)]
+    (f : HomGrp G G' S) : f.comp (0 : HomGrp G' G'' S) = 0 := by
+  apply Additive.toMul.injective
+  dsimp [HomGrp.comp, HomGrp]
+  exact Mon_Class.comp_one _
+
+@[simp]
+lemma HomGrp.zero_comp [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
+    (f : HomGrp G' G'' S) : (0 : HomGrp G G' S).comp f = 0 := by
+  apply Additive.toMul.injective
+  dsimp [HomGrp.comp, HomGrp]
+  exact Mon_Class.one_comp f.toMul
+
+lemma HomGrp.add_comp [IsCommMon (G''.asOver S)]
+    (f : HomGrp G G' S) (g g' : HomGrp G' G'' S) :
+    f.comp (g + g') = f.comp g + f.comp g' := by
+  apply Additive.toMul.injective
+  dsimp [HomGrp.comp, HomGrp]
+  exact Mon_Class.comp_mul _ _ _
+
+end
+
+variable (S) in
+set_option maxHeartbeats 0 in
+def diagHomGrp {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f : M →+ N) :
+    HomGrp (Diag S N) (Diag S M) S := .ofMul ((diagFunctor S).map (AddCommGrp.ofHom f).op)
+
+set_option maxHeartbeats 0 in
+lemma diagHomGrp_comp {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCommGroup O]
+    (f : M →+ N) (g : N →+ O) :
+    (diagHomGrp S g).comp (diagHomGrp S f) = diagHomGrp S (g.comp f) := by
+  apply Additive.toMul.injective
+  dsimp [HomGrp, diagHomGrp, HomGrp.comp]
+  exact (S.diagFunctor.map_comp ..).symm
+
+set_option maxHeartbeats 0 in
+lemma diagHomGrp_comp_add {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCommGroup O]
+    (f f' : M →+ N) (g : N →+ O) :
+    (diagHomGrp S g).comp (diagHomGrp S f) = diagHomGrp S (g.comp f) := by
+  apply Additive.toMul.injective
+  dsimp [HomGrp, diagHomGrp, HomGrp.comp]
+  exact (S.diagFunctor.map_comp ..).symm
+
 set_option maxHeartbeats 0 in
 def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [AddCommGroup N] :
-    (N →+ M) ≃+
-    (Additive <| Grp_.mk' ((Diag (Spec (.of R)) M).asOver (Spec (.of R))) ⟶
-      Grp_.mk' ((Diag (Spec (.of R)) N).asOver (Spec (.of R)))) :=
+    (N →+ M) ≃+ HomGrp (Diag (Spec (.of R)) M) (Diag (Spec (.of R)) N) (Spec (.of R)) :=
   letI e := Functor.FullyFaithful.homEquiv (.ofFullyFaithful (diagFunctor (Spec <| .of R)))
     (X := .op (.of M)) (Y := .op (.of N))
   { toFun f := Additive.ofMul (e (AddCommGrp.ofHom f).op)
@@ -194,6 +272,10 @@ def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [Ad
     right_inv _ := by simp only [AddCommGrp.ofHom_hom, Quiver.Hom.op_unop, e.apply_symm_apply,
       ofMul_toMul]
     map_add' f g := congr(Additive.ofMul $(diagFunctor_map_add f g))  }
+
+lemma diagHomEquiv_apply {R M N : Type u}
+    [CommRing R] [IsDomain R] [AddCommGroup M] [AddCommGroup N] (f : N →+ M) :
+    diagHomEquiv (R := R) f = diagHomGrp (Spec _) f := rfl
 
 end Diag
 

@@ -18,10 +18,12 @@ to connect 1 and 2.
 open Function Module
 
 namespace LinearMap
-variable {R K M N : Type*} [AddCommGroup M] [AddCommGroup N]
+variable {R K M N M' N' : Type*} [AddCommGroup M] [AddCommGroup N]
+  [AddCommGroup M'] [AddCommGroup N']
 
 section CommRing
 variable [CommRing R] [Module R M] [Module R N] {p : M →ₗ[R] N →ₗ[R] R} {x : M} {y : N}
+variable [Module R M'] [Module R N']
 
 /-- For a ring `R` and two modules `M` and `N`, a perfect pairing is a bilinear map `M × N → R`
 that is bijective in both arguments. -/
@@ -73,6 +75,23 @@ lemma _root_.Module.finrank_of_isPerfPair [Module.Finite R M] [Module.Free R M] 
 protected instance IsPerfPair.id [IsReflexive R M] : IsPerfPair (.id (R := R) (M := Dual R M)) where
   bijective_left := bijective_id
   bijective_right := bijective_dual_eval R M
+
+instance IsPerfPair.compl₁₂
+    (p : M' →ₗ[R] N' →ₗ[R] R) (eM : M ≃ₗ[R] M') (eN : N ≃ₗ[R] N') [p.IsPerfPair] :
+    (p.compl₁₂ eM eN : M →ₗ[R] N →ₗ[R] R).IsPerfPair := by
+  sorry
+
+lemma IsPerfPair.congr
+    (p : M' →ₗ[R] N' →ₗ[R] R) (eM : M ≃ₗ[R] M') (eN : N ≃ₗ[R] N') [p.IsPerfPair]
+    (q : M →ₗ[R] N →ₗ[R] R) (H : q.compl₁₂ eM.symm eN.symm = p) : q.IsPerfPair := by
+  obtain rfl : q = p.compl₁₂ eM eN := by subst H; ext; simp
+  infer_instance
+
+lemma IsPerfPair.of_bijective
+    (p : M →ₗ[R] N →ₗ[R] R) [IsReflexive R N] (h : Bijective p) : IsPerfPair p :=
+  inferInstanceAs ((LinearMap.id (R := R) (M := Dual R N)).compl₁₂
+    (LinearEquiv.ofBijective p h : M →ₗ[R] N →ₗ[R] R)
+    (LinearEquiv.refl R N : N →ₗ[R] N)).IsPerfPair
 
 end CommRing
 
