@@ -6,7 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.RingTheory.HopfAlgebra.Basic
+import Mathlib.RingTheory.HopfAlgebra.TensorProduct
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
@@ -22,7 +22,7 @@ noncomputable section
 
 namespace CategoryTheory
 
-open Limits HopfAlgebra
+open Coalgebra HopfAlgebra Limits
 
 universe v u
 variable {R : Type u} [CommRing R]
@@ -242,20 +242,8 @@ def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat 
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
 
-open Bialgebra  Coalgebra
-open scoped TensorProduct
-
-instance {A : CommHopfAlgCat.{u} R} [IsCocomm R A] :
-    IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X where
-  mul_comm' := by
-    have := comm_comp_comulBialgHom R A
-    have : CommHopfAlgCat.ofHom (comulBialgHom R A) = CommHopfAlgCat.ofHom (comulBialgHom R A) := _
-    have := congr(CommHopfAlgCat.ofHom (R := R) (X := A) (Y := A ⊗[R] A) $this)
-    convert congr(($(Grp_Class.left_inv A.unop.X)).unop.hom.toLinearMap)
-    simp [-Grp_Class.left_inv]
-    rw [← LinearMap.comp_assoc]
-    congr 1
-    ext
-    rfl
+instance isCommMon_commHopfAlgCatEquivCogrpCommAlgCat_functor_obj_unop_X {A : CommHopfAlgCat.{u} R}
+    [IsCocomm R A] : IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X :=
+  isCommMon_commBialgCatEquivComonCommAlgCat_functor_obj_unop_X
 
 end CategoryTheory
