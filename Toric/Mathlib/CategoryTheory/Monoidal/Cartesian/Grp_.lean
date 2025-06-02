@@ -246,6 +246,58 @@ protected noncomputable def FullyFaithful.mapGrp (hF : F.FullyFaithful) :
     F.mapGrp.FullyFaithful where
   preimage {X Y} f := Grp_.homMk <| hF.preimage f.hom
 
+lemma id_tensor_id {X Y : C} : (𝟙 X ⊗ 𝟙 Y) = 𝟙 _ := by simp
+
+def _root_.Mon_Class.ofIso {X Y : C} (e : X ≅ Y) [Mon_Class X] : Mon_Class Y where
+  one := η[X] ≫ e.hom
+  mul := (e.inv ⊗ e.inv) ≫ μ[X] ≫ e.hom
+  one_mul' := by simpa [← id_tensorHom, ← tensorHom_id, ← tensor_comp_assoc, id_tensor_id,
+      -Iso.cancel_iso_hom_right_assoc, ← leftUnitor_naturality] using
+      congr(_ ◁ e.inv ≫ $(Mon_Class.one_mul X) ≫ e.hom)
+  mul_one' := by simpa [← id_tensorHom, ← tensorHom_id, ← tensor_comp_assoc, id_tensor_id,
+      -Iso.cancel_iso_hom_right_assoc, ← rightUnitor_naturality] using
+      congr(e.inv ▷ _ ≫ $(Mon_Class.mul_one X) ≫ e.hom)
+  mul_assoc' := by simpa [← id_tensorHom, ← tensorHom_id, ← tensor_comp_assoc,
+      -associator_conjugation, associator_naturality_assoc] using
+      congr(((e.inv ⊗ e.inv) ⊗ e.inv) ≫ $(Mon_Class.mul_assoc X) ≫ e.hom)
+
+def _root_.Grp_Class.ofIso {X Y : C} (e : X ≅ Y) [Grp_Class X] : Grp_Class Y where
+  __ := Mon_Class.ofIso e
+  inv := e.inv ≫ ι[X] ≫ e.hom
+  left_inv' := by simpa [-Grp_Class.left_inv, Mon_Class.ofIso, comp_lift_assoc] using
+    congr(e.inv ≫ $(Grp_Class.left_inv X))
+  right_inv' := by simpa [-Grp_Class.right_inv, Mon_Class.ofIso, comp_lift_assoc] using
+    congr(e.inv ≫ $(Grp_Class.right_inv X))
+
+def FullyFaithful.Mon_Class (hF : F.FullyFaithful) (X : C) [Mon_Class (F.obj X)] : Mon_Class X where
+  one := hF.preimage (OplaxMonoidal.η F ≫ η[F.obj X])
+  mul := hF.preimage (OplaxMonoidal.δ F X X ≫ μ[F.obj X])
+  one_mul' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_left_assoc])
+  mul_one' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_right_assoc])
+  mul_assoc' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_left_assoc,
+    ← OplaxMonoidal.δ_natural_right_assoc])
+
+def FullyFaithful.Grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
+  __ := hF.Mon_Class X
+  inv := hF.preimage ι[F.obj X]
+  left_inv' := hF.map_injective
+    (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
+  right_inv' := hF.map_injective
+    (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
+
+open Monoidal in
+/-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
+same on group objects as on objects. -/
+@[simp] lemma essImage_mapMon [F.Full] [F.Faithful] {G : Mon_ D} :
+    F.mapMon.essImage G ↔ F.essImage G.X where
+  mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Mon_.forget _).mapIso e⟩⟩
+  mpr hG := by
+    obtain ⟨G', ⟨e⟩⟩ := hG
+    letI h₁ := Mon_Class.ofIso e.symm
+    letI h₂ := FullyFaithful.Mon_Class (.ofFullyFaithful F) (X := G')
+    refine ⟨.mk' G', ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;>
+      simp [Mon_Class.ofIso, FullyFaithful.Mon_Class, h₁, h₂] <;> rfl
+
 open EssImageSubcategory Monoidal in
 /-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
 same on group objects as on objects. -/
@@ -253,41 +305,12 @@ same on group objects as on objects. -/
     F.mapGrp.essImage G ↔ F.essImage G.X where
   mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
   mpr hG := by
-    letI F' := F.toEssImage.asEquivalence
-    have : F'.inverse.Monoidal := .ofChosenFiniteProducts _
-    refine ⟨F'.inverse.mapGrp.obj <| {
-        X := ⟨G.X, hG⟩
-        one := G.one
-        mul := G.mul
-        one_mul := by simpa only [whiskerRight_def] using G.one_mul
-        mul_one := by simpa only [whiskerLeft_def] using G.mul_one
-        mul_assoc := by
-          simpa only [whiskerLeft_def, whiskerRight_def, associator_hom_def] using G.mul_assoc
-        inv := G.inv
-        left_inv := by simpa only [lift_def, toUnit_def] using G.left_inv
-        right_inv := by simpa only [lift_def, toUnit_def] using G.right_inv
-      }, ⟨Grp_.mkIso
-        ((ObjectProperty.ι _).mapIso <| F'.counitIso.app ⟨G.X, hG⟩) ?_ ?_⟩⟩
-    · simp
-      erw [F'.counitIso.hom.naturality (X := 𝟙_ F.EssImageSubcategory) (Y := ⟨G.X, hG⟩) G.one]
-      have : ε F ≫ F.map (ε F'.inverse) ≫ F'.counitIso.hom.app (𝟙_ F.EssImageSubcategory) = 𝟙 _ :=
-        toUnit_unique ..
-      apply_fun (· ≫ (G.one : 𝟙_ F.EssImageSubcategory ⟶ ⟨G.X, hG⟩)) at this
-      simpa using this
-    · simp
-      erw [F'.counitIso.hom.naturality (X := ⟨G.X, hG⟩ ⊗ ⟨G.X, hG⟩) (Y := ⟨G.X, hG⟩) G.mul]
-      have :
-        «μ» F _ _ ≫ F.map («μ» F'.inverse ⟨G.X, hG⟩ ⟨G.X, hG⟩) ≫ F'.counitIso.hom.app _ =
-          F'.counitIso.hom.app _ ⊗ F'.counitIso.hom.app _ := by
-        --erw [F'.functor_map_μ_inverse_comp_counitIso_hom_app_tensor]
-        simp
-        refine hom_ext _ _ ?_ ?_
-        · refine Eq.trans ?_ (tensorHom_fst (F'.counitIso.hom.app ⟨G.X, hG⟩)
-            (F'.counitIso.hom.app ⟨G.X, hG⟩)).symm
-          sorry
-        · sorry
-      apply_fun (· ≫ (G.mul : (⟨G.X, hG⟩ ⊗ ⟨G.X, hG⟩ : F.EssImageSubcategory) ⟶ ⟨G.X, hG⟩)) at this
-      sorry
+    obtain ⟨G', ⟨e⟩⟩ := hG
+    letI h₁ := Grp_Class.ofIso e.symm
+    letI h₂ := FullyFaithful.Grp_Class (.ofFullyFaithful F) G'
+    refine ⟨.mk' G', ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
+      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.Mon_Class,
+        FullyFaithful.Grp_Class, Grp_.mk', h₁, h₂] <;> rfl
 
 end Functor
 end CategoryTheory
