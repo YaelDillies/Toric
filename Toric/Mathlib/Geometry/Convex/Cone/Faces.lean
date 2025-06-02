@@ -393,6 +393,7 @@ instance orderBot : OrderBot (PolyhedralCone p.toLinearMap) := {
   }
 }
 
+-- abbrev
 def IsFacet (a b : PolyhedralCone p) := @IsCoatom (Set.Iic a) _ _ b
 def IsEdge (a b : PolyhedralCone p) := @IsAtom (Set.Iic a) _ _ b
 
