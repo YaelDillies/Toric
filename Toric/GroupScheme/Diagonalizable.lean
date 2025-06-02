@@ -6,9 +6,10 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel
 import Mathlib.AlgebraicGeometry.Limits
 import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.MonoidAlgebra
+import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
-open scoped AddMonoidAlgebra
+open scoped AddMonoidAlgebra Hom
 
 noncomputable section
 
@@ -61,6 +62,131 @@ instance : IsMon_Hom ((diagSpecIso M R).inv.asOver (Spec R)) :=
   Mon_.instIsMon_HomHom
   ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
     (specULiftZIsTerminal.hom_ext _ _)).app _).inv
+
+variable (S) in
+def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon_ (Over S) :=
+  AddCommMonCat.equivalence.functor.op ⋙
+    (commMonAlg (ULift.{u} ℤ)).op ⋙ bialgSpec (.of <| ULift.{u} ℤ) ⋙
+      (Over.pullback (specULiftZIsTerminal.from S)).mapMon
+
+@[simp] lemma diagMonFunctor_obj (M : AddCommMonCatᵒᵖ) :
+    (diagMonFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
+
+variable (S) in
+def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
+  commGroupAddCommGroupEquivalence.inverse.op ⋙
+    (commGrpAlg (ULift.{u} ℤ)).op ⋙ hopfSpec (.of <| ULift.{u} ℤ) ⋙
+      (Over.pullback (specULiftZIsTerminal.from S)).mapGrp
+
+@[simp] lemma diagFunctor_obj (M : AddCommMonCatᵒᵖ) :
+    (diagMonFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
+
+instance {C : Type*} [Category C] {X : C} [CartesianMonoidalCategory C] [BraidedCategory C]
+    [Grp_Class X] [IsCommMon X] : IsCommMon (Grp_.mk' X) :=
+  letI : IsCommMon (Grp_.mk' X).X := ‹_›
+  inferInstance
+
+instance (M : AddCommMonCatᵒᵖ) : IsCommMon ((diagMonFunctor S).obj M).X :=
+  inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
+
+instance (M : AddCommGrpᵒᵖ) : IsCommMon ((diagFunctor S).obj M).X :=
+  inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
+
+@[simp]
+lemma AddMonoidHom.toMultiplicative_add
+    {M N : Type*} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
+    (f + g).toMultiplicative = f.toMultiplicative * g.toMultiplicative := rfl
+
+open MonoidAlgebra in
+@[simp]
+lemma MonoidAlgebra.mapDomainBialgHom_mul {R M N : Type*} [CommSemiring R] [CommMonoid M]
+    [CommMonoid N] (f g : M →* N) :
+    mapDomainBialgHom R (f * g) = mapDomainBialgHom R f * mapDomainBialgHom R g := by
+  sorry
+
+instance {R S : Type u} [CommRing R] [CommRing S] [HopfAlgebra R S] [Coalgebra.IsCocomm R S] :
+    IsCommMon (unop ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj
+      (CommHopfAlgCat.of R S))).X := by
+  sorry
+
+@[simp]
+lemma commHopfAlgCatEquivCogrpCommAlgCat_foo {R S T : Type u}
+    [CommRing R] [CommRing S] [CommRing T]
+    [HopfAlgebra R S] [HopfAlgebra R T] [Coalgebra.IsCocomm R S] (f g : S →ₐc[R] T) :
+    (commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom (f * g)) =
+      (((commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom f)).unop *
+      ((commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom g)).unop).op := by
+  sorry
+
+open Functor.LaxMonoidal Functor.OplaxMonoidal Functor.Monoidal in
+instance {C D : Type*}
+    [Category C] [Category D] [CartesianMonoidalCategory C] [CartesianMonoidalCategory D] (F : C ⥤ D)
+    [BraidedCategory C] [BraidedCategory D] [F.Braided] : F.mapGrp.Monoidal := sorry
+attribute [local instance] Functor.Monoidal.ofChosenFiniteProducts in
+set_option maxHeartbeats 0 in
+lemma diagFunctor_map_add {M N : Type u} [AddCommGroup M] [AddCommGroup N]
+    (f g : M →+ N) :
+    (diagFunctor S).map (AddCommGrp.ofHom (f + g)).op =
+      (diagFunctor S).map (AddCommGrp.ofHom f).op *
+        (diagFunctor S).map (AddCommGrp.ofHom g).op := by
+  have : PreservesFiniteProducts (algSpec (CommRingCat.of (ULift.{u, 0} ℤ))) := sorry
+  -- have : (algSpec (CommRingCat.of (ULift.{u, 0} ℤ))).mapGrp.Monoidal := sorry
+  simp only [diagFunctor, commGroupAddCommGroupEquivalence_inverse, Functor.comp_obj,
+    Functor.op_obj, commGrpAlg_obj, AddCommGrp.toCommGrp_obj_coe, Functor.leftOp_obj,
+    commHopfAlgCatEquivCogrpCommAlgCat_functor_obj, Functor.comp_map, Functor.op_map,
+    Quiver.Hom.unop_op, AddCommGrp.toCommGrp_map, AddCommGrp.hom_ofHom,
+    AddMonoidHom.toMultiplicative_add, commGrpAlg_map, CommGrp.hom_ofHom,
+    MonoidAlgebra.mapDomainBialgHom_mul, Functor.leftOp_map, commHopfAlgCatEquivCogrpCommAlgCat_foo,
+    Functor.map_mul]
+  congr
+  -- rw [Functor.map_mul]
+  sorry
+
+variable (R) in
+def diagMonFunctorIso :
+    diagMonFunctor (Spec R) ≅ AddCommMonCat.equivalence.functor.op ⋙
+      (commMonAlg R).op ⋙ bialgSpec R :=
+  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
+  isoWhiskerLeft AddCommMonCat.equivalence.functor.op
+    (specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
+      (specULiftZIsTerminal.hom_ext _ _))
+
+lemma diagMonFunctorIso_app (M : AddCommMonCatᵒᵖ) :
+    ((diagMonFunctorIso R).app M).hom.hom.left = (diagSpecIso M.unop _).hom := rfl
+
+variable (R) in
+def diagFunctorIso :
+    diagFunctor (Spec R) ≅ commGroupAddCommGroupEquivalence.inverse.op ⋙
+      (commGrpAlg R).op ⋙ hopfSpec R :=
+  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
+  isoWhiskerLeft commGroupAddCommGroupEquivalence.inverse.op
+    (specCommGrpAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
+      (specULiftZIsTerminal.hom_ext _ _))
+
+lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
+    ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso M.unop _).hom := rfl
+
+instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor (Spec (.of R))).Full :=
+  have : (hopfSpec (CommRingCat.of R)).Full := hopfSpec.instFull
+  .of_iso (diagFunctorIso (.of R)).symm
+
+instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor (Spec (.of R))).Faithful :=
+  have : (hopfSpec (CommRingCat.of R)).Faithful := hopfSpec.instFaithful
+  .of_iso (diagFunctorIso (.of R)).symm
+
+set_option maxHeartbeats 0 in
+def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [AddCommGroup N] :
+    (N →+ M) ≃+
+    (Additive <| Grp_.mk' ((Diag (Spec (.of R)) M).asOver (Spec (.of R))) ⟶
+      Grp_.mk' ((Diag (Spec (.of R)) N).asOver (Spec (.of R)))) :=
+  letI e := Functor.FullyFaithful.homEquiv (.ofFullyFaithful (diagFunctor (Spec <| .of R)))
+    (X := .op (.of M)) (Y := .op (.of N))
+  { toFun f := Additive.ofMul (e (AddCommGrp.ofHom f).op)
+    invFun f := (e.symm f.toMul).unop.hom
+    left_inv _ := by simp only [toMul_ofMul, e.symm_apply_apply]; rfl
+    right_inv _ := by simp only [AddCommGrp.ofHom_hom, Quiver.Hom.op_unop, e.apply_symm_apply,
+      ofMul_toMul]
+    map_add' f g := congr(Additive.ofMul $(diagFunctor_map_add f g))  }
 
 end Diag
 
