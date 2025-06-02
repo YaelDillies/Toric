@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
-import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 

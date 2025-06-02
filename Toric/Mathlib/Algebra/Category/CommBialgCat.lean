@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
 
 /-!

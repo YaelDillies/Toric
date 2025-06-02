@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała
 import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.RingTheory.HopfAlgebra.TensorProduct
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution

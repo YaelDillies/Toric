@@ -9,7 +9,6 @@ import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Functor.FullyFaithful
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
 
