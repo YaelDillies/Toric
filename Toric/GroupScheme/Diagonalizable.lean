@@ -116,7 +116,17 @@ lemma commHopfAlgCatEquivCogrpCommAlgCat_foo {R S T : Type u}
     (commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom (f * g)) =
       (((commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom f)).unop *
       ((commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom g)).unop).op := by
-  sorry
+  apply Quiver.Hom.unop_inj
+  ext1
+  apply Quiver.Hom.unop_inj
+  ext1
+  convert_to f * g =
+    (Algebra.TensorProduct.lift (AlgHomClass.toAlgHom f) (AlgHomClass.toAlgHom g)
+      (fun _ _ ↦ .all _ _)).comp (Bialgebra.comulAlgHom _ _)
+  dsimp [AlgHom.mul_def]
+  rw [← AlgHom.comp_assoc]
+  congr 1
+  ext <;> simp
 
 open Functor.LaxMonoidal Functor.Monoidal in
 set_option maxHeartbeats 0 in
