@@ -2,6 +2,7 @@ import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
+import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 
 suppress_compilation
 
@@ -42,6 +43,45 @@ noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : MonoidAlgebra R M 
     ext g : 2
     simp [Subsingleton.elim g 1, MonoidAlgebra.one_def]
   right_inv := (Bialgebra.counitAlgHom R (MonoidAlgebra R M)).commutes
+
+end MonoidAlgebra
+
+namespace MonoidAlgebra
+variable [CommSemiring R]
+
+section
+variable  [Semiring A] [Bialgebra R A]
+
+@[simp]
+lemma convMul_linear_single (f g : MonoidAlgebra R M →ₗ[R] A) (x : M) :
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by simp
+
+end
+
+section
+
+variable [CommSemiring A] [Bialgebra R A]
+
+section
+variable [Monoid M]
+
+@[simp]
+lemma convMul_AlgHom_single (f g : MonoidAlgebra R M →ₐ[R] A) (x : M) :
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
+  simp [← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_mul]
+
+end
+
+section
+variable [CommMonoid M]
+
+@[simp]
+lemma convMul_BialgHom_single (f g : MonoidAlgebra R M →ₐc[R] A) (x : M) :
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
+  simp [← BialgHom.toLinearMap_apply, -CoalgHom.toLinearMap_eq_coe, BialgHom.toLinearMap_mul]
+
+end
+end
 
 end MonoidAlgebra
 
