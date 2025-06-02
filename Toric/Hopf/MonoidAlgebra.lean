@@ -35,7 +35,6 @@ lemma mapDomainBialgHom_mul (f g : M →* N) :
     mapDomainBialgHom R (f * g) = mapDomainBialgHom R f * mapDomainBialgHom R g := by
   ext x : 2
   simp
-  sorry
 
 end CommMonoid
 
