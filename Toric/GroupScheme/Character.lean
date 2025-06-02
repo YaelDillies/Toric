@@ -8,6 +8,7 @@ import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
+import Toric.Util.TrackSorry
 
 /-!
 # The lattices of characters and cocharacters

@@ -78,8 +78,11 @@ protected instance IsPerfPair.id [IsReflexive R M] : IsPerfPair (.id (R := R) (M
 
 instance IsPerfPair.compl₁₂
     (p : M' →ₗ[R] N' →ₗ[R] R) (eM : M ≃ₗ[R] M') (eN : N ≃ₗ[R] N') [p.IsPerfPair] :
-    (p.compl₁₂ eM eN : M →ₗ[R] N →ₗ[R] R).IsPerfPair := by
-  sorry
+    (p.compl₁₂ eM eN : M →ₗ[R] N →ₗ[R] R).IsPerfPair :=
+  ⟨((LinearEquiv.congrLeft R R eN).symm.bijective.comp
+    (IsPerfPair.bijective_left p)).comp eM.bijective,
+    ((LinearEquiv.congrLeft R R eM).symm.bijective.comp
+    (IsPerfPair.bijective_right p)).comp eN.bijective⟩
 
 lemma IsPerfPair.congr
     (p : M' →ₗ[R] N' →ₗ[R] R) (eM : M ≃ₗ[R] M') (eN : N ≃ₗ[R] N') [p.IsPerfPair]
