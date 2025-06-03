@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
 import Toric.MvLaurentPolynomial
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
 /-!
 # The standard algebraic torus
@@ -15,7 +16,7 @@ This file defines the standard algebraic torus over `Spec R` as `Spec (R ⊗ ℤ
 
 noncomputable section
 
-open CategoryTheory Opposite Limits
+open CategoryTheory Opposite Limits MonoidalCategory
 
 namespace AlgebraicGeometry.Scheme
 
@@ -130,10 +131,13 @@ section Product
 variable {S G H : Scheme.{u}} [G.Over S] [H.Over S] [Grp_Class (asOver G S)]
   [Grp_Class (asOver H S)]
 
-instance : Grp_Class <| asOver (pullback (G ↘ S) (H ↘ S)) S := sorry
+@[simp]
+lemma leftAsOver {X : Over S} : asOver X.left S = X := rfl
+
+instance {X : Over S} [Grp_Class X] : Grp_Class <| asOver X.left S := by simpa
 
 instance IsSplitTorus.product [IsSplitTorus S G] [IsSplitTorus S H] :
-    IsSplitTorus S <| pullback (G ↘ S) (H ↘ S) := sorry
+    IsSplitTorus S <| (asOver G S ⊗ asOver H S).left := sorry
 
 end Product
 
