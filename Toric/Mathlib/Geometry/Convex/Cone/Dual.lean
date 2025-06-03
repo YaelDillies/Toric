@@ -37,6 +37,7 @@ def dual' (s : Set M) : PointedCone R N where
   smul_mem' c y hy x hx := by rw [← Nonneg.coe_smul, map_smul]; exact mul_nonneg c.2 (hy hx)
 
 @[simp] lemma mem_dual' : y ∈ dual' p s ↔ ∀ ⦃x⦄, x ∈ s → 0 ≤ p x y := .rfl
+@[simp low+1] lemma mem_dual'_singleton {x : M} : y ∈ dual' p {x} ↔ 0 ≤ p x y := by simp
 
 @[simp] lemma dual_empty : dual' p ∅ = ⊤ := by ext; simp
 @[simp] lemma dual_zero : dual' p 0 = ⊤ := by ext; simp
