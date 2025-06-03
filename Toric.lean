@@ -1,3 +1,4 @@
+import Toric.Examples.CharCocharPairing
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
