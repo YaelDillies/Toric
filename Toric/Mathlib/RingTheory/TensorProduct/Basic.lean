@@ -76,9 +76,12 @@ end hetero
 
 namespace Algebra.TensorProduct
 
-variable {R A B : Type*} [CommSemiring R] [Semiring A] [CommSemiring B] [Algebra R A] [Algebra R B]
+variable {R A B : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 
-lemma algebraMap_eq_includeRight :
+@[simp] lemma comm_toLinearMap [Semiring B] [Algebra R B] :
+    (Algebra.TensorProduct.comm R A B).toLinearMap = _root_.TensorProduct.comm R A B := rfl
+
+lemma algebraMap_eq_includeRight [CommSemiring B] [Algebra R B] :
   letI := rightAlgebra (R := R) (A := A) (B := B)
   algebraMap B (TensorProduct R A B) = includeRight (R := R) (A := A) (B := B) := rfl
 
