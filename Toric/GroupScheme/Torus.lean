@@ -136,6 +136,8 @@ lemma leftAsOver {X : Over S} : asOver X.left S = X := rfl
 
 instance {X : Over S} [Grp_Class X] : Grp_Class <| asOver X.left S := by simpa
 
+lemma foo : asOver (pullback (G ↘ S) (H ↘ S)) S = asOver G S ⊗ asOver H S := rfl
+
 instance IsSplitTorus.product [IsSplitTorus S G] [IsSplitTorus S H] :
     IsSplitTorus S <| (asOver G S ⊗ asOver H S).left := sorry
 
