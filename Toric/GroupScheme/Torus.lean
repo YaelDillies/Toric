@@ -91,6 +91,7 @@ lemma IsTorus.of_isIso [IsTorus k H]
 
 end IsTorus
 
+section
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
 abbrev SplitTorus (S : Scheme) (σ : Type u) : Scheme.{u} := Diag S <| FreeAbelianGroup σ
 
@@ -122,5 +123,18 @@ variable (R σ) in
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
 abbrev splitTorusIso (R : CommRingCat) (σ : Type*) :
     𝔾ₘ[Spec R, σ] ≅ Spec (.of <| MvLaurentPolynomial σ R) := diagSpecIso _ _
+
+end
+
+section Product
+variable {S G H : Scheme.{u}} [G.Over S] [H.Over S] [Grp_Class (asOver G S)]
+  [Grp_Class (asOver H S)]
+
+instance : Grp_Class <| asOver (pullback (G ↘ S) (H ↘ S)) S := sorry
+
+instance IsSplitTorus.product [IsSplitTorus S G] [IsSplitTorus S H] :
+    IsSplitTorus S <| pullback (G ↘ S) (H ↘ S) := sorry
+
+end Product
 
 end AlgebraicGeometry.Scheme
