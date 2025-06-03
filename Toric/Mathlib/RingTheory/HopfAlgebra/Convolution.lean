@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 import Toric.Mathlib.Algebra.Algebra.Defs
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 /-!
 # Convolution product on Hopf algebra maps
@@ -25,9 +26,10 @@ suppress_compilation
 
 open Algebra Coalgebra Bialgebra TensorProduct
 
-variable {R A C : Type*} [CommSemiring R]
+variable {R A B₁ B₂ C : Type*} [CommSemiring R]
 
 namespace HopfAlgebra
+
 variable [CommSemiring A] [HopfAlgebra R A]
 
 lemma antipode_mul_antidistrib (a b : A) :
@@ -72,6 +74,10 @@ variable [Semiring C] [HopfAlgebra R C]
 
 @[simp] lemma id_mul_antipode : id * antipode R (A := C) = 1 := by
   ext; simp [mul_def, ← LinearMap.lTensor_def]
+
+noncomputable
+instance : Invertible (LinearMap.id (R := R) (M := C)) :=
+  ⟨antipode R, antipode_mul_id, id_mul_antipode⟩
 
 lemma counit_comp_antipode : ε ∘ₗ antipode R (A := C) = ε := calc
   _ = 1 * (ε ∘ₗ antipode R (A := C)) := (one_mul _).symm
@@ -121,6 +127,132 @@ lemma comul_right_inv : δ₁ * 𝑭 = 1 := calc
 end LinearMap
 
 namespace AlgHom
+
+variable [Semiring A] [Semiring C] [Algebra R A]
+  [CommSemiring B₁] [CommSemiring B₂] [Algebra R B₁] [Algebra R B₂] [HopfAlgebra R C]
+
+-- noncomputable
+-- instance : Group (C →ₐ[R] B₁) where
+--   inv f := (f.comp <| HopfAlgebra.antipodeAlgHom R C)
+--   inv_mul_cancel l := by
+--     ext x
+--     dsimp [AlgHom.one_def, AlgHom.mul_def, Algebra.ofId]
+--     trans l (algebraMap R C (counit x))
+--     · rw [← HopfAlgebra.mul_antipode_rTensor_comul_apply]
+--       induction comul (R := R) x with
+--       | zero => simp
+--       | add x y _ _ => simp [*]
+--       | tmul x y => simp
+--     · simp
+
+-- lemma _root_.Bialgebra.comulAlgHom_def : Bialgebra.comulAlgHom R C =
+--     Algebra.TensorProduct.includeLeft * Algebra.TensorProduct.includeRight := by
+--   ext x
+--   simp only [comulAlgHom_apply, AlgHom.mul_def, AlgHom.coe_comp, Function.comp_apply]
+--   induction comul (R := R) x with
+--   | zero => simp
+--   | add x y hx hy => simp only [map_add, ← hx, ← hy]
+--   | tmul x y => simp
+
+-- lemma _root_.HopfAlgebra.antipodeAlgHom_def :
+--     HopfAlgebra.antipodeAlgHom R C = (AlgHom.id _ _)⁻¹ := rfl
+
+lemma _root_.Bialgebra.counitAlgHom_def :
+    Bialgebra.counitAlgHom R C = 1 := rfl
+
+lemma _root_.Bialgebra.counit_def :
+    Coalgebra.counit (R := R) (A := C) = 1 := rfl
+
+lemma _root_.Bialgebra.comul_def : Coalgebra.comul (R := R) (A := C) =
+    Algebra.TensorProduct.includeLeft.toLinearMap *
+    Algebra.TensorProduct.includeRight.toLinearMap := by
+  ext x
+  simp only [LinearMap.mul_apply]
+  induction comul (R := R) x with
+  | zero => simp
+  | add x y hx hy => simp only [map_add, ← hx, ← hy]
+  | tmul x y => simp
+
+@[simps]
+noncomputable
+instance invertibleToLinearMap (f : C →ₐ[R] A) : Invertible f.toLinearMap := by
+  refine ⟨f ∘ₗ antipode R, ?_, ?_⟩
+  · ext x
+    dsimp [AlgHom.one_def, AlgHom.mul_def, Algebra.ofId]
+    trans f (algebraMap R C (counit x))
+    · rw [← HopfAlgebra.mul_antipode_rTensor_comul_apply]
+      induction comul (R := R) x with
+      | zero => simp
+      | add x y _ _ => simp [*]
+      | tmul x y => simp
+    · simp
+  · ext x
+    dsimp [AlgHom.one_def, AlgHom.mul_def, Algebra.ofId]
+    trans f (algebraMap R C (counit x))
+    · rw [← HopfAlgebra.mul_antipode_lTensor_comul_apply]
+      induction comul (R := R) x with
+      | zero => simp
+      | add x y _ _ => simp [*]
+      | tmul x y => simp
+    · simp
+
+lemma comul_antipode_inv : (comul ∘ₗ antipode R (A := C)) * comul = 1 := by
+  ext x
+  simp only [LinearMap.mul_apply, LinearMap.one_apply, Algebra.TensorProduct.algebraMap_apply]
+  trans comul ((algebraMap R C) (counit x))
+  · rw [← HopfAlgebra.mul_antipode_rTensor_comul_apply, ← LinearMap.rTensor_comp_lTensor,
+      LinearMap.coe_comp, Function.comp_apply]
+    induction comul (R := R) x with
+    | zero => simp
+    | add x y _ _ => simp_all [add_tmul]
+    | tmul x y =>
+      simp [LinearMap.rTensor_tmul, LinearMap.lTensor_tmul, LinearMap.mul'_apply]
+  · simp
+
+lemma _root_.HopfAlgebra.antipode_comul_antidistrib : comul ∘ₗ antipode R (A := C) =
+    map (antipode R) (antipode R) ∘ₗ (Algebra.TensorProduct.comm R C C).toAlgHom.toLinearMap
+       ∘ₗ comul := by
+  let e :=
+    (invertibleToLinearMap (Algebra.TensorProduct.includeLeft : C →ₐ[R] C ⊗[R] C)).mul
+    (invertibleToLinearMap (Algebra.TensorProduct.includeRight : C →ₐ[R] C ⊗[R] C))
+  have H : (comul ∘ₗ antipode R (A := C)) * comul = 1 := comul_antipode_inv
+  nth_rw 2 [Bialgebra.comul_def] at H
+  convert (invOf_eq_left_inv H).symm
+  simp only [AlgEquiv.toAlgHom_eq_coe, AlgEquiv.toAlgHom_toLinearMap, invOf_mul,
+    invertibleToLinearMap_invOf]
+  simp only [LinearMap.mul_def, ← LinearMap.comp_assoc]
+  congr 1
+  ext; simp
+
+end AlgHom
+
+namespace HopfAlgebra
+variable {C : Type*} [Semiring C] [HopfAlgebra R C] [IsCocomm R C]
+
+lemma _root_.HopfAlgebra.antipode_comul_distrib : comul ∘ₗ antipode R (A := C) =
+    map (antipode R) (antipode R) ∘ₗ comul := by
+  simp [antipode_comul_antidistrib]
+
+variable (R C) in
+/-- The antipode as a coalgebra hom. -/
+def antipodeCoalgHom : C →ₗc[R] C where
+  __ := antipode R (A := C)
+  counit_comp := by ext a; exact antipode_counit _
+  map_comp_comul := antipode_comul_distrib.symm
+
+@[simp]
+lemma antipodeCoalgHom_def : antipodeCoalgHom R C = antipode R (A := C) := rfl
+
+variable (R A) in
+/-- The antipode as a bialgebra hom. -/
+def antipodeBialgHom [CommSemiring A] [HopfAlgebra R A] [IsCocomm R A] : A →ₐc[R] A where
+  __ := antipodeCoalgHom R A
+  map_one' := antipode_one
+  map_mul' := antipode_mul_distrib
+
+end HopfAlgebra
+
+namespace AlgHom
 variable [CommSemiring A] [Semiring C] [Bialgebra R C] [HopfAlgebra R A]
 
 lemma antipode_id_cancel : HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A = 1 := by
@@ -148,22 +280,59 @@ private lemma inv_convMul_cancel (f : C →ₐc[R] A) :
 
 end AlgHom
 
+open HopfAlgebra
+
 namespace BialgHom
-variable [CommSemiring A] [CommSemiring C]
+variable {B₁ B₂ : Type*} [CommSemiring A] [CommSemiring B₁] [CommSemiring B₂]
+  [Algebra R B₁] [Algebra R B₂] [CommSemiring C]
 
 section HopfAlgebra
-variable [HopfAlgebra R A] [HopfAlgebra R C] [IsCocomm R C]
+variable [HopfAlgebra R A] [HopfAlgebra R C]
 
-instance : Inv (C →ₐc[R] A) where inv f := sorry
+instance : Group (C →ₐ[R] B₁) where
+  inv f := (f.comp <| HopfAlgebra.antipodeAlgHom R C)
+  inv_mul_cancel l := by
+    ext x
+    dsimp [AlgHom.one_def, AlgHom.mul_def, ofId]
+    trans l (algebraMap R C (counit x))
+    · rw [← HopfAlgebra.mul_antipode_rTensor_comul_apply]
+      induction comul (R := R) x with
+      | zero => simp
+      | add x y _ _ => simp [*]
+      | tmul x y => simp
+    · simp
 
--- lemma inv_def (f : C →ₐc[R] A) : f⁻¹ = sorry := rfl
+lemma foo1 : Bialgebra.comulAlgHom R C =
+    Algebra.TensorProduct.includeLeft *
+    Algebra.TensorProduct.includeRight := by
+  ext x
+  simp only [comulAlgHom_apply, AlgHom.mul_def, AlgHom.coe_comp, Function.comp_apply]
+  induction comul (R := R) x with
+  | zero => simp
+  | add x y hx hy => simp only [map_add, ← hx, ← hy]
+  | tmul x y => simp
 
--- @[simp]
--- lemma inv_apply (f : C →ₐc[R] A) (c : C) : f⁻¹ c = sorry := rfl
+lemma foo2 : HopfAlgebra.antipodeAlgHom R C = (AlgHom.id _ _)⁻¹ := rfl
 
-private lemma inv_convMul_cancel (f : C →ₐc[R] A) : f⁻¹ * f = 1 := sorry
+lemma comp_inv (f : C →ₐ[R] B₁) (g : B₁ →ₐ[R] B₂) : g.comp (f⁻¹) = (g.comp f)⁻¹ := rfl
 
-instance : CommGroup (C →ₐc[R] A) where inv_mul_cancel := inv_convMul_cancel
+lemma foobar : (Algebra.TensorProduct.map (HopfAlgebra.antipodeAlgHom R C)
+    (HopfAlgebra.antipodeAlgHom R C)).comp
+    ((Algebra.TensorProduct.comm R C C).toAlgHom.comp (Bialgebra.comulAlgHom R C)) =
+      ((Bialgebra.comulAlgHom R C).comp ((HopfAlgebra.antipodeAlgHom R C))) := by
+  simp [foo1, foo2, AlgHom.mul_distrib_comp, AlgHom.comp_mul_distrib, comp_inv]
+
+variable [IsCocomm R A]
+
+instance : Inv (C →ₐc[R] A) where inv f := (antipodeBialgHom R A).comp f
+
+lemma inv_def (f : C →ₐc[R] A) : f⁻¹ = (antipodeBialgHom R A).comp f := rfl
+
+@[simp] lemma inv_apply (f : C →ₐc[R] A) (c : C) : f⁻¹ c = antipode R (f c) := rfl
+
+--private lemma inv_convMul_cancel (f : C →ₐc[R] A) : f⁻¹ * f = 1 := sorry
+
+--instance : CommGroup (C →ₐc[R] A) where inv_mul_cancel := inv_convMul_cancel
 
 end HopfAlgebra
 end BialgHom

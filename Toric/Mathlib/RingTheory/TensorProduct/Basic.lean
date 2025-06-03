@@ -61,3 +61,18 @@ lemma Algebra.TensorProduct.mapRingHom_comp_includeRight :
   ext; simp
 
 end hetero
+
+namespace Algebra.TensorProduct
+
+open TensorProduct
+
+universe uR uS uA uB uC uD uE uF
+
+variable (R : Type uR) [CommSemiring R]
+variable (A : Type uA) [Semiring A] [Algebra R A]
+variable (B : Type uB) [Semiring B] [Algebra R B]
+
+@[simp] lemma comm_toLinearMap :
+    (Algebra.TensorProduct.comm R A B).toLinearMap = _root_.TensorProduct.comm R A B := rfl
+
+end Algebra.TensorProduct
