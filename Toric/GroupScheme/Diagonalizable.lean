@@ -110,20 +110,6 @@ lemma commHopfAlgCatEquivCogrpCommAlgCat_foo {R S T : Type u} [CommRing R] [Comm
   congr 1
   ext <;> simp
 
-open Functor.LaxMonoidal Functor.Monoidal in
-set_option maxHeartbeats 0 in
-instance {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
-    [CartesianMonoidalCategory D] (F : C ⥤ D)
-    [BraidedCategory C] [BraidedCategory D] [F.Braided] : F.mapGrp.Monoidal :=
-  Functor.CoreMonoidal.toMonoidal
-  { εIso := (Grp_.fullyFaithfulForget₂Mon_ _).preimageIso (εIso F.mapMon)
-    μIso X Y := (Grp_.fullyFaithfulForget₂Mon_ _).preimageIso (μIso F.mapMon X.toMon_ Y.toMon_)
-    μIso_hom_natural_left f Z := by convert μ_natural_left F.mapMon f Z.toMon_ using 1
-    μIso_hom_natural_right Z f := by convert μ_natural_right F.mapMon Z.toMon_ f using 1
-    associativity X Y Z := by convert associativity F.mapMon X.toMon_ Y.toMon_ Z.toMon_ using 1
-    left_unitality X := by convert left_unitality F.mapMon X.toMon_ using 1
-    right_unitality X := by convert right_unitality F.mapMon X.toMon_ using 1 }
-
 lemma diagFunctor_map_add {M N : Type u} [AddCommGroup M] [AddCommGroup N]
     (f g : M →+ N) :
     (diagFunctor S).map (AddCommGrp.ofHom (f + g)).op =
