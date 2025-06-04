@@ -99,11 +99,11 @@
   \uses{0-torus}
   \lean{AlgebraicGeometry.ToricVariety}
   \leanok
-
-  A {\bf toric variety} is a variety $X$ with
+  Let $X$ be a scheme over $S$. A structure of {\bf toric variety} on $X$ over $S$ consists the following data
   \begin{itemize}
-    \item an open embedding $T := (\bbC^\times)^n \hookrightarrow X$ with dense image
-    \item such that the natural action $T \times T \to T$ of the torus on itself extends to an (algebraic) action $T \times X \to X$.
+    \item a group scheme $T$ over $S$ that is a torus.
+    \item a group action $T \times X \to X$ over $S$.
+    \item an dominant open embedding $i : T \to X$ over $S$ that is $T$-equivariant.
   \end{itemize}
 \end{definition}
 
