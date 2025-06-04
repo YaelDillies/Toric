@@ -200,7 +200,7 @@ Finally, let's do the right edge.
   \lean{AlgebraicGeometry.Scheme.SplitTorus, AlgebraicGeometry.Scheme.SplitTorus.instCanonicallyOver}
   \leanok
 
-  The split torus $\Gm^n$ over a scheme $S$ is the pullback of
+  The split torus $\G_m^n$ over a scheme $S$ is the pullback of
   $\Spec \Z[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}]$ along the unique map $S \to \Spec \Z$.
 \end{definition}
 
@@ -246,7 +246,7 @@ Finally, let's do the right edge.
 
   For a group scheme $G$ over $S$, the {\bf character lattice} of $G$ is
   \[
-    X(G) := \Hom_{\mathsf{GrpSch}_S}(G, \Gm).
+    X(G) := \Hom_{\mathsf{GrpSch}_S}(G, \G_m).
   \]
   An element of $X(G)$ is called a {\bf character}.
 \end{definition}
@@ -260,7 +260,7 @@ Finally, let's do the right edge.
 
   For a group scheme $G$ over $S$, the {\bf cocharacter lattice} of $G$ is
   \[
-    X^*(G) := \Hom_{\mathsf{GrpSch}_S}(\Gm, G).
+    X^*(G) := \Hom_{\mathsf{GrpSch}_S}(\G_m, G).
   \]
   An element of $X^*(G)$ is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
 \end{definition}
@@ -281,7 +281,7 @@ Finally, let's do the right edge.
 
   By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
   \[
-    X(G) = \Hom_{\mathsf{GrpSch}}(G, \Gm) = \Hom(k[\Z], k[G]) = \Hom(\Z, G) = G.
+    X(G) = \Hom_{\mathsf{GrpSch}}(G, \G_m) = \Hom(k[\Z], k[G]) = \Hom(\Z, G) = G.
   \]
 \end{proof}
 
@@ -301,7 +301,7 @@ Finally, let's do the right edge.
 
   By Propositions \ref{0-torus-spec} and \ref{0-full-faithful-diag} in turn, we have
   \[
-    X^*(G) = \Hom_{\mathsf{GrpSch}}(\Gm, G) = \Hom(k[G], k[\Z]) = \Hom(G, \Z).
+    X^*(G) = \Hom_{\mathsf{GrpSch}}(\G_m, G) = \Hom(k[G], k[\Z]) = \Hom(G, \Z).
   \]
 \end{proof}
 
@@ -363,5 +363,5 @@ Finally, let's do the right edge.
   \uses{}
   \leanok
 
-  Transfer everything across the isos $X(\Gm^n) = \Z^n, X*(\Gm^n) = \Hom(\Z^n, \Z)$.
+  Transfer everything across the isos $X(\G_m^n) = \Z^n, X*(\G_m^n) = \Hom(\Z^n, \Z)$.
 \end{proof}
