@@ -94,7 +94,7 @@
   % \lean{}
   % \leanok
 
-  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi'_\MCA : T \to \Gm^s$
+  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi'_\MCA : T \to \G_m^s$
   given by $\Phi'_{\mathcal A} (t) = (\chi^{a_1} (t), \dotsc, \chi^{a_s} (t))$.
 \end{definition}
 
@@ -104,7 +104,7 @@
   % \lean{}
   % \leanok
 
-  Let $\iota : \Gm^n \to \mathbb{A}^n$ be the canonical inclusion.
+  Let $\iota : \G_m^n \to \mathbb{A}^n$ be the canonical inclusion.
   Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$,
   define $\Phi_\MCA : T \to \mathbb{A}^s$ as $\Phi_{\MCA}=\iota\circ\Phi'_{\MCA}$.
 \end{definition}
@@ -135,7 +135,7 @@
   {\textbf Torus: }
   Define the torus $T'$ to be the one we get from \ref{1-1-1-group-hom-torus} with quotient map $\pi:T \to T'$.
   {\textbf Open embedding: }
-  Since both $Y_{\MCA},T'$ are closures of $\Phi,\Phi'$ and $\Gm^n\to\mathbb{A}^n$ is an open embedding
+  Since both $Y_{\MCA},T'$ are closures of $\Phi,\Phi'$ and $\G_m^n\to\mathbb{A}^n$ is an open embedding
   we get an open embedding $\iota:T' \to Y_{\MCA}$ such that the map $\phi:T \to Y_{\MCA}$ factors as
   $\phi = \iota \circ \pi$.
   {\textbf Dominant: } Since $\phi$ is dominant, so is $\iota$.
@@ -147,7 +147,7 @@
   First, $T'\times_S T' \to T'\times Y_\MCA$ is dominant, since $T'$ is flat and flat base change preserves dominance (TODO add lemma).
   Since the image of $T'\times_S T'$ is $T'$ we're done for topological reasons.
 
-  {\textbf Equivariant: } The inclusion of the torus is equivariant, since $\Gm^n \to \mathbb{A}^n$ is.
+  {\textbf Equivariant: } The inclusion of the torus is equivariant, since $\G_m^n \to \mathbb{A}^n$ is.
 \end{proof}
 
 \begin{proposition}
