@@ -28,9 +28,9 @@ def Diag : Scheme.{u} :=
 
 @[simps! -isSimp]
 instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance
-instance : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
-instance : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
-instance : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
+instance Diag.mon_ClassAsOver : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
+instance Diag.grp_ClassAsOver : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
+instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
 
 variable {R : CommRingCat.{u}}
 
