@@ -133,3 +133,68 @@
   Therefore $D_S(f)$ is faithfully flat,
   as faithfully flat morphisms are preserved under base change.
 \end{proof}
+
+
+\begin{proposition}[Faithfully flat morphisms between diagonalisable group schemes]
+  \label{0-diag-faithful-flat}
+  \uses{0-diag}
+  % \lean{}
+  % \leanok
+
+  Let $S$ be a scheme.
+  Let $G, H$ be abelian groups and $f : G \to H$ an injective group hom.
+  Then the map $D_S(f) : D_S(H) \to D_S(G)$ is faithfully flat.
+\end{proposition}
+\begin{proof}
+  \uses{0-grp-alg-free}
+  % \leanok
+
+  Since $f$ is injective, $\Z[H]$ is a free module over $\Z[G]$ by Proposition \ref{0-grp-alg-free},
+  hence the map $\Z[G] \to \Z[H]$ is faithfully flat and so is $\Spec \Z[H] \to \Spec \Z[G]$.
+  Therefore $D_S(f)$ is faithfully flat,
+  as faithfully flat morphisms are preserved under base change.
+\end{proof}
+
+
+\begin{proposition}[A subgroup of a diagonalisable group scheme is a diagonalisable group scheme]
+  \label{0-subgroup-diag}
+  \uses{0-diag}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a domain. Let $G$ be an abelian group.
+  If $H$ is a closed subgroup of $D_R(G)$, then $H$ is a diagonalisable group scheme.
+\end{proposition}
+\begin{proof}
+  \uses{0-is-diag-bialg-quot, 0-ess-image-spec-hopf, 0-full-faithful-spec-hopf, 0-diag-spec}
+  % \leanok
+
+  $H$ is a closed subscheme of an affine scheme, hence it is affine.
+  By Proposition \ref{0-ess-image-spec-hopf}, write $H = \Spec A$ where $A$ is a $R$-Hopf algebra.
+  The closed subgroup embedding $H \hookrightarrow D_R(G)$
+  becomes a surjective bialgebra hom $R[G] \to A$ by
+  Propositions \ref{0-diag-spec} and \ref{0-full-faithful-spec-hopf}.
+  By Proposition \ref{0-is-diag-bialg-quot},
+  $A$ is a diagonalisable bialgebra and therefore $H$ is a diagonalisable group scheme.
+\end{proof}
+
+
+\begin{proposition}[Diagonalisable group scheme of a torsion group is disconnected]
+  \label{0-diag-tors}
+  \uses{0-diag}
+  % \lean{}
+  % \leanok
+
+  Let $G$ be an abelian group with an element of torsion $n$.
+  Let $R$ be a commutative ring with $n$ invertible.
+  Then $D_R(G)$ is disconnected.
+\end{proposition}
+\begin{proof}
+  \uses{0-diag-spec}
+  % \leanok
+
+  Say $x \in G$ is such that $x^n = 1$. Then
+  \[e : R[G] := \frac 1n \sum_{i = 0}^n x^i\]
+  is such that $e ^ 2 = e$.
+  We are done by Proposition \ref{0-diag-spec}.
+\end{proof}
