@@ -11,12 +11,12 @@
   % \leanok
 
   Let $T_1$ and $T_2$ be split tori over a field $k$ and let $\phi: T_1 \to T_2$ be a homomorphism,
-  then $\phi$ factors as
+  then the (scheme theoretic) image of $\phi$ can be given a $k$-group scheme structure such that
+  the canonical maps
   \[
-    T_1 \xrightarrow{\phi} T_2 = T_1 \xrightarrow{\iota} T \xrightarrow{\i} T_2,
+    T_1 \xrightarrow{\hat{\phi}} \operatorname{im}\phi \xrightarrow{\iota} T_2,
   \]
-  where $T$ is a split torus,
-  $\i$ is a closed subgroup embedding and $\iota$ is an fpqc homomorphism.
+  are group homomorphisms, and $\hat{\phi}$ is fpqc.
 \end{proposition}
 \begin{proof}
   \uses{0-full-faithful-diag, 0-diag-spec, 0-diag-closed-emb, 0-diag-aff-hom}
@@ -83,14 +83,25 @@
 
 \subsection{Lattice Points}
 
-
 \begin{definition}
-  \label{1-1-phiA}
+  \label{1-1-phiAprime}
   \uses{0-char}
   % \lean{}
   % \leanok
 
-  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi_\MCA : T \to \mathbb{A}^s$ given by $\Phi_{\mathcal A} (t) = (\chi^{a_1} (t), \dotsc, \chi^{a_s} (t))$.
+  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi'_\MCA : T \to \Gm^s$
+  given by $\Phi'_{\mathcal A} (t) = (\chi^{a_1} (t), \dotsc, \chi^{a_s} (t))$.
+\end{definition}
+
+\begin{definition}
+  \label{1-1-phiA}
+  \uses{1-1-phiAprime}
+  % \lean{}
+  % \leanok
+
+  Let $\iota : \Gm^n \to \mathbb{A}^n$ be the canonical inclusion.
+  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$,
+  define $\Phi_\MCA : T \to \mathbb{A}^s$ as $\Phi_{\MCA}=\iota\circ\Phi'_{\MCA}$.
 \end{definition}
 
 
@@ -100,7 +111,7 @@
   % \lean{}
   % \leanok
 
-  $Y_\MCA$ is the (Zariski) closure of $\im \Phi_\MCA$ in $\mathbb A^s$.
+  $Y_\MCA$ is the scheme theoretic closure of $\im \Phi_\MCA$ in $\mathbb A^s$.
 \end{definition}
 
 
@@ -110,13 +121,28 @@
   % \lean{}
   % \leanok
 
-  $Y_\MCA$ is a toric variety.
+  Let the base be $S=\Spec k$ for a field $k$, then $Y_\MCA$ is a toric variety.
 \end{proposition}
 \begin{proof}
   \uses{1-1-1-group-hom-subtorus}
   % \leanok
 
-  TODO
+  {\textbf Torus: }
+  Define the torus $T'$ to be the one we get from \ref{1-1-1-group-hom-subtorus} with quotient map $\pi:T \to T'$.
+  {\textbf Open embedding: }
+  Since both $Y_{\MCA},T'$ are closures of $\Phi,\Phi'$ and $\Gm^n\to\mathbb{A}^n$ is an open embedding
+  we get an open embedding $\iota:T' \to Y_{\MCA}$ such that the map $\phi:T \to Y_{\MCA}$ factors as
+  $\phi = \iota \circ \pi$.
+  {\textbf Dominant: } Since $\phi$ is dominant, so is $\iota$.
+  {\textbf Action: }
+  Since $\G_m^n$ acts on $\mathbb{A}^n$, we get a morphism $a':T' \times_S Y_\MCA \to \mathbb{A}^n$.
+  As $T'\times_S Y_\MCA$ is reduced (TODO add lemma), to show that this factors through $Y_\MCA$ it suffices to check
+  that the image lies in $Y_\MCA$.
+
+  First, $T'\times_S T' \to T'\times Y_\MCA$ is dominant, since $T'$ is flat and flat base change preserves dominance (TODO add lemma).
+  Since the image of $T'\times_S T'$ is $T'$ we're done for topological reasons.
+
+  {\textbf Equivariant: } The inclusion of the torus is equivariant, since $\Gm^n \to \mathbb{A}^n$ is.
 \end{proof}
 
 \begin{proposition}
