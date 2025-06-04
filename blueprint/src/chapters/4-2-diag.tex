@@ -73,3 +73,63 @@
 
   Also see Theorem 12.9(a) in \cite{Milne_2017}. See SGA III Exposé VIII for a proof that works for $R$ an arbitrary commutative ring.
 \end{proof}
+
+
+\begin{proposition}[Morphisms between diagonalisable group schemes are affine]
+  \label{0-diag-aff-hom}
+  \uses{0-diag}
+  % \lean{}
+  % \leanok
+
+  Let $S$ be a scheme.
+  Let $M, N$ be commutative monoids and $f : M \to N$ a monoid hom.
+  Then the map $D_S(f) : D_S(N) \to D_S(M)$ is affine.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  $\Spec f : \Spec \Z[N] \to \Spec \Z[M]$ is affine by definition(?).
+  Therefore $D_S(f)$ is affine, as affine morphisms are preserved under base change.
+\end{proof}
+
+
+\begin{proposition}[Closed embeddings between diagonalisable group schemes]
+  \label{0-diag-closed-emb}
+  \uses{0-diag}
+  % \lean{}
+  % \leanok
+
+  Let $S$ be a scheme.
+  Let $M, N$ be commutative monoids and $f : M \to N$ a surjective monoid hom.
+  Then the map $D_S(f) : D_S(N) \to D_S(M)$ is a closed embedding.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Since $f$ is surjective, the corresponding map $\hat f : \Z[M] \to \Z[N]$ is surjective too.
+  Hence $\Spec \hat f : \Spec \Z[N] \to \Spec \Z[M]$ is a closed embedding.
+  Therefore $D_S(f)$ is a closed embedding, as closed embeddings are preserved under base change.
+\end{proof}
+
+
+\begin{proposition}[Faithfully flat morphisms between diagonalisable group schemes]
+  \label{0-diag-faithful-flat}
+  \uses{0-diag}
+  % \lean{}
+  % \leanok
+
+  Let $S$ be a scheme.
+  Let $G, H$ be abelian groups and $f : G \to H$ an injective group hom.
+  Then the map $D_S(f) : D_S(H) \to D_S(G)$ is faithfully flat.
+\end{proposition}
+\begin{proof}
+  \uses{0-mon-alg-free}
+  % \leanok
+
+  Since $f$ is injective, $\Z[H]$ is a free module over $\Z[G]$ by Proposition \ref{0-mon-alg-free},
+  hence the map $\Z[G] \to \Z[H]$ is faithfully flat and so is $\Spec \Z[H] \to \Spec \Z[G]$.
+  Therefore $D_S(f)$ is faithfully flat,
+  as faithfully flat morphisms are preserved under base change.
+\end{proof}
