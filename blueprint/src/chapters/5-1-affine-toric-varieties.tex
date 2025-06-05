@@ -88,25 +88,37 @@
 
 \subsection{Lattice Points}
 
+
 \begin{definition}
   \label{1-1-phiAprime}
-  \uses{0-char}
+  \uses{0-diag}
   % \lean{}
   % \leanok
 
-  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi'_\MCA : T \to \G_m^s$
-  given by $\Phi'_{\mathcal A} (t) = (\chi^{a_1} (t), \dotsc, \chi^{a_s} (t))$.
+  Let $S$ be a scheme. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Define $\Phi'_\MCA : D_S(G) \to \G_m^s$ as the image under $D_S$ of the map
+  \begin{align*}
+    \Z^{\oplus s} & \to G \\
+    e_i & \mapsto \MCA_i.
+  \end{align*}
 \end{definition}
+
 
 \begin{definition}
   \label{1-1-phiA}
-  \uses{1-1-phiAprime}
+  \uses{0-diag}
   % \lean{}
   % \leanok
 
-  Let $\iota : \G_m^n \to \mathbb{A}^n$ be the canonical inclusion.
-  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$,
-  define $\Phi_\MCA : T \to \mathbb{A}^s$ as $\Phi_{\MCA}=\iota\circ\Phi'_{\MCA}$.
+  Let $S$ be a scheme. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Define $\Phi_\MCA : D_S(G) \to \mathbb A^s$
+  as the image under $D_S$ of the map
+  \begin{align*}
+    \N^{\oplus s} & \to G \\
+    e_i & \mapsto \MCA_i.
+  \end{align*}
 \end{definition}
 
 
@@ -116,7 +128,9 @@
   % \lean{}
   % \leanok
 
-  $Y_\MCA$ is the scheme theoretic closure of $\im \Phi_\MCA$ in $\mathbb A^s$.
+  Let $S$ be a scheme. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Define $Y_\MCA$ is the scheme-theoretic closure of $\im \Phi_\MCA$ in $\mathbb A^s$.
 \end{definition}
 
 
