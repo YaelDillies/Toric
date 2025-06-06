@@ -85,8 +85,14 @@
   % \lean{}
   % \leanok
 
-  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$, define $\Phi'_\MCA : T \to \G_m^s$
-  given by $\Phi'_{\mathcal A} (t) = (\chi^{a_1} (t), \dotsc, \chi^{a_s} (t))$.
+  Let $S$ be a scheme. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Let $f'_\MCA$ be the map
+  \begin{align*}
+    \Z^{\oplus s} & \to G \\
+    e_i & \mapsto \MCA_i.
+  \end{align*}
+  and define $\Phi'_\MCA : D_S(G) \to \G_m^s$ as the image under $D_S$ of $f'_\MCA$.
 \end{definition}
 
 \begin{definition}
@@ -95,9 +101,14 @@
   % \lean{}
   % \leanok
 
-  Let $\iota : \G_m^n \to \mathbb{A}^n$ be the canonical inclusion.
-  Given a finite set $\MCA = \{a_1, \dotsc, a_s\} \subseteq M$,
-  define $\Phi_\MCA : T \to \mathbb{A}^s$ as $\Phi_{\MCA}=\iota\circ\Phi'_{\MCA}$.
+  Let $S$ be a scheme. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Let $f_\MCA$ be the map
+  \begin{align*}
+    \N^{\oplus s} & \to G \\
+    e_i & \mapsto \MCA_i.
+  \end{align*}
+  and define $\Phi_\MCA : D_S(G) \to \mathbb A^s$ as the image under $D_S$ of $f_\MCA$.
 \end{definition}
 
 
@@ -141,6 +152,7 @@
   {\textbf Equivariant: } The inclusion of the torus is equivariant, since $\G_m^n \to \mathbb{A}^n$ is.
 \end{proof}
 
+
 \begin{proposition}
   \label{1-1-8-char-ya}
   \uses{1-1-7-ya}
@@ -157,25 +169,52 @@
   The conclusion follows from looking at the corresponding maps of character lattices.
 \end{proof}
 
+
 \subsection{Toric Ideals}
+
+
+\begin{definition}[Lattice ideal]
+  \label{1-1-lattice-ideal}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  Let $G$ be a free abelian group and $M$ a cancellative monoid whose Grothendieck group is $G$.
+  Let $L \subseteq G$ be a sublattice. The \emph{lattice ideal} of $L$ is
+  \[
+    I_L = \langle X^\alpha - X^\beta | \alpha, \beta \in M, \alpha - \beta \in L\rangle
+  \]
+\end{definition}
 
 
 \begin{proposition}
   \label{1-1-9-ideal-ya}
-  \uses{1-1-7-ya}
+  \uses{1-1-phiAprime, 1-1-7-ya, 1-1-lattice-ideal}
   % \lean{}
   % \leanok
 
-  The ideal of the affine toric variety $Y_\MCA$ is
+  Let $R$ be a commutative ring. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Let $L$ be the kernel of $f'_\MCA : \Z^{\oplus s} \to G$.
+  Then the ideal of the affine toric variety $Y_\MCA$ is
   \[
-    I(Y_\MCA) = \langle x^{\ell_+} - x^{\ell_-} | \ell \in L\rangle
+    I(Y_\MCA) = I_L.
   \]
 \end{proposition}
 \begin{proof}
-  \uses{}
+  \uses{0-ker-sum, 0-torus-spec}
   % \leanok
 
-  See \cite{Cox_2011}.
+  By the definition of $Y_\MCA$ as the scheme-theoretic closure of $\Phi_\MCA$,
+  we have $I(Y_\MCA) = \ker R[f_\MCA] = \ker R[f'_\MCA]$ where, recall,
+  $f_\MCA : \N^s \to G, f'_\MCA : \Z^s \to G$ are both given by $e_i & \mapsto \MCA_i$,
+  and $R[f_\MCA] : R[\N^s] \to R[G]$ is the pushforward.
+
+  By Proposition \ref{0-ker-mon-alg} with $G := \Z, S := {1}$,
+  \[
+    \ker R[f_\MCA] = \span\{X^\alpha - X^\beta | \alpha, \beta \in \N^s, f(\alpha) = f(\beta)\}
+      = \span\{X^\alpha - X^\beta | \alpha, \beta \in \N^s, \alpha - \beta \in L\}.
+  \]
 \end{proof}
 
 
