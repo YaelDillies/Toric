@@ -15,29 +15,51 @@ abbrev U1Ring : Type _ := R[X][Y] ⧸ Ideal.span {(X ^ 2 + Y ^ 2 - 1 : R[X][Y])}
 
 abbrev U1Ring.mk (p : R[X][Y]) : (U1Ring R) := Ideal.Quotient.mk _ p
 
+@[simp]
+lemma U1relation : U1Ring.mk (R := R) X ^ 2 + U1Ring.mk Y ^ 2 = 1 := by
+  simp_rw [← map_pow, ← RingHom.map_add]
+  rw [← (Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq]
+  simp
+  exact Ideal.mem_span_singleton_self (X ^ 2 + Y ^ 2 - 1)
+
+lemma U1relation' : U1Ring.mk (R := R) X ^ 2 = 1 - U1Ring.mk Y ^ 2 := by simp [← U1relation]
+
 def Polynomial.aevalAEval {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] (x y : A) :
     R[X][Y] →ₐ[R] A where
-  toFun p := eval x (eval₂ (mapRingHom (algebraMap R A)) (C y) p)
+  toFun p := eval y (eval₂ (mapRingHom (algebraMap R A)) (C x) p)
   map_one' := by simp
   map_mul' x y := by simp
   map_zero' := by simp
   map_add' x y := by simp
   commutes' r := by simp
 
+@[simp]
+lemma Polynomial.aevalAEval_X {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] (x y : A) :
+    Polynomial.aevalAEval (R := R) x y X = x := by simp [aevalAEval]
+
+@[simp]
+lemma Polynomial.aevalAEval_Y {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] (x y : A) :
+    Polynomial.aevalAEval (R := R) x y Y = y := by simp [aevalAEval]
+
 instance : Algebra R (U1Ring R ⊗[R] U1Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := U1Ring R) (B := U1Ring R)
 
+attribute [local simp] U1relation' in
+set_option synthInstance.maxHeartbeats 0 in
+set_option maxHeartbeats 0 in
 instance : CoalgebraStruct R (U1Ring R) where
   comul := (Ideal.Quotient.liftₐ _
     (aevalAEval (.mk X ⊗ₜ .mk X - .mk Y ⊗ₜ .mk Y) (.mk X ⊗ₜ .mk Y - .mk Y ⊗ₜ .mk X)) (by
     show Ideal.span _ ≤ RingHom.ker _
     simp only [Ideal.span_le, Set.singleton_subset_iff]
+    simp
+    ring
+    erw [Algebra.TensorProduct.tmul_pow]
     sorry
     )).toLinearMap
   counit := (Ideal.Quotient.liftₐ _ (aevalAEval 1 0) (by
     show Ideal.span _ ≤ RingHom.ker _
-    simp only [Ideal.span_le, Set.singleton_subset_iff]
-    sorry
+    simp [Ideal.span_le, Set.singleton_subset_iff]
     )).toLinearMap
 
 instance : Coalgebra R (U1Ring R) where
