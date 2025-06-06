@@ -1,0 +1,201 @@
+% !TeX program = xelatex
+% !TEX options = --shell-escape paper/hopf_alg_aff_grp_sch.tex
+\documentclass{article}
+
+\title{Correspondence of Hopf algebras and affine group schemes in Lean 4}
+\author{Yaël Dillies, Michał Mrugała, Andrew Yang\footnote{All authors contributed equally to this work.}}
+\date{\today}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{mathrsfs}
+\usepackage{parskip}
+\usepackage{relsize}
+\usepackage[hypcap=true]{caption}
+\usepackage[shortlabels]{enumitem}
+\usepackage{hyperref}
+
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{nameref}
+\usepackage[margin=1in,a4paper]{geometry}
+
+%%% Lean listings setup %%%
+
+\usepackage{fontspec}
+\usepackage{minted}
+
+% JuliaMono has all the symbols needed for Lean code
+\setmonofont[Scale=MatchLowercase]{JuliaMono}[
+  Extension=.ttf,
+  UprightFont=*-Regular,
+  BoldFont=*-Bold,
+  ItalicFont=*-RegularItalic,
+  BoldItalicFont=*-BoldItalic,
+  RawFeature={-calt},
+]
+
+% autogobble lets us indent the lean code to distinguish it from the latex
+\setminted{frame=single}
+\newmintinline[lean]{lean}{breaklines,breakbefore={. },breakafter={_}}
+\newminted[leancode]{lean}{autogobble}
+
+% Configure the appearance of minted.
+% We adjust the spacing around minted environments, which stretches badly by default
+\fvset{listparameters=\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}}
+\AtBeginEnvironment{minted}{\vspace{4pt}}
+\renewcommand{\floatpagefraction}{.99}
+\renewcommand{\bottomfraction}{.7}
+
+%%% Lean listings setup %%%
+
+% Theorems
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{corollary}[thm]{Corollary}
+\newtheorem{dfn}[thm]{Definition}
+\newtheorem{eg}[thm]{Example}
+\newtheorem{egs}[thm]{Examples}
+\newtheorem{conj}{Conjecture}
+\newtheorem{prob}[thm]{Problem}
+\newtheorem{question}{Question}
+
+% Command redirections
+\let\P\oldP
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+% Letter shorthands
+\newcommand{\C}{\mathbb C}
+\newcommand{\bbE}{\mathbb E}
+\newcommand{\F}{\mathbb F}
+\newcommand{\K}{\mathbb K}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\mcA}{\mathcal A}
+\newcommand{\mcB}{\mathcal B}
+\newcommand{\mcC}{\mathcal C}
+\newcommand{\mcD}{\mathcal D}
+\newcommand{\mcE}{\mathcal E}
+\newcommand{\mcF}{\mathcal F}
+\newcommand{\mcG}{\mathcal G}
+\newcommand{\mcH}{\mathcal H}
+\newcommand{\mcM}{\mathcal M}
+\newcommand{\mcN}{\mathcal N}
+\newcommand{\mcO}{\mathcal O}
+\newcommand{\mcP}{\mathcal P}
+\newcommand{\mcQ}{\mathcal Q}
+\newcommand{\mcR}{\mathcal R}
+\newcommand{\mcS}{\mathcal S}
+\newcommand{\mcT}{\mathcal T}
+\newcommand{\mcU}{\mathcal U}
+\newcommand{\mcV}{\mathcal V}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Eps}{\mathcal E}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+  We formalise the correspondence between affine group schemes and Hopf algebras in Lean 4.
+  We show that the category of affine group schemes is equivalent to the category of commutative Hopf algebras over a field.
+  As an application, we construct the perfect pairing of characters and cocharacters.
+  Our work is largely a reproduction of \cite{CrazyAffine}, with the major difference being that we work with group objects as defined by the usual diagrams as opposed to presheaves of groups.
+  Our code is made available as part of Mathlib, the Lean 4 library of formalised mathematics.
+\end{abstract}
+
+
+\section{Introduction}\label{sec:intro}
+
+
+Algebraic groups are a central object of study in algebraic geometry. TODO: Expand
+
+Hopf algebras ... TODO: Expand
+
+Since we have no use for not necessarily commutative rings, we drop henceforth the ``commutative'' prefix in front of ``ring'', ``algebra'', ``bialgebra'', ``Hopf algebra''.
+We keep ``Comm'' in the names of our categories, for consistency with the Lean code.
+
+Lean is an interactive theorem prover and functional programming language. TODO: Expand
+
+Here is a sample of Lean code, claiming that composition of morphisms is associative:
+\begin{leancode}
+  variable {𝒞 : Type u} [Category.{v} 𝒞] {W X Y Z : 𝒞}
+
+  lemma comp_assoc (f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z) : f ≫ (g ≫ h) = (f ≫ g) ≫ h := ...
+\end{leancode}
+
+\lean{variable} is a keyword to introduce variables.
+The combination \lean{{𝒞 : Type u} [Category.{v} 𝒞]} translates to ``Let $\mcC$ be a category with objects and morphisms in the $u$-th and $v$-th universes respectively''.
+We will not have much use of universes and therefore will explain them no further.
+All there is to know is that the categories relevant to the present paper have $u = v + 1$, corresponding to the fact that their objects form a proper class and their hom sets $X \to Y$ truly are sets.
+\lean{{W X Y Z : 𝒞}} declares $W, X, Y, Z$ as objects in the category $\mcC$, and \lean{(f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z)} declares morphisms between them.
+\lean{f ≫ g} represents composition of morphisms, with the twist that the morphism $f$ is applied first, as opposed to the usual function composition notation \lean{g ∘ f}.
+\lean{...} is not valid Lean syntax, but instead a placeholder we use throughout this paper to elide irrelevant details.
+The full code for code snippets in each section is available on GitHub. See \url{https://github.com/YaelDillies/Toric/tree/master/HopfAlgAffGrpSchPaper}.
+
+Our motivation for this work is not correctness.
+Certainly, the material we formalise is part of the standard algebraic geometry curriculum and is correct without a doubt.
+Our goal is instead to clear the prerequisites to more advanced topics, such as toric varieties.
+In fact, we started off formalising toric varieties within the Toric project
+\footnote{Available on GitHub. See \url{https://yaeldillies.github.io/Toric/}.}
+before quickly realising that we first needed a solid theory of algebraic tori, which itself is most conveniently expressed in the language of algebraic groups.
+Simultaneously, algebraic groups are needed for Kevin Buzzard's ongoing project to formalise Fermat's Last Theorem in Lean.
+\footnote{Available on GitHub. See \url{https://imperialcollegelondon.github.io/FLT/}.}
+
+The paper is structured as follows:
+\cref{sec:informal} provides the mathematical background necessary to understanding the formalisation.
+\cref{sec:hopf,sec:grp,sec:yoneda} illustrate design decisions we made, specific painpoints we identified and how we circumvented them, all grouped according to the relevant mathematical concepts.
+These developments culminate in the definition of the perfect pairing between characters and cocharacters of an algebraic group, as described in \cref{sec:char-cochar}.
+
+
+\section{Informal description of the correspondence}\label{sec:informal}
+
+
+TODO
+
+
+\section{Hopf algebras}\label{sec:hopf}
+
+
+TODO(Michał)
+
+
+\section{Group objects}\label{sec:grp}
+
+
+TODO(Yaël)
+
+
+\section{The Yoneda embedding}\label{sec:yoneda}
+
+
+TODO(Andrew)
+
+
+\section{The pairing of characters and cocharacters}\label{sec:char-cochar}
+
+
+TODO
+
+
+\section{Conclusion}\label{sec:conclusion}
+
+
+TODO
+
+
+\bibliographystyle{plain}
+\bibliography{./hopf_alg_aff_grp_sch}
+
+\end{document}
