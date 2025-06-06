@@ -7,6 +7,12 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
+/-!
+# TODO
+
+Deprecate `Grp_.mk'`
+-/
+
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 open scoped Hom
 
@@ -276,11 +282,11 @@ same on group objects as on objects. -/
 @[simp] lemma essImage_mapGrp [F.Full] [F.Faithful] {G : Grp_ D} :
     F.mapGrp.essImage G ↔ F.essImage G.X where
   mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
-  mpr hG := by
-    obtain ⟨G', ⟨e⟩⟩ := hG
+  mpr := by
+    rintro ⟨H, ⟨e⟩⟩ 
     letI h₁ := Grp_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.Grp_Class (.ofFullyFaithful F) G'
-    refine ⟨.mk' G', ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
+    letI h₂ := FullyFaithful.Grp_Class (.ofFullyFaithful F) H
+    refine ⟨.mk' H, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
       simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.Mon_Class,
         FullyFaithful.Grp_Class, Grp_.mk', h₁, h₂] <;> rfl
 

@@ -24,7 +24,6 @@ import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
-import Toric.Mathlib.Algebra.Order.Nonneg.Module
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Functor.FullyFaithful
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over

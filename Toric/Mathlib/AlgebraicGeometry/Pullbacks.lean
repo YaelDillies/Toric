@@ -19,15 +19,15 @@ instance canonicallyOverPullback : (pullback (M ↘ S) f).CanonicallyOver T wher
 @[simps! -isSimp mul one]
 instance mon_ClassAsOverPullback [Mon_Class (asOver M S)] :
     Mon_Class (asOver (pullback (M ↘ S) f) T) :=
-  ((Over.pullback f).mapMon.obj <| .mk' <| asOver M S).instMon_ClassX
+  ((Over.pullback f).mapMon.obj <| .mk <| asOver M S).mon
 
 instance isCommMon_asOver_pullback [Mon_Class (asOver M S)] [IsCommMon (asOver M S)] :
     IsCommMon (asOver (pullback (M ↘ S) f) T) :=
-  ((Over.pullback f).mapCommMon.obj <| .mk' <| asOver M S).instIsCommMonX
+  ((Over.pullback f).mapCommMon.obj <| .mk <| asOver M S).comm
 
 instance Grp_ClassAsOverPullback [Grp_Class (asOver M S)] :
     Grp_Class (asOver (pullback (M ↘ S) f) T) :=
-  ((Over.pullback f).mapGrp.obj <| .mk' <| asOver M S).instGrp_ClassX
+    ((Over.pullback f).mapGrp.obj <| .mk <| asOver M S).grp
 
 instance : (pullback.fst (M ↘ S) (𝟙 S)).IsOver S := ⟨(pullback.condition).trans (by simp; rfl)⟩
 

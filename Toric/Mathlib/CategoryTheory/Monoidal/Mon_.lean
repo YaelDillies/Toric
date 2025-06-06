@@ -69,15 +69,14 @@ def FullyFaithful.mon_Class [F.OplaxMonoidal] (hF : F.FullyFaithful) (X : C) [Mo
 open Monoidal in
 /-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
 same on group objects as on objects. -/
-@[simp] lemma essImage_mapMon [F.Monoidal] [F.Full] [F.Faithful] {G : Mon_ D} :
-    F.mapMon.essImage G ↔ F.essImage G.X where
-  mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Mon_.forget _).mapIso e⟩⟩
-  mpr hG := by
-    obtain ⟨G', ⟨e⟩⟩ := hG
+@[simp] lemma essImage_mapMon [F.Monoidal] [F.Full] [F.Faithful] {M : Mon_ D} :
+    F.mapMon.essImage M ↔ F.essImage M.X where
+  mp := by rintro ⟨N, ⟨e⟩⟩; exact ⟨N.X, ⟨(Mon_.forget _).mapIso e⟩⟩
+  mpr := by
+    rintro ⟨N, ⟨e⟩⟩
     letI h₁ := Mon_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.mon_Class (.ofFullyFaithful F) (X := G')
-    refine ⟨.mk' G', ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;>
-      simp [Mon_Class.ofIso, FullyFaithful.mon_Class, h₁, h₂] <;> rfl
+    letI h₂ := FullyFaithful.mon_Class (.ofFullyFaithful F) (X := N)
+    refine ⟨.mk N, ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;> simp [Mon_Class.ofIso, FullyFaithful.mon_Class, h₁, h₂]
 
 variable [BraidedCategory C] [BraidedCategory D] (F)
 
@@ -131,25 +130,8 @@ instance [F.Braided] : F.mapMon.Braided where
 end Mon_
 
 section
-variable {C : Type*} [Category C] [MonoidalCategory C]
+variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M : C}
 
-namespace Mon_Class
-
-theorem mul_assoc_flip (X : C) [Mon_Class X] : X ◁ μ ≫ μ = (α_ X X X).inv ≫ μ ▷ X ≫ μ := by simp
-
-end Mon_Class
-
-variable [BraidedCategory C] {G : C}
-
-instance Mon_.mk'.X.instIsComm_Mon [Mon_Class G] [IsCommMon G] : IsCommMon (Mon_.mk' G).X := ‹_›
+instance Mon_.mk'.X.instIsComm_Mon [Mon_Class M] [IsCommMon M] : IsCommMon (Mon_.mk M).X := ‹_›
 
 end
-
-namespace Mon_
-variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
-
--- TODO: Rewrite `Mon_.mul_assoc_flip` to this
-example : (M.X ◁ M.mul) ≫ M.mul = (α_ M.X M.X M.X).inv ≫ (M.mul ▷ M.X) ≫ M.mul :=
-  Mon_Class.mul_assoc_flip M.X
-
-end Mon_

@@ -3,7 +3,7 @@ Copyright (c) 2025 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 -/
-import Toric.Mathlib.Algebra.Order.Nonneg.Module
+import Mathlib.Algebra.Order.Nonneg.Module
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
 
 /-!
@@ -24,6 +24,8 @@ open Function
 open Submodule hiding span
 
 variable {R 𝕜 M N : Type*}
+
+local notation3 "𝕜≥0" => {c : 𝕜 // 0 ≤ c}
 
 namespace PointedCone
 section PartialOrder
@@ -63,15 +65,14 @@ lemma isPolyhedral.dual_inj (hC₁ : IsPolyhedral p C₁) (hC₂ : IsPolyhedral 
 end PartialOrder
 
 section LinearOrder
-variable {𝕜 M N : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [AddCommGroup M]
-  [AddCommGroup N] [Module 𝕜 M] [Module 𝕜 N] {p : M →ₗ[𝕜] N →ₗ[𝕜] 𝕜} {C : PointedCone 𝕜 N}
-  {s : Set M} {w : N}
+variable [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜] [AddCommGroup M] [AddCommGroup N]
+  [Module 𝕜 M] [Module 𝕜 N] {p : M →ₗ[𝕜] N →ₗ[𝕜] 𝕜} {C : PointedCone 𝕜 N} {s : Set M} {w : N}
 
 /-- If the module `M` is finite and the pairing induces an injection `N` into `M →ₗ[𝕜] 𝕜`,
 then the zero cone in `N` is polyhedral. -/
 lemma IsPolyhedral.bot [Module.Finite 𝕜 M] (hp : Injective p.flip) :
     IsPolyhedral p (⊥ : PointedCone 𝕜 N) := by
-  obtain ⟨s, hS : span 𝕜 _ = ⊤⟩ := (Nonneg.instModuleFinite 𝕜 M).fg_top
+  obtain ⟨s, hS : span 𝕜 _ = ⊤⟩ := Module.Finite.fg_top (R := 𝕜≥0) (M := M)
   refine ⟨s, s.finite_toSet, ?_⟩
   rw [← dual_span, hS, Submodule.top_coe, dual_univ hp, Submodule.zero_eq_bot]
 

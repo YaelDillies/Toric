@@ -62,8 +62,8 @@ lemma Submonoid.closure_irreducible : Submonoid.closure {p : M | Irreducible p} 
   convert hSgen
   refine (irreducible_subset_of_submonoidClosure_eq_top hSgen).antisymm fun r hrS ↦ ?_
   by_contra hrirred
-  simp only [irreducible_iff, Set.mem_setOf_eq, not_and, not_forall, Classical.not_imp,
-    not_or] at hrirred
+  simp only [irreducible_iff, Set.mem_setOf_eq, not_and, not_forall, Classical.not_imp, not_or]
+    at hrirred
   obtain rfl | hr₀ := eq_or_ne r 1
   · simpa using hSmax (y := S \ {1}) (by simpa) Finset.sdiff_subset hrS
   obtain ⟨a, b, hr, ha, hb⟩ := hrirred <| by simpa
@@ -85,7 +85,8 @@ lemma Submonoid.closure_irreducible : Submonoid.closure {p : M | Irreducible p} 
       rw [hr', Set.singleton_subset_iff]
       refine mul_mem ?_ ?_ <;> refine prod_mem _ fun s hs ↦ pow_mem (subset_closure ?_) _ <;>
         rw [← hr'] <;> simpa using hs
-    specialize hSmax (y := S \ {r}) (by simp [this, hSgen]) Finset.sdiff_subset
+    specialize hSmax (y := S \ {r}) (by simp [Submonoid.closure_sdiff_eq_closure this, hSgen])
+      Finset.sdiff_subset
     simpa using hSmax hrS
   | 1 =>
     simp only [hr, pow_one, mul_assoc, eq_comm (a := r), mul_eq_left, LeftCancelMonoid.mul_eq_one,
