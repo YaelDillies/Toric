@@ -1,5 +1,129 @@
 \section{Hopf algebras}
 
+\subsection{Ideals and quotients}
+
+\begin{definition}[Coideal]
+  \label{0-coideal}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a commutative ring and $(C,\Delta,\varepsilon)$ be a coalgebra over $R$. An $R$-submodule $I$ of $C$
+  is a \emph{coideal} of $C$ if $\Delta(I) \subeqteq \bar{I \otimes_R C} + \bar{C \otimes_R I}$ and $\varepsilon(I)=0$,
+  where $\bar{\cdot}$ denotes the image in $C \otimes_R C$.
+\end{definition}
+
+\begin{proposition}[Quotient coalgebra]
+  \label{0-coquot}
+  \uses{0-coideal}
+  % \lean{}
+  % \leanok
+
+  If $C$ is a coalgebra over $R$ and $I$ is a coideal, the quotient $C /I$ is equipped with a canonical
+  $R$-coalgebra structure.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Toddler street.
+\end{proof}
+
+\begin{proposition}[Quotient coalgebra map]
+  \label{0-coquot-hom}
+  \uses{0-coquot}
+  % \lean{}
+  % \leanok
+
+  If $C$ is a coalgebra over $R$ and $I$ is a coideal, the quotient map $C \to C / I$ is a coalgebra homomorphism.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Do I even need to say it?
+\end{proof}
+
+\begin{definition}[Bialgebra ideal]
+  \label{0-biideal}
+  \uses{0-coideal}
+  % \lean{}
+  % \leanok
+
+  Let $B$ be a bialgebra over a commutative ring $R$. A \emph{bialgebra ideal} $I$ is an ideal which is also a coideal.
+\end{definition}
+
+\begin{proposition}[Quotient bialgebra]
+  \label{0-biquot}
+  \uses{0-biideal}
+  % \lean{}
+  % \leanok
+
+  If $B$ is a bialgebra over $R$ and $I$ is a bialgebra ideal, the quotient $B / I$ is equipped with a canonical
+  $R$-bialgebra structure.
+\end{proposition}
+\begin{proof}
+  \uses{0-coquot}
+  % \leanok
+
+  Cmon.
+\end{proof}
+
+\begin{proposition}[Quotient bialgebra map]
+  \label{0-biquot-hom}
+  \uses{0-biquot}
+  % \lean{}
+  % \leanok
+
+  If $B$ is a bialgebra over $R$ and $I$ is a bialgebra ideal, the quotient map $B \to B / I$ is a bialgebra homomorphism.
+\end{proposition}
+\begin{proof}
+  \uses{0-coquot-hom}
+  % \leanok
+
+  Just do it.
+\end{proof}
+
+\begin{definition}[Hopf ideal]
+  \label{0-hopf-ideal}
+  \uses{0-biideal}
+  % \lean{}
+  % \leanok
+
+  Let $A$ be a Hopf algebra over a commutative ring $R$. A \emph{Hopf ideal} $I$ is a bialgebra ideal
+  such that $S(I)=I$.
+\end{definition}
+
+\begin{proposition}[Quotient Hopf algebra]
+  \label{0-hopf-quot}
+  \uses{0-hopf-ideal}
+  % \lean{}
+  % \leanok
+
+  If $A$ is a Hopf algebra over $R$ and $I$ is a Hopf ideal, the quotient $A / I$ is equipped with a canonical
+  Hopf algebra structure over $R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-biquot}
+  % \leanok
+
+  Cmon.
+\end{proof}
+
+\begin{proposition}[Quotient Hopf algebra map]
+  \label{0-hopf-quot-hom}
+  \uses{0-hopf-quot}
+  % \lean{}
+  % \leanok
+
+  If $A$ is a Hopf algebra over $R$ and $I$ is a Hopf ideal, the quotient map $A \to A / I$ is a Hopf algebra homomorphism.
+\end{proposition}
+\begin{proof}
+  \uses{0-biquot-hom}
+  % \leanok
+
+  Follows immediately from Proposition \ref{0-biquot-hom}.
+\end{proof}
 
 \subsection{Group algebras}
 
@@ -30,8 +154,6 @@
   Those two functions are clearly inverse to each other,
   and the forward map is clearly $R[G]$-linear.
 \end{proof}
-
-
 
 \subsection{Group-like elements}
 
@@ -210,6 +332,24 @@
   Now use that $\GrpLike R[G] \cong G$ from Proposition \ref{0-grp-like-grp-alg}.
 \end{proof}
 
+\begin{proposition}[Quotients by binomial ideals]
+  \label{0-grp-like-quot-hopf}
+  \uses{0-grp-like, 0-hopf-ideal}
+  % \lean{}
+  % \leanok
+
+  Let $A$ be a Hopf algebra, $H$ be a subgroup of $\GrpLike A$ and
+  \[
+    I = \langle h_1 - h_2 : h_1,h_2 \in H \rangle
+  \]
+  be an ideal. The $I$ is a Hopf ideal.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  TODO
+\end{proof}
 
 \subsection{Diagonalizable bialgebras}
 
