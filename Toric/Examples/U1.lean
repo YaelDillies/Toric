@@ -18,11 +18,11 @@ abbrev U1Ring.mk (p : R[X][Y]) : (U1Ring R) := Ideal.Quotient.mk _ p
 def Polynomial.aevalAEval {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] (x y : A) :
     R[X][Y] →ₐ[R] A where
   toFun p := eval x (eval₂ (mapRingHom (algebraMap R A)) (C y) p)
-  map_one' := by sorry
-  map_mul' := by sorry
-  map_zero' := by sorry
-  map_add' := by sorry
-  commutes' := by sorry
+  map_one' := by simp
+  map_mul' x y := by simp
+  map_zero' := by simp
+  map_add' x y := by simp
+  commutes' r := by simp
 
 instance : Algebra R (U1Ring R ⊗[R] U1Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := U1Ring R) (B := U1Ring R)
