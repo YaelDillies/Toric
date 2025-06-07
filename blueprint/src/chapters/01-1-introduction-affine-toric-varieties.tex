@@ -18,7 +18,7 @@
   where $T$ is a split torus, $\iota$ is a closed subgroup embedding and $\phi$ is an fpqc homomorphism.
 \end{proposition}
 \begin{proof}
-  \uses{0-full-faithful-diag, 0-torus-spec}
+  \uses{0-full-faithful-diag, 0-diag-spec}
   % \leanok
   Let $M_1=X(T_1), M_2=X(T_2)$. Define $M$ to be the image of the homomorphism $M_2 \to M_1$
   corresponding to $\Phi$ and take $T = D_k(M)$. The homomorphisms $\iota,\phi$ correspond to the
@@ -46,7 +46,7 @@
   If $H \subseteq T$ is an irreducible subgroup, then $H$ is a split torus.
 \end{proposition}
 \begin{proof}
-  \uses{0-full-faithful-diag, 0-torus-spec}
+  \uses{0-full-faithful-diag, 0-diag-spec}
   % \leanok
 
   Let $M = X(T), N=X(H)$. Since $H$ is a closed subscheme $M \to N$ is surjective,
@@ -220,10 +220,10 @@
   If $S$ is an affine monoid, then $\Spec \Bbbk[S]$ is an affine toric variety.
 \end{proposition}
 \begin{proof}
-  \uses{0-aff-mon-alg-domain, 0-full-faithful-grp-alg, 0-torus-spec}
+  \uses{0-aff-mon-alg-domain, 0-full-faithful-grp-alg, 0-diag-spec}
   % \leanok
 
-  Identify the torus with $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Lemma \ref{0-torus-spec}.
+  Identify the torus with $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Lemma \ref{0-diag-spec}.
   $i$ induces a morphism $T \to \Spec \Bbbk[S]$. It's an open embedding as $i$ gives the localization of $\Bbbk[S]$ at $\chi^{a_i}$, so $\im i$ is an affine open. It's dominant as $\Spec \Bbbk[S]$ is integral and so is irreducible, and $\im i$ is open and nonempty, so dense. The torus action is given by the natural restriction of comultiplication on $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Proposition \ref{0-full-faithful-grp-alg}.
 \end{proof}
 
