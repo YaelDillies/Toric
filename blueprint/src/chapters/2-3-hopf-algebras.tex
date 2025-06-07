@@ -1,6 +1,8 @@
 \section{Hopf algebras}
 
+
 \subsection{Ideals and quotients}
+
 
 \begin{definition}[Coideal]
   \label{0-coideal}
@@ -8,10 +10,12 @@
   % \lean{}
   % \leanok
 
-  Let $R$ be a commutative ring and $(C,\Delta,\varepsilon)$ be a coalgebra over $R$. An $R$-submodule $I$ of $C$
-  is a \emph{coideal} of $C$ if $\Delta(I) \subeqteq \bar{I \otimes_R C} + \bar{C \otimes_R I}$ and $\varepsilon(I)=0$,
+  Let $R$ be a commutative ring and $(C,\Delta,\varepsilon)$ be a coalgebra over $R$.
+  An $R$-submodule $I$ of $C$ is a \emph{coideal} of $C$ if
+  $\Delta(I) \subseteq \bar{I \otimes_R C} + \bar{C \otimes_R I}$ and $\varepsilon(I)=0$,
   where $\bar{\cdot}$ denotes the image in $C \otimes_R C$.
 \end{definition}
+
 
 \begin{proposition}[Quotient coalgebra]
   \label{0-coquot}
@@ -19,8 +23,8 @@
   % \lean{}
   % \leanok
 
-  If $C$ is a coalgebra over $R$ and $I$ is a coideal, the quotient $C /I$ is equipped with a canonical
-  $R$-coalgebra structure.
+  If $C$ is a coalgebra over $R$ and $I$ is a coideal,
+  the quotient $C /I$ is equipped with a canonical $R$-coalgebra structure.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -29,13 +33,15 @@
   Toddler street.
 \end{proof}
 
+
 \begin{proposition}[Quotient coalgebra map]
   \label{0-coquot-hom}
   \uses{0-coquot}
   % \lean{}
   % \leanok
 
-  If $C$ is a coalgebra over $R$ and $I$ is a coideal, the quotient map $C \to C / I$ is a coalgebra homomorphism.
+  If $C$ is a coalgebra over $R$ and $I$ is a coideal,
+  the quotient map $C \to C / I$ is a coalgebra homomorphism.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -44,14 +50,17 @@
   Do I even need to say it?
 \end{proof}
 
+
 \begin{definition}[Bialgebra ideal]
   \label{0-biideal}
   \uses{0-coideal}
   % \lean{}
   % \leanok
 
-  Let $B$ be a bialgebra over a commutative ring $R$. A \emph{bialgebra ideal} $I$ is an ideal which is also a coideal.
+  Let $B$ be a bialgebra over a commutative ring $R$.
+  A \emph{bialgebra ideal} $I$ is an ideal which is also a coideal.
 \end{definition}
+
 
 \begin{proposition}[Quotient bialgebra]
   \label{0-biquot}
@@ -59,8 +68,8 @@
   % \lean{}
   % \leanok
 
-  If $B$ is a bialgebra over $R$ and $I$ is a bialgebra ideal, the quotient $B / I$ is equipped with a canonical
-  $R$-bialgebra structure.
+  If $B$ is a bialgebra over $R$ and $I$ is a bialgebra ideal,
+  the quotient $B / I$ is equipped with a canonical $R$-bialgebra structure.
 \end{proposition}
 \begin{proof}
   \uses{0-coquot}
@@ -69,13 +78,15 @@
   Cmon.
 \end{proof}
 
+
 \begin{proposition}[Quotient bialgebra map]
   \label{0-biquot-hom}
   \uses{0-biquot}
   % \lean{}
   % \leanok
 
-  If $B$ is a bialgebra over $R$ and $I$ is a bialgebra ideal, the quotient map $B \to B / I$ is a bialgebra homomorphism.
+  If $B$ is a bialgebra over $R$ and $I$ is a bialgebra ideal,
+  the quotient map $B \to B / I$ is a bialgebra homomorphism.
 \end{proposition}
 \begin{proof}
   \uses{0-coquot-hom}
@@ -84,14 +95,15 @@
   Just do it.
 \end{proof}
 
+
 \begin{definition}[Hopf ideal]
   \label{0-hopf-ideal}
   \uses{0-biideal}
   % \lean{}
   % \leanok
 
-  Let $A$ be a Hopf algebra over a commutative ring $R$. A \emph{Hopf ideal} $I$ is a bialgebra ideal
-  such that $S(I)=I$.
+  Let $A$ be a Hopf algebra over a commutative ring $R$.
+  A \emph{Hopf ideal} $I$ is a bialgebra ideal such that $S(I)=I$.
 \end{definition}
 
 \begin{proposition}[Quotient Hopf algebra]
@@ -100,8 +112,8 @@
   % \lean{}
   % \leanok
 
-  If $A$ is a Hopf algebra over $R$ and $I$ is a Hopf ideal, the quotient $A / I$ is equipped with a canonical
-  Hopf algebra structure over $R$.
+  If $A$ is a Hopf algebra over $R$ and $I$ is a Hopf ideal,
+  the quotient $A / I$ is equipped with a canonical Hopf algebra structure over $R$.
 \end{proposition}
 \begin{proof}
   \uses{0-biquot}
@@ -110,13 +122,15 @@
   Cmon.
 \end{proof}
 
+
 \begin{proposition}[Quotient Hopf algebra map]
   \label{0-hopf-quot-hom}
   \uses{0-hopf-quot}
   % \lean{}
   % \leanok
 
-  If $A$ is a Hopf algebra over $R$ and $I$ is a Hopf ideal, the quotient map $A \to A / I$ is a Hopf algebra homomorphism.
+  If $A$ is a Hopf algebra over $R$ and $I$ is a Hopf ideal,
+  the quotient map $A \to A / I$ is a Hopf algebra homomorphism.
 \end{proposition}
 \begin{proof}
   \uses{0-biquot-hom}
@@ -124,6 +138,7 @@
 
   Follows immediately from Proposition \ref{0-biquot-hom}.
 \end{proof}
+
 
 \subsection{Group algebras}
 
@@ -197,6 +212,24 @@
       \sigma^\oplus(f^\oplus(x)) \equiv 0 \mod I \iff x \equiv 0 \mod I
   \]
   and we are done.
+\end{proof}
+
+
+\begin{proposition}[Localising a monoid algebra]
+  \label{0-loc-mon-alg}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a commutative ring.
+  Let $M$ be a commutative monoid and $M'$ be its localization at some $S \subseteq M$.
+  Then $R[M']$ is the localization of $M$ at $\{X^s | s \in S\}$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Toddlers and streets.
 \end{proof}
 
 
@@ -376,6 +409,7 @@
   by Proposition \ref{0-grp-like-map}.
   Now use that $\GrpLike R[G] \cong G$ from Proposition \ref{0-grp-like-grp-alg}.
 \end{proof}
+
 
 \begin{proposition}[Quotients by binomial ideals]
   \label{0-grp-like-quot-hopf}
