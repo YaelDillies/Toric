@@ -10,20 +10,6 @@ open Polynomial TensorProduct
 
 variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 
-variable (R) in
-abbrev U1Ring : Type _ := R[X][Y] ⧸ Ideal.span {(X ^ 2 + Y ^ 2 - 1 : R[X][Y])}
-
-abbrev U1Ring.mk (p : R[X][Y]) : (U1Ring R) := Ideal.Quotient.mk _ p
-
-@[simp]
-lemma U1relation : U1Ring.mk (R := R) X ^ 2 + U1Ring.mk Y ^ 2 = 1 := by
-  simp_rw [← map_pow, ← RingHom.map_add]
-  rw [← (Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq]
-  simp
-  exact Ideal.mem_span_singleton_self (X ^ 2 + Y ^ 2 - 1)
-
-lemma U1relation' : U1Ring.mk (R := R) X ^ 2 = 1 - U1Ring.mk Y ^ 2 := by simp [← U1relation]
-
 def Polynomial.aevalAEval {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] (x y : A) :
     R[X][Y] →ₐ[R] A where
   toFun p := eval y (eval₂ (mapRingHom (algebraMap R A)) (C x) p)
@@ -41,29 +27,47 @@ lemma Polynomial.aevalAEval_X {R A : Type*} [CommRing R] [CommRing A] [Algebra R
 lemma Polynomial.aevalAEval_Y {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] (x y : A) :
     Polynomial.aevalAEval (R := R) x y Y = y := by simp [aevalAEval]
 
-instance : Algebra R (U1Ring R ⊗[R] U1Ring R) :=
-  Algebra.TensorProduct.leftAlgebra (A := U1Ring R) (B := U1Ring R)
+variable (R) in
+def U1Ring : Type _ := R[X][Y] ⧸ Ideal.span {(X ^ 2 + Y ^ 2 - 1 : R[X][Y])}
 
-attribute [local simp] U1relation' in
-set_option synthInstance.maxHeartbeats 0 in
-set_option maxHeartbeats 0 in
+instance : CommRing (U1Ring R) := by delta U1Ring; infer_instance
+instance : Algebra R (U1Ring R) := by delta U1Ring; infer_instance
+
+def U1Ring.mk : R[X][Y] →ₐ[R] U1Ring R := Ideal.Quotient.mkₐ R _
+
+nonrec def U1Ring.X : U1Ring R := .mk X
+nonrec def U1Ring.Y : U1Ring R := .mk Y
+
+def U1Ring.liftₐ (x y : S) (H : x ^ 2 + y ^ 2 = 1) : U1Ring R →ₐ[R] S :=
+  Ideal.Quotient.liftₐ _ (aevalAEval x y)
+    (show Ideal.span _ ≤ RingHom.ker _ by simp [Ideal.span_le, Set.singleton_subset_iff, H])
+
+@[simp]
+lemma U1Ring.liftₐ_X (x y : S) (H : x ^ 2 + y ^ 2 = 1) : liftₐ (R := R) x y H .X = x :=
+  Polynomial.aevalAEval_X ..
+
+@[simp]
+lemma U1Ring.liftₐ_Y (x y : S) (H : x ^ 2 + y ^ 2 = 1) : liftₐ (R := R) x y H .Y = y :=
+  Polynomial.aevalAEval_Y ..
+
+@[simp]
+lemma U1relation : U1Ring.X (R := R) ^ 2 + .Y ^ 2 = 1 := by
+  simp_rw [U1Ring.X, U1Ring.Y, ← map_pow, ← map_add, ← map_one U1Ring.mk]
+  refine Ideal.Quotient.eq.mpr (by simp [Ideal.mem_span_singleton])
+
+lemma U1relation' : U1Ring.X (R := R) ^ 2 = 1 - .Y ^ 2 := by simp [← U1relation]
+
 instance : CoalgebraStruct R (U1Ring R) where
-  comul := (Ideal.Quotient.liftₐ _
-    (aevalAEval (.mk X ⊗ₜ .mk X - .mk Y ⊗ₜ .mk Y) (.mk X ⊗ₜ .mk Y - .mk Y ⊗ₜ .mk X)) (by
-    show Ideal.span _ ≤ RingHom.ker _
-    simp only [Ideal.span_le, Set.singleton_subset_iff]
-    simp
-    ring
-    erw [Algebra.TensorProduct.tmul_pow]
-    sorry
-    )).toLinearMap
-  counit := (Ideal.Quotient.liftₐ _ (aevalAEval 1 0) (by
-    show Ideal.span _ ≤ RingHom.ker _
-    simp [Ideal.span_le, Set.singleton_subset_iff]
-    )).toLinearMap
+  comul := (U1Ring.liftₐ (.X ⊗ₜ .X - .Y ⊗ₜ .Y) (.X ⊗ₜ .Y + .Y ⊗ₜ .X) (by
+    ring_nf
+    simp [U1relation', sub_tmul, tmul_sub,
+      Algebra.TensorProduct.tmul_pow (A := U1Ring R) (B := U1Ring R),
+      ← Algebra.TensorProduct.one_def (A := U1Ring R) (B := U1Ring R)]
+    ring_nf)).toLinearMap
+  counit := (U1Ring.liftₐ 1 0 (by simp)).toLinearMap
 
 instance : Coalgebra R (U1Ring R) where
-  coassoc := sorry
+  coassoc := by ext x; simp
   rTensor_counit_comp_comul := sorry
   lTensor_counit_comp_comul := sorry
 
