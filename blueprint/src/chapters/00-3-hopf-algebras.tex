@@ -10,7 +10,10 @@
   \lean{Bialgebra.IsGroupLikeElem}
   \leanok
 
-  An element $a$ of a bi-algebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$, where $\Delta$ is the comultiplication map.
+  An element $a$ of a bialgebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$,
+  where $\Delta$ is the comultiplication map.
+
+  We write $\GrpLike A$ for the set of group-like elements of $A$.
 \end{definition}
 
 
@@ -43,7 +46,7 @@
   \lean{Bialgebra.GroupLike.instGroup, Bialgebra.GroupLike.instCommGroup}
   \leanok
 
-  Group-like elements of a bi-algebra $A$ form a group under multiplication.
+  Group-like elements $\GrpLike A$ of a bialgebra $A$ form a group under multiplication.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -177,6 +180,7 @@
 
   A bialgebra is called diagonalizable if it is isomorphic to a group algebra.
 \end{definition}
+
 
 \begin{lemma}
   \label{0-is-diag-bialg-group-like-span}
