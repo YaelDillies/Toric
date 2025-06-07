@@ -32,7 +32,8 @@ Now let's do the top edge.
   \lean{algSpec}
   \leanok
 
-  Spec is a contravariant functor from the category of $R$-algebras to the category of schemes over $\Spec_R$.
+  Spec is a contravariant functor from the category of $R$-algebras
+  to the category of schemes over $\Spec_R$.
 \end{definition}
 
 
@@ -42,13 +43,63 @@ Now let's do the top edge.
   \lean{algSpec.instPreservesLimits, algSpec.instFull, algSpec.instFaithful, algSpec.fullyFaithful}
   \leanok
 
-  Spec is a fully faithful contravariant functor from the category of $R$-algebras to the category of schemes over $\Spec_R$, preserving all limits.
+  Spec is a fully faithful contravariant functor from the category of $R$-algebras
+  to the category of schemes over $\Spec_R$, preserving all limits.
 \end{proposition}
 \begin{proof}
   \uses{0-slice-adj, 0-over-lim}
   \leanok
 
-  $\Spec : \Ring \to \Sch$ is a fully faithful contravariant functor which preserves all limits, hence so is $\Spec : \Ring_R \to \AffSch_{\Spec R}$ by Proposition \ref{0-over-lim} (alternatively, by Proposition \ref{0-slice-adj}).
+  $\Spec : \Ring \to \Sch$ is a fully faithful contravariant functor which preserves all limits,
+  hence so is $\Spec : \Ring_R \to \Sch_{\Spec R}$ by Proposition \ref{0-over-lim}
+  (alternatively, by Proposition \ref{0-slice-adj}).
+\end{proof}
+
+
+\begin{definition}[Spec as a functor on bialgebras]
+  \label{0-spec-bialg}
+  \uses{0-full-faithful-spec-alg}
+  \lean{bialgSpec}
+  \leanok
+
+  Spec is a contravariant functor from the category of $R$-bialgebras
+  to the category of monoid schemes over $\Spec_R$.
+\end{definition}
+
+
+\begin{proposition}[Spec as a functor on bialgebras is fully faithful]
+  \label{0-full-faithful-spec-bialg}
+  \uses{0-spec-hopf}
+  \lean{bialgSpec.instFull, bialgSpec.instFaithful, bialgSpec.fullyFaithful}
+  \leanok
+
+  Spec is a fully faithful contravariant functor from the category of $R$-bialgebras
+  to the category of monoid schemes over $\Spec_R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-grp, 0-full-faithful-spec-alg}
+  \leanok
+
+  $\Spec : \Ring_R \to \Sch_{\Spec R}$ is a fully faithful contravariant functor
+  preserving all limits according to Proposition \ref{0-spec-alg},
+  therefore $\Spec : \Bialg_R \to \MonSch_{\Spec R}$ too is fully faithful
+  according to \ref{0-full-faithful-grp}.
+\end{proof}
+
+
+\begin{proposition}[Spec sends cocommutative bialgebras to commutative monoid schemes]
+  \label{0-spec-cocomm-bialg}
+  \uses{0-spec-hopf}
+  \lean{AlgebraicGeometry.Scheme.asOver.instIsComm_Mon, AlgebraicGeometry.Scheme.asOver.instCommGrp_Class}
+  \leanok
+
+  If $A$ is a cocommutative bialgebra over $R$, then $\Spec A$ is a commutative monoid scheme.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Diagrams are the same up to identifying $\Spec (A \otimes A)$ with $\Spec A \otimes \Spec A$.
 \end{proof}
 
 
@@ -74,23 +125,10 @@ Now let's do the top edge.
   \uses{0-full-faithful-grp, 0-full-faithful-spec-alg}
   \leanok
 
-  $\Spec : \Ring_R \to \Sch_{\Spec R}$ is a fully faithful contravariant functor preserving all limits according to Proposition \ref{0-spec-alg}, therefore $\Spec : \Hopf_R \to \GrpSch_{\Spec R}$ too is fully faithful according to \ref{0-full-faithful-grp}.
-\end{proof}
-
-
-\begin{proposition}[Spec sends cocommutative Hopf algebras to commutative group schemes]
-  \label{0-spec-cocomm-hopf}
-  \uses{0-spec-hopf}
-  \lean{AlgebraicGeometry.Scheme.asOver.instIsComm_Mon, AlgebraicGeometry.Scheme.asOver.instCommGrp_Class}
-  \leanok
-
-  If $A$ is a cocommutative Hopf algebra over $R$, then $\Spec A$ is a commutative group scheme.
-\end{proposition}
-\begin{proof}
-  \uses{}
-  \leanok
-
-  Diagrams are the same up to identifying $\Spec (A \otimes A)$ with $\Spec A \otimes \Spec A$.
+  $\Spec : \Ring_R \to \Sch_{\Spec R}$ is a fully faithful contravariant functor
+  preserving all limits according to Proposition \ref{0-spec-alg},
+  therefore $\Spec : \Hopf_R \to \GrpSch_{\Spec R}$ too is fully faithful
+  according to \ref{0-full-faithful-grp}.
 \end{proof}
 
 
@@ -106,13 +144,31 @@ Finally, let's do the right edge.
   \lean{essImage_algSpec}
   \leanok
 
-  The essential image of $\Spec : \Ring_R \to \Sch_{\Spec R}$ is precisely affine schemes over $\Spec R$.
+  The essential image of $\Spec : \Ring_R \to \Sch_{\Spec R}$ is precisely
+  affine schemes over $\Spec R$.
 \end{proposition}
 \begin{proof}
   \uses{0-ess-image-over}
   \leanok
 
   Direct consequence of Proposition \ref{0-ess-image-over}.
+\end{proof}
+
+
+\begin{proposition}[Essential image of Spec on bialgebras]
+  \label{0-ess-image-spec-bialg}
+  \uses{0-spec-bialg}
+  \lean{essImage_bialgSpec}
+  \leanok
+
+  The essential image of $\Spec : \Bialg_R \to \GrpSch_{\Spec R}$ is precisely
+  affine monoid schemes over $\Spec R$.
+\end{proposition}
+\begin{proof}
+  \uses{0-ess-image-grp, 0-ess-image-spec-alg, 0-full-faithful-spec-alg}
+  \leanok
+
+  Direct consequence of Propositions \ref{0-ess-image-grp} and \ref{0-ess-image-spec-alg}.
 \end{proof}
 
 
