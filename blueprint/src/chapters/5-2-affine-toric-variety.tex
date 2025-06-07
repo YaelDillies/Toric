@@ -1,0 +1,152 @@
+\section{Affine toric varieties and affine monoids}\label{sec:aff-tor-var}
+
+
+In this section, we construct affine toric varieties from affine monoids,
+and show all affine toric varieties arise from affine monoids in this way.
+
+
+\subsection{Toric varieties from affine monoids}
+
+
+\begin{proposition}[The diagonalisable group scheme of an affine monoid algebra is an affine toric variety]
+  \label{1-1-aff-tor-var-diag-aff-mon}
+  \uses{0-diag, 5-1-tor-var}
+  % \lean{}
+  % \leanok
+
+  Let $k$ be a field.
+  Let $G$ be a finitely generated free abelian group.
+  Let $M$ be an affine monoid with Grothendieck group $G$.
+  Then $D_k(M)$ is an affine toric variety over $k$ with torus $D_k(G)$.
+\end{proposition}
+\begin{proof}
+  \uses{0-aff-mon-alg-domain, 0-loc-mon-alg, 0-comap-mod, 0-diag-spec}
+  % \leanok
+
+  The map $D_k(G) \hookrightarrow D_k(M)$ is given by the embedding $M \hookrightarrow G$.
+
+  We identify $D_k(G) \cong \Spec k[G], D_k(M) \cong \Spec k[M]$ using
+  Proposition \ref{0-diag-spec}.
+
+  By Proposition \ref{0-loc-mon-alg}, $k[G]$ is a localization of $k[M]$.
+  Therefore the map $\Spec k[G] \hookrightarrow \Spec k[M]$ is an open embedding.
+
+  This open embedding is dominant since $\Spec k[M]$ is irreducible as $k[M]$ is a domain
+  (Proposition \ref{0-aff-mon-alg-domain}).
+
+  The group action $D_k(G) \times D_k(M) \to D_k(M)$ comes
+  from pulling back along $D_k(G) \hookrightarrow D_k(M)$
+  the left action $D_k(M) \times D_k(M) \to D_k(M)$ using Proposition \ref{0-comap-mod}.
+\end{proof}
+
+
+\subsection{Essential surjectivity from affine monoids to affine toric varieties}
+
+
+\begin{definition}[The character eigenspace]
+  \label{1-1-char-eigenspace}
+  \uses{0-char}
+  % \lean{}
+  % \leanok
+
+  For a finite dimensional representation of a torus $T$ on $W$, the {\bf character eigenspace} of a character $\chi \in X(T)$ is
+  \[
+    W_m = \{w\in W : t\cdot w = \chi(t)\text{ for all } t\in T \}.
+  \]
+\end{definition}
+
+
+\begin{proposition}[Decomposition into character eigenspaces]
+  \label{1-1-2-char-eigenspace-direct-sum}
+  \uses{1-1-char-eigenspace}
+
+  The space decomposes into the direct sum of the character eigenspaces.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  TODO
+\end{proof}
+
+
+\begin{definition}
+  \label{1-1-tor-act-alg}
+  \uses{0-torus}
+  % \lean{}
+  % \leanok
+
+  There is a torus action on the semigroup algebra $\bbC[M]$: given $t\in T_N$ and $f\in \bbC[M]$ define
+  \[
+    t \cdot f = (p \mapsto f(t^{-1}p)).
+  \]
+\end{definition}
+
+
+\begin{lemma}
+  \label{1-1-16-total-red}
+  \uses{1-1-tor-act-alg}
+    Let $A \subseteq \bbC[M]$ be a stable subspace, then
+    \[
+      A = \bigoplus_{\chi^m \in A} \bbC \cdot \chi^m.
+    \]
+\end{lemma}
+\begin{proof}
+  \uses{1-1-2-char-eigenspace-direct-sum}
+  % \leanok
+
+  TODO
+\end{proof}
+
+
+\begin{definition}[Characters of a toric variety]
+  \label{5-2-char-tor-var}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  Let $k$ be a field.
+  Let $T$ be a torus over $k$.
+  Let $V$ be a toric variety with torus $k$.
+  The \emph{characters} $X(V)$ of $V$ are defined as the intersection of $X(T)$
+  with the image of the map $k[V] \to k[T]$ of coordinate rings
+  induced by the embedding $T \hookrightarrow V$.
+\end{definition}
+
+
+\begin{proposition}[Characters of a toric variety are an affine monoid]
+  \label{5-2-char-tor-var-aff-mon}
+  \uses{5-2-char-tor-var}
+  % \lean{}
+  % \leanok
+
+  Let $k$ be a field.
+  Let $T$ be a torus over $k$.
+  Let $V$ be a toric variety with torus $k$.
+  Then $X(V)$ is an affine monoid.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  TODO
+\end{proof}
+
+
+\begin{theorem}[Affine toric varieties come from affine monoids]
+  \label{5-1-aff-tor-var-iso-diag-aff-mon}
+  \uses{0-aff-mon, 5-1-tor-var, 5-1-tor-hom, 1-1-7-ya, 1-1-10-lat-ideal}
+  % \lean{}
+  % \leanok
+
+  Let $k$ be a field.
+  Let $T$ be a torus over $k$.
+  Let $V$ be a toric variety with torus $k$.
+  Then there exists a torus isomorphism $V \cong D_k(X(V))$.
+\end{theorem}
+\begin{proof}
+  \uses{1-1-tor-act-alg, 1-1-8-aff-tor-var-ya, 1-1-9-ideal-ya, 1-1-14-aff-tor-var-spec-aff-mon-alg, 1-1-16-total-red, 5-2-char-tor-var-aff-mon}
+  % \leanok
+
+  TODO
+\end{proof}
