@@ -201,7 +201,7 @@
 
 
 \begin{proposition}
-  \label{0-bialg-bij-of-span-group-like}
+  \label{0-bialg-bij-of-span-grp-like}
   \uses{0-is-diag-bialg, 0-grp-like-grp}
   \lean{Bialgebra.liftGroupLikeBialgHom_bijective_of_span_isGroupLikeElem_eq_top}
   \leanok
@@ -231,17 +231,17 @@
   group-like elements.
 \end{corollary}
 \begin{proof}
-  \uses{0-is-diag-bialg-group-like-span, 0-bialg-bij-of-span-group-like}
+  \uses{0-is-diag-bialg-group-like-span, 0-bialg-bij-of-span-grp-like}
   \leanok
 
   We know that a diagonalizable bialgebra is spanned by its group-like elements
   by \ref{0-is-diag-bialg-group-like-span}, and that a bialgebra over a domain
   that is spanned by its group-like elements is diagonalizable by
-  \ref{0-bialg-bij-of-span-group-like} (and by the fact that a bijective morphism
+  \ref{0-bialg-bij-of-span-grp-like} (and by the fact that a bijective morphism
   of bialgebras is an isomorphism).
 \end{proof}
 
-Proposition \ref{0-bialg-bij-of-span-group-like} and Corollary \ref{0-is-diag-iff-grp-like-span} are false over a general commutative ring.
+Proposition \ref{0-bialg-bij-of-span-grp-like} and Corollary \ref{0-is-diag-iff-grp-like-span} are false over a general commutative ring.
 Indeed, let $R$ be a commutative ring and let $G$ be a group.
 Then the group-like elements of $R[G]$ correspond to locally constant maps from $Spec R$ to $G$ (with the discrete topology),
 hence they are of the form $e_1 g_1+\cdots+e_r g_r$, with the $g_i$ in $G$ and $e_1,\ldots,e_r$ a family of pairwise orthogonal idempotent elements of $R$ that sum to $1$.

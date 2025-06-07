@@ -86,7 +86,7 @@
 
 
 \begin{definition}
-  \label{1-1-3-aff-tor-var}
+  \label{1-1-3-tor-var}
   \uses{0-torus}
   \lean{AlgebraicGeometry.ToricVariety}
   \leanok
@@ -176,7 +176,7 @@
 
 
 \begin{definition}
-  \label{1-1-10-lattice-ideal}
+  \label{1-1-10-lat-ideal}
   \uses{}
   \lean{AddMonoidAlgebra.monoidIdeal}
   \leanok
@@ -189,7 +189,7 @@
 
 \begin{definition}
   \label{1-1-10-toric-ideal}
-  \uses{1-1-10-lattice-ideal}
+  \uses{1-1-10-lat-ideal}
   \lean{AddMonoidAlgebra.IsToricIdeal}
   \leanok
   A {\bf toric ideal} is a prime lattice ideal.
@@ -213,7 +213,7 @@
 
 \begin{proposition}[The spectrum of an affine monoid algebra is an affine toric variety]
   \label{1-1-14-aff-tor-var-spec-aff-mon-alg}
-  \uses{0-aff-mon, 1-1-3-aff-tor-var}
+  \uses{0-aff-mon, 1-1-3-tor-var}
   \lean{AffineToricVarietyFromMonoid.instToricVariety}
   \leanok
 
@@ -230,7 +230,7 @@
 
 \begin{proposition}
   \label{1-1-14-spec-aff-mon-alg-eq-ya}
-  \uses{0-aff-mon, 1-1-3-aff-tor-var, 1-1-7-ya}
+  \uses{0-aff-mon, 1-1-3-tor-var, 1-1-7-ya}
   % \lean{}
   % \leanok
 
@@ -294,7 +294,7 @@
 
 \begin{theorem}
   \label{thm:1-1-17}
-  \uses{0-aff-mon, 1-1-3-aff-tor-var, 1-1-7-ya, 1-1-10-lattice-ideal}
+  \uses{0-aff-mon, 1-1-3-tor-var, 1-1-7-ya, 1-1-10-lat-ideal}
   TFAE:
   \begin{enumerate}
     \item $V$ is an affine toric variety.
