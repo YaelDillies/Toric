@@ -17,7 +17,7 @@ universe u v
 
 namespace AlgebraicGeometry.Scheme
 section Diag
-variable {S : Scheme.{u}} {M G : Type u} [AddCommMonoid M] [AddCommGroup G]
+variable {S : Scheme.{u}} {M N G : Type u} [AddCommMonoid M] [AddCommMonoid N] [AddCommGroup G]
 
 variable (S M) in
 /-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
@@ -26,11 +26,22 @@ def Diag : Scheme.{u} :=
     (Spec (.of <| MonoidAlgebra (ULift.{u} ℤ) <| Multiplicative M) ↘ Spec (.of <| ULift.{u} ℤ))
     (specULiftZIsTerminal.from S)
 
+variable (S) in
+/-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
+def Diag.map (f : M →+ N) : Diag S N ⟶ Diag S M :=
+  pullback.map _ _ _ _
+    (Spec.map <| CommRingCat.ofHom <| MonoidAlgebra.mapDomainRingHom _ f.toMultiplicative)
+    (𝟙 S) (𝟙 _) (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) (by simp)
+
 @[simps! -isSimp]
 instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance
+@[simps! -isSimp one_left]
 instance Diag.mon_ClassAsOver : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
 instance Diag.grp_ClassAsOver : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
 instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
+
+attribute [local simp] Diag.map Diag.canonicallyOver_over in
+instance Diag.isOver_map {f : M →+ N} : (Diag.map S f).IsOver S where
 
 variable {R : CommRingCat.{u}}
 
@@ -81,6 +92,11 @@ def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
 @[simp] lemma diagFunctor_obj (M : AddCommGrpᵒᵖ) :
     (diagFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
 
+@[simp] lemma diagFunctor_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
+    (diagFunctor S).map f =
+    .mk ((Diag.map S f.unop.hom).asOver S) (by ext; simp [Diag.mon_ClassAsOver_one_left]) _ := rfl
+
+#exit
 instance {C : Type*} [Category C] {X : C} [CartesianMonoidalCategory C] [BraidedCategory C]
     [Grp_Class X] [IsCommMon X] : IsCommMon (Grp_.mk' X) :=
   letI : IsCommMon (Grp_.mk' X).X := ‹_›
@@ -223,7 +239,7 @@ lemma diagHomGrp_comp {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCom
 
 set_option maxHeartbeats 0 in
 lemma diagHomGrp_comp_add {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCommGroup O]
-    (f f' : M →+ N) (g : N →+ O) :
+    (f : M →+ N) (g : N →+ O) :
     (diagHomGrp S g).comp (diagHomGrp S f) = diagHomGrp S (g.comp f) := by
   apply Additive.toMul.injective
   dsimp [HomGrp, diagHomGrp, HomGrp.comp]
