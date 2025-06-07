@@ -1,0 +1,157 @@
+\section{The torus}
+
+
+\begin{definition}[The split torus]
+  \label{0-torus}
+  \lean{AlgebraicGeometry.Scheme.SplitTorus, AlgebraicGeometry.Scheme.SplitTorus.instCanonicallyOver}
+  \leanok
+
+  The split torus $\G_m^n$ over a scheme $S$ is the pullback of
+  $\Spec \Z[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}]$ along the unique map $S \to \Spec \Z$.
+\end{definition}
+
+
+\begin{lemma}[Diag is a group isomorphism on hom sets]
+  \label{0-diag-hom}
+  \uses{0-diag}
+  \lean{AlgebraicGeometry.Scheme.diagHomEquiv}
+  \leanok
+
+  Let $R$ be a domain.
+  The functor $G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is a group isomorphism on hom sets.
+\end{lemma}
+\begin{proof}
+  \uses{0-full-faithful-diag, 0-full-faithful-grp-hom}
+  \leanok
+
+  Toddlers and streets by Lemmas \ref{0-full-faithful-diag} and \ref{0-full-faithful-grp-hom}.
+\end{proof}
+
+
+\begin{definition}[Characters of a group scheme]
+  \label{0-char}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.Scheme.char}
+  \leanok
+
+  For a group scheme $G$ over $S$, the {\bf character lattice} of $G$ is
+  \[
+    X(G) := \Hom_{\mathsf{GrpSch}_S}(G, \G_m).
+  \]
+  An element of $X(G)$ is called a {\bf character}.
+\end{definition}
+
+
+\begin{definition}[Cocharacters of a group scheme]
+  \label{0-cochar}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.Scheme.cochar}
+  \leanok
+
+  For a group scheme $G$ over $S$, the {\bf cocharacter lattice} of $G$ is
+  \[
+    X^*(G) := \Hom_{\mathsf{GrpSch}_S}(\G_m, G).
+  \]
+  An element of $X^*(G)$ is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
+\end{definition}
+
+
+\begin{proposition}[Character lattice of a diagonalisable group scheme]
+  \label{0-char-diag}
+  \uses{0-char}
+  \lean{AlgebraicGeometry.Scheme.charGrpAlg}
+  \leanok
+
+  Let $R$ be a domain and $G$ be a commutative group.
+  Then $X(\Spec R[G]) = G$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-diag}
+  \leanok
+
+  By Propositions \ref{0-diag-spec} and \ref{0-full-faithful-diag} in turn, we have
+  \[
+    X(G) = \Hom_{\mathsf{GrpSch}}(G, \G_m) = \Hom(k[\Z], k[G]) = \Hom(\Z, G) = G.
+  \]
+\end{proof}
+
+
+\begin{proposition}[Cocharacter lattice of a diagonalisable group scheme]
+  \label{0-cochar-diag}
+  \uses{0-cochar}
+  \lean{AlgebraicGeometry.Scheme.cocharGrpAlg}
+  \leanok
+
+  Let $R$ be a domain and $G$ be a commutative group.
+  Then $X^*(\Spec R[G]) = \Hom(G, \Z)$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-diag}
+  \leanok
+
+  By Propositions \ref{0-diag-spec} and \ref{0-full-faithful-diag} in turn, we have
+  \[
+    X^*(G) = \Hom_{\mathsf{GrpSch}}(\G_m, G) = \Hom(k[G], k[\Z]) = \Hom(G, \Z).
+  \]
+\end{proof}
+
+
+\begin{proposition}[Character lattice of the torus]
+  \label{0-char-torus}
+  \uses{0-char}
+  \lean{AlgebraicGeometry.Scheme.charTorus}
+  \leanok
+
+  Let $G$ be a torus of dimension $n$ over a domain $R$.
+  Then $X(G) = \Z^n$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-diag, 0-diag-spec}
+  \leanok
+
+  Immediate from Propositions \ref{0-diag-spec} and \ref{0-char-diag}.
+\end{proof}
+
+
+\begin{proposition}[Cocharacter lattice of the torus]
+  \label{0-cochar-torus}
+  \uses{0-cochar}
+  \lean{AlgebraicGeometry.Scheme.cocharTorus}
+  \leanok
+
+  Let $G$ be a torus of dimension $n$ over a domain $R$.
+  Then $X^*(G) = \Hom(\Z^n, \Z)$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-diag, 0-diag-spec}
+  \leanok
+
+  Immediate from Propositions \ref{0-diag-spec} and \ref{0-cochar-diag}.
+\end{proof}
+
+
+\begin{definition}[The character-cocharacter pairing]
+  \label{0-char-cochar-pairing}
+  \uses{0-char, 0-cochar}
+  \lean{AlgebraicGeometry.Scheme.charPairing}
+  \leanok
+
+  Let $R$ be a domain and $G$ a group scheme over $\Spec R$.
+  Then there is a $\Z$-valued perfect pairing between $X(G)$ and $X^*(G)$.
+\end{definition}
+
+
+\begin{proposition}[The character-cocharacter pairing is perfect]
+  \label{0-char-cochar-pairing-perfect}
+  \uses{0-char-cochar-pairing}
+  \lean{AlgebraicGeometry.Scheme.isPerfPair_charPairing}
+  \leanok
+
+  The character-cocharacter pairing on a torus is perfect.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Transfer everything across the isos $X(\G_m^n) = \Z^n, X*(\G_m^n) = \Hom(\Z^n, \Z)$.
+\end{proof}

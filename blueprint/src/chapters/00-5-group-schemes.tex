@@ -1,29 +1,20 @@
-\section{Group Schemes}
+\section{Correspondence between affine group schemes and Hopf algebras}
 
 
-\subsection{Correspondence between Hopf algebras and affine group schemes}
+We want to show that affine group schemes correspond to Hopf algebras.
+We must decide what this means mathematically.
+
+We choose to interpret this as lifting Spec to a fully faithful functor
+from Hopf algebras to group schemes,
+with essential image affine group schemes.
+
+An alternative would have been to lift the Gamma-Spec adjunction to an adjunction between
+Hopf algebras and affine group schemes.
+This is unfortunately much harder to do over an arbitrary scheme,
+so we leave this as future work.
 
 
-We want to show that Hopf algebras correspond to affine group schemes.
-This can easily be done categorically assuming both categories on either side are defined thoughtfully.
-However, the categorical version will not be workable with if we do not also have links to the non-categorical notions.
-Therefore, one solution would be to build the left, top and right edges of the following
-diagram so that the bottom edge can be obtained by composing the three:
-%   Cogrp Mod_R   ⥤        Grp Sch_{Spec R}
-%       ↑ ↓                        ↓
-% R-Hopf algebras → Affine group schemes over Spec R
-
-
-\subsubsection{Bundling/unbundling Hopf algebras}
-
-
-We have already done the left edge in the previous section.
-
-
-\subsubsection{Spec of a Hopf algebra}
-
-
-Now let's do the top edge.
+\subsection{Spec of an algebra}
 
 
 \begin{definition}[Spec as a functor on algebras]
@@ -54,6 +45,9 @@ Now let's do the top edge.
   hence so is $\Spec : \Ring_R \to \Sch_{\Spec R}$ by Proposition \ref{0-over-lim}
   (alternatively, by Proposition \ref{0-slice-adj}).
 \end{proof}
+
+
+\subsection{Spec of a bialgebra}
 
 
 \begin{definition}[Spec as a functor on bialgebras]
@@ -103,6 +97,9 @@ Now let's do the top edge.
 \end{proof}
 
 
+\subsection{Spec of a Hopf algebra}
+
+
 \begin{definition}[Spec as a functor on Hopf algebras]
   \label{0-spec-hopf}
   \uses{0-full-faithful-spec-alg}
@@ -133,9 +130,6 @@ Now let's do the top edge.
 
 
 \subsection{Essential image of Spec on Hopf algebras}
-
-
-Finally, let's do the right edge.
 
 
 \begin{proposition}[Essential image of Spec on algebras]
@@ -185,240 +179,4 @@ Finally, let's do the right edge.
   \leanok
 
   Direct consequence of Propositions \ref{0-ess-image-grp} and \ref{0-ess-image-spec-alg}.
-\end{proof}
-
-
-\subsection{Diagonalisable groups}
-
-
-\begin{definition}[The diagonalisable group scheme functor]
-  \label{0-diag}
-  \uses{0-grp-alg, 0-hopf-alg-equiv-cogrp-alg, 0-spec-hopf}
-  \lean{Diag}
-  \leanok
-
-  Let $G$ be a commutative group and $S$ a base scheme.
-  The diagonalisable group scheme $D_S(G)$ is defined as the base-change of $\Spec \Z[G]$ to $S$.
-  For a commutative ring $R$, we write $D_R(G) := D_{\Spec R}(G)$.
-\end{definition}
-
-
-\begin{definition}[Diagonalisable group schemes]
-  \label{0-is-diag}
-  \uses{0-diag}
-  \lean{AlgebraicGeometry.Scheme.IsDiagonalisable}
-  \leanok
-
-  An algebraic group $G$ over $\Spec R$ is {\bf diagonalisable} if it is isomorphic to $D_R(G)$ for some commutative group $G$.
-\end{definition}
-
-
-\begin{lemma}[The diagonalisable group scheme torus over $\Spec R$]
-  \label{0-diag-spec}
-  \uses{0-torus}
-  \lean{AlgebraicGeometry.Scheme.diagSpecIso, AlgebraicGeometry.Scheme.splitTorusIso}
-  \leanok
-
-  Let $R$ be a commutative ring and $M$ an abelian monoid.
-  Then $D_R(M)$ is isomorphic to $\Spec R[M]$.
-\end{lemma}
-\begin{proof}
-  \uses{}
-  \leanok
-
-  Ask any toddler on the street.
-\end{proof}
-
-
-\begin{theorem}
-  \label{0-diag-iff-grp-like-span}
-  \uses{0-diag, 0-is-diag}
-  \lean{AlgebraicGeometry.Scheme.isDiagonalisable_iff_span_isGroupLikeElem_eq_top}
-  \leanok
-
-  An algebraic group $G$ over a field $k$ is diagonalizable if and only if $\Gamma(G)$ is spanned by its group-like elements.
-\end{theorem}
-\begin{proof}
-  \uses{0-grp-like-lin-indep}
-  % \leanok
-
-  See Theorem 12.8 in \cite{Milne_2017}.
-\end{proof}
-
-
-\begin{theorem}
-  \label{0-full-faithful-diag}
-  \uses{0-diag}
-  \lean{}
-  \leanok
-
-  Let $R$ be a domain.
-  The functor $D_R(G) := G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is fully faithful.
-\end{theorem}
-\begin{proof}
-  \uses{0-full-faithful-spec-hopf, 0-full-faithful-grp-alg}
-  \leanok
-
-  Compose Propositions \ref{0-full-faithful-spec-hopf} and \ref{0-full-faithful-grp-alg}.
-
-  Also see Theorem 12.9(a) in \cite{Milne_2017}. See SGA III Exposé VIII for a proof that works for $R$ an arbitrary commutative ring.
-\end{proof}
-
-
-\subsection{The Torus}
-
-
-\begin{definition}[The split torus]
-  \label{0-torus}
-  \lean{AlgebraicGeometry.Scheme.SplitTorus, AlgebraicGeometry.Scheme.SplitTorus.instCanonicallyOver}
-  \leanok
-
-  The split torus $\G_m^n$ over a scheme $S$ is the pullback of
-  $\Spec \Z[x_1^{\pm 1}, \dotsc, x_n^{\pm 1}]$ along the unique map $S \to \Spec \Z$.
-\end{definition}
-
-
-\begin{lemma}[Diag is a group isomorphism on hom sets]
-  \label{0-diag-hom}
-  \uses{0-diag}
-  \lean{AlgebraicGeometry.Scheme.diagHomEquiv}
-  \leanok
-
-  Let $R$ be a domain.
-  The functor $G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is a group isomorphism on hom sets.
-\end{lemma}
-\begin{proof}
-  \uses{0-full-faithful-diag, 0-full-faithful-grp-hom}
-  \leanok
-
-  Toddlers and streets by Lemmas \ref{0-full-faithful-diag} and \ref{0-full-faithful-grp-hom}.
-\end{proof}
-
-
-\begin{definition}[Characters of a group scheme]
-  \label{0-char}
-  \uses{0-torus}
-  \lean{AlgebraicGeometry.Scheme.char}
-  \leanok
-
-  For a group scheme $G$ over $S$, the {\bf character lattice} of $G$ is
-  \[
-    X(G) := \Hom_{\mathsf{GrpSch}_S}(G, \G_m).
-  \]
-  An element of $X(G)$ is called a {\bf character}.
-\end{definition}
-
-
-\begin{definition}[Cocharacters of a group scheme]
-  \label{0-cochar}
-  \uses{0-torus}
-  \lean{AlgebraicGeometry.Scheme.cochar}
-  \leanok
-
-  For a group scheme $G$ over $S$, the {\bf cocharacter lattice} of $G$ is
-  \[
-    X^*(G) := \Hom_{\mathsf{GrpSch}_S}(\G_m, G).
-  \]
-  An element of $X^*(G)$ is called a {\bf cocharacter} or {\bf one-parameter subgroup}.
-\end{definition}
-
-
-\begin{proposition}[Character lattice of a diagonalisable group scheme]
-  \label{0-char-diag}
-  \uses{0-char}
-  \lean{AlgebraicGeometry.Scheme.charGrpAlg}
-  \leanok
-
-  Let $R$ be a domain and $G$ be a commutative group.
-  Then $X(\Spec R[G]) = G$.
-\end{proposition}
-\begin{proof}
-  \uses{0-full-faithful-diag}
-  \leanok
-
-  By Propositions \ref{0-diag-spec} and \ref{0-full-faithful-diag} in turn, we have
-  \[
-    X(G) = \Hom_{\mathsf{GrpSch}}(G, \G_m) = \Hom(k[\Z], k[G]) = \Hom(\Z, G) = G.
-  \]
-\end{proof}
-
-
-\begin{proposition}[Cocharacter lattice of a diagonalisable group scheme]
-  \label{0-cochar-diag}
-  \uses{0-cochar}
-  \lean{AlgebraicGeometry.Scheme.cocharGrpAlg}
-  \leanok
-
-  Let $R$ be a domain and $G$ be a commutative group.
-  Then $X^*(\Spec R[G]) = \Hom(G, \Z)$.
-\end{proposition}
-\begin{proof}
-  \uses{0-full-faithful-diag}
-  \leanok
-
-  By Propositions \ref{0-diag-spec} and \ref{0-full-faithful-diag} in turn, we have
-  \[
-    X^*(G) = \Hom_{\mathsf{GrpSch}}(\G_m, G) = \Hom(k[G], k[\Z]) = \Hom(G, \Z).
-  \]
-\end{proof}
-
-
-\begin{proposition}[Character lattice of the torus]
-  \label{0-char-torus}
-  \uses{0-char}
-  \lean{AlgebraicGeometry.Scheme.charTorus}
-  \leanok
-
-  Let $G$ be a torus of dimension $n$ over a domain $R$.
-  Then $X(G) = \Z^n$.
-\end{proposition}
-\begin{proof}
-  \uses{0-full-faithful-diag, 0-diag-spec}
-  \leanok
-
-  Immediate from Propositions \ref{0-diag-spec} and \ref{0-char-diag}.
-\end{proof}
-
-
-\begin{proposition}[Cocharacter lattice of the torus]
-  \label{0-cochar-torus}
-  \uses{0-cochar}
-  \lean{AlgebraicGeometry.Scheme.cocharTorus}
-  \leanok
-
-  Let $G$ be a torus of dimension $n$ over a domain $R$.
-  Then $X^*(G) = \Hom(\Z^n, \Z)$.
-\end{proposition}
-\begin{proof}
-  \uses{0-full-faithful-diag, 0-diag-spec}
-  \leanok
-
-  Immediate from Propositions \ref{0-diag-spec} and \ref{0-cochar-diag}.
-\end{proof}
-
-
-\begin{definition}[The character-cocharacter pairing]
-  \label{0-char-cochar-pairing}
-  \uses{0-char, 0-cochar}
-  \lean{AlgebraicGeometry.Scheme.charPairing}
-  \leanok
-
-  Let $R$ be a domain and $G$ a group scheme over $\Spec R$.
-  Then there is a $\Z$-valued perfect pairing between $X(G)$ and $X^*(G)$.
-\end{definition}
-
-
-\begin{proposition}[The character-cocharacter pairing is perfect]
-  \label{0-char-cochar-pairing-perfect}
-  \uses{0-char-cochar-pairing}
-  \lean{AlgebraicGeometry.Scheme.isPerfPair_charPairing}
-  \leanok
-
-  The character-cocharacter pairing on a torus is perfect.
-\end{proposition}
-\begin{proof}
-  \uses{}
-  \leanok
-
-  Transfer everything across the isos $X(\G_m^n) = \Z^n, X*(\G_m^n) = \Hom(\Z^n, \Z)$.
 \end{proof}
