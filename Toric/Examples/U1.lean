@@ -1,5 +1,6 @@
 import Mathlib
 import Toric.GroupScheme.Character
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 noncomputable section
 
@@ -90,6 +91,11 @@ instance : Coalgebra R (U1Ring R) where
   coassoc := by
     change (Algebra.TensorProduct.assoc _ _ _ _ _).toLinearMap ∘ₗ _ = _
     change _ ∘ₗ _ ∘ₗ U1Ring.comulAlgHom.toLinearMap = _ ∘ₗ U1Ring.comulAlgHom.toLinearMap
+    change _ ∘ₗ (Algebra.TensorProduct.rTensor _).toLinearMap ∘ₗ _ = _
+    change _ = (Algebra.TensorProduct.lTensor _).toLinearMap ∘ₗ _
+    simp only [← AlgHom.comp_toLinearMap]
+    erw [← AlgHom.comp_toLinearMap]
+    -- apply AlgHom.toLinearMap_injective (R := R) (A := U1Ring R) (B := U1Ring R ⊗[R] U1Ring R ⊗[R] U1Ring R)
     sorry
   rTensor_counit_comp_comul := sorry
   lTensor_counit_comp_comul := sorry
