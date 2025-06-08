@@ -81,44 +81,26 @@ def U1Ring.comulAlgHom : U1Ring R →ₐ[R] U1Ring R ⊗[R] U1Ring R :=
       sub_tmul, ← Algebra.TensorProduct.one_def (A := U1Ring R) (B := U1Ring R)]
     ring_nf))
 
+@[simp]
+lemma U1Ring.comulAlgHom_apply_X : U1Ring.comulAlgHom (R := R) .X = (.X ⊗ₜ .X - .Y ⊗ₜ .Y) := by
+  simp [comulAlgHom]
+
+@[simp]
+lemma U1Ring.comulAlgHom_apply_Y : U1Ring.comulAlgHom (R := R) .Y = (.X ⊗ₜ .Y + .Y ⊗ₜ .X) := by
+  simp [comulAlgHom]
+
 def U1Ring.counitAlgHom : U1Ring R →ₐ[R] R := (U1Ring.liftₐ 1 0 (by simp))
 
-instance : CoalgebraStruct R (U1Ring R) where
-  comul := U1Ring.comulAlgHom.toLinearMap
-  counit := U1Ring.counitAlgHom.toLinearMap
+@[simp]
+lemma U1Ring.counitAlgHom.apply_X : U1Ring.counitAlgHom (R := R) .X = 1 := by simp [counitAlgHom]
 
-instance : Coalgebra R (U1Ring R) where
-  coassoc := by
-    change (Algebra.TensorProduct.assoc _ _ _ _ _).toLinearMap ∘ₗ _ = _
-    change _ ∘ₗ _ ∘ₗ U1Ring.comulAlgHom.toLinearMap = _ ∘ₗ U1Ring.comulAlgHom.toLinearMap
-    change _ ∘ₗ (Algebra.TensorProduct.rTensor _).toLinearMap ∘ₗ _ = _
-    change _ = (Algebra.TensorProduct.lTensor _).toLinearMap ∘ₗ _
-    simp only [← AlgHom.comp_toLinearMap]
-    erw [← AlgHom.comp_toLinearMap]
-    -- apply AlgHom.toLinearMap_injective (R := R) (A := U1Ring R) (B := U1Ring R ⊗[R] U1Ring R ⊗[R] U1Ring R)
-    sorry
-  rTensor_counit_comp_comul := sorry
-  lTensor_counit_comp_comul := sorry
+@[simp]
+lemma U1Ring.counitAlgHom.apply_Y : U1Ring.counitAlgHom (R := R) .Y = 0 := by simp [counitAlgHom]
 
-instance : Bialgebra R (U1Ring R) where
-  counit_one := by
-    change U1Ring.counitAlgHom.toLinearMap _ = _
-    simp
-  mul_compr₂_counit := by
-    ext
-    simp only [LinearMap.compr₂_apply, LinearMap.mul_apply_apply, LinearMap.compl₁₂_apply]
-    change U1Ring.counitAlgHom.toLinearMap _ =
-      U1Ring.counitAlgHom.toLinearMap _ * U1Ring.counitAlgHom.toLinearMap _
-    simp
-  comul_one := by
-    change U1Ring.comulAlgHom.toLinearMap _ = _
-    simp
-  mul_compr₂_comul := by
-    ext
-    simp
-    change U1Ring.comulAlgHom.toLinearMap _ =
-      U1Ring.comulAlgHom.toLinearMap _ * U1Ring.comulAlgHom.toLinearMap _
-    simp
+instance : Bialgebra R (U1Ring R) := Bialgebra.ofAlgHom U1Ring.comulAlgHom U1Ring.counitAlgHom
+  (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul] <;> ring)
+  (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
+  (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
 
 instance : HopfAlgebra R (U1Ring R) where
   antipode := (Ideal.Quotient.liftₐ _
