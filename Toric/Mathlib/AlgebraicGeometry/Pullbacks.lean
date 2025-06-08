@@ -27,7 +27,7 @@ instance isCommMon_asOver_pullback [Mon_Class (asOver M S)] [IsCommMon (asOver M
 
 instance Grp_ClassAsOverPullback [Grp_Class (asOver M S)] :
     Grp_Class (asOver (pullback (M ↘ S) f) T) :=
-    ((Over.pullback f).mapGrp.obj <| .mk <| asOver M S).grp
+  ((Over.pullback f).mapGrp.obj <| .mk <| asOver M S).grp
 
 instance : (pullback.fst (M ↘ S) (𝟙 S)).IsOver S := ⟨(pullback.condition).trans (by simp; rfl)⟩
 
