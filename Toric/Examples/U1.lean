@@ -107,7 +107,10 @@ instance : HopfAlgebra R (U1Ring R) where
     (aevalAEval (.mk X) (- .mk Y)) (by
     show Ideal.span _ ≤ RingHom.ker _
     simp only [Ideal.span_le, Set.singleton_subset_iff]
-    sorry
+    simp only [SetLike.mem_coe, RingHom.mem_ker, map_sub, map_add, map_pow, aevalAEval_X,
+      aevalAEval_Y, even_two, Even.neg_pow, map_one]
+    rw [← U1Ring.X, ← U1Ring.Y]
+    simp
     )).toLinearMap
   mul_antipode_rTensor_comul := sorry
   mul_antipode_lTensor_comul := sorry
