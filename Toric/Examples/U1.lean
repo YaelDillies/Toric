@@ -57,25 +57,62 @@ lemma U1relation : U1Ring.X (R := R) ^ 2 + .Y ^ 2 = 1 := by
 
 lemma U1relation' : U1Ring.X (R := R) ^ 2 = 1 - .Y ^ 2 := by simp [← U1relation]
 
-instance : CoalgebraStruct R (U1Ring R) where
-  comul := (U1Ring.liftₐ (.X ⊗ₜ .X - .Y ⊗ₜ .Y) (.X ⊗ₜ .Y + .Y ⊗ₜ .X) (by
+/- @[ext]
+lemma U1Ring.linearMap_ext {M : Type*} [AddCommGroup M] [Module R M] {f g : U1Ring R →ₗ[R] M}
+    (h1 : f .X = g .X) (h2 : f .Y = g .Y) : f = g := by
+  simp_rw [U1Ring] at f g
+  ext -/
+
+@[ext]
+lemma U1Ring.algebraMap_ext {A : Type*} [Semiring A] [Algebra R A] {f g : U1Ring R →ₐ[R] A}
+    (h1 : f .X = g .X) (h2 : f .Y = g .Y) : f = g := by
+  simp_rw [U1Ring] at f g
+  apply Ideal.Quotient.algHom_ext
+  ext
+  · exact h2
+  exact h1
+
+def U1Ring.comulAlgHom : U1Ring R →ₐ[R] U1Ring R ⊗[R] U1Ring R :=
+  (U1Ring.liftₐ (.X ⊗ₜ .X - .Y ⊗ₜ .Y) (.X ⊗ₜ .Y + .Y ⊗ₜ .X) (by
     ring_nf
-    simp [U1relation', sub_tmul, tmul_sub,
-      Algebra.TensorProduct.tmul_pow (A := U1Ring R) (B := U1Ring R),
-      ← Algebra.TensorProduct.one_def (A := U1Ring R) (B := U1Ring R)]
-    ring_nf)).toLinearMap
-  counit := (U1Ring.liftₐ 1 0 (by simp)).toLinearMap
+    simp only [Algebra.TensorProduct.tmul_mul_tmul,
+      Algebra.TensorProduct.tmul_pow (A := U1Ring R) (B := U1Ring R), U1relation', tmul_sub,
+      sub_tmul, ← Algebra.TensorProduct.one_def (A := U1Ring R) (B := U1Ring R)]
+    ring_nf))
+
+def U1Ring.counitAlgHom : U1Ring R →ₐ[R] R := (U1Ring.liftₐ 1 0 (by simp))
+
+instance : CoalgebraStruct R (U1Ring R) where
+  comul := U1Ring.comulAlgHom.toLinearMap
+  counit := U1Ring.counitAlgHom.toLinearMap
 
 instance : Coalgebra R (U1Ring R) where
-  coassoc := by ext x; simp
+  coassoc := by
+    change (Algebra.TensorProduct.assoc _ _ _ _ _).toLinearMap ∘ₗ _ = _
+    change _ ∘ₗ _ ∘ₗ U1Ring.comulAlgHom.toLinearMap = _ ∘ₗ U1Ring.comulAlgHom.toLinearMap
+    sorry
   rTensor_counit_comp_comul := sorry
   lTensor_counit_comp_comul := sorry
 
 instance : Bialgebra R (U1Ring R) where
-  counit_one := sorry
-  mul_compr₂_counit := sorry
-  comul_one := sorry
-  mul_compr₂_comul := sorry
+  counit_one := by
+    change U1Ring.counitAlgHom.toLinearMap _ = _
+    simp
+  mul_compr₂_counit := by
+    ext
+    simp only [LinearMap.compr₂_apply, LinearMap.mul_apply_apply, LinearMap.compl₁₂_apply]
+    change U1Ring.counitAlgHom.toLinearMap _ =
+      U1Ring.counitAlgHom.toLinearMap _ * U1Ring.counitAlgHom.toLinearMap _
+    simp
+  comul_one := by
+    change U1Ring.comulAlgHom.toLinearMap _ = _
+    simp
+  mul_compr₂_comul := by
+    ext
+    simp
+    change U1Ring.comulAlgHom.toLinearMap _ =
+      U1Ring.comulAlgHom.toLinearMap _ * U1Ring.comulAlgHom.toLinearMap _
+    simp
 
 instance : HopfAlgebra R (U1Ring R) where
   antipode := (Ideal.Quotient.liftₐ _
