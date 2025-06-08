@@ -177,16 +177,17 @@ end CommBialgCat
 
 attribute [local ext] Quiver.Hom.unop_inj
 
+attribute [simp] Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def in
 /-- Implementation detail of `commBialgCatEquivComonCommAlgCat`. -/
 @[simps! obj map]
 private def commBialgCatToComonCommAlgCat : CommBialgCat R ⥤ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   obj A := .op {
     X := .op <| .of R A
-    one := (CommAlgCat.ofHom <| counitAlgHom R A).op
-    mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
-    one_mul := by ext; exact Coalgebra.rTensor_counit_comul _
-    mul_one := by ext; exact Coalgebra.lTensor_counit_comul _
-    mul_assoc := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
+    mon.one := (CommAlgCat.ofHom <| counitAlgHom R A).op
+    mon.mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
+    mon.one_mul := by ext; exact Coalgebra.rTensor_counit_comul _
+    mon.mul_one := by ext; exact Coalgebra.lTensor_counit_comul _
+    mon.mul_assoc := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
   }
   map {A B} f := .op {
     hom := (CommAlgCat.ofHom f.hom).op

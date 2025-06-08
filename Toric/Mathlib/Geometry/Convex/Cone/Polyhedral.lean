@@ -125,7 +125,7 @@ private lemma dual_auxGenSet (hs : s.Finite) :
       sub_nonneg] at hv2
     nth_rw 2 [mul_comm] at hv2
     exact hv2
-  obtain hSv | hSv := {y ∈ s | p y w < 0 ∧ p y v < 0}.eq_empty_or_nonempty
+  obtain hSv | ⟨y, hy⟩ := {y ∈ s | p y w < 0 ∧ p y v < 0}.eq_empty_or_nonempty
   · simp +contextual only [Set.sep_and, Set.eq_empty_iff_forall_notMem, Set.mem_inter_iff,
       Set.mem_setOf_eq, not_and, true_and, not_lt, and_imp] at hSv
     refine ⟨0, zero_mem _, v, fun x hx => ?_, zero_add _⟩
@@ -136,32 +136,26 @@ private lemma dual_auxGenSet (hs : s.Finite) :
   let u : 𝕜 := ({y ∈ s | p y w < 0}.image (fun y => p y v * (p y w)⁻¹)).max' <| by
     simpa [Finset.Nonempty, Set.Nonempty] using hSw.image _
   have hu : 0 ≤ u := by
-    obtain ⟨y, hy⟩ := hSv
     refine le_trans (mul_nonneg_of_nonpos_of_nonpos hy.2.2.le (inv_nonpos.mpr hy.2.1.le))
       (Finset.le_max' _ (p y v * (p y w)⁻¹) ?_)
     simp only [Finset.mem_image, Finset.mem_filter]
-    exact ⟨y, ⟨⟨hy.1, hy.2.1⟩, rfl⟩⟩
+    exact ⟨y, ⟨hy.1, hy.2.1⟩, rfl⟩
   refine ⟨u • w, ?_, v - u • w, fun z hzS ↦ ?_, add_sub_cancel _ _⟩
   · rw [← Nonneg.mk_smul _ hu]
     exact Submodule.smul_mem _ _ (Submodule.subset_span rfl)
   simp only [map_sub, map_smul, smul_eq_mul, sub_nonneg]
-  by_cases hzw_zero : p z w = 0
-  · rw [hzw_zero, mul_zero]
-    exact hv1 ⟨hzS, hzw_zero.symm.le⟩
-  by_cases hzw : 0 < p z w
-  · obtain ⟨y, hy, t_eq : _ = u⟩ := Finset.mem_image.mp <|
-      ({y ∈ s | p y w < 0}.image (fun y => p y v * (p y w)⁻¹)).max'_mem <| by
-        simpa [Finset.Nonempty, Set.Nonempty] using hSw.image _
-    rw [Finset.mem_filter] at hy
-    rw [← t_eq, ← _root_.mul_le_mul_left_of_neg hy.2, ← mul_assoc]
-    nth_rw 4 [mul_comm]
-    rw [mul_inv_cancel_left₀ hy.2.ne]
-    exact hv2 ⟨hzS, hzw.le⟩ hy
-  · replace hzw : p z w < 0 := lt_of_le_of_ne (le_of_not_lt hzw) hzw_zero
-    rw [← _root_.mul_le_mul_right_of_neg (inv_neg''.mpr hzw),
-      mul_inv_cancel_right₀ hzw_zero]
+  obtain hzw | hzw := lt_or_ge (p z w) 0
+  · rw [← _root_.mul_le_mul_right_of_neg (inv_neg''.mpr hzw), mul_inv_cancel_right₀ hzw.ne]
     exact Finset.le_max' _ (p z v * (p z w)⁻¹) <|
       Finset.mem_image.mpr ⟨z, Finset.mem_filter.mpr ⟨hzS, hzw⟩, rfl⟩
+  obtain ⟨y, hy, t_eq : _ = u⟩ := Finset.mem_image.mp <|
+    ({y ∈ s | p y w < 0}.image (fun y => p y v * (p y w)⁻¹)).max'_mem <| by
+      simpa [Finset.Nonempty, Set.Nonempty] using hSw.image _
+  rw [Finset.mem_filter] at hy
+  rw [← t_eq, ← _root_.mul_le_mul_left_of_neg hy.2, ← mul_assoc]
+  nth_rw 4 [mul_comm]
+  rw [mul_inv_cancel_left₀ hy.2.ne]
+  exact hv2 ⟨hzS, hzw⟩ hy
 
 /-- A finitely generated cone is polyhedral. -/
 lemma IsPolyhedral.of_fg [Module.Finite 𝕜 M] (hp : Injective p.flip) (hC : C.FG) :

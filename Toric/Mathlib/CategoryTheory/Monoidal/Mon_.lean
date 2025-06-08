@@ -7,6 +7,8 @@ import Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 
+attribute [-simp] Mon_.one_def Mon_.mul_def Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def
+
 open CategoryTheory MonoidalCategory Monoidal
 
 assert_not_exists CartesianMonoidalCategory
@@ -50,9 +52,17 @@ instance [IsCommMon M] [IsCommMon N] : IsCommMon (M ⊗ N) where
   mul_comm' := by
     simp [← IsIso.inv_comp_eq, tensorμ, ← associator_inv_naturality_left_assoc,
       ← associator_naturality_right_assoc, SymmetricCategory.braiding_swap_eq_inv_braiding M N,
-      ← tensorHom_def_assoc, -whiskerRight_tensor, -tensor_whiskerLeft, ← tensor_comp]
+      ← tensorHom_def_assoc, -whiskerRight_tensor, -tensor_whiskerLeft, ← tensor_comp,
+      Mon_Class.tensorObj.mul_def]
 
 end Mon_Class
+
+namespace Mon_
+variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C]
+
+@[simp] lemma tensorObj_X (M N : Mon_ C) : (M ⊗ N).X = M.X ⊗ N.X := rfl
+
+end Mon_
 
 namespace CategoryTheory.Functor
 
@@ -106,16 +116,39 @@ lemma tensorμ_tensorHom_μ_μ_μ {W X Y Z : C} [F.LaxBraided] :
   simp only [← map_comp, whisker_assoc, Category.assoc, pentagon_inv_inv_hom_hom_inv,
     pentagon_inv_hom_hom_hom_inv_assoc]
 
-attribute [local simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc in
+attribute [local instance] obj.instMon_Class
+
+open scoped Mon_Class
+
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.mul_hom in
+attribute [simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc
+  Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def in
 instance [F.LaxBraided] : F.mapMon.LaxMonoidal where
   ε' := .mk (ε F)
-  μ' M N := .mk (μ F M.X N.X)
+  μ' M N := by
+    refine .mk («μ» F M.X N.X) ?_ ?_
+    · aesop_cat_nonterminal
+      rw [Mon_Class.tensorObj.one_def]
+      aesop_cat_nonterminal
+      simp [← Functor.map_comp]
+    · aesop_cat_nonterminal
+      rw [Mon_Class.tensorObj.mul_def]
+      aesop_cat
 
 attribute [local simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc in
 instance [F.Braided] : F.mapMon.Monoidal :=
   CoreMonoidal.toMonoidal
   { εIso := Mon_.mkIso (Monoidal.εIso F)
-    μIso M N := Mon_.mkIso (Monoidal.μIso F M.X N.X) }
+    μIso M N := by
+      refine Mon_.mkIso (Monoidal.μIso F M.X N.X) ?_ ?_
+      · aesop_cat_nonterminal
+        rw [Mon_Class.tensorObj.one_def]
+        aesop_cat_nonterminal
+        simp [← Functor.map_comp]
+      · aesop_cat_nonterminal
+        rw [Mon_Class.tensorObj.mul_def]
+        aesop_cat
+  }
 
 end CategoryTheory.Functor
 
