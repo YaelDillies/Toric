@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.HopfAlgebra.Basic
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 /-!
 # TODO
@@ -9,7 +10,7 @@ import Mathlib.RingTheory.HopfAlgebra.Basic
 
 export HopfAlgebraStruct (antipode)
 
-open Coalgebra Bialgebra TensorProduct
+open Coalgebra Bialgebra TensorProduct Algebra
 
 namespace HopfAlgebra
 variable {R A : Type*} [CommSemiring R] [Semiring A] [HopfAlgebra R A]
@@ -36,5 +37,28 @@ lemma antipode_counit (a : A) : counit (R := R) (antipode R a) = counit (R := R)
   simp_rw [map_smul, counit_one, smul_eq_mul, mul_one, map_sum, counit_mul, ← smul_eq_mul,
     ← map_smul, ← map_sum, sum_counit_smul (ℛ R a)] at this
   exact this
+
+end HopfAlgebra
+
+namespace HopfAlgebra
+variable {R A : Type*} [CommSemiring R] [CommSemiring A] [Bialgebra R A]
+
+noncomputable
+abbrev _root_.HopfAlgebra.ofAlgHom
+    (antipode : A →ₐ[R] A)
+    (mul_antipode_rTensor_comul :
+      (Algebra.TensorProduct.lmul' R (S := A)).comp
+        ((Algebra.TensorProduct.rTensor A antipode).comp
+          (comulAlgHom R A)) = (Algebra.ofId R A).comp (Bialgebra.counitAlgHom R A))
+    (mul_antipode_lTensor_comul :
+      (Algebra.TensorProduct.lmul' R (S := A)).comp
+        ((Algebra.TensorProduct.lTensor A antipode).comp
+          (comulAlgHom R A)) = (Algebra.ofId R A).comp (Bialgebra.counitAlgHom R A)) :
+    HopfAlgebra R A where
+  antipode := antipode
+  mul_antipode_rTensor_comul := by
+    exact congr(($mul_antipode_rTensor_comul).toLinearMap)
+  mul_antipode_lTensor_comul := by
+    exact congr(($mul_antipode_lTensor_comul).toLinearMap)
 
 end HopfAlgebra
