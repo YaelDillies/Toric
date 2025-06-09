@@ -8,7 +8,7 @@ we have a bilinear pairing \( \langle \cdot, \cdot \rangle \colon N
 \times M \to \Bbbk \) such that the induced maps \( M \to
 \Hom(N,\Bbbk) \) and \( N \to \Hom(N,\Bbbk) \) are both bijective
 (this is also known as a \emph{perfect pairing}). Since \( \Bbbk \) is
-linearly ordered, we cann define the non-negative scalar \(\Bbbk_{\geq
+linearly ordered, we can define the non-negative scalars \(\Bbbk_{\geq
 0} = \{t \in \Bbbk \mid t \geq 0 \} \subseteq \Bbbk\). This is a
 \emph{semifield}, i.e. a commutative semiring, in which every nonzero
 element has a multiplicative inverse.
@@ -136,6 +136,31 @@ element has a multiplicative inverse.
   T^{\vee} \). Clearly \( T \subseteq \Cone(S) \), hence \( S^{\vee} =
   \Cone(S)^{\vee} \subseteq T^{\vee} \). Also clear is \( w \in
   T^{\vee} \), hence \( S^{\vee} + \Cone(\{w\}) \subset T^{\vee} \).
+  For the reverse inclusion, let \( v \in T^\vee \). We need to show
+  \( v - uw \in S^\vee \) for some \( u \in \Bbbk_{\geq 0} \). If
+  there is no \( y \in S \) with both \( \langle y, w \rangle < 0 \)
+  and \( \langle y, v \rangle < 0 \), we can easily see that \( u = 0
+  \) works, i.e. \( T^{\vee} \subseteq S^{\vee} \). Otherwise, we
+  set
+  \[
+      u\ :=\ \max_{\substack{y \in S \\ \langle y, w \rangle < 0}}
+      \frac{\langle y, v \rangle}{\langle y, w \rangle},
+  \]
+  which is then well-defined and non-negative. We need to show
+  \( u \langle z, w \rangle \leq \langle z, v \rangle \) for all \( z
+  \in S \). If \( \langle z, w \rangle < 0 \), this follows from
+  maximality of \( u \). If \( \langle z, w \rangle = 0 \), the claim
+  follows from \( z \in T \) and \( v \in T^{\vee} \). Lastly, assume
+  \( \langle z, w \rangle > 0 \) and fix \( y \in S \) such that \( u
+  = \frac{\langle y, v \rangle}{\langle y, w \rangle} \). In
+  particular, \( \langle y, w \rangle < 0 \). Then the claim \( u
+  \langle z, w \rangle \leq \langle z, v \rangle \) is equivalent to
+  \[
+      \langle y, v \rangle \langle z, w \rangle \geq
+      \langle z, v \rangle \langle y, w \rangle.
+  \]
+  But \( y \langle z, w \rangle - z \langle y, w \rangle \in T \),
+  hence the claim follows from \( v \in T^{\vee} \).
 \end{proof}
 
 \begin{proposition}
@@ -149,7 +174,7 @@ element has a multiplicative inverse.
   \uses{0-bot-polyhedral, 0-fourier-motzkin}
   \leanok
   Write \( \sigma = \Cone(S) \) and use induction on the size of \( S
-  \): For \( S = \emptyset \), we use use~\ref{0-bot-polyhedral}
+  \): For \( S = \emptyset \), we use~\ref{0-bot-polyhedral}
   and the induction step is~\ref{0-fourier-motzkin}.
 \end{proof}
 
@@ -213,164 +238,173 @@ element has a multiplicative inverse.
 \subsection{Faces, edges and facets}
 
 
-
-Given $m \ne 0$ in $M$, we get the hyperplane
-$$H_m = \{u \in N | \langle m, u\rangle = 0\} \subseteq N$$
-and the closed half-space
-$$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
-
+\begin{definition}
+  \label{0-hyperplane}
+  \uses{}
+  % \lean{}
+  % \leanok
+  For any subset \( A \subseteq M \), we define the \emph{perp space}
+  \[
+      A^{\perp}\ :=\ \{v \in N\ \mid\ \forall u \in A, \langle v, u \rangle = 0\},
+  \]
+  which is a pointed cone in \( N \). We also write \( u^{\perp} :=
+  \{u\}^{\perp} \).
+\end{definition}
 
 \begin{definition}[Face of a cone]
-  \label{1-2-5-face}
-  \uses{}
-  \lean{IsExposed}
-  \leanok
-
-  If $\sigma$ is a cone, then a subset of $\sigma$ is a {\bf face} iff it is the intersection of $\sigma$ with some halfspace. We write this $\tau \preceq \sigma$. If furthermore $\tau \ne \sigma$, we call $\tau$ a proper face and write $\tau \prec \sigma$.
-\end{definition}
-
-
-\begin{definition}[Edge of a cone]
-  \label{1-2-5-edge}
-  \uses{1-2-5-face}
+  \label{0-face}
+  \uses{0-hyperplane}
   % \lean{}
   % \leanok
-
-  A dimension 1 face of a cone is called an {\bf edge}.
+  A \emph{face} of a pointed cone \( \sigma \subseteq N \) is the
+  intersection of \( \sigma \) with some hyperplane \( u^{\perp} \)
+  for \( u \in \sigma^{\vee} \).
 \end{definition}
-
-
-\begin{definition}[Facet of a cone]
-  \label{1-2-5-facet}
-  \uses{1-2-5-face}
-  % \lean{}
-  % \leanok
-
-  A codimension 1 face of a cone is called a {\bf facet}.
-\end{definition}
-
 
 \begin{lemma}[Face of a polyhedral cone]
-  \label{1-2-6-face-polyhedral-cone}
-  \uses{0-polyhedral-cone, 1-2-5-face}
+  \label{0-face-polyhedral}
+  \uses{0-face, 0-polyhedral-cone}
   % \lean{}
   % \leanok
-
-  If $\sigma$ is a polyhedral cone, then every face of $\sigma$ is a polyhedral cone.
+  A face of a polyhedral cone is polyhedral.
 \end{lemma}
-
+\begin{proof}
+    Let \( \sigma = S^{\vee} \) be polyhedral, where \( S \subseteq M
+    \) finite and consider a face \( \tau = \sigma \cap u^{\perp} \)
+    for \( u \in \sigma^{\vee} \). We claim that \( \tau = (S \cup
+    \{-u\})^\vee \). The inclusion ``\( \subseteq \)'' is obvious. For
+    the converse, suppose \( v \in (S \cup \{-u\})\vee = \sigma \cap
+    \{-u\}^\vee \). Then \( \langle v, u \rangle \leq 0 \). But since
+    \( u \in \sigma^{\vee} \), we also have \( \langle v, u \rangle
+    \geq 0 \). We obtain \( \langle v, u \rangle = 0 \), which shows
+    the claim.
+\end{proof}
 
 \begin{lemma}[Intersection of faces]
-  \label{1-2-6-inter-faces}
-  \uses{0-polyhedral-cone, 1-2-5-face}
+  \label{0-face-intersection}
+  \uses{0-face}
   % \lean{}
   % \leanok
-
-  If $\sigma$ is a polyhedral cone, then the intersection of two faces of $\sigma$ is a face of $\sigma$.
+  If \( \sigma \) is a pointed cone, then the intersection of two
+  faces of \( \sigma \) is a again face of \( \sigma \).
 \end{lemma}
 \begin{proof}
   \uses{}
   % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
+  Let \( \tau = \sigma \cap u^{\perp} \) and \( \tau' = \sigma \cap
+  \tau'^{\perp} \) be faces. We claim that \( \sigma \cap u^{\perp}
+  \cap u'^{\perp} = \sigma \cap (u + u')^{\perp} \). The inclusion
+  ``\( \subseteq \)'' is obvious. For the converse, suppose \( v \in
+  \sigma \) with \( \langle v, u \rangle + \langle v, u' \rangle = 0
+  \). Since \( u, u' \in \sigma^{\vee} \), both summands are
+  nonnegative, hence \( \langle v, u \rangle = \langle v, u' \rangle =
+  0 \).
 \end{proof}
 
 
 \begin{lemma}[Face of a face]
-  \label{1-2-6-face-face}
+  \label{0-face-face}
   \uses{0-polyhedral-cone, 1-2-5-face}
   % \lean{}
   % \leanok
-
-  A face of a face of a polyhedral cone $\sigma$ is again a face of $\sigma$.
+  A face of a face of a polyhedral cone \( \sigma \) is again a face
+  of \( \sigma \).
 \end{lemma}
 \begin{proof}
   \uses{}
   % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
+  TODO
 \end{proof}
 
 
 \begin{lemma}
-  \label{1-2-7-face-mem-of-add}
-  \uses{0-polyhedral-cone, 1-2-5-face}
+  \label{0-face-mem-of-add}
+  \uses{0-polyhedral-cone, 0-face}
   % \lean{}
   % \leanok
-
-  Let $\tau$ be a face of a polyhedral cone $\sigma$. If $v, w \in \sigma$ and $v + w \in \tau$, then $v, w \in \tau$.
+  Let \( \tau \) be a face of a polyhedral cone \( \sigma \). If \( v,
+  w \in \sigma \) and \( v + w \in \tau \), then \( v, w \in \tau \).
 \end{lemma}
 \begin{proof}
   \uses{}
   % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
+  Write \( \tau = \sigma \cap u^{\perp} \). Then \( v + w \in \tau \)
+  means \( \langle v, u \rangle + \langle w, u \rangle = 0 \). Since
+  \( u \in \sigma^{\perp} \) and \( v, w \in \sigma \), both summands
+  are nonnegative, hence \( \langle v, u \rangle = \langle w, u
+  \rangle = 0 \).
 \end{proof}
 
-
-\begin{proposition}[Dual cone of the intersection of halfspaces]
-  \label{1-2-8-dual-cone-inter-halfspaces}
-  \uses{1-2-cone-span, 0-dual-cone}
+\begin{definition}[Dimension of cone]
+  \label{0-pointed-cone-dimension}
+  \uses{0-pointed-cone}
   % \lean{}
   % \leanok
+  The \emph{dimension} of a pointed cone \( \sigma \subseteq N \) is
+  the dimension of the \( \Bbbk \)-linear subspace \(
+  \Span_{\Bbbk}(\sigma) \).
+\end{definition}
 
-  If $\sigma = H_{m_1}^+ \cap \dots \cap H_{m_s}^+$, then
-  $$\sigma^\vee = \Cone(m_1, \dots, m_s).$$
-\end{proposition}
-\begin{proof}
-  \uses{}
+\begin{definition}[Facets]
+  \label{0-facet}
+  \uses{0-pointed-cone-dimension}
+  % \lean{}
   % \leanok
+  A \emph{facet} of a pointed cone is a codimension one face.
+\end{definition}
 
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
-
+\begin{definition}[Edges]
+  \label{0-edge}
+  \uses{0-pointed-cone-dimension}
+  % \lean{}
+  % \leanok
+  An \emph{edge} of a pointed cone is a face of dimension one.
+\end{definition}
 
 \begin{proposition}[Facets of a full dimensional cone]
-  \label{1-2-8-facet-full-dim-cone}
-  \uses{1-2-cone-span, 1-2-5-facet}
+  \label{0-facet-full-dim-cone}
+  \uses{0-facet, 0-polyhedral-cone}
   % \lean{}
   % \leanok
-
-  If $\sigma$ is a full dimensional cone, then facets of $\sigma$ are of the form $H_m \cap \sigma$.
+  If \( \sigma = S^{\vee} \subseteq N \) is a full-dimensional
+  polyhedral cone for some finite \( S \subseteq M \), then the facets
+  of \( \sigma \) are \( \sigma \cap u^{\perp} \), where \( u \in S
+  \).
 \end{proposition}
 \begin{proof}
   \uses{}
-  % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
+  TODO
 \end{proof}
 
-
 \begin{proposition}[Intersection of facets containing a face]
-  \label{1-2-8-inter-facet}
-  \uses{1-2-5-facet}
+  \label{0-face-equals-inter-facets}
+  \uses{0-facet}
   % \lean{}
   % \leanok
-
-  Every proper face $\tau \prec \sigma$ of a polyhedral cone $\sigma$ is the intersection of the facets of $\sigma$ containing $\tau$.
+  Every proper face \( \tau \prec \sigma \) of a polyhedral cone \(
+  \sigma \) is the intersection of the facets of \( \sigma \) containing
+  \( \tau \).
 \end{proposition}
 \begin{proof}
   \uses{}
   % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
+  TODO
 \end{proof}
 
 
 \begin{definition}[Dual face]
-  \label{00-dual-face}
-  \uses{0-dual-cone, 1-2-5-face}
+  \label{0-dual-face}
+  \uses{0-dual-cone, 0-face}
   % \lean{}
   % \leanok
-
   Given a cone $\sigma$ and a face $\tau \preceq \sigma$, the {\bf dual face} to $\tau$ is
   $$\tau^* := \sigma^\vee \cap \tau^\perp$$
 \end{definition}
 
 
 \begin{proposition}[The dual face is a face of the dual]
-  \label{00-dual-face-face-dual}
-  \uses{00-dual-face}
+  \label{0-dual-face-face-dual}
+  \uses{0-dual-face}
   % \lean{}
   % \leanok
 
@@ -385,8 +419,8 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 
 \begin{proposition}[The double dual of a face]
-  \label{00-double-dual-face-dual-face}
-  \uses{00-dual-face}
+  \label{0-double-dual-face-dual-face}
+  \uses{0-dual-face}
   % \lean{}
   % \leanok
 
@@ -401,8 +435,8 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 
 \begin{proposition}[The dual of a face is antitone]
-  \label{00-dual-face-antitone}
-  \uses{00-dual-face}
+  \label{0-dual-face-antitone}
+  \uses{0-dual-face}
   % \lean{}
   % \leanok
 
@@ -417,8 +451,8 @@ $$H_m^+ = \{u \in N | \langle m, u\rangle \ge 0\} \subseteq N.$$
 
 
 \begin{proposition}[The dimension of the dual of a face]
-  \label{00-dim-dual-face}
-  \uses{00-dual-face}
+  \label{0-dim-dual-face}
+  \uses{0-dual-face}
   % \lean{}
   % \leanok
 
