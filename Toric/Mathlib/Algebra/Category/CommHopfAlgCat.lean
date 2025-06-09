@@ -174,6 +174,7 @@ instance reflectsIsomorphisms_forget : (forget (CommHopfAlgCat.{u} R)).ReflectsI
 
 end CommHopfAlgCat
 
+attribute [local ext] Quiver.Hom.unop_inj
 
 instance CommAlgCat.grp_ClassOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
     Grp_Class (Opposite.op <| CommAlgCat.of R A) where
