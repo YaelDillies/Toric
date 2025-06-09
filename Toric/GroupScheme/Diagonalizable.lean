@@ -70,7 +70,7 @@ def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon_ (Over S) :=
       (Over.pullback (specULiftZIsTerminal.from S)).mapMon
 
 @[simp] lemma diagMonFunctor_obj (M : AddCommMonCatᵒᵖ) :
-    (diagMonFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
+    (diagMonFunctor S).obj M = .mk ((Diag S M.unop).asOver S) := rfl
 
 variable (S) in
 def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
@@ -93,7 +93,8 @@ instance (M : AddCommGrpᵒᵖ) : IsCommMon ((diagFunctor S).obj M).X :=
   inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
 
 @[simp]
-lemma commHopfAlgCatEquivCogrpCommAlgCat_foo {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
+lemma commHopfAlgCatEquivCogrpCommAlgCat_functor_map_ofHom_mul
+    {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
     [HopfAlgebra R S] [HopfAlgebra R T] [Coalgebra.IsCocomm R S] (f g : S →ₐc[R] T) :
     (commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom (f * g)) =
       (((commHopfAlgCatEquivCogrpCommAlgCat _).functor.map (CommHopfAlgCat.ofHom f)).unop *
@@ -222,12 +223,9 @@ lemma diagHomGrp_comp {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCom
   exact (S.diagFunctor.map_comp ..).symm
 
 set_option maxHeartbeats 0 in
-lemma diagHomGrp_comp_add {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCommGroup O]
-    (f f' : M →+ N) (g : N →+ O) :
-    (diagHomGrp S g).comp (diagHomGrp S f) = diagHomGrp S (g.comp f) := by
-  apply Additive.toMul.injective
-  dsimp [HomGrp, diagHomGrp, HomGrp.comp]
-  exact (S.diagFunctor.map_comp ..).symm
+lemma diagHomGrp_add {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
+    diagHomGrp S (f + g) = diagHomGrp S f + diagHomGrp S g :=
+  congr(Additive.ofMul $(diagFunctor_map_add f g))
 
 set_option maxHeartbeats 0 in
 def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [AddCommGroup N] :
@@ -239,7 +237,7 @@ def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [Ad
     left_inv _ := by simp only [toMul_ofMul, e.symm_apply_apply]; rfl
     right_inv _ := by simp only [AddCommGrp.ofHom_hom, Quiver.Hom.op_unop, e.apply_symm_apply,
       ofMul_toMul]
-    map_add' f g := congr(Additive.ofMul $(diagFunctor_map_add f g))  }
+    map_add' := diagHomGrp_add  }
 
 lemma diagHomEquiv_apply {R M N : Type u}
     [CommRing R] [IsDomain R] [AddCommGroup M] [AddCommGroup N] (f : N →+ M) :

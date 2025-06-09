@@ -11,6 +11,6 @@ scoped[Obj] attribute [instance] CategoryTheory.Functor.obj.instMon_Class
 
 open scoped Obj
 
-instance isCommMonObj : IsCommMon (F.obj M) := (F.mapCommMon.obj (.mk' M)).instIsCommMonX
+instance isCommMonObj : IsCommMon (F.obj M) := (F.mapCommMon.obj (.mk M)).comm
 
 end CategoryTheory.Functor

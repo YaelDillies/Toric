@@ -9,6 +9,7 @@ import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
+import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 
 /-!
 # The category of commutative Hopf algebras over a commutative ring
@@ -173,76 +174,50 @@ instance reflectsIsomorphisms_forget : (forget (CommHopfAlgCat.{u} R)).ReflectsI
 
 end CommHopfAlgCat
 
-/-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlgCat`. -/
-@[simps! obj map]
-private def commHopfAlgCatToCogrpAlgCat : CommHopfAlgCat R ⥤ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
-  obj A := .op {
-    toMon_ := ((commBialgCatEquivComonCommAlgCat R).functor.obj <| .of R A).unop
-    inv := (CommAlgCat.ofHom <| HopfAlgebra.antipodeAlgHom R A).op
-    left_inv := by
-      apply Quiver.Hom.unop_inj
-      ext (x : A)
-      refine .trans ?_ (HopfAlgebra.mul_antipode_rTensor_comul_apply (R := R) x)
-      change (CartesianMonoidalCategory.lift (CommAlgCat.ofHom (HopfAlgebra.antipodeAlgHom R A)).op
-        (𝟙 _)).unop.hom (CoalgebraStruct.comul (R := R) x) = _
-      induction CoalgebraStruct.comul (R := R) x with
-      | zero => simp
-      | tmul x y => rfl
-      | add x y _ _ => simp_all
-    right_inv := by
-      apply Quiver.Hom.unop_inj
-      ext (x : A)
-      refine .trans ?_ (HopfAlgebra.mul_antipode_lTensor_comul_apply (R := R) x)
-      change (CartesianMonoidalCategory.lift (𝟙 _) (CommAlgCat.ofHom
-        (HopfAlgebra.antipodeAlgHom R A)).op).unop.hom (CoalgebraStruct.comul (R := R) x) = _
-      induction CoalgebraStruct.comul (R := R) x with
-      | zero => simp
-      | tmul x y => rfl
-      | add x y _ _ => simp_all
-  }
-  map {A B} f := (commBialgCatEquivComonCommAlgCat R).functor.map (CommBialgCat.ofHom f.hom)
+attribute [local ext] Quiver.Hom.unop_inj
 
-/-- Implementation detail of `commHopfAlgCatEquivCogrpCommAlg`. -/
-@[simps! obj map]
-private def cogrpAlgCatToCommHopfAlgCat : (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommHopfAlgCat R where
-  obj A := {
-    __ := (commBialgCatEquivComonCommAlgCat R).inverse.obj <| .op A.unop.toMon_
-    hopfAlgebra := {
-      __ := ((commBialgCatEquivComonCommAlgCat R).inverse.obj <| .op A.unop.toMon_).bialgebra
-      antipode := A.unop.inv.unop.hom.toLinearMap
-      mul_antipode_rTensor_comul := by
-        convert congr(($(Grp_Class.left_inv A.unop.X)).unop.hom.toLinearMap)
-        simp [-Grp_Class.left_inv]
-        rw [← LinearMap.comp_assoc]
-        congr 1
-        ext
-        rfl
-      mul_antipode_lTensor_comul := by
-        convert congr(($(Grp_Class.right_inv A.unop.X)).unop.hom.toLinearMap)
-        simp [-Grp_Class.right_inv]
-        rw [← LinearMap.comp_assoc]
-        congr 1
-        ext
-        rfl
-    }
-  }
-  map {A B f} :=
-    CommHopfAlgCat.ofHom ((commBialgCatEquivComonCommAlgCat R).inverse.map <| .op f.unop).hom
+instance CommAlgCat.grp_ClassOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
+    Grp_Class (Opposite.op <| CommAlgCat.of R A) where
+  inv := (CommAlgCat.ofHom <| antipodeAlgHom R A).op
+  left_inv' := by
+    ext x
+    simpa [← Algebra.TensorProduct.lmul'_comp_map, -mul_antipode_rTensor_comul_apply] using
+      mul_antipode_rTensor_comul_apply (R := R) x
+  right_inv' := by
+    ext x
+    simpa [← Algebra.TensorProduct.lmul'_comp_map, -mul_antipode_lTensor_comul_apply] using
+      mul_antipode_lTensor_comul_apply (R := R) x
+
+open Opposite Mon_Class
+
+@[simp]
+lemma CommAlgCat.inv_op_of_unop_hom {A : Type u} [CommRing A] [HopfAlgebra R A] :
+    ι[op <| CommAlgCat.of R A].unop.hom = antipodeAlgHom R A := rfl
+
+instance (A : (CommAlgCat R)ᵒᵖ) [Grp_Class A] : HopfAlgebra R A.unop :=
+  .ofAlgHom ι[A].unop.hom
+    congr($(Grp_Class.left_inv' (X := A)).unop.hom)
+    congr($(Grp_Class.right_inv' (X := A)).unop.hom)
 
 variable (R) in
 /-- Commutative Hopf algebras over a commutative ring `R` are the same thing as cogroup
 `R`-algebras. -/
-@[simps! functor_obj unitIso_inv counitIso_hom counitIso_inv]
+@[simps! functor_obj_unop_X inverse_obj unitIso_hom_app
+  unitIso_inv_app counitIso_hom_app counitIso_inv_app]
 def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
-  functor := commHopfAlgCatToCogrpAlgCat
-  inverse := cogrpAlgCatToCommHopfAlgCat
+  functor.obj A := .op <| .mk <| .op <| .of R A
+  functor.map {A B} f := .op <| .mk' <| .op <| CommAlgCat.ofHom f.hom
+  inverse.obj A := .of R A.unop.X.unop
+  inverse.map {A B} f := CommHopfAlgCat.ofHom <| .ofAlgHom f.unop.hom.unop.hom
+    congr(($(IsMon_Hom.one_hom (f := f.unop.hom))).unop.hom.toLinearMap)
+    congr(($((IsMon_Hom.mul_hom (f := f.unop.hom)).symm)).unop.hom.toLinearMap)
   unitIso.hom := 𝟙 _
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
 
-instance isCommMon_commHopfAlgCatEquivCogrpCommAlgCat_functor_obj_unop_X {A : CommHopfAlgCat.{u} R}
-    [IsCocomm R A] : IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X :=
-  isCommMon_commBialgCatEquivComonCommAlgCat_functor_obj_unop_X
+instance {A : CommHopfAlgCat.{u} R} [IsCocomm R A] :
+    IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X := by
+  dsimp; infer_instance
 
 end CategoryTheory

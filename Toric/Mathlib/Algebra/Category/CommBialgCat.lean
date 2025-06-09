@@ -15,14 +15,12 @@ This file defines the bundled category `CommBialgCat` of commutative bialgebras 
 commutative ring `R` along with the forgetful functor to `CommAlgCat`.
 -/
 
-open Bialgebra Coalgebra
+open Bialgebra Coalgebra Opposite CategoryTheory Limits Mon_Class
+open scoped MonoidalCategory
 
 noncomputable section
 
 namespace CategoryTheory
-
-open Bialgebra Limits
-open scoped Mon_Class MonoidalCategory
 
 universe v u
 variable {R : Type u} [CommRing R]
@@ -151,7 +149,7 @@ def isoMk {X Y : Type v} {_ : CommRing X} {_ : CommRing Y} {_ : Bialgebra R X}
   inv := ofHom (e.symm : Y →ₐc[R] X)
 
 /-- Build a `BialgEquiv` from an isomorphism in the category `CommBialgCat R`. -/
-@[simps]
+@[simps apply, simps -isSimp symm_apply]
 def ofIso (i : A ≅ B) : A ≃ₐc[R] B where
   __ := i.hom.hom
   toFun := i.hom
@@ -177,58 +175,65 @@ end CommBialgCat
 
 attribute [local ext] Quiver.Hom.unop_inj
 
-/-- Implementation detail of `commBialgCatEquivComonCommAlgCat`. -/
-@[simps! obj map]
-private def commBialgCatToComonCommAlgCat : CommBialgCat R ⥤ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
-  obj A := .op {
-    X := .op <| .of R A
-    one := (CommAlgCat.ofHom <| counitAlgHom R A).op
-    mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
-    one_mul := by ext; exact Coalgebra.rTensor_counit_comul _
-    mul_one := by ext; exact Coalgebra.lTensor_counit_comul _
-    mul_assoc := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
-  }
-  map {A B} f := .op {
-    hom := (CommAlgCat.ofHom f.hom).op
-    one_hom := by ext; simp
-    mul_hom := by
-      ext
-      simp only [unop_comp, Quiver.Hom.unop_op, CommAlgCat.hom_comp, CommAlgCat.hom_ofHom,
-        CommAlgCat.tensorHom_unop_hom]
-      rw [BialgHomClass.map_comp_comulAlgHom]
-  }
+instance CommAlgCat.mon_ClassOpOf {A : Type u} [CommRing A] [Bialgebra R A] :
+    Mon_Class (op <| CommAlgCat.of R A) where
+  one := (CommAlgCat.ofHom <| counitAlgHom R A).op
+  mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
+  one_mul' := by ext; exact Coalgebra.rTensor_counit_comul _
+  mul_one' := by ext; exact Coalgebra.lTensor_counit_comul _
+  mul_assoc' := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
 
-/-- Implementation detail of `commBialgCatEquivComonCommAlg`. -/
-@[simps! obj map]
-private def comonCommAlgCatToCommBialgCat : (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ ⥤ CommBialgCat R where
-  obj A := {
-    carrier := A.unop.X.unop
-    bialgebra := .ofAlgHom A.unop.mul.unop.hom A.unop.one.unop.hom
-      congr(($((Mon_Class.mul_assoc_flip A.unop.X).symm)).unop.hom)
-      congr(($(Mon_Class.one_mul A.unop.X)).unop.hom)
-      congr(($(Mon_Class.mul_one A.unop.X)).unop.hom)
-  }
-  map {A B} f := CommBialgCat.ofHom <| .ofAlgHom f.unop.hom.unop.hom
-    congr(($(IsMon_Hom.one_hom (f := f.unop.hom))).unop.hom.toLinearMap)
-    congr(($((IsMon_Hom.mul_hom (f := f.unop.hom)).symm)).unop.hom.toLinearMap)
+@[simp]
+lemma CommAlgCat.one_op_of_unop_hom {A : Type u} [CommRing A] [Bialgebra R A] :
+    η[op <| CommAlgCat.of R A].unop.hom = counitAlgHom R A := rfl
+
+@[simp]
+lemma CommAlgCat.mul_op_of_unop_hom {A : Type u} [CommRing A] [Bialgebra R A] :
+    μ[op <| CommAlgCat.of R A].unop.hom = comulAlgHom R A := rfl
+
+instance {A : Type u} [CommRing A] [Bialgebra R A] [IsCocomm R A] :
+    IsCommMon (Opposite.op <| CommAlgCat.of R A) where
+  mul_comm' := by ext; exact comm_comul R _
+
+instance {A B : Type u} [CommRing A] [Bialgebra R A] [CommRing B] [Bialgebra R B]
+    (f : A →ₐc[R] B) : IsMon_Hom (CommAlgCat.ofHom (f : A →ₐ[R] B)).op where
+
+instance (A : (CommAlgCat R)ᵒᵖ) [Mon_Class A] : Bialgebra R A.unop :=
+  .ofAlgHom μ[A].unop.hom η[A].unop.hom
+    congr(($((Mon_Class.mul_assoc_flip A).symm)).unop.hom)
+    congr(($(Mon_Class.one_mul A)).unop.hom)
+    congr(($(Mon_Class.mul_one A)).unop.hom)
 
 variable (R) in
 /-- Commutative bialgebras over a commutative ring `R` are the same thing as comonoid
 `R`-algebras. -/
-@[simps!]
+@[simps! functor_obj_unop_X inverse_obj unitIso_hom_app
+  unitIso_inv_app counitIso_hom_app counitIso_inv_app]
 def commBialgCatEquivComonCommAlgCat : CommBialgCat R ≌ (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
-  functor := commBialgCatToComonCommAlgCat
-  inverse := comonCommAlgCatToCommBialgCat
+  functor.obj A := .op <| .mk <| .op <| .of R A
+  functor.map {A B} f := .op <| .mk' <| .op <| CommAlgCat.ofHom f.hom
+  inverse.obj A := .of R A.unop.X.unop
+  inverse.map {A B} f := CommBialgCat.ofHom <| .ofAlgHom f.unop.hom.unop.hom
+    congr(($(IsMon_Hom.one_hom (f := f.unop.hom))).unop.hom.toLinearMap)
+    congr(($((IsMon_Hom.mul_hom (f := f.unop.hom)).symm)).unop.hom.toLinearMap)
   unitIso.hom := 𝟙 _
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _
   counitIso.inv := 𝟙 _
 
-instance isCommMon_commBialgCatEquivComonCommAlgCat_functor_obj_unop_X {A : CommBialgCat.{u} R}
-    [IsCocomm R A] : IsCommMon ((commBialgCatEquivComonCommAlgCat R).functor.obj A).unop.X where
-  mul_comm' := by
-    ext : 2
-    exact congr(AlgHomClass.toAlgHom ((commBialgCatEquivComonCommAlgCat R).functor.map <|
-      CommBialgCat.ofHom $(comm_comp_comulBialgHom R A)).unop.hom.unop.hom)
+@[simp]
+lemma commBialgCatEquivComonCommAlgCat_functor_map_unop_hom {A B : CommBialgCat R} (f : A ⟶ B) :
+  ((commBialgCatEquivComonCommAlgCat R).functor.map f).unop.hom =
+    (CommAlgCat.ofHom (AlgHomClass.toAlgHom f.hom)).op := rfl
+
+@[simp]
+lemma commBialgCatEquivComonCommAlgCat_inverse_map_unop_hom
+    {A B : (Mon_ (CommAlgCat R)ᵒᵖ)ᵒᵖ} (f : A ⟶ B) :
+  AlgHomClass.toAlgHom ((commBialgCatEquivComonCommAlgCat R).inverse.map f).hom =
+    f.unop.hom.unop.hom := rfl
+
+instance {A : CommBialgCat.{u} R} [IsCocomm R A] :
+    IsCommMon ((commBialgCatEquivComonCommAlgCat R).functor.obj A).unop.X := by
+  dsimp; infer_instance
 
 end CategoryTheory

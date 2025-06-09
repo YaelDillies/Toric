@@ -11,11 +11,11 @@ variable {C : Type u} [Category.{v} C] [CartesianMonoidalCategory C] [BraidedCat
 
 namespace CommGrp_
 
-def mk' (G : C) [Grp_Class G] [IsCommMon G] : CommGrp_ C where
-  __ := Grp_.mk' G
-  mul_comm := IsCommMon.mul_comm G
+-- TODO: Make `CommGrp_.toGrp_` an abbrev in mathlib.
+set_option allowUnsafeReducibility true in
+attribute [reducible] CommGrp_.toGrp_
 
-instance (G : CommGrp_ C) : CommGrp_Class G.X where mul_comm' := G.mul_comm
+instance (G : CommGrp_ C) : CommGrp_Class G.X where mul_comm' := G.comm.mul_comm'
 
 section GrpGrp
 

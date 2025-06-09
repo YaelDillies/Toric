@@ -49,11 +49,6 @@ end CategoryTheory.Functor
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
   [Mon_Class N]
 
-lemma Mon_.one_eq_one (M : Mon_ C) : M.one = 1 := Mon_Class.one_eq_one (M := M.X)
-
-lemma Mon_.mul_eq_mul (M : Mon_ C) : M.mul = fst M.X M.X * snd M.X M.X :=
-  Mon_Class.mul_eq_mul (M := M.X)
-
 @[reassoc]
 lemma Mon_Class.comp_pow (f : X ⟶ M) (n : ℕ) (h : Y ⟶ X) : h ≫ f ^ n = (h ≫ f) ^ n := by
   induction n <;> simp [pow_succ, Mon_Class.comp_mul, *]
@@ -86,7 +81,7 @@ abbrev Hom.commMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
 
 scoped[Hom] attribute [instance] Hom.commMonoid
 
-attribute [local simp] mul_eq_mul comp_mul mul_comp one_eq_one Mon_.one_eq_one Mon_.mul_eq_mul
+attribute [local simp] mul_eq_mul comp_mul mul_comp one_eq_one
 
 namespace Mon_
 variable {M N N₁ N₂ : Mon_ C}
@@ -107,19 +102,12 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) wher
 @[simp] lemma fst_hom (M N : Mon_ C) : (fst M N).hom = fst M.X N.X := rfl
 @[simp] lemma snd_hom (M N : Mon_ C) : (snd M N).hom = snd M.X N.X := rfl
 
-@[simp] lemma mul_comm [IsCommMon M.X] : (β_ _ _).hom ≫ M.mul = M.mul := IsCommMon.mul_comm _
-
 /-- A commutative monoid object is a monoid object in the category of monoid objects. -/
 instance [IsCommMon M.X] : Mon_Class M where
   one :=
-    .mk M.one (by simp [Mon_.one_eq_one]) (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom])
-  mul := .mk M.mul (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]) <| by
-    simp only [monMonoidalStruct_tensorObj_X, tensorObj_mul, tensorμ, Category.assoc,
-      tensorHom_def'_assoc, ← associator_inv_naturality_right_assoc,
-      (Iso.inv_comp_eq _).mpr M.mul_assoc, ← MonoidalCategory.whiskerLeft_comp_assoc,
-      ← M.mul_assoc, ← comp_whiskerRight_assoc]
-    simp only [mul_comm, mul_assoc, Iso.inv_hom_id_assoc, MonoidalCategory.whiskerLeft_comp,
-      Category.assoc, tensor_whiskerLeft]
+    .mk η[M.X] (by simp) (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom])
+  mul := .mk μ[M.X] (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]) <| by
+    simp [mul_mul_mul_comm]
   one_mul' := by ext; simp [leftUnitor_hom]
   mul_one' := by ext; simp [rightUnitor_hom]
   mul_assoc' := by ext; simp [_root_.mul_assoc]

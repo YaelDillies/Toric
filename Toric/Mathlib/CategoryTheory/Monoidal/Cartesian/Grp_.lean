@@ -7,6 +7,12 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
+/-!
+# TODO
+
+Deprecate `Grp_.mk'`
+-/
+
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 open scoped Hom
 
@@ -23,7 +29,7 @@ scoped[Obj] attribute [instance] CategoryTheory.Functor.obj.instMon_Class
 open scoped Obj
 
 /-- The image of a group object under a monoidal functor is a group object. -/
-noncomputable abbrev grp_ClassObj : Grp_Class (F.obj G) := (F.mapGrp.obj (.mk' G)).instGrp_ClassX
+noncomputable abbrev grp_ClassObj : Grp_Class (F.obj G) := (F.mapGrp.obj (.mk' G)).grp
 
 scoped[Obj] attribute [instance] CategoryTheory.Functor.grp_ClassObj
 
@@ -39,9 +45,8 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C}
 def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f] :
     Grp_.mk' G ⟶ Grp_.mk' H := Mon_.Hom.mk' f
 
-@[simp] lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) : homMk f.hom = f := rfl
-
-lemma Grp_.inv_eq_inv {G : Grp_ C} : G.inv = (𝟙 G.X)⁻¹ := Grp_Class.inv_eq_inv (G := G.X)
+@[simp] lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) :
+    homMk (G := G.X) (H := H.X) f.hom = f := rfl
 
 @[reassoc]
 lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H] :
@@ -58,8 +63,8 @@ lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι
 lemma Grp_Class.mul_eq_comp_mul {G H : C} {f g : G ⟶ H} [Grp_Class H] : f * g = lift f g ≫ μ := rfl
 
 attribute [local simp] mul_eq_mul Grp_Class.inv_eq_inv comp_mul comp_mul_assoc
-  mul_comp mul_comp_assoc Grp_Class.comp_inv one_eq_one Grp_.inv_eq_inv Mon_.one_eq_one
-  Mon_.mul_eq_mul Grp_Class.div_comp Grp_Class.div_comp_assoc one_comp
+  mul_comp mul_comp_assoc Grp_Class.comp_inv one_eq_one
+  Grp_Class.div_comp Grp_Class.div_comp_assoc one_comp
 
 lemma Grp_Class.mul_inv_rev [BraidedCategory C] {G : C} [Grp_Class G] :
     μ ≫ ι = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by
@@ -115,31 +120,29 @@ end Grp_Class
 
 namespace Grp_
 
-@[simp] lemma mk'_X (G : C) [Grp_Class G] : (mk' G).X = G := rfl
-
 variable [BraidedCategory C] {G H H₁ H₂ : Grp_ C}
 
 @[simps! tensorObj_X tensorHom_hom]
 instance instMonoidalCategoryStruct : MonoidalCategoryStruct (Grp_ C) where
   tensorObj G H := mk' (G.X ⊗ H.X)
   tensorHom := tensorHom (C := Mon_ C)
-  whiskerRight f _ := whiskerRight (C := Mon_ C) f _
-  whiskerLeft _ _ _ := whiskerLeft (C := Mon_ C) _
+  whiskerRight f G := whiskerRight (C := Mon_ C) f G.toMon_
+  whiskerLeft G _ _ f := MonoidalCategoryStruct.whiskerLeft (C := Mon_ C) G.toMon_ f
   tensorUnit := mk' (𝟙_ C)
-  associator _ _ _ := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (associator _ _ _)
-  leftUnitor _ := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (leftUnitor _)
-  rightUnitor _ := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (rightUnitor _)
+  associator X Y Z :=
+    (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (associator X.toMon_ Y.toMon_ Z.toMon_)
+  leftUnitor G := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (leftUnitor G.toMon_)
+  rightUnitor G := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (rightUnitor G.toMon_)
 
 @[simp] lemma tensorUnit_X : (𝟙_ (Grp_ C)).X = 𝟙_ C := rfl
 
-@[simp] lemma tensorUnit_one : (𝟙_ (Grp_ C)).one = 𝟙 (𝟙_ C) := rfl
+@[simp] lemma tensorUnit_one : η[(𝟙_ (Grp_ C)).X] = η[𝟙_ C] := rfl
 
-@[simp] lemma tensorUnit_mul : (𝟙_ (Grp_ C)).mul = (λ_ (𝟙_ C)).hom := rfl
+@[simp] lemma tensorUnit_mul : μ[(𝟙_ (Grp_ C)).X] = μ[𝟙_ C] := rfl
 
-@[simp] lemma tensorObj_one (G H : Grp_ C) : (G ⊗ H).one = (λ_ (𝟙_ C)).inv ≫ (G.one ⊗ H.one) := rfl
+@[simp] lemma tensorObj_one (G H : Grp_ C) : η[(G ⊗ H).X] = η[G.X ⊗ H.X] := rfl
 
-@[simp] lemma tensorObj_mul (G H : Grp_ C) :
-    (G ⊗ H).mul = tensorμ G.X H.X G.X H.X ≫ (G.mul ⊗ H.mul) := rfl
+@[simp] lemma tensorObj_mul (G H : Grp_ C) : μ[(G ⊗ H).X] = μ[G.X ⊗ H.X] := rfl
 
 @[simp] lemma whiskerLeft_hom {G H : Grp_ C} (f : G ⟶ H) (I : Grp_ C) :
     (f ▷ I).hom = f.hom ▷ I.X := rfl
@@ -155,11 +158,6 @@ instance instMonoidalCategoryStruct : MonoidalCategoryStruct (Grp_ C) where
 @[simp] lemma associator_hom_hom (G H I : Grp_ C) : (α_ G H I).hom.hom = (α_ G.X H.X I.X).hom := rfl
 @[simp] lemma associator_inv_hom (G H I : Grp_ C) : (α_ G H I).inv.hom = (α_ G.X H.X I.X).inv := rfl
 
-@[simp] lemma tensor_one (G H : Grp_ C) : (G ⊗ H).one = (λ_ (𝟙_ C)).inv ≫ (G.one ⊗ H.one) := rfl
-
-@[simp] lemma tensor_mul (G H : Grp_ C) :
-    (G ⊗ H).mul = tensorμ G.X H.X G.X H.X ≫ (G.mul ⊗ H.mul) := rfl
-
 instance instMonoidalCategory : MonoidalCategory (Grp_ C) where
   tensorHom_def := by intros; ext; simp [tensorHom_def]
   triangle _ _ := by ext; exact triangle _ _
@@ -172,8 +170,8 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Grp_ C) wher
   tensorProductIsBinaryProduct G H :=
     BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom)
       (by aesop_cat) (by aesop_cat)) (by aesop_cat) (by aesop_cat) (by aesop_cat)
-  fst_def G H := Mon_.ext <| fst_def _ _
-  snd_def G H := Mon_.ext <| snd_def _ _
+  fst_def G H := Mon_.Hom.ext <| fst_def _ _
+  snd_def G H := Mon_.Hom.ext <| snd_def _ _
 
 @[simp] lemma lift_hom (f : G ⟶ H₁) (g : G ⟶ H₂) : (lift f g).hom = lift f.hom g.hom := rfl
 @[simp] lemma fst_hom (G H : Grp_ C) : (fst G H).hom = fst G.X H.X := rfl
@@ -185,6 +183,10 @@ instance instBraided : BraidedCategory (Grp_ C) where braiding G H := Grp_.mkIso
 @[simp] lemma braiding_inv_hom (G H : Grp_ C) : (β_ G H).inv.hom = (β_ G.X H.X).inv := rfl
 
 variable [IsCommMon H.X]
+
+-- TODO: Make `Grp_.toMon_` an abbrev in mathlib.
+set_option allowUnsafeReducibility true in
+attribute [reducible] Grp_.toMon_
 
 namespace Hom
 
@@ -203,7 +205,7 @@ instance : Mon_Class H where
   induction n <;> simp [pow_succ, *]
 
 /-- A commutative group object is a group object in the category of group objects. -/
-instance : Grp_Class H where inv := .mk H.inv
+instance : Grp_Class H where inv := .mk ι[H.X]
 
 instance {f : G ⟶ H} [IsCommMon H.X] : IsMon_Hom f.hom⁻¹ where
 
@@ -249,26 +251,16 @@ protected noncomputable def FullyFaithful.mapGrp (hF : F.FullyFaithful) :
 def _root_.Grp_Class.ofIso {X Y : C} (e : X ≅ Y) [Grp_Class X] : Grp_Class Y where
   __ := Mon_Class.ofIso e
   inv := e.inv ≫ ι[X] ≫ e.hom
-  left_inv' := by simpa [-Grp_Class.left_inv, Mon_Class.ofIso, comp_lift_assoc] using
-    congr(e.inv ≫ $(Grp_Class.left_inv X))
-  right_inv' := by simpa [-Grp_Class.right_inv, Mon_Class.ofIso, comp_lift_assoc] using
-    congr(e.inv ≫ $(Grp_Class.right_inv X))
+  left_inv' := by simp [Mon_Class.ofIso]
+  right_inv' := by simp [Mon_Class.ofIso]
 
-def FullyFaithful.Mon_Class (hF : F.FullyFaithful) (X : C) [Mon_Class (F.obj X)] : Mon_Class X where
-  one := hF.preimage (OplaxMonoidal.η F ≫ η[F.obj X])
-  mul := hF.preimage (OplaxMonoidal.δ F X X ≫ μ[F.obj X])
-  one_mul' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_left_assoc])
-  mul_one' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_right_assoc])
-  mul_assoc' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_left_assoc,
-    ← OplaxMonoidal.δ_natural_right_assoc])
-
-def FullyFaithful.Grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
-  __ := hF.Mon_Class X
+def FullyFaithful.grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
+  __ := hF.mon_Class X
   inv := hF.preimage ι[F.obj X]
   left_inv' := hF.map_injective
-    (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
+    (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
   right_inv' := hF.map_injective
-    (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
+    (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
 
 open EssImageSubcategory Monoidal in
 /-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
@@ -276,13 +268,13 @@ same on group objects as on objects. -/
 @[simp] lemma essImage_mapGrp [F.Full] [F.Faithful] {G : Grp_ D} :
     F.mapGrp.essImage G ↔ F.essImage G.X where
   mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
-  mpr hG := by
-    obtain ⟨G', ⟨e⟩⟩ := hG
+  mpr := by
+    rintro ⟨H, ⟨e⟩⟩
     letI h₁ := Grp_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.Grp_Class (.ofFullyFaithful F) G'
-    refine ⟨.mk' G', ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
-      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.Mon_Class,
-        FullyFaithful.Grp_Class, Grp_.mk', h₁, h₂] <;> rfl
+    letI h₂ := FullyFaithful.grp_Class (.ofFullyFaithful F) H
+    refine ⟨.mk' H, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
+      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class,
+        FullyFaithful.grp_Class, Grp_.mk', h₁, h₂]
 
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 

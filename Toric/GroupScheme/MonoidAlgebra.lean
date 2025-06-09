@@ -14,7 +14,7 @@ import Toric.MonoidAlgebra.TensorProduct
 
 noncomputable section
 
-open CategoryTheory Limits Opposite MonoidalCategory MonoidAlgebra
+open CategoryTheory Limits Opposite MonoidalCategory MonoidAlgebra Mon_Class
 
 attribute [local instance] Functor.Monoidal.ofChosenFiniteProducts
 attribute [local instance] MonoidAlgebra.algebraMonoidAlgebra
@@ -38,8 +38,11 @@ abbrev specCommMonAlgPullbackObjXIso :
 
 private
 lemma specCommMonAlgPullbackObjXIso_one :
-    Mon_.one _ ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom = Mon_.one _ := by
+    η ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom = η := by
   subst H
+  dsimp [AlgHom.toUnder]
+  erw [CategoryTheory.Functor.mapMon_obj_mon_one,
+    CategoryTheory.Functor.mapMon_obj_mon_one] --erw? says nothing
   letI := f.hom.toAlgebra
   have h₁ := counitAlgHom_comp_mapRangeRingHom f.hom (M := M)
   have h₂ := (Bialgebra.counitAlgHom S S[M]).comp_algebraMap
@@ -79,9 +82,12 @@ lemma specCommMonAlgPullbackObjIso_mul_aux :
 set_option maxHeartbeats 0 in
 private
 lemma specCommMonAlgPullbackObjXIso_mul :
-    Mon_.mul _ ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom =
+    μ ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom =
     ((specCommMonAlgPullbackObjXIso M f Sf H).hom ⊗
-      (specCommMonAlgPullbackObjXIso M f Sf H).hom) ≫ Mon_.mul _ := by
+      (specCommMonAlgPullbackObjXIso M f Sf H).hom) ≫ μ := by
+  dsimp [AlgHom.toUnder]
+  -- FIXME: `erw?` says nothing
+  erw [Functor.mapMon_obj_mon_mul, Functor.mapMon_obj_mon_mul]
   subst H
   letI := f.hom.toAlgebra
   have h₃ := comulAlgHom_comp_mapRangeRingHom f.hom (M := M)
