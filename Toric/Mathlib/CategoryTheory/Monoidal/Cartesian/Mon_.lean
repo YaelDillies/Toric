@@ -107,12 +107,7 @@ instance [IsCommMon M.X] : Mon_Class M where
   one :=
     .mk η[M.X] (by simp) (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom])
   mul := .mk μ[M.X] (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]) <| by
-    simp only [monMonoidalStruct_tensorObj_X, tensorObj_mul, tensorμ, ←
-      MonoidalCategory.whiskerLeft_comp_assoc, Category.assoc, tensorHom_def'_assoc, ←
-      associator_inv_naturality_right_assoc, (Iso.inv_comp_eq _).mpr (Mon_Class.mul_assoc M.X), ←
-      Mon_Class.mul_assoc M.X, ← comp_whiskerRight_assoc]
-    simp only [mul_comm, Mon_Class.mul_assoc, Iso.inv_hom_id_assoc,
-      MonoidalCategory.whiskerLeft_comp, Category.assoc, tensor_whiskerLeft]
+    simp [mul_mul_mul_comm]
   one_mul' := by ext; simp [leftUnitor_hom]
   mul_one' := by ext; simp [rightUnitor_hom]
   mul_assoc' := by ext; simp [_root_.mul_assoc]

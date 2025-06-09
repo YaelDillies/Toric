@@ -146,7 +146,7 @@ instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 
 instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
-  ((bialgSpec R).obj <| .op <| .of R A).instMon_ClassX
+  ((bialgSpec R).obj <| .op <| .of R A).mon
 
 lemma μIso_algSpec_inv_left [Algebra R A] :
     (μIso (algSpec R) (op (.of R A)) (op (.of R A))).inv.left = (pullbackSpecIso R A A).inv := rfl
@@ -170,7 +170,7 @@ instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
     have := LaxMonoidal.μ (algSpec R) (.op <| .of R A) (.op <| .of R A)
     have := congr((pullbackSpecIso R A A).hom ≫ ((bialgSpec R).map <| .op <| CommBialgCat.ofHom <|
       $(Bialgebra.comm_comp_comulBialgHom R A)).hom.left)
-    dsimp at this ⊢
+    dsimp [commBialgCatEquivComonCommAlgCat] at this ⊢
     have h₁ : (Algebra.TensorProduct.includeRight : A →ₐ[R] A ⊗[R] A) =
       (RingHomClass.toRingHom (Bialgebra.comm R A A)).comp
         Algebra.TensorProduct.includeLeftRingHom := by ext; rfl
@@ -187,7 +187,7 @@ instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
     · exact mul_left ..
 
 instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class ((Spec A).asOver (Spec R)) :=
-  ((hopfSpec R).obj <| .op <| .of R A).instGrp_ClassX
+  ((hopfSpec R).obj <| .op <| .of R A).grp
 
 instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
    CommGrp_Class ((Spec A).asOver (Spec R)) where
