@@ -1,5 +1,5 @@
 import Mathlib
-import Toric.GroupScheme.Character
+-- import Toric.GroupScheme.Character
 import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 noncomputable section
@@ -111,29 +111,15 @@ lemma U1Ring.counit_def :
     CoalgebraStruct.counit (R := R) (A := U1Ring R) = U1Ring.counitAlgHom (R := R) := rfl
 
 def U1Ring.antipodeAlgHom : U1Ring R →ₐ[R] U1Ring R :=
-  (Ideal.Quotient.liftₐ _
-    (aevalAEval (.mk Polynomial.X) (- .mk Y)) (by
-    show Ideal.span _ ≤ RingHom.ker _
-    simp only [Ideal.span_le, Set.singleton_subset_iff]
-    simp only [SetLike.mem_coe, RingHom.mem_ker, map_sub, map_add, map_pow, aevalAEval_X,
-      aevalAEval_Y, even_two, Even.neg_pow, map_one]
-    rw [← U1Ring.X, ← U1Ring.Y]
-    simp
-    ))
+  U1Ring.liftₐ .X (-.Y) (by simp)
 
 @[simp]
 lemma U1Ring.antipodeAlgHom.apply_X : U1Ring.antipodeAlgHom (R := R) .X = U1Ring.X := by
-  simp [U1Ring.antipodeAlgHom, X]
-  erw [Ideal.Quotient.liftₐ_apply]
-  erw [Ideal.Quotient.lift_mk]
-  simp
+  simp [U1Ring.antipodeAlgHom]
 
 @[simp]
 lemma U1Ring.antipodeAlgHom.apply_Y : U1Ring.antipodeAlgHom (R := R) .Y =  -.Y := by
-  simp [U1Ring.antipodeAlgHom, U1Ring.Y]
-  erw [Ideal.Quotient.liftₐ_apply]
-  erw [Ideal.Quotient.lift_mk]
-  simp
+  simp [U1Ring.antipodeAlgHom]
 
 instance : HopfAlgebra R (U1Ring R) :=
   .ofAlgHom U1Ring.antipodeAlgHom
