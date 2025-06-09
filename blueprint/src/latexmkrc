@@ -2,4 +2,6 @@
 # the pdf version of the blueprint
 $pdf_mode = 1;
 $pdflatex = 'xelatex -synctex=1';
+$pdflatex = 'xelatex -synctex=1';
 @default_files = ('print.tex');
+$out_dir = '../print';

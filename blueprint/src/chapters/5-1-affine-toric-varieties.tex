@@ -18,7 +18,7 @@
   where $T$ is a split torus, $\iota$ is a closed subgroup embedding and $\phi$ is an fpqc homomorphism.
 \end{proposition}
 \begin{proof}
-  \uses{0-full-faithful-diag, 0-torus-spec}
+  \uses{0-full-faithful-diag, 0-diag-spec}
   % \leanok
   Let $M_1=X(T_1), M_2=X(T_2)$. Define $M$ to be the image of the homomorphism $M_2 \to M_1$
   corresponding to $\Phi$ and take $T = D_k(M)$. The homomorphisms $\iota,\phi$ correspond to the
@@ -46,7 +46,7 @@
   If $H \subseteq T$ is an irreducible subgroup, then $H$ is a split torus.
 \end{proposition}
 \begin{proof}
-  \uses{0-full-faithful-diag, 0-torus-spec}
+  \uses{0-full-faithful-diag, 0-diag-spec}
   % \leanok
 
   Let $M = X(T), N=X(H)$. Since $H$ is a closed subscheme $M \to N$ is surjective,
@@ -86,7 +86,7 @@
 
 
 \begin{definition}
-  \label{1-1-3-aff-tor-var}
+  \label{1-1-3-tor-var}
   \uses{0-torus}
   \lean{AlgebraicGeometry.ToricVariety}
   \leanok
@@ -149,7 +149,7 @@
   \uses{0-char-torus}
   % \leanok
 
-  $\Phi_\MCA: T_N \to \Gm^s$ factors through the torus of $Y_\MCA$.
+  $\Phi_\MCA: T_N \to \G_m^s$ factors through the torus of $Y_\MCA$.
   The conclusion follows from looking at the corresponding maps of character lattices.
 \end{proof}
 
@@ -176,7 +176,7 @@
 
 
 \begin{definition}
-  \label{1-1-10-lattice-ideal}
+  \label{1-1-10-lat-ideal}
   \uses{}
   \lean{AddMonoidAlgebra.monoidIdeal}
   \leanok
@@ -189,7 +189,7 @@
 
 \begin{definition}
   \label{1-1-10-toric-ideal}
-  \uses{1-1-10-lattice-ideal}
+  \uses{1-1-10-lat-ideal}
   \lean{AddMonoidAlgebra.IsToricIdeal}
   \leanok
   A {\bf toric ideal} is a prime lattice ideal.
@@ -213,24 +213,24 @@
 
 \begin{proposition}[The spectrum of an affine monoid algebra is an affine toric variety]
   \label{1-1-14-aff-tor-var-spec-aff-mon-alg}
-  \uses{0-aff-mon, 1-1-3-aff-tor-var}
+  \uses{0-aff-mon, 1-1-3-tor-var}
   \lean{AffineToricVarietyFromMonoid.instToricVariety}
   \leanok
 
   If $S$ is an affine monoid, then $\Spec \Bbbk[S]$ is an affine toric variety.
 \end{proposition}
 \begin{proof}
-  \uses{0-aff-mon-alg-domain, 0-full-faithful-grp-alg, 0-torus-spec}
+  \uses{0-aff-mon-alg-domain, 0-full-faithful-grp-alg, 0-diag-spec}
   % \leanok
 
-  Identify the torus with $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Lemma \ref{0-torus-spec}.
+  Identify the torus with $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Lemma \ref{0-diag-spec}.
   $i$ induces a morphism $T \to \Spec \Bbbk[S]$. It's an open embedding as $i$ gives the localization of $\Bbbk[S]$ at $\chi^{a_i}$, so $\im i$ is an affine open. It's dominant as $\Spec \Bbbk[S]$ is integral and so is irreducible, and $\im i$ is open and nonempty, so dense. The torus action is given by the natural restriction of comultiplication on $\Bbbk[x_1^{\pm1}, \dotsc, x_n^{\pm1}]$ using Proposition \ref{0-full-faithful-grp-alg}.
 \end{proof}
 
 
 \begin{proposition}
   \label{1-1-14-spec-aff-mon-alg-eq-ya}
-  \uses{0-aff-mon, 1-1-3-aff-tor-var, 1-1-7-ya}
+  \uses{0-aff-mon, 1-1-3-tor-var, 1-1-7-ya}
   % \lean{}
   % \leanok
 
@@ -294,7 +294,7 @@
 
 \begin{theorem}
   \label{thm:1-1-17}
-  \uses{0-aff-mon, 1-1-3-aff-tor-var, 1-1-7-ya, 1-1-10-lattice-ideal}
+  \uses{0-aff-mon, 1-1-3-tor-var, 1-1-7-ya, 1-1-10-lat-ideal}
   TFAE:
   \begin{enumerate}
     \item $V$ is an affine toric variety.
