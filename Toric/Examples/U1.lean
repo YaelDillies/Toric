@@ -2,6 +2,7 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.MonoidAlgebra
+
 noncomputable section
 
 notation3:max R "[X][Y]" => Polynomial (Polynomial R)
