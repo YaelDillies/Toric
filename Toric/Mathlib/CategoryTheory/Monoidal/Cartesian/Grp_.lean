@@ -254,23 +254,13 @@ def _root_.Grp_Class.ofIso {X Y : C} (e : X ≅ Y) [Grp_Class X] : Grp_Class Y w
   left_inv' := by simp [Mon_Class.ofIso]
   right_inv' := by simp [Mon_Class.ofIso]
 
-def FullyFaithful.Mon_Class (hF : F.FullyFaithful)
-    (X : C) [Mon_Class (F.obj X)] : Mon_Class X where
-  one := hF.preimage (OplaxMonoidal.η F ≫ η[F.obj X])
-  mul := hF.preimage (OplaxMonoidal.δ F X X ≫ μ[F.obj X])
-  one_mul' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_left_assoc])
-  mul_one' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_right_assoc])
-  mul_assoc' := hF.map_injective (by simp [← OplaxMonoidal.δ_natural_left_assoc,
-    ← OplaxMonoidal.δ_natural_right_assoc])
-
-def FullyFaithful.Grp_Class
-    (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
-  __ := hF.Mon_Class X
+def FullyFaithful.grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
+  __ := hF.mon_Class X
   inv := hF.preimage ι[F.obj X]
   left_inv' := hF.map_injective
-    (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
+    (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
   right_inv' := hF.map_injective
-    (by simp [FullyFaithful.Mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
+    (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
 
 open EssImageSubcategory Monoidal in
 /-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
@@ -281,10 +271,10 @@ same on group objects as on objects. -/
   mpr := by
     rintro ⟨H, ⟨e⟩⟩
     letI h₁ := Grp_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.Grp_Class (.ofFullyFaithful F) H
+    letI h₂ := FullyFaithful.grp_Class (.ofFullyFaithful F) H
     refine ⟨.mk' H, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
-      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.Mon_Class,
-        FullyFaithful.Grp_Class, Grp_.mk', h₁, h₂]
+      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class,
+        FullyFaithful.grp_Class, Grp_.mk', h₁, h₂]
 
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 

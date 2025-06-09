@@ -223,9 +223,8 @@ lemma diagHomGrp_comp {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCom
   exact (S.diagFunctor.map_comp ..).symm
 
 set_option maxHeartbeats 0 in
-lemma diagHomGrp_add {M N : Type u} [AddCommGroup M] [AddCommGroup N]
-    (f g : M →+ N) :
-    (diagHomGrp S (f + g)) = diagHomGrp S f + diagHomGrp S g :=
+lemma diagHomGrp_add {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
+    diagHomGrp S (f + g) = diagHomGrp S f + diagHomGrp S g :=
   congr(Additive.ofMul $(diagFunctor_map_add f g))
 
 set_option maxHeartbeats 0 in

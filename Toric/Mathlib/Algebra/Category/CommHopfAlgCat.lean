@@ -9,6 +9,7 @@ import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
+import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 
 /-!
 # The category of commutative Hopf algebras over a commutative ring
@@ -173,36 +174,8 @@ instance reflectsIsomorphisms_forget : (forget (CommHopfAlgCat.{u} R)).ReflectsI
 
 end CommHopfAlgCat
 
-attribute [local ext] Quiver.Hom.unop_inj
 
--- move me
-lemma Algebra.TensorProduct.lmul'_comp_map
-    {R A B C : Type*} [CommSemiring R] [Semiring A] [Semiring B] [CommSemiring C]
-    [Algebra R A] [Algebra R B] [Algebra R C] (f : A →ₐ[R] C) (g : B →ₐ[R] C) :
-    (Algebra.TensorProduct.lmul' R).comp (Algebra.TensorProduct.map f g) =
-    Algebra.TensorProduct.lift f g (fun _ _ ↦ .all _ _) := by
-  ext <;> rfl
-
--- move me
-noncomputable
-abbrev _root_.HopfAlgebra.ofAlgHom {A : Type*} [CommSemiring A] [Bialgebra R A]
-    (antipode : A →ₐ[R] A)
-    (mul_antipode_rTensor_comul :
-      ((Algebra.TensorProduct.lift antipode (.id R A) fun _ _ ↦ .all _ _).comp
-        (Bialgebra.comulAlgHom R A)) = (Algebra.ofId R A).comp (Bialgebra.counitAlgHom R A))
-    (mul_antipode_lTensor_comul :
-      (Algebra.TensorProduct.lift (.id R A) antipode fun _ _ ↦ .all _ _).comp
-        (Bialgebra.comulAlgHom R A) = (Algebra.ofId R A).comp (Bialgebra.counitAlgHom R A)) :
-    HopfAlgebra R A where
-  antipode := antipode
-  mul_antipode_rTensor_comul := by
-    rw [← Algebra.TensorProduct.lmul'_comp_map] at mul_antipode_rTensor_comul
-    exact congr(($mul_antipode_rTensor_comul).toLinearMap)
-  mul_antipode_lTensor_comul := by
-    rw [← Algebra.TensorProduct.lmul'_comp_map] at mul_antipode_lTensor_comul
-    exact congr(($mul_antipode_lTensor_comul).toLinearMap)
-
-instance CommAlgCat.Grp_ClassOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
+instance CommAlgCat.grp_ClassOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
     Grp_Class (Opposite.op <| CommAlgCat.of R A) where
   inv := (CommAlgCat.ofHom <| antipodeAlgHom R A).op
   left_inv' := by
@@ -219,8 +192,6 @@ open Opposite Mon_Class
 @[simp]
 lemma CommAlgCat.inv_op_of_unop_hom {A : Type u} [CommRing A] [HopfAlgebra R A] :
     ι[op <| CommAlgCat.of R A].unop.hom = antipodeAlgHom R A := rfl
-
-open Mon_Class
 
 instance (A : (CommAlgCat R)ᵒᵖ) [Grp_Class A] : HopfAlgebra R A.unop :=
   .ofAlgHom ι[A].unop.hom

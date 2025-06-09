@@ -72,10 +72,10 @@ class IsTorus : Prop where
 instance [IsSplitTorus (Spec (.of k)) G] : IsTorus k G :=
   ⟨⟨k, ‹_›, inferInstance, inferInstance, by
     simp only [Algebra.id.map_eq_id, CommRingCat.ofHom_id]
-    suffices (Spec (CommRingCat.of k)).IsSplitTorus
-        (pullback (G ↘ Spec (CommRingCat.of k)) (𝟙 _)) by
+    suffices (Spec (.of k)).IsSplitTorus
+        (pullback (G ↘ Spec (.of k)) (𝟙 _)) by
       convert this <;> simp
-    exact .of_isIso (pullback.fst (G ↘ (Spec (.of k))) (𝟙 _))⟩⟩
+    exact .of_isIso (pullback.fst (G ↘ Spec (.of k)) (𝟙 _))⟩⟩
 
 lemma IsTorus.of_iso [IsTorus k H]
     (e : Grp_.mk' (asOver G (Spec (.of k))) ≅ .mk' (asOver H (Spec (.of k)))) : IsTorus k G :=

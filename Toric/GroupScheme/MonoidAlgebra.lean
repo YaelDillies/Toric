@@ -38,7 +38,7 @@ abbrev specCommMonAlgPullbackObjXIso :
 
 private
 lemma specCommMonAlgPullbackObjXIso_one :
-    η[_] ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom = η[_] := by
+    η ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom = η := by
   subst H
   dsimp [AlgHom.toUnder]
   erw [CategoryTheory.Functor.mapMon_obj_mon_one,
@@ -82,12 +82,12 @@ lemma specCommMonAlgPullbackObjIso_mul_aux :
 set_option maxHeartbeats 0 in
 private
 lemma specCommMonAlgPullbackObjXIso_mul :
-    μ[_] ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom =
+    μ ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom =
     ((specCommMonAlgPullbackObjXIso M f Sf H).hom ⊗
-      (specCommMonAlgPullbackObjXIso M f Sf H).hom) ≫ μ[_] := by
+      (specCommMonAlgPullbackObjXIso M f Sf H).hom) ≫ μ := by
   dsimp [AlgHom.toUnder]
-  erw [CategoryTheory.Functor.mapMon_obj_mon_mul,
-    CategoryTheory.Functor.mapMon_obj_mon_mul] --erw? says nothing
+  -- FIXME: `erw?` says nothing
+  erw [Functor.mapMon_obj_mon_mul, Functor.mapMon_obj_mon_mul]
   subst H
   letI := f.hom.toAlgebra
   have h₃ := comulAlgHom_comp_mapRangeRingHom f.hom (M := M)

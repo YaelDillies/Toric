@@ -5,6 +5,9 @@ variable {R S A B C D : Type*} [CommSemiring R] [CommSemiring S] [Algebra R S] [
   [Algebra R A] [Algebra S A] [IsScalarTower R S A] [Semiring B] [Algebra R B] [Semiring C]
   [Algebra R C] [Algebra S C] [IsScalarTower R S C] [Semiring D] [Algebra R D]
 
+lemma lmul'_comp_map {C : Type*} [CommSemiring C] [Algebra R C] (f : A →ₐ[R] C) (g : B →ₐ[R] C) :
+    (lmul' R).comp (map f g) = lift f g (fun _ _ ↦ .all _ _) := by ext <;> rfl
+
 lemma algebraMap_def {R S T : Type*}
     [CommSemiring R] [CommSemiring S] [CommSemiring T] [Algebra R S] [Algebra R T] :
   algebraMap S (TensorProduct R S T) = Algebra.TensorProduct.includeLeftRingHom := rfl

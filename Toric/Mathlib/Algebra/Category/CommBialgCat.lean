@@ -15,14 +15,12 @@ This file defines the bundled category `CommBialgCat` of commutative bialgebras 
 commutative ring `R` along with the forgetful functor to `CommAlgCat`.
 -/
 
-open Bialgebra Coalgebra
+open Bialgebra Coalgebra Opposite CategoryTheory Limits Mon_Class
+open scoped MonoidalCategory
 
 noncomputable section
 
 namespace CategoryTheory
-
-open Bialgebra Limits
-open scoped Mon_Class MonoidalCategory
 
 universe v u
 variable {R : Type u} [CommRing R]
@@ -175,11 +173,9 @@ instance reflectsIsomorphisms_forget : (forget (CommBialgCat.{u} R)).ReflectsIso
 
 end CommBialgCat
 
-open Opposite
-
 attribute [local ext] Quiver.Hom.unop_inj
 
-instance CommAlgCat.Mon_ClassOpOf {A : Type u} [CommRing A] [Bialgebra R A] :
+instance CommAlgCat.mon_ClassOpOf {A : Type u} [CommRing A] [Bialgebra R A] :
     Mon_Class (op <| CommAlgCat.of R A) where
   one := (CommAlgCat.ofHom <| counitAlgHom R A).op
   mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
@@ -201,12 +197,6 @@ instance {A : Type u} [CommRing A] [Bialgebra R A] [IsCocomm R A] :
 
 instance {A B : Type u} [CommRing A] [Bialgebra R A] [CommRing B] [Bialgebra R B]
     (f : A →ₐc[R] B) : IsMon_Hom (CommAlgCat.ofHom (f : A →ₐ[R] B)).op where
-  one_hom := by ext; simp [CommAlgCat.Mon_ClassOpOf]
-  mul_hom := by
-    ext
-    simp only [unop_comp, Quiver.Hom.unop_op, CommAlgCat.hom_comp, CommAlgCat.hom_ofHom,
-      CommAlgCat.tensorHom_unop_hom, CommAlgCat.Mon_ClassOpOf]
-    rw [BialgHomClass.map_comp_comulAlgHom]
 
 instance (A : (CommAlgCat R)ᵒᵖ) [Mon_Class A] : Bialgebra R A.unop :=
   .ofAlgHom μ[A].unop.hom η[A].unop.hom
