@@ -102,18 +102,55 @@ instance : Bialgebra R (U1Ring R) := Bialgebra.ofAlgHom U1Ring.comulAlgHom U1Rin
   (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
   (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
 
-instance : HopfAlgebra R (U1Ring R) where
-  antipode := (Ideal.Quotient.liftₐ _
-    (aevalAEval (.mk X) (- .mk Y)) (by
+@[simp]
+lemma U1Ring.comul_def :
+    CoalgebraStruct.comul (R := R) (A := U1Ring R) = U1Ring.comulAlgHom (R := R) := rfl
+
+@[simp]
+lemma U1Ring.counit_def :
+    CoalgebraStruct.counit (R := R) (A := U1Ring R) = U1Ring.counitAlgHom (R := R) := rfl
+
+def U1Ring.antipodeAlgHom : U1Ring R →ₐ[R] U1Ring R :=
+  (Ideal.Quotient.liftₐ _
+    (aevalAEval (.mk Polynomial.X) (- .mk Y)) (by
     show Ideal.span _ ≤ RingHom.ker _
     simp only [Ideal.span_le, Set.singleton_subset_iff]
     simp only [SetLike.mem_coe, RingHom.mem_ker, map_sub, map_add, map_pow, aevalAEval_X,
       aevalAEval_Y, even_two, Even.neg_pow, map_one]
     rw [← U1Ring.X, ← U1Ring.Y]
     simp
-    )).toLinearMap
-  mul_antipode_rTensor_comul := sorry
-  mul_antipode_lTensor_comul := sorry
+    ))
+
+@[simp]
+lemma U1Ring.antipodeAlgHom.apply_X : U1Ring.antipodeAlgHom (R := R) .X = U1Ring.X := by
+  simp [U1Ring.antipodeAlgHom, X]
+  erw [Ideal.Quotient.liftₐ_apply]
+  erw [Ideal.Quotient.lift_mk]
+  simp
+
+@[simp]
+lemma U1Ring.antipodeAlgHom.apply_Y : U1Ring.antipodeAlgHom (R := R) .Y =  -.Y := by
+  simp [U1Ring.antipodeAlgHom, U1Ring.Y]
+  erw [Ideal.Quotient.liftₐ_apply]
+  erw [Ideal.Quotient.lift_mk]
+  simp
+
+instance : HopfAlgebra R (U1Ring R) :=
+  .ofAlgHom U1Ring.antipodeAlgHom
+  (by
+    ext
+    · simp
+      ring_nf
+      exact U1relation
+    simp
+    ring_nf)
+  (by
+    ext
+    · simp
+      ring_nf
+      exact U1relation
+    simp
+    ring_nf)
 
 def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
   __ := ((MonoidAlgebra.liftGroupLikeBialgHom _ _).comp
