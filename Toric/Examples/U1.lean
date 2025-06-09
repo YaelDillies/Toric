@@ -177,12 +177,12 @@ def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1
         simp
         ring)⟩))
       AddEquiv.finsuppUnique.toAddMonoidHom))))
-  invFun := Ideal.Quotient.liftₐ _ (aevalAEval
+  invFun := U1Ring.liftₐ
     ((1 / 2 : ℂ) • (.single (.single .unit 1) 1 - .single (.single .unit (-1)) 1))
-    (- (.I / 2 : ℂ) • (.single (.single .unit 1) 1 + .single (.single .unit (-1)) 1))) (by
-    show Ideal.span _ ≤ RingHom.ker _
-    simp only [Ideal.span_le, Set.singleton_subset_iff]
-    sorry)
+    (- (.I / 2 : ℂ) • (.single (.single .unit 1) 1 + .single (.single .unit (-1)) 1))
+    (by
+      simp
+      sorry)
   left_inv := sorry
   right_inv := sorry
 
