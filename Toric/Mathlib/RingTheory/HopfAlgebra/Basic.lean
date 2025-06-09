@@ -39,26 +39,3 @@ lemma antipode_counit (a : A) : counit (R := R) (antipode R a) = counit (R := R)
   exact this
 
 end HopfAlgebra
-
-namespace HopfAlgebra
-variable {R A : Type*} [CommSemiring R] [CommSemiring A] [Bialgebra R A]
-
-noncomputable
-abbrev _root_.HopfAlgebra.ofAlgHom
-    (antipode : A →ₐ[R] A)
-    (mul_antipode_rTensor_comul :
-      (Algebra.TensorProduct.lmul' R (S := A)).comp
-        ((Algebra.TensorProduct.rTensor A antipode).comp
-          (comulAlgHom R A)) = (Algebra.ofId R A).comp (Bialgebra.counitAlgHom R A))
-    (mul_antipode_lTensor_comul :
-      (Algebra.TensorProduct.lmul' R (S := A)).comp
-        ((Algebra.TensorProduct.lTensor A antipode).comp
-          (comulAlgHom R A)) = (Algebra.ofId R A).comp (Bialgebra.counitAlgHom R A)) :
-    HopfAlgebra R A where
-  antipode := antipode
-  mul_antipode_rTensor_comul := by
-    exact congr(($mul_antipode_rTensor_comul).toLinearMap)
-  mul_antipode_lTensor_comul := by
-    exact congr(($mul_antipode_lTensor_comul).toLinearMap)
-
-end HopfAlgebra

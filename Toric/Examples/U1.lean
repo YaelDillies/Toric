@@ -1,7 +1,7 @@
-import Mathlib
--- import Toric.GroupScheme.Character
-import Toric.Mathlib.RingTheory.TensorProduct.Basic
-
+import Mathlib.Data.Complex.Basic
+import Mathlib.LinearAlgebra.UnitaryGroup
+import Toric.GroupScheme.HopfAffine
+import Toric.Hopf.MonoidAlgebra
 noncomputable section
 
 notation3:max R "[X][Y]" => Polynomial (Polynomial R)
@@ -38,6 +38,12 @@ def U1Ring.mk : R[X][Y] →ₐ[R] U1Ring R := Ideal.Quotient.mkₐ R _
 
 nonrec def U1Ring.X : U1Ring R := .mk X
 nonrec def U1Ring.Y : U1Ring R := .mk Y
+
+@[simp]
+lemma U1Ring.X_def : .mk Polynomial.X = U1Ring.X (R := R) := rfl
+
+@[simp]
+lemma U1Ring.Y_def : .mk Y = U1Ring.Y (R := R) := rfl
 
 def U1Ring.liftₐ (x y : S) (H : x ^ 2 + y ^ 2 = 1) : U1Ring R →ₐ[R] S :=
   Ideal.Quotient.liftₐ _ (aevalAEval x y)
@@ -138,12 +144,37 @@ instance : HopfAlgebra R (U1Ring R) :=
     simp
     ring_nf)
 
+private lemma foo : (U1Ring.X (R := ℂ))  ^ 2 - (Complex.I • U1Ring.Y) ^ 2 = 1 := calc
+  _ = .X ^ 2 - (Complex.I • .Y) * (Complex.I • .Y) := by ring
+  _ = .X ^ 2 - (Complex.I) ^ 2 • .Y ^ 2 := by
+    rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
+    ring_nf
+  _ = _ := by simp
+
 def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
   __ := ((MonoidAlgebra.liftGroupLikeBialgHom _ _).comp
     (MonoidAlgebra.mapDomainBialgHom ℂ (M := Multiplicative (Unit →₀ ℤ))
     (AddMonoidHom.toMultiplicative'' (.comp (zmultiplesHom _
       (.ofMul ⟨.mkOfMulEqOne (α := U1Ring ℂ)
-      (.mk X + Complex.I • .mk Y) (.mk X - Complex.I • .mk Y) (by sorry), (by sorry)⟩))
+      (.mk Polynomial.X + Complex.I • .mk Y) (.mk Polynomial.X - Complex.I • .mk Y)
+      (by ring_nf; simp [foo]), (by
+        simp
+        constructor
+        · rw [isUnit_iff_exists]
+          use mk Polynomial.X - Complex.I • mk Y
+          constructor
+          · simp
+            ring_nf
+            exact foo
+          simp
+          ring_nf
+          exact foo
+        simp [sub_tmul, tmul_sub, tmul_add, add_tmul]
+        ring_nf
+        simp only [← smul_tmul']
+        rw [smul_smul]
+        simp
+        ring)⟩))
       AddEquiv.finsuppUnique.toAddMonoidHom))))
   invFun := Ideal.Quotient.liftₐ _ (aevalAEval
     ((1 / 2 : ℂ) • (.single (.single .unit 1) 1 - .single (.single .unit (-1)) 1))
@@ -166,5 +197,5 @@ open scoped Hom
 local notation "Spec(R)" => (Spec (CommRingCat.of R))
 local notation "SO₂(R)" => (Spec (CommRingCat.of (U1Ring R)))
 
-def foo : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
+def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
     Matrix.specialOrthogonalGroup (Fin 2) R := sorry
