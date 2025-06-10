@@ -1,16 +1,10 @@
 /-
-Copyright (c) 2025 Andrew Yang. All rights reserved.
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Andrew Yang
+Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.Algebra.Category.Grp.Adjunctions
-import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
-import Mathlib.Algebra.Category.Ring.Adjunctions
-import Mathlib.AlgebraicGeometry.Limits
-import Toric.GroupScheme.HopfAffine
-import Toric.Mathlib.Algebra.Category.Grp.Basic
-import Toric.Mathlib.Algebra.Category.MonCat.Basic
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
+import Mathlib.FieldTheory.Separable
+import Toric.GroupScheme.Diagonalizable
 import Toric.MvLaurentPolynomial
 
 /-!
@@ -25,89 +19,110 @@ open CategoryTheory Opposite Limits
 
 namespace AlgebraicGeometry.Scheme
 
-def DiagInt (M : Type*) [CommMonoid M] : Scheme := Spec (.of (MonoidAlgebra (ULift ℤ) M))
+universe u v
 
-def DiagInt.representableBy (M : Type*) [CommMonoid M] :
-    (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-      CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget _).RepresentableBy
-      (DiagInt M) :=
-  letI e : opOp CommMonCat ⋙ yoneda.obj (op (.of M)) ≅ CommMonCat.coyoneda.obj _ ⋙ forget _ :=
-    Coyoneda.opIso.app (op _) ≪≫ CommMonCat.coyonedaForget.symm.app (op (.of M))
-  letI e' := isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat) e
-  ((ΓSpec.adjunction.comp (CommRingCat.forget₂Adj CommRingCat.isInitial).op).representableBy
-    (op (.of M))).ofIso e'
+section IsSplitTorus
+variable {S G H : Scheme.{u}} [G.Over S] [H.Over S] [Grp_Class (asOver G S)]
+  [Grp_Class (asOver H S)]
 
-instance (M : Type*) [CommMonoid M] : Mon_Class (DiagInt M) :=
-  Mon_Class.ofRepresentableBy _ (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-    CommMonCat.coyoneda.obj (op (.of M)) ⋙ forget₂ _ _) (DiagInt.representableBy M)
+variable (S G) in
+@[mk_iff]
+class IsSplitTorus : Prop where
+  existsIso :
+    ∃ (A : Type u) (_ : AddCommGroup A) (_ : Module.Free ℤ A),
+      Nonempty <| Grp_.mk' (asOver G S) ≅ .mk' (asOver (Diag S A) S)
 
-def TorusInt (σ : Type*) : Scheme := DiagInt (Multiplicative (FreeAbelianGroup σ))
+instance {A : Type u} [AddCommGroup A] [Module.Free ℤ A] : IsSplitTorus S (Diag S A) :=
+  ⟨A, ‹_›, ‹_›, ⟨by exact .refl _⟩⟩
 
-def TorusInt.representableBy (σ : Type*) :
-    (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
-      CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
-        (TorusInt σ) :=
-  ((ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
-    CommGrp.forget₂CommMonAdj.op.comp <|
-      commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
-        AddCommGrp.adj.op).representableBy (op σ)).ofIso <|
-    isoWhiskerLeft (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙ forget CommGrp)
-      (Coyoneda.opIso.app _)
+lemma IsSplitTorus.of_iso [IsSplitTorus S H]
+    (e : Grp_.mk' (asOver G S) ≅ .mk' (asOver H S)) : IsSplitTorus S G :=
+  let ⟨A, _, _, ⟨e'⟩⟩ := ‹IsSplitTorus S H›; ⟨A, _, ‹_›, ⟨e.trans e'⟩⟩
 
-instance (σ : Type*) : CommGrp_Class (TorusInt σ) :=
-  .ofRepresentableBy _
-    (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙ CommGrp.coyonedaRight.obj (op σ))
-      (TorusInt.representableBy σ)
+instance  (f : G ⟶ H) [IsIso f] [f.IsOver S] : IsIso (f.asOver S) :=
+  have : IsIso ((Over.forget S).map (Hom.asOver f S)) := ‹_›
+  isIso_of_reflects_iso _ (Over.forget _)
 
-attribute [local instance] Functor.Braided.ofChosenFiniteProducts in
-def CommGrp_Torus (S : Scheme) (σ : Type*) : CommGrp_ (Over S) :=
-  ((Over.equivalenceOfIsTerminal terminalIsTerminal).inverse ⋙
-    Over.pullback (terminal.from _)).mapCommGrp.obj
-      (.mk' (TorusInt σ))
+lemma IsSplitTorus.of_isIso [IsSplitTorus S H]
+    (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : IsSplitTorus S G :=
+  have : IsMon_Hom (asIso (Hom.asOver f S)).hom := ‹_›
+  .of_iso (H := H) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
+    (Mon_.mkIso' (asIso (f.asOver S))))
+
+lemma IsSplitTorus.of_isIso' [IsSplitTorus S G]
+    (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : IsSplitTorus S H :=
+  have : IsMon_Hom (asIso (Hom.asOver f S)).hom := ‹_›
+  .of_iso (H := G) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
+    (.symm <| Mon_.mkIso' (asIso (f.asOver S))))
+
+end IsSplitTorus
+
+section IsTorus
+variable {k : Type u} [Field k] {G H : Scheme.{u}} [G.Over (Spec (.of k))] [H.Over (Spec (.of k))]
+  [Grp_Class (asOver G (Spec (.of k)))] [Grp_Class (asOver H (Spec (.of k)))]
+
+variable (k G) in
+@[mk_iff]
+class IsTorus : Prop where
+  existsSplit :
+    ∃ (L : Type u) (_ : Field L) (_ : Algebra k L) (_ : Algebra.IsSeparable k L),
+      IsSplitTorus (Spec (.of L)) <|
+        pullback (G ↘ Spec (.of k)) (Spec.map (CommRingCat.ofHom <| algebraMap k L))
+
+instance [IsSplitTorus (Spec (.of k)) G] : IsTorus k G :=
+  ⟨⟨k, ‹_›, inferInstance, inferInstance, by
+    simp only [Algebra.id.map_eq_id, CommRingCat.ofHom_id]
+    suffices (Spec (.of k)).IsSplitTorus
+        (pullback (G ↘ Spec (.of k)) (𝟙 _)) by
+      convert this <;> simp
+    exact .of_isIso (pullback.fst (G ↘ Spec (.of k)) (𝟙 _))⟩⟩
+
+lemma IsTorus.of_iso [IsTorus k H]
+    (e : Grp_.mk' (asOver G (Spec (.of k))) ≅ .mk' (asOver H (Spec (.of k)))) : IsTorus k G :=
+  let ⟨L, _, _, _, hH⟩ := ‹IsTorus k H›; ⟨L, _, ‹_›, ‹_›,
+    have e := (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap k L)))).mapGrp.mapIso e
+    .of_iso (H := (pullback (H ↘ Spec (.of k))
+      (Spec.map (CommRingCat.ofHom <| algebraMap k L)))) (by convert e using 1)⟩
+
+lemma IsTorus.of_isIso [IsTorus k H]
+    (f : G ⟶ H) [IsIso f] [f.IsOver (Spec (.of k))] [IsMon_Hom (f.asOver (Spec (.of k)))] :
+    IsTorus k G :=
+  have : IsMon_Hom (asIso (Hom.asOver f (Spec (.of k)))).hom := ‹_›
+  .of_iso (H := H) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
+    (Mon_.mkIso' (asIso (f.asOver (Spec (.of k))))))
+
+end IsTorus
 
 /-- The (split) algebraic torus over `S` indexed by `σ`. -/
-def splitTorus (S : Scheme) (σ : Type*) : Scheme := (CommGrp_Torus S σ).X.left
+abbrev SplitTorus (S : Scheme) (σ : Type u) : Scheme.{u} := Diag S <| FreeAbelianGroup σ
 
-@[inherit_doc splitTorus]
-notation3 "𝔾ₘ[" S ", " σ "]" => splitTorus S σ
+@[inherit_doc SplitTorus]
+notation3 "𝔾ₘ[" S ", " σ "]" => SplitTorus S σ
 
-/-- The (split) algebraic circle over `S`. -/
-notation3 "𝔾ₘ["S"]" => splitTorus S PUnit
+/-- The multiplicative group over `S`. -/
+notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 
-/-- The split torus over a general base is defined by base-changing the torus over `ℤ`. -/
-example (S : Scheme) (σ : Type*) :
-    splitTorus S σ = pullback (terminal.from (TorusInt σ)) (terminal.from S) := rfl
+-- def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
+--     ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
+--       CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
+--       (𝔾ₘ[S, σ].asOver S) :=
+--   ((((Over.mapPullbackAdj (terminal.from S)).comp
+--     (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
+--     (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
+--       CommGrp.forget₂CommMonAdj.op.comp <|
+--         commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
+--           AddCommGrp.adj.op)).representableBy (op σ)).ofIso <|
+--     isoWhiskerRight (NatIso.op (Over.forgetMapTerminal _ _))
+--       (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
+--         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
+--         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
+--           CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
 
-instance splitTorus.instCanonicallyOver (S : Scheme) (σ : Type*) :
-    (splitTorus S σ).CanonicallyOver S where
-  hom := (CommGrp_Torus S σ).X.hom
+variable {R : CommRingCat} {σ : Type*}
 
-instance (S : Scheme) (σ : Type*) : CommGrp_Class (asOver (splitTorus S σ) S) :=
-  inferInstanceAs (CommGrp_Class (CommGrp_Torus S σ).X)
-
-def splitTorus.representableBy (S : Scheme) (σ : Type*) :
-    ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
-      CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
-      (Over.mk (splitTorus S σ ↘ S)) :=
-  ((((Over.mapPullbackAdj (terminal.from S)).comp
-    (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
-    (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
-      CommGrp.forget₂CommMonAdj.op.comp <|
-        commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
-          AddCommGrp.adj.op)).representableBy (op σ)).ofIso <|
-    isoWhiskerRight (NatIso.op (Over.forgetMapTerminal _ _))
-      (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-        CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
-        (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
-          CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
-
+variable (R σ) in
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-def splitTorusIsoSpec (R : CommRingCat) (σ : Type*) :
-    splitTorus (Spec R) σ ≅ Spec (.of <| MvLaurentPolynomial σ R) := sorry
-
-/-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-def splitTorusIsoSpecOver (R : CommRingCat) (σ : Type*) :
-    asOver 𝔾ₘ[Spec R, σ] (Spec R) ≅ asOver (Spec <| .of <| MvLaurentPolynomial σ R) (Spec R) :=
-  Over.isoMk (splitTorusIsoSpec _ _) sorry
+abbrev splitTorusIso (R : CommRingCat) (σ : Type*) :
+    𝔾ₘ[Spec R, σ] ≅ Spec (.of <| MvLaurentPolynomial σ R) := diagSpecIso _ _
 
 end AlgebraicGeometry.Scheme

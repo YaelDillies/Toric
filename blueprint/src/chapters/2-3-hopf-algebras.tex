@@ -1,0 +1,335 @@
+\section{Hopf algebras}
+
+
+\subsection{Group-like elements}
+
+
+\begin{definition}[Group-like elements]
+  \label{0-grp-like}
+  \uses{}
+  \lean{Bialgebra.IsGroupLikeElem}
+  \leanok
+
+  An element $a$ of a bialgebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$,
+  where $\Delta$ is the comultiplication map.
+
+  We write $\GrpLike A$ for the set of group-like elements of $A$.
+\end{definition}
+
+
+\begin{lemma}[The image of a group-like element by the counit is $1$]
+  \label{0-grp-like-counit}
+  \uses{0-grp-like}
+  \lean{Bialgebra.IsGroupLikeElem.counit_eq_one}
+  \leanok
+
+  If $A$ is a bialgebra, then the counit of $A$ sends every group-like element of
+  $A$ to $1$.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Let $\Delta$ be the comultiplication map and $\epsilon$ be the counit map.
+  Let $a$ be a group-like element of $A$.
+  Using the coalgebra axioms and the fact that $\Delta(x) = x\otimes x$, we get:
+  \[x \otimes 1 = (\mathbf{1}_A\otimes\epsilon)(\Delta(x))= x \otimes\epsilon(x).\]
+  As $x$ is invertible, this implies that $1\otimes 1 = 1\otimes\epsilon(x)$ in
+  $R\otimes_R A$. But the algebra map from $R$ to $A$ is injective because $A$
+  is a bialgebra (hence the counit is a left inverse of this map), so $1=\epsilon(x)$.
+\end{proof}
+
+
+\begin{proposition}[Group-like elements form a group]
+  \label{0-grp-like-grp}
+  \uses{0-grp-like}
+  \lean{Bialgebra.GroupLike.instGroup, Bialgebra.GroupLike.instCommGroup}
+  \leanok
+
+  Group-like elements $\GrpLike A$ of a bialgebra $A$ form a group under multiplication.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Check that group-like elements are closed under unit, multiplication and inverses.
+\end{proof}
+
+
+\begin{lemma}[Bialgebra homs preserve group-like elements]
+  \label{0-grp-like-map}
+  \uses{0-grp-like}
+  \lean{Bialgebra.IsGroupLikeElem.map}
+  \leanok
+
+  Let $f : A \to B$ be a bi-algebra hom. If $a \in A$ is group-like, then $f(a)$ is group-like too.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  $a$ is a unit, so $f(a)$ is a unit too. Then
+  \[
+    f(a) \ox f(a) = (f \ox f)(\Delta_A(a)) = \Delta_B(f(a))
+  \]
+  so $f(a)$ is group-like.
+\end{proof}
+
+
+\begin{lemma}
+  \label{0-grp-like-grp-alg-of}
+  \uses{0-grp-like}
+  \lean{MonoidAlgebra.isGroupLikeElem_of}
+  \leanok
+
+  If $R$ is a commutative semiring, $A$ is a Hopf algebra over $R$ and
+  $G$ is a group, then every element of the image of $G$ in $A[G]$ is group-like.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  This is an easy check.
+\end{proof}
+
+
+\begin{lemma}
+  \label{0-grp-like-grp-alg-span}
+  \uses{0-grp-like}
+  \lean{MonoidAlgebra.span_isGroupLikeElem}
+  \leanok
+
+  If $R$ is a commutative semiring, $A$ is a Hopf algebra over $R$ and
+  $G$ is a group, then the group-like elements in $A[G]$ span $A[G]$ as
+  an $A$-module.
+
+\end{lemma}
+\begin{proof}
+  \uses{0-grp-like-grp-alg-of}
+  \leanok
+
+  This follows immediately from \ref{0-grp-like-grp-alg-of}.
+\end{proof}
+
+
+\begin{lemma}[Independence of group-like elements]
+  \label{0-grp-like-lin-indep}
+  \uses{0-grp-like}
+  \lean{Coalgebra.linearIndepOn_isGroupLikeElem}
+  \leanok
+
+  The group-like elements in a bialgebra $A$ over a domain are linearly independent.
+\end{lemma}
+\begin{proof}
+  \uses{0-tensor-lin-indep}
+  \leanok
+
+  Let's prove that any finite set $s$ of group-like elements is linearly independent, by induction on $s$.
+
+  $\emptyset$ is clearly linearly independent.
+
+  Assume now that the finite set $s$ of group-like elements is linearly independent, that $a \notin s$ is group-like, and let's show that $s \cup \{a\}$ is linearly independent too.
+
+  Assume there is some $c : A \to R$ such that $\sum_{x \in s} c_x x = c_a a$.
+  Since $a$ and all elements of $s$ are group-like, we compute
+  \begin{align*}
+    \sum_{x, y \in s} c_x c_y x \otimes y
+    & = c_a ^ 2 a \otimes a \\
+    & = c_a ^ 2 \Delta(a) \\
+    & = c_a \Delta\left(\sum_{x \in s} c_x x\right) \\
+    & = \sum_{x \in s} c_a c_x \Delta(x) \\
+    & = \sum_{x \in s} c_a c_x x \otimes x
+  \end{align*}
+  By Lemma \ref{0-tensor-lin-indep}, the $x \otimes y$ are linearly independent and therefore $c_x ^ 2 = c_a c_x$ and $c_x c_y = 0$ if $x \ne y$.
+
+  If $c_x = 0$ for all $x \in s$, then we are clearly done.
+  Else find $x \in s$ such that $c_x \ne 0$.
+  From the above two equations, we get that $c_x = c_a$ and $c_y = 0$ for all $y \in s, y \ne x$.
+  Therefore
+  \[c_x x = \sum_{y \in s} c_y y = c_a a = c_x a\]
+  and $x = a$.
+  Contradiction.
+\end{proof}
+
+
+\begin{lemma}[Group-like elements in a group algebra]
+  \label{0-grp-like-grp-alg}
+  \uses{0-grp-like}
+  \lean{MonoidAlgebra.isGroupLikeElem_iff_mem_range_of}
+  \leanok
+
+  Let $R$ be a domain.
+  The group-like elements of $R[M]$ are exactly the image of $M$.
+\end{lemma}
+\begin{proof}
+  \uses{0-grp-like-lin-indep}
+  \leanok
+
+  See Lemma 12.4 in \cite{Milne_2017}.
+\end{proof}
+
+
+\subsection{Diagonalizable bialgebras}
+
+
+\begin{definition}[Diagonalizable bialgebras]
+  \label{0-is-diag-bialg}
+  \uses{}
+  \lean{Bialgebra.IsDiagonalisable}
+  \leanok
+
+  A bialgebra is called diagonalizable if it is isomorphic to a group algebra.
+\end{definition}
+
+
+\begin{lemma}
+  \label{0-is-diag-bialg-group-like-span}
+  \uses{0-is-diag-bialg, 0-grp-like}
+  \lean{Bialgebra.span_isGroupLikeElem_eq_top_of_isDiagonalisable}
+  \leanok
+
+  A diagonalizable bialgebra is spanned by its group-like elements.
+\end{lemma}
+\begin{proof}
+  \uses{0-grp-like-grp-alg-span}
+  \leanok
+
+  This is true for a group algebra by \ref{0-grp-like-grp-alg-span}, and the
+  property of being spanned by its group-like elements is preserves by
+  isomorphisms of bialgebras.
+\end{proof}
+
+
+\begin{proposition}
+  \label{0-bialg-bij-of-span-grp-like}
+  \uses{0-is-diag-bialg, 0-grp-like-grp}
+  \lean{Bialgebra.liftGroupLikeBialgHom_bijective_of_span_isGroupLikeElem_eq_top}
+  \leanok
+
+  Let $A$ be a bialgebra over a domain $R$, and let $G$ be the set of group-like
+  elements of $A$ (which is a group by \ref{0-grp-like-grp}). If $A$ is generated
+  by $G$, then the unique bialgebra morphism from $R[G]$ to $A$ sending each
+  element of $G$ to itself is bijective.
+\end{proposition}
+\begin{proof}
+  \uses{0-grp-like-lin-indep}
+  \leanok
+
+  This morphism is injective by the linear independence of group-like elements
+  (\ref{0-grp-like-lin-indep}), and surjective because the group-like elements
+  of $A$ span $A$ by assumption.
+\end{proof}
+
+
+\begin{corollary}
+  \label{0-is-diag-bialg-iff-span-group-like}
+  \uses{0-is-diag-bialg, 0-grp-like}
+  \lean{Bialgebra.isDiagonalisable.iff_span_isGroupLikeElem_eq_top}
+  \leanok
+
+  A bialgebra over a domain is diagonalizable if and only if it is spanned by its
+  group-like elements.
+\end{corollary}
+\begin{proof}
+  \uses{0-is-diag-bialg-group-like-span, 0-bialg-bij-of-span-grp-like}
+  \leanok
+
+  We know that a diagonalizable bialgebra is spanned by its group-like elements
+  by \ref{0-is-diag-bialg-group-like-span}, and that a bialgebra over a domain
+  that is spanned by its group-like elements is diagonalizable by
+  \ref{0-bialg-bij-of-span-grp-like} (and by the fact that a bijective morphism
+  of bialgebras is an isomorphism).
+\end{proof}
+
+Proposition \ref{0-bialg-bij-of-span-grp-like} and Corollary \ref{0-is-diag-iff-grp-like-span} are false over a general commutative ring.
+Indeed, let $R$ be a commutative ring and let $G$ be a group.
+Then the group-like elements of $R[G]$ correspond to locally constant maps from $Spec R$ to $G$ (with the discrete topology),
+hence they are of the form $e_1 g_1+\cdots+e_r g_r$, with the $g_i$ in $G$ and $e_1,\ldots,e_r$ a family of pairwise orthogonal idempotent elements of $R$ that sum to $1$.
+So $R[G]$ is not isomorphic to the group algebra over its group-like elements unless $Spec R$ is connected.
+As for the corollary, a bialgebra of the form $R_1[G_1]\times\cdots\times R_n[G_n]$,
+seen as a bialgebra over $R_1\times\cdots\times R_n$,
+is generated by its group-like elements but not diagonalizable.
+
+
+\subsection{The group algebra functor}
+
+
+\begin{proposition}[The antipode is a antihomomorphism]
+  \label{0-antipode-mul}
+  \uses{}
+  \lean{HopfAlgebra.antipode_mul_antidistrib, HopfAlgebra.antipode_mul_distrib}
+  \leanok
+
+  If $A$ is a $R$-Hopf algebra, then the antipode map $s : A \to A$ is anti-commutative, ie $s(a * b) = s(b) * s(a)$. If further $A$ is commutative, then $s(a * b) = s(a) * s(b)$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Any standard reference will have a proof.
+\end{proof}
+
+
+\begin{proposition}[Bialgebras are comonoid objects in the category of algebras]
+  \label{0-bialg-equiv-comon-alg}
+  \uses{}
+  \lean{commBialgCatEquivComonCommAlg}
+  \leanok
+
+  The category of $R$-bialgebras is equivalent to comonoid objects in the category of $R$-algebras.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Turn the arrows around.
+\end{proof}
+
+
+\begin{proposition}[Hopf algebras are cogroup objects in the category of algebras]
+  \label{0-hopf-alg-equiv-cogrp-alg}
+  \uses{}
+  \lean{commHopfAlgCatEquivCogrpCommAlg}
+  \leanok
+
+  The category of $R$-Hopf algebras is equivalent to cogroup objects in the category of $R$-algebras.
+\end{proposition}
+\begin{proof}
+  \uses{0-bialg-equiv-comon-alg, 0-antipode-mul}
+  \leanok
+
+  Turn the arrows around.
+  Most of the diagrams have been turned around in Proposition \ref{0-bialg-equiv-comon-alg} already.
+\end{proof}
+
+
+\begin{definition}[The group algebra functor]
+  \label{0-grp-alg}
+  \uses{}
+  \lean{commGrpAlg}
+  \leanok
+
+  For a commutative ring $R$, we have a functor $G \rightsquigarrow R[G] : \Grp \to \Hopf_R$.
+\end{definition}
+
+
+\begin{proposition}[The group algebra functor is fully faithful]
+  \label{0-full-faithful-grp-alg}
+  \uses{0-grp-alg}
+  \lean{MonoidAlgebra.mapDomainBialgHomMulEquiv, AddMonoidAlgebra.mapDomainBialgHomMulEquiv, commGrpAlg.fullyFaithful, commGrpAlg.instFull, commGrpAlg.instFaithful}
+  \leanok
+
+  Let $R$ be a domain.
+  The functor $G \rightsquigarrow R[G]$ from the category of groups to the category of Hopf algebras over $R$ is fully faithful.
+\end{proposition}
+\begin{proof}
+  \uses{0-grp-like-grp-alg, 0-grp-like-map}
+  \leanok
+
+  The functor is clearly faithful.
+  Now for the full part, if $f : R[G] \to R[H]$ is a Hopf algebra hom, then we get a series of maps
+  \[
+    G \simeq \text{ group-like elements of } R[G] \to \text{ group-like elements of } R[H] \simeq H
+  \]
+  and each map separately is clearly multiplicative.
+\end{proof}

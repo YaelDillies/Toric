@@ -3,20 +3,23 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.Algebra.Category.CommAlgCat.Basic
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
-import Toric.Mathlib.Algebra.Category.CommAlgCat.Basic
 
 /-!
 # The cocartesian monoidal category structure on commutative `R`-algebras
+
+This file provides the cocartesian-monoidal category structure on `CommAlgCat R` constructed
+explicitly using the tensor product.
 -/
+
+open CategoryTheory CartesianMonoidalCategory Limits TensorProduct
 
 noncomputable section
 
 namespace CategoryTheory.CommAlgCat
-
-open Limits TensorProduct
 universe u v
-variable {R : Type u} [CommRing R] {A B C : CommAlgCat.{u} R}
+variable {R : Type u} [CommRing R] {A B : CommAlgCat.{u} R}
 
 variable (A B) in
 /-- The explicit cocone with tensor products as the fibered product in `CommAlgCat`. -/
@@ -47,6 +50,7 @@ def binaryCofanIsColimit : IsColimit (binaryCofan A B) :=
       refine Algebra.TensorProduct.liftEquiv.symm_apply_eq (y := ⟨⟨_, _⟩, fun _ _ ↦ .all _ _⟩).mp ?_
       exact Subtype.ext (Prod.ext congr(($hm₁).hom) congr(($hm₂).hom)))
 
+/-- The initial object of `CommAlgCat R` is `R` as an algebra over itself -/
 def isInitialSelf : IsInitial (of R R) := .ofUniqueHom (fun A ↦ ofHom (Algebra.ofId R A))
   fun _ _ ↦ hom_ext (Algebra.ext_id _ _ _)
 
@@ -60,7 +64,7 @@ instance : MonoidalCategory (CommAlgCat.{u} R)ᵒᵖ where
   whiskerRight {S₁ S₂} f T := .op <| ofHom (Algebra.TensorProduct.map f.unop.hom (.id _ _))
   tensorHom {S₁ S₂ T₁ T₂} f g := .op <| ofHom (map f.unop.hom g.unop.hom)
   tensorUnit := .op (.of R R)
-  associator {S T U} := .op <| isoMk (Algebra.TensorProduct.assoc R _ _ _).symm
+  associator {S T U} := .op <| isoMk (Algebra.TensorProduct.assoc R R _ _ _).symm
   leftUnitor S := .op <| isoMk (Algebra.TensorProduct.lid R _).symm
   rightUnitor _ := .op <| isoMk (Algebra.TensorProduct.rid R R _).symm
   tensorHom_def := by intros; ext <;> rfl
@@ -92,20 +96,45 @@ instance : BraidedCategory (CommAlgCat.{u} R)ᵒᵖ where
 
 open MonoidalCategory
 
-lemma rightWhisker_hom (f : A ⟶ B) :
-    (f.op ▷ op C).unop.hom = Algebra.TensorProduct.map f.hom (.id _ _) := rfl
+variable {A B C D : (CommAlgCat.{u} R)ᵒᵖ}
 
-lemma leftWhisker_hom (f : A ⟶ B) :
-    (op C ◁ f.op).unop.hom = Algebra.TensorProduct.map (.id _ _) f.hom := rfl
+@[simp] lemma coe_tensorObj_unop : (A ⊗ B).unop = A.unop ⊗[R] B.unop := rfl
 
-lemma associator_hom_unop_hom :
-    (α_ (op A) (op B) (op C)).hom.unop.hom =
-      (Algebra.TensorProduct.assoc R A B C).symm.toAlgHom := rfl
+@[simp] lemma coe_tensorUnit_unop : (𝟙_ (CommAlgCat.{u} R)ᵒᵖ).unop = R := rfl
 
-lemma associator_inv_unop_hom :
-    (α_ (op A) (op B) (op C)).inv.unop.hom = (Algebra.TensorProduct.assoc R A B C).toAlgHom := rfl
+@[simp] lemma rightWhisker_hom (f : A ⟶ B) :
+    (f ▷ C).unop.hom = Algebra.TensorProduct.map f.unop.hom (.id _ _) := rfl
 
-lemma tensorHom_unop_hom {D : CommAlgCat R} (f : A ⟶ C) (g : B ⟶ D) :
-    (f.op ⊗ g.op).unop.hom = (Algebra.TensorProduct.map f.hom g.hom) := rfl
+@[simp] lemma leftWhisker_hom (f : A ⟶ B) :
+    (C ◁ f).unop.hom = Algebra.TensorProduct.map (.id _ _) f.unop.hom := rfl
+
+@[simp] lemma associator_hom_unop_hom :
+    (α_ A B C).hom.unop.hom =
+      (Algebra.TensorProduct.assoc R R A.unop B.unop C.unop).symm.toAlgHom := rfl
+
+@[simp] lemma associator_inv_unop_hom :
+    (α_ A B C).inv.unop.hom = (Algebra.TensorProduct.assoc R R A.unop B.unop C.unop).toAlgHom := rfl
+
+@[simp] lemma braiding_hom_unop_hom :
+    (β_ A B).hom.unop.hom = (Algebra.TensorProduct.comm R B.unop A.unop).toAlgHom := rfl
+
+@[simp] lemma braiding_inv_unop_hom :
+    (β_ A B).inv.unop.hom = (Algebra.TensorProduct.comm R A.unop B.unop).toAlgHom := rfl
+
+@[simp] lemma tensorHom_unop_hom (f : A ⟶ C) (g : B ⟶ D) :
+    (f ⊗ g).unop.hom = Algebra.TensorProduct.map f.unop.hom g.unop.hom := rfl
+
+@[simp] lemma toUnit_unop_hom (A : (CommAlgCat R)ᵒᵖ) :
+    (toUnit A).unop.hom = Algebra.ofId R A.unop := rfl
+
+@[simp] lemma fst_unop_hom (A B : (CommAlgCat R)ᵒᵖ) :
+    (fst A B).unop.hom = Algebra.TensorProduct.includeLeft := rfl
+
+@[simp] lemma snd_unop_hom (A B : (CommAlgCat R)ᵒᵖ) :
+    (snd A B).unop.hom = Algebra.TensorProduct.includeRight := rfl
+
+@[simp] lemma lift_unop_hom (f : C ⟶ A) (g : C ⟶ B) :
+    (lift f g).unop.hom = Algebra.TensorProduct.lift f.unop.hom g.unop.hom (fun _ _ ↦ .all _ _) :=
+  rfl
 
 end CategoryTheory.CommAlgCat

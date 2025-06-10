@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Pullbacks
+import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
@@ -39,7 +40,8 @@ where the top `≌` comes from the essentially surjective functor `Cogrp Mod_R �
 so that in particular we do not easily know that its inverse is given by `Γ`.
 -/
 
-open AlgebraicGeometry Scheme CategoryTheory Opposite Limits Mon_Class Grp_Class
+open AlgebraicGeometry Coalgebra Scheme CategoryTheory MonoidalCategory Functor Monoidal Opposite
+  Limits Mon_Class Grp_Class TensorProduct
 
 universe u
 variable {R : CommRingCat.{u}}
@@ -70,6 +72,33 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
+
+@[simp]
+lemma prodComparisonIso_algSpec_hom_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).hom.left =
+      (pullbackSpecIso R A.unop B.unop).inv := rfl
+
+@[simp]
+lemma prodComparisonIso_algSpec_inv_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).inv.left =
+      (pullbackSpecIso R A.unop B.unop).hom := by
+  rw [← Iso.comp_inv_eq_id, ← prodComparisonIso_algSpec_hom_left, ← Over.comp_left,
+    Iso.inv_hom_id, Over.id_left]
+
+lemma preservesTerminalIso_algSpec :
+  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)) =
+    Over.isoMk (Iso.refl (Spec R)) (by dsimp; simp [MonoidalCategoryStruct.tensorUnit]) := by
+  ext1; exact CartesianMonoidalCategory.toUnit_unique _ _
+
+@[simp]
+lemma preservesTerminalIso_algSpec_inv_left :
+  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).inv.left = 𝟙 (Spec R) := by
+  simp [preservesTerminalIso_algSpec]
+
+@[simp]
+lemma preservesTerminalIso_algSpec_hom_left :
+  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).hom.left = 𝟙 (Spec R) := by
+  simp [preservesTerminalIso_algSpec]
 
 /-- `Spec` is full on `R`-algebras. -/
 instance algSpec.instFull : (algSpec R).Full :=
@@ -108,18 +137,70 @@ noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
     algSpec.fullyFaithful.mapGrp
 
 namespace AlgebraicGeometry.Scheme
-variable {R A : CommRingCat.{u}}
+variable {R A : CommRingCat.{u}} {M G : Scheme.{u}}
 
 suppress_compilation
 
-instance [Algebra R A] : (Spec A).Over (Spec R) where
+@[simps -isSimp]
+instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 
-instance asOver.instMon_Class [Bialgebra R A] : Mon_Class (asOver (Spec A) (Spec R)) :=
-  ((bialgSpec R).obj <| .op <| .of R A).instMon_ClassX
+instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
+  ((bialgSpec R).obj <| .op <| .of R A).mon
 
-instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class (asOver (Spec A) (Spec R)) :=
-  ((hopfSpec R).obj <| .op <| .of R A).instGrp_ClassX
+lemma μIso_algSpec_inv_left [Algebra R A] :
+    (μIso (algSpec R) (op (.of R A)) (op (.of R A))).inv.left = (pullbackSpecIso R A A).inv := rfl
+
+-- arguably this should be defeq.
+lemma μ_algSpec_left [Algebra R A] :
+    (LaxMonoidal.μ (algSpec R) (op (.of R A)) (op (.of R A))).left =
+      (pullbackSpecIso R A A).hom := by
+  rw [← Iso.comp_inv_eq_id, ← μIso_algSpec_inv_left, ← Over.comp_left, Monoidal.μIso_inv,
+    Monoidal.μ_δ, Over.id_left]
+
+lemma mul_left [Bialgebra R A] :
+    μ[(Spec A).asOver (Spec R)].left =
+      (pullbackSpecIso R A A).hom ≫ Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R A)) := by
+  rw [← μ_algSpec_left]; rfl
+
+instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
+    IsCommMon ((Spec A).asOver (Spec R)) where
+  mul_comm' := by
+    ext
+    have := LaxMonoidal.μ (algSpec R) (.op <| .of R A) (.op <| .of R A)
+    have := congr((pullbackSpecIso R A A).hom ≫ ((bialgSpec R).map <| .op <| CommBialgCat.ofHom <|
+      $(Bialgebra.comm_comp_comulBialgHom R A)).hom.left)
+    dsimp [commBialgCatEquivComonCommAlgCat] at this ⊢
+    have h₁ : (Algebra.TensorProduct.includeRight : A →ₐ[R] A ⊗[R] A) =
+      (RingHomClass.toRingHom (Bialgebra.comm R A A)).comp
+        Algebra.TensorProduct.includeLeftRingHom := by ext; rfl
+    have h₂ : (Algebra.TensorProduct.includeLeftRingHom) =
+      (RingHomClass.toRingHom (Bialgebra.comm R A A)).comp
+       (Algebra.TensorProduct.includeRight : A →ₐ[R] A ⊗[R] A) := by ext; rfl
+    convert this using 1
+    · simp only [Spec.map_comp, ← Category.assoc, mul_left]
+      congr 1
+      rw [← Iso.eq_comp_inv, Category.assoc, ← Iso.inv_comp_eq]
+      ext
+      · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₁]; rfl
+      · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₂]; rfl
+    · exact mul_left ..
+
+instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class ((Spec A).asOver (Spec R)) :=
+  ((hopfSpec R).obj <| .op <| .of R A).grp
+
+instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
+   CommGrp_Class ((Spec A).asOver (Spec R)) where
+
+/-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
+prove that. -/
+noncomputable instance [M.Over (Spec R)] [Mon_Class (M.asOver (Spec R))] [IsAffine M] :
+    Bialgebra R Γ(M, ⊤) := by sorry
+
+/-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
+prove that. -/
+noncomputable instance [G.Over (Spec R)] [Grp_Class (G.asOver (Spec R))] [IsAffine G] :
+    HopfAlgebra R Γ(G, ⊤) := by sorry
 
 end AlgebraicGeometry.Scheme
 

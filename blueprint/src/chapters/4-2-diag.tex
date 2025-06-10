@@ -1,0 +1,75 @@
+\section{Diagonalisable groups}
+
+
+\begin{definition}[The diagonalisable group scheme functor]
+  \label{0-diag}
+  \uses{0-grp-alg, 0-hopf-alg-equiv-cogrp-alg, 0-spec-hopf}
+  \lean{Diag}
+  \leanok
+
+  Let $G$ be a commutative group and $S$ a base scheme.
+  The diagonalisable group scheme $D_S(G)$ is defined as the base-change of $\Spec \Z[G]$ to $S$.
+  For a commutative ring $R$, we write $D_R(G) := D_{\Spec R}(G)$.
+\end{definition}
+
+
+\begin{definition}[Diagonalisable group schemes]
+  \label{0-is-diag}
+  \uses{0-diag}
+  \lean{AlgebraicGeometry.Scheme.IsDiagonalisable}
+  \leanok
+
+  An algebraic group $G$ over $\Spec R$ is {\bf diagonalisable} if it is isomorphic to $D_R(G)$ for some commutative group $G$.
+\end{definition}
+
+
+\begin{lemma}[The diagonalisable group scheme torus over $\Spec R$]
+  \label{0-diag-spec}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.Scheme.diagSpecIso, AlgebraicGeometry.Scheme.splitTorusIso}
+  \leanok
+
+  Let $R$ be a commutative ring and $M$ an abelian monoid.
+  Then $D_R(M)$ is isomorphic to $\Spec R[M]$.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Ask any toddler on the street.
+\end{proof}
+
+
+\begin{theorem}
+  \label{0-diag-iff-grp-like-span}
+  \uses{0-diag, 0-is-diag}
+  \lean{AlgebraicGeometry.Scheme.isDiagonalisable_iff_span_isGroupLikeElem_eq_top}
+  \leanok
+
+  An algebraic group $G$ over a field $k$ is diagonalizable if and only if $\Gamma(G)$ is spanned by its group-like elements.
+\end{theorem}
+\begin{proof}
+  \uses{0-grp-like-lin-indep}
+  % \leanok
+
+  See Theorem 12.8 in \cite{Milne_2017}.
+\end{proof}
+
+
+\begin{theorem}
+  \label{0-full-faithful-diag}
+  \uses{0-diag}
+  \lean{}
+  \leanok
+
+  Let $R$ be a domain.
+  The functor $D_R(G) := G \rightsquigarrow \Spec R[G]$ from the category of groups to the category of group schemes over $\Spec R$ is fully faithful.
+\end{theorem}
+\begin{proof}
+  \uses{0-full-faithful-spec-hopf, 0-full-faithful-grp-alg}
+  \leanok
+
+  Compose Propositions \ref{0-full-faithful-spec-hopf} and \ref{0-full-faithful-grp-alg}.
+
+  Also see Theorem 12.9(a) in \cite{Milne_2017}. See SGA III Exposé VIII for a proof that works for $R$ an arbitrary commutative ring.
+\end{proof}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
 import Mathlib.RingTheory.Bialgebra.TensorProduct
-import Toric.Mathlib.RingTheory.Bialgebra.Hom
+import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.Convolution
 
 /-!
@@ -26,10 +26,7 @@ suppress_compilation
 
 open Algebra Coalgebra Bialgebra TensorProduct
 
--- TODO: Remove universe monomorphism
--- TODO: Generalise to semirings
-universe u
-variable {R A B C : Type u} [CommRing R]
+variable {R A B C : Type*} [CommSemiring R]
 
 namespace AlgHom
 variable [CommSemiring A] [CommSemiring B] [Semiring C] [Bialgebra R C] [Algebra R A]
@@ -55,9 +52,6 @@ lemma toLinearMap_pow (f : C →ₐ[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.to
   · rfl
   · simp only [pow_succ, toLinearMap_mul, hn, _root_.pow_succ]
 
-instance : CommMonoid (C →ₐ[R] A) :=
-  toLinearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
-
 lemma mul_distrib_comp [Bialgebra R B] (f g : C →ₐ A) (h : B →ₐc[R] C) :
     AlgHom.comp (f * g) (h : B →ₐ[R] C) = (.comp f h) * (.comp g h) := calc
   _ = (.comp (lmul' R) <| .comp (Algebra.TensorProduct.map f g) <|
@@ -74,10 +68,18 @@ lemma comp_mul_distrib [Algebra R B] (f g : C →ₐ[R] A) (h : A →ₐ[R] B) :
   apply toLinearMap_injective
   simp [toLinearMap_mul, LinearMap.comp_mul_distrib]
 
+instance : Monoid (C →ₐ[R] A) :=
+  toLinearMap_injective.monoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
+
+variable [IsCocomm R C]
+
+instance : CommMonoid (C →ₐ[R] A) :=
+  toLinearMap_injective.commMonoid _ toLinearMap_one toLinearMap_mul toLinearMap_pow
+
 end AlgHom
 
 namespace BialgHom
-variable [CommRing A] [CommRing C] [Bialgebra R A] [Bialgebra R C]
+variable [CommSemiring A] [CommSemiring C] [Bialgebra R A] [Bialgebra R C]
 
 instance : One (C →ₐc[R] A) where one := (unitBialgHom R A).comp <| counitBialgHom R C
 

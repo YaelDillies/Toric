@@ -1,0 +1,77 @@
+\section{Objects}
+
+
+\subsection{Group objects}
+
+
+\begin{proposition}[Fully faithful product-preserving functors lift to monoid/group objects]
+  \label{0-full-faithful-grp}
+  \uses{}
+  \lean{CategoryTheory.Functor.Faithful.mapGrp, CategoryTheory.Functor.Full.mapGrp}
+  \leanok
+
+  If a finite-products-preserving functor $F : C \to D$ is fully faithful,
+  then so is $\Grp(F) : \Grp C \to \Grp D$.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Faithfulness is immediate.
+
+  For fullness, assume $f : F(G) \to F(H)$ is a morphism. By fullness of $F$,
+  find $g : G \to H$ such that $F(g) = f$. $g$ is a morphism
+  because we can pull back each diagram from $D$ to $C$ along $F$ which is faithful.
+\end{proof}
+
+
+\begin{proposition}[Equivalences lift to monoid/group object categories]
+  \label{0-grp-equiv}
+  \uses{}
+  \lean{CategoryTheory.Equivalence.mapGrp}
+  \leanok
+
+  If $e : C \backsimeq D$ is an equivalence of cartesian-monoidal categories,
+  then $\Grp(e) : \Grp(C) \backsimeq \Grp(D)$ too is an equivalence of categories.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Transfer all diagrams.
+\end{proof}
+
+
+\begin{proposition}[Essential image of a functor on monoid/group objects]
+  \label{0-ess-image-grp}
+  \uses{}
+  \lean{CategoryTheory.Functor.essImage_mapGrp}
+  \leanok
+
+  If $F : C \to D$ is a fully faithful functor between cartesian-monoidal categories,
+  then $\Grp(F) : \Grp(C) \hom \Grp(D)$ has the same essential image as $F$.
+\end{proposition}
+\begin{proof}
+  \uses{0-grp-equiv}
+  \leanok
+
+  Transfer all diagrams.
+\end{proof}
+
+
+\begin{lemma}[A fully faithful functor product-preserving is a group isomorphism on hom sets]
+  \label{0-full-faithful-grp-hom}
+  \uses{0-full-faithful-grp}
+  \lean{CategoryTheory.Functor.FullyFaithful.homMulEquiv}
+  \leanok
+
+  If $F : C \to D$ is a fully faithful functor between cartesian-monoidal categories
+  and $X, G \in C$ are an object and a group object respectively,
+  then $\Grp(F) : (X \hom G) \hom \backcong (F(X) \hom F(G))$ is a group isomorphism.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  \leanok
+
+  Toddlers and streets.
+\end{proof}

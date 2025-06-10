@@ -1,13 +1,11 @@
 import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.RingTheory.Coalgebra.TensorProduct
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Tower
-import Toric.Mathlib.RingTheory.Coalgebra.Basic
+import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
 
 open TensorProduct
 
 namespace Coalgebra
+
 variable {R C : Type*} [CommSemiring R] [AddCommMonoid C] [Module R C] [Coalgebra R C]
   [IsCocomm R C]
 
@@ -33,22 +31,13 @@ noncomputable def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
       simp
     _ = ε := by ext; simp
   map_comp_comul := by
-    simp only [comul_def, AlgebraTensorModule.tensorTensorTensorComm_eq_tensorTensorTensorComm,
-      tensorTensorTensorComm, TensorProduct.coe_congr, TensorProduct.leftComm,
-      LinearEquiv.coe_trans, LinearEquiv.refl_toLinearMap, AlgebraTensorModule.map_eq_map]
-    simp only [LinearMap.comp_assoc, ← LinearMap.lTensor_def, ← LinearMap.rTensor_def,
-      LinearMap.lTensor_comp]
-    rw [← LinearMap.lTensor_comp_rTensor, LinearMap.lTensor_tensor]
-    simp only [LinearMap.comp_assoc, LinearEquiv.comp_symm_cancel_left]
-    rw [Coalgebra.coassoc]
-    conv =>
-      enter [2, 2]
-      simp only [LinearEquiv.coe_toLinearMap_one, ← LinearMap.lTensor_def, ← LinearMap.rTensor_def,
-        ← LinearMap.comp_assoc, ← LinearMap.lTensor_comp]
-      simp only [LinearMap.comp_assoc]
-      rw [Coalgebra.coassoc_symm]
-      rw [← LinearMap.comp_assoc comul, ← LinearMap.rTensor_comp, comm_comp_comul]
-      rw [Coalgebra.coassoc]
-    simp only [LinearMap.comp_assoc, LinearMap.lTensor_comp]
+    let e : (C ⊗[R] C) ⊗[R] (C ⊗[R] C) ≃ₗ[R] C ⊗[R] (C ⊗[R] C) ⊗[R] C :=
+      _root_.TensorProduct.assoc _ _ _ _ ≪≫ₗ
+        TensorProduct.congr (.refl _ _) (_root_.TensorProduct.assoc _ _ _ _).symm
+    rw [← e.comp_toLinearMap_eq_iff, TensorProduct.comul_def]
+    trans (((TensorProduct.comm _ _ _).toLinearMap ∘ₗ δ).rTensor _ ∘ₗ δ).lTensor _ ∘ₗ δ
+    · rw [Coalgebra.comm_comp_comul]
+      coassoc_simps
+    · coassoc_simps
 
 end Coalgebra

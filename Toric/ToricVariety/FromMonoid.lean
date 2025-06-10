@@ -3,7 +3,7 @@ Copyright (c) 2025 Patrick Luo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Luo
 -/
-import Toric.AffineMonoid.Embedding
+import Toric.Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.GroupScheme.HopfAffine
 import Toric.ToricVariety.Defs
 
@@ -23,8 +23,8 @@ namespace AffineToricVarietyFromMonoid
 
 -- TODO: This used to be nicer when the torus was defined as `Spec _`
 instance instMod_Class :
-    Mod_Class (asOver 𝔾ₘ[Spec R, ULift <| Fin <| dim S] (Spec R))
-      (asOver (Spec <| .of R[S]) (Spec R)) where
+    Mod_Class (𝔾ₘ[Spec R, ULift <| Fin <| dim S].asOver (Spec R))
+      ((Spec <| .of R[S]).asOver (Spec R)) where
   smul := Over.homMk sorry sorry
   -- (pullbackSpecIso _ _ _).hom ≫ (Spec.map <| CommRingCat.ofHom <| RingHom.comp
   -- (Algebra.TensorProduct.map (AddMonoidAlgebra.mapDomainAlgHom R _ <| embedding S)
