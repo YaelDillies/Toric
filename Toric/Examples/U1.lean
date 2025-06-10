@@ -152,6 +152,13 @@ private lemma foo : (U1Ring.X (R := ℂ))  ^ 2 - (Complex.I • U1Ring.Y) ^ 2 = 
     ring_nf
   _ = _ := by simp
 
+@[simp]
+lemma AddMonoidAlgebra.single_neg {k G : Type*} [Ring k] (a : G) (b : k) :
+    single a (-b) = - single a b := Finsupp.single_neg ..
+
+set_option allowUnsafeReducibility true in
+attribute [semireducible] AddMonoidAlgebra.single
+
 def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
   __ := ((MonoidAlgebra.liftGroupLikeBialgHom _ _).comp
     (MonoidAlgebra.mapDomainBialgHom ℂ (M := Multiplicative (Unit →₀ ℤ))
@@ -178,11 +185,18 @@ def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1
         ring)⟩))
       AddEquiv.finsuppUnique.toAddMonoidHom))))
   invFun := U1Ring.liftₐ
-    ((1 / 2 : ℂ) • (.single (.single .unit 1) 1 - .single (.single .unit (-1)) 1))
-    (- (.I / 2 : ℂ) • (.single (.single .unit 1) 1 + .single (.single .unit (-1)) 1))
+    ((1 / 2 : ℂ) • (.single (.single .unit 1) 1 + .single (.single .unit (-1)) 1))
+    (- (.I / 2 : ℂ) • (.single (.single .unit 1) 1 - .single (.single .unit (-1)) 1))
     (by
-      simp
-      sorry)
+      trans AddMonoidAlgebra.single 0 (1 / 4) * 4
+      · simp [pow_two, sub_mul, mul_sub, AddMonoidAlgebra.single_mul_single,
+          add_mul, mul_add, AddMonoidAlgebra.smul_single', ← two_nsmul, div_mul_div_comm,
+          smul_sub, neg_div, AddMonoidAlgebra.single_neg]
+        ring_nf
+      · rw [mul_comm, ← Nat.cast_ofNat, ← nsmul_eq_mul]
+        simp only [succ_nsmul, zero_smul, zero_add, ← AddMonoidAlgebra.single_add,
+          AddMonoidAlgebra.one_def]
+        norm_num)
   left_inv := sorry
   right_inv := sorry
 
