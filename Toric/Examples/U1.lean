@@ -2,7 +2,6 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.MonoidAlgebra
-
 noncomputable section
 
 notation3:max R "[X][Y]" => Polynomial (Polynomial R)
@@ -145,7 +144,7 @@ instance : HopfAlgebra R (U1Ring R) :=
     simp
     ring_nf)
 
-private lemma foo : (U1Ring.X (R := ℂ))  ^ 2 - (Complex.I • U1Ring.Y) ^ 2 = 1 := calc
+private lemma foo : (U1Ring.X (R := ℂ)) ^ 2 - (Complex.I • U1Ring.Y) ^ 2 = 1 := calc
   _ = .X ^ 2 - (Complex.I • .Y) * (Complex.I • .Y) := by ring
   _ = .X ^ 2 - (Complex.I) ^ 2 • .Y ^ 2 := by
     rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
@@ -157,15 +156,17 @@ lemma AddMonoidAlgebra.single_neg {k G : Type*} [Ring k] (a : G) (b : k) :
     single a (-b) = - single a b := Finsupp.single_neg ..
 
 set_option allowUnsafeReducibility true in
-attribute [semireducible] AddMonoidAlgebra.single
+attribute [semireducible] MonoidAlgebra.single
 
-private def U1Ring.complexEquivFun : AddMonoidAlgebra ℂ (Unit →₀ ℤ) →ₐc[ℂ] U1Ring ℂ :=
+@[simps!]
+def U1Ring.T : (U1Ring ℂ)ˣ :=
+  .mkOfMulEqOne (α := U1Ring ℂ) (.X + Complex.I • .Y) (.X - Complex.I • .Y) (by ring_nf; simp [foo])
+
+private def U1Ring.complexEquivFun : MonoidAlgebra ℂ (Multiplicative (Unit →₀ ℤ)) →ₐc[ℂ] U1Ring ℂ :=
   (MonoidAlgebra.liftGroupLikeBialgHom _ _).comp
     (MonoidAlgebra.mapDomainBialgHom ℂ (M := Multiplicative (Unit →₀ ℤ))
     (AddMonoidHom.toMultiplicative'' (.comp (zmultiplesHom _
-      (.ofMul ⟨.mkOfMulEqOne (α := U1Ring ℂ)
-      (.mk Polynomial.X + Complex.I • .mk Y) (.mk Polynomial.X - Complex.I • .mk Y)
-      (by ring_nf; simp [foo]), (by
+      (.ofMul ⟨T, (by
         simp
         constructor
         · rw [isUnit_iff_exists]
@@ -185,21 +186,32 @@ private def U1Ring.complexEquivFun : AddMonoidAlgebra ℂ (Unit →₀ ℤ) →�
         ring)⟩))
       AddEquiv.finsuppUnique.toAddMonoidHom)))
 
-def U1Ring.complexEquivInv : U1Ring ℂ →ₐc[ℂ] AddMonoidAlgebra ℂ (Unit →₀ ℤ) :=
-  .ofAlgHom' (U1Ring.liftₐ
-    ((1 / 2 : ℂ) • (.single (.single .unit 1) 1 + .single (.single .unit (-1)) 1))
-    (- (.I / 2 : ℂ) • (.single (.single .unit 1) 1 - .single (.single .unit (-1)) 1))
-    (by
-      trans AddMonoidAlgebra.single 0 (1 / 4) * 4
-      · simp [pow_two, sub_mul, mul_sub, AddMonoidAlgebra.single_mul_single,
-          add_mul, mul_add, AddMonoidAlgebra.smul_single', ← two_nsmul, div_mul_div_comm,
-          smul_sub, neg_div, AddMonoidAlgebra.single_neg]
+-- set_option profiler true in
+-- set_option trace.Meta.Tactic.simp true in
+set_option synthInstance.maxHeartbeats 0 in
+lemma U1Ring.complexEquivFun.apply_single (a : Multiplicative (Unit →₀ ℤ)) (b : ℂ) :
+    U1Ring.complexEquivFun (.single a b) = b • (T ^ (a ())).1 := by
+  simp [U1Ring.complexEquivFun, Algebra.ofId_apply, Algebra.smul_def]
+
+private def U1Ring.complexEquivInv : U1Ring ℂ →ₐ[ℂ] MonoidAlgebra ℂ (Multiplicative (Unit →₀ ℤ)) :=
+ (U1Ring.liftₐ
+    ((1 / 2 : ℂ) • (.single (.ofAdd <| .single .unit 1) 1 +
+    .single (.ofAdd <| .single .unit (-1)) 1))
+    (- (.I / 2 : ℂ) • (.single (.ofAdd <| .single .unit 1) 1 -
+    .single (.ofAdd <| .single .unit (-1)) 1))
+    sorry
+    /- (by
+      trans MonoidAlgebra.single 1 (1 / 4) * 4
+      · simp [pow_two, sub_mul, mul_sub, MonoidAlgebra.single_mul_single,
+          add_mul, mul_add, MonoidAlgebra.smul_single', ← two_nsmul, div_mul_div_comm,
+          smul_sub, neg_div, ← ofAdd_add, ← mul_inv, -mul_inv_rev]
         ring_nf
       · rw [mul_comm, ← Nat.cast_ofNat, ← nsmul_eq_mul]
         simp only [succ_nsmul, zero_smul, zero_add, ← AddMonoidAlgebra.single_add,
           AddMonoidAlgebra.one_def]
-        norm_num))
-  (by
+        norm_num) -/
+  )
+  /- (by
     ext <;> simp [AddMonoidAlgebra.counit_single]; norm_num)
   (by
     ext
@@ -210,15 +222,17 @@ def U1Ring.complexEquivInv : U1Ring ℂ →ₐc[ℂ] AddMonoidAlgebra ℂ (Unit 
     simp [AddMonoidAlgebra.comul_single, smul_add, tmul_add, add_tmul, smul_sub, sub_tmul,
       tmul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm,
       Complex.I_mul_I]
-    module)
+    module) -/
 
 def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
   __ := complexEquivFun
-  invFun := complexEquivInv
-  left_inv := by
-    rw [Function.leftInverse_iff_comp]
-    sorry
-  right_inv := sorry
+  __ := AlgEquiv.ofAlgHom (AlgHomClass.toAlgHom U1Ring.complexEquivFun) U1Ring.complexEquivInv
+    (by
+      ext
+      · simp [U1Ring.complexEquivFun.apply_single, U1Ring.complexEquivInv]
+        erw? [U1Ring.liftₐ_X ]
+        sorry
+      sorry) sorry
 
 instance : Algebra S (S ⊗[R] U1Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := U1Ring R)
@@ -234,3 +248,4 @@ local notation "SO₂(R)" => (Spec (CommRingCat.of (U1Ring R)))
 
 def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
     Matrix.specialOrthogonalGroup (Fin 2) R := sorry
+#min_imports
