@@ -236,7 +236,8 @@ def diagHomGrp {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f : M →+ N) :
 lemma diagHomGrp_comp {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCommGroup O]
     (f : M →+ N) (g : N →+ O) :
     (diagHomGrp S g).comp (diagHomGrp S f) = diagHomGrp S (g.comp f) := by
-  simp [HomGrp, diagHomGrp, HomGrp.comp]
+  simpa [HomGrp, diagHomGrp, HomGrp.comp]
+    using (S.diagFunctor.map_comp (AddCommGrp.ofHom g).op (AddCommGrp.ofHom f).op).symm
 
 lemma diagHomGrp_add {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
     diagHomGrp S (f + g) = diagHomGrp S f + diagHomGrp S g := by
