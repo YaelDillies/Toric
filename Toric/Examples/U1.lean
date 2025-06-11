@@ -159,8 +159,8 @@ lemma AddMonoidAlgebra.single_neg {k G : Type*} [Ring k] (a : G) (b : k) :
 set_option allowUnsafeReducibility true in
 attribute [semireducible] AddMonoidAlgebra.single
 
-def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
-  __ := ((MonoidAlgebra.liftGroupLikeBialgHom _ _).comp
+private def U1Ring.complexEquivFun : AddMonoidAlgebra ℂ (Unit →₀ ℤ) →ₐc[ℂ] U1Ring ℂ :=
+  (MonoidAlgebra.liftGroupLikeBialgHom _ _).comp
     (MonoidAlgebra.mapDomainBialgHom ℂ (M := Multiplicative (Unit →₀ ℤ))
     (AddMonoidHom.toMultiplicative'' (.comp (zmultiplesHom _
       (.ofMul ⟨.mkOfMulEqOne (α := U1Ring ℂ)
@@ -183,8 +183,10 @@ def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1
         rw [smul_smul]
         simp
         ring)⟩))
-      AddEquiv.finsuppUnique.toAddMonoidHom))))
-  invFun := U1Ring.liftₐ
+      AddEquiv.finsuppUnique.toAddMonoidHom)))
+
+def U1Ring.complexEquivInv : U1Ring ℂ →ₐ[ℂ] AddMonoidAlgebra ℂ (Unit →₀ ℤ) :=
+  U1Ring.liftₐ
     ((1 / 2 : ℂ) • (.single (.single .unit 1) 1 + .single (.single .unit (-1)) 1))
     (- (.I / 2 : ℂ) • (.single (.single .unit 1) 1 - .single (.single .unit (-1)) 1))
     (by
@@ -197,7 +199,13 @@ def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1
         simp only [succ_nsmul, zero_smul, zero_add, ← AddMonoidAlgebra.single_add,
           AddMonoidAlgebra.one_def]
         norm_num)
-  left_inv := sorry
+
+def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
+  __ := complexEquivFun
+  invFun := complexEquivInv
+  left_inv := by
+    rw [Function.leftInverse_iff_comp]
+    sorry
   right_inv := sorry
 
 instance : Algebra S (S ⊗[R] U1Ring R) :=
