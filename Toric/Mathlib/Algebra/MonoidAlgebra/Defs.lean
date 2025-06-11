@@ -62,7 +62,11 @@ theorem induction_linear [Monoid G] {p : MonoidAlgebra k G → Prop}
 
 end
 
+end MonoidAlgebra
+
 namespace AddMonoidAlgebra
+
+universe u₁ u₂
 
 variable {k : Type u₁} {G : Type u₂} [Semiring k]
 
