@@ -224,15 +224,33 @@ private def U1Ring.complexEquivInv : U1Ring ℂ →ₐ[ℂ] MonoidAlgebra ℂ (M
       Complex.I_mul_I]
     module) -/
 
+lemma ofNat_nsmul_eq_mul {S : Type*} [Semiring S] (n : ℕ)
+    [n.AtLeastTwo] (s : S) : ofNat(n) • s = ofNat(n) * s := by
+  simp [OfNat.ofNat, nsmul_eq_mul, Algebra.smul_def]
+
+@[simp]
+lemma _root_.MonoidAlgebra.smul_apply {S M : Type*} [CommSemiring S] (s : S) (m : M)
+    (a : MonoidAlgebra S M) :
+    (s • a) m = s • (a m) := rfl
+
+@[simp]
+lemma _root_.MonoidAlgebra.neg_apply {S M : Type*} [CommRing S] (m : M)
+    (a : MonoidAlgebra S M) : (- a) m = - (a m) := rfl
+
 def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
   __ := complexEquivFun
   __ := AlgEquiv.ofAlgHom (AlgHomClass.toAlgHom U1Ring.complexEquivFun) U1Ring.complexEquivInv
     (by
       ext
-      · simp [U1Ring.complexEquivFun.apply_single, U1Ring.complexEquivInv]
-        erw? [U1Ring.liftₐ_X ]
-        sorry
-      sorry) sorry
+      · simp [complexEquivFun.apply_single, complexEquivInv]
+        module
+      simp [complexEquivInv, complexEquivFun.apply_single, ←two_mul, smul_smul, div_mul_eq_mul_div,
+        ← ofNat_nsmul_eq_mul (n := 2) (s := U1Ring.Y), -nsmul_eq_mul]
+      module)
+    (by
+      ext ⟨⟩ b
+      simp [complexEquivFun.apply_single, complexEquivInv, smul_smul, mul_div, smul_sub]
+      ring)
 
 instance : Algebra S (S ⊗[R] U1Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := U1Ring R)
