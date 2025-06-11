@@ -29,7 +29,7 @@ lemma Polynomial.aevalAEval_Y {R A : Type*} [CommRing R] [CommRing A] [Algebra R
     Polynomial.aevalAEval (R := R) x y Y = y := by simp [aevalAEval]
 
 variable (R) in
-def U1Ring : Type _ := R[X][Y] ⧸ Ideal.span {(X ^ 2 + Y ^ 2 - 1 : R[X][Y])}
+def U1Ring : Type _ := AdjoinRoot (X ^ 2 + Y ^ 2 - 1 : R[X][Y])
 
 instance : CommRing (U1Ring R) := by delta U1Ring; infer_instance
 instance : Algebra R (U1Ring R) := by delta U1Ring; infer_instance
@@ -194,35 +194,16 @@ lemma U1Ring.complexEquivFun.apply_single (a : Multiplicative (Unit →₀ ℤ))
   simp [U1Ring.complexEquivFun, Algebra.ofId_apply, Algebra.smul_def]
 
 private def U1Ring.complexEquivInv : U1Ring ℂ →ₐ[ℂ] MonoidAlgebra ℂ (Multiplicative (Unit →₀ ℤ)) :=
- (U1Ring.liftₐ
+  U1Ring.liftₐ
     ((1 / 2 : ℂ) • (.single (.ofAdd <| .single .unit 1) 1 +
     .single (.ofAdd <| .single .unit (-1)) 1))
     (- (.I / 2 : ℂ) • (.single (.ofAdd <| .single .unit 1) 1 -
     .single (.ofAdd <| .single .unit (-1)) 1))
-    sorry
-    /- (by
-      trans MonoidAlgebra.single 1 (1 / 4) * 4
-      · simp [pow_two, sub_mul, mul_sub, MonoidAlgebra.single_mul_single,
-          add_mul, mul_add, MonoidAlgebra.smul_single', ← two_nsmul, div_mul_div_comm,
-          smul_sub, neg_div, ← ofAdd_add, ← mul_inv, -mul_inv_rev]
-        ring_nf
-      · rw [mul_comm, ← Nat.cast_ofNat, ← nsmul_eq_mul]
-        simp only [succ_nsmul, zero_smul, zero_add, ← AddMonoidAlgebra.single_add,
-          AddMonoidAlgebra.one_def]
-        norm_num) -/
-  )
-  /- (by
-    ext <;> simp [AddMonoidAlgebra.counit_single]; norm_num)
-  (by
-    ext
-    · simp [AddMonoidAlgebra.comul_single, smul_add, tmul_add, add_tmul, smul_sub, sub_tmul,
-        tmul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm,
-        Complex.I_mul_I]
-      module
-    simp [AddMonoidAlgebra.comul_single, smul_add, tmul_add, add_tmul, smul_sub, sub_tmul,
-      tmul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm,
-      Complex.I_mul_I]
-    module) -/
+    (by
+      simp [pow_two, sub_mul, mul_sub, add_mul, mul_add, MonoidAlgebra.single_mul_single,
+        ← ofAdd_add, ← two_nsmul, ← mul_smul, ← mul_inv_rev, div_mul_div_comm, neg_div,
+        smul_sub, MonoidAlgebra.one_def]
+      module)
 
 lemma ofNat_nsmul_eq_mul {S : Type*} [Semiring S] (n : ℕ)
     [n.AtLeastTwo] (s : S) : ofNat(n) • s = ofNat(n) * s := by
