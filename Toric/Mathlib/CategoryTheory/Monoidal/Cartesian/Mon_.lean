@@ -57,7 +57,7 @@ variable [BraidedCategory C]
 
 lemma mul_tensor_mul (f f' : X ⟶ M) (g g' : Y ⟶ N) :
     (f * f') ⊗ (g * g') = (f ⊗ g) * (f' ⊗ g') := by
-  simp [Hom.mul_def, Hom.one_def]
+  simp [Hom.mul_def, Hom.one_def, tensorObj.mul_def]
 
 lemma one_tensor_one : (1 : X ⟶ M) ⊗ (1 : Y ⟶ N) = 1 := by
   simp only [Hom.one_def, tensor_comp, tensorObj.one_def, ← Category.assoc]
@@ -65,7 +65,7 @@ lemma one_tensor_one : (1 : X ⟶ M) ⊗ (1 : Y ⟶ N) = 1 := by
   rw [Iso.eq_comp_inv]
   exact toUnit_unique _ _
 
-attribute [local simp]  one_eq_one
+attribute [local simp] tensorObj.one_def tensorObj.mul_def
 
 instance : IsMon_Hom (fst M N) where
 instance : IsMon_Hom (snd M N) where

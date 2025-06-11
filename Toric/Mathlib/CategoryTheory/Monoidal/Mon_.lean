@@ -7,8 +7,6 @@ import Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 
-attribute [-simp] Mon_.one_def Mon_.mul_def Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def
-
 open CategoryTheory MonoidalCategory Monoidal
 
 assert_not_exists CartesianMonoidalCategory
@@ -120,34 +118,20 @@ attribute [local instance] obj.instMon_Class
 
 open scoped Mon_Class
 
-attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.mul_hom in
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom in
 attribute [simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc
   Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def in
 instance [F.LaxBraided] : F.mapMon.LaxMonoidal where
   ε' := .mk (ε F)
-  μ' M N := by
-    refine .mk («μ» F M.X N.X) ?_ ?_
-    · aesop_cat_nonterminal
-      rw [Mon_Class.tensorObj.one_def]
-      aesop_cat_nonterminal
-      simp [← Functor.map_comp]
-    · aesop_cat_nonterminal
-      rw [Mon_Class.tensorObj.mul_def]
-      aesop_cat
+  μ' M N := .mk («μ» F M.X N.X) <| by simp [← Functor.map_comp]
 
-attribute [local simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc in
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom in
+attribute [simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc
+  Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def in
 instance [F.Braided] : F.mapMon.Monoidal :=
-  CoreMonoidal.toMonoidal
-  { εIso := Mon_.mkIso (Monoidal.εIso F)
-    μIso M N := by
-      refine Mon_.mkIso (Monoidal.μIso F M.X N.X) ?_ ?_
-      · aesop_cat_nonterminal
-        rw [Mon_Class.tensorObj.one_def]
-        aesop_cat_nonterminal
-        simp [← Functor.map_comp]
-      · aesop_cat_nonterminal
-        rw [Mon_Class.tensorObj.mul_def]
-        aesop_cat
+  CoreMonoidal.toMonoidal {
+    εIso := Mon_.mkIso (Monoidal.εIso F)
+    μIso M N := Mon_.mkIso (Monoidal.μIso F M.X N.X) <| by simp [← Functor.map_comp]
   }
 
 end CategoryTheory.Functor
