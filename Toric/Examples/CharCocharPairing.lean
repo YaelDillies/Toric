@@ -38,7 +38,7 @@ then this pairing is perfect.
 -/
 
 example {R : CommRingCat.{0}} [IsDomain R] {G : Scheme} [G.Over (Spec R)]
-    [CommGrp_Class (G.asOver (Spec R))] [IsSplitTorus (Spec R) G] :
+    [CommGrp_Class (G.asOver (Spec R))] :
     X*(Spec R, G) →ₗ[ℤ] X(Spec R, G) →ₗ[ℤ] ℤ := charPairing R G
 
 example {R : CommRingCat} [IsDomain R] {σ : Type} [Finite σ] :
