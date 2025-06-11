@@ -185,8 +185,8 @@ private def U1Ring.complexEquivFun : AddMonoidAlgebra ℂ (Unit →₀ ℤ) →�
         ring)⟩))
       AddEquiv.finsuppUnique.toAddMonoidHom)))
 
-def U1Ring.complexEquivInv : U1Ring ℂ →ₐ[ℂ] AddMonoidAlgebra ℂ (Unit →₀ ℤ) :=
-  U1Ring.liftₐ
+def U1Ring.complexEquivInv : U1Ring ℂ →ₐc[ℂ] AddMonoidAlgebra ℂ (Unit →₀ ℤ) :=
+  .ofAlgHom' (U1Ring.liftₐ
     ((1 / 2 : ℂ) • (.single (.single .unit 1) 1 + .single (.single .unit (-1)) 1))
     (- (.I / 2 : ℂ) • (.single (.single .unit 1) 1 - .single (.single .unit (-1)) 1))
     (by
@@ -198,7 +198,19 @@ def U1Ring.complexEquivInv : U1Ring ℂ →ₐ[ℂ] AddMonoidAlgebra ℂ (Unit �
       · rw [mul_comm, ← Nat.cast_ofNat, ← nsmul_eq_mul]
         simp only [succ_nsmul, zero_smul, zero_add, ← AddMonoidAlgebra.single_add,
           AddMonoidAlgebra.one_def]
-        norm_num)
+        norm_num))
+  (by
+    ext <;> simp [AddMonoidAlgebra.counit_single]; norm_num)
+  (by
+    ext
+    · simp [AddMonoidAlgebra.comul_single, smul_add, tmul_add, add_tmul, smul_sub, sub_tmul,
+        tmul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm,
+        Complex.I_mul_I]
+      module
+    simp [AddMonoidAlgebra.comul_single, smul_add, tmul_add, add_tmul, smul_sub, sub_tmul,
+      tmul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm,
+      Complex.I_mul_I]
+    module)
 
 def U1Ring.complexEquiv : AddMonoidAlgebra ℂ (Unit →₀ ℤ) ≃ₐc[ℂ] U1Ring ℂ where
   __ := complexEquivFun
