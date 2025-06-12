@@ -1,5 +1,5 @@
 import Toric.Examples.CharCocharPairing
-import Toric.Examples.U1
+import Toric.Examples.SO2
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
