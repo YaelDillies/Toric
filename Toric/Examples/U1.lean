@@ -1,7 +1,9 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.UnitaryGroup
+import Mathlib.RingTheory.AdjoinRoot
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.MonoidAlgebra
+
 noncomputable section
 
 notation3:max R "[X][Y]" => Polynomial (Polynomial R)
@@ -192,6 +194,7 @@ set_option synthInstance.maxHeartbeats 0 in
 lemma U1Ring.complexEquivFun.apply_single (a : Multiplicative (Unit →₀ ℤ)) (b : ℂ) :
     U1Ring.complexEquivFun (.single a b) = b • (T ^ (a ())).1 := by
   simp [U1Ring.complexEquivFun, Algebra.ofId_apply, Algebra.smul_def]
+  sorry
 
 private def U1Ring.complexEquivInv : U1Ring ℂ →ₐ[ℂ] MonoidAlgebra ℂ (Multiplicative (Unit →₀ ℤ)) :=
   U1Ring.liftₐ
@@ -245,6 +248,6 @@ open scoped Hom
 local notation "Spec(R)" => (Spec (CommRingCat.of R))
 local notation "SO₂(R)" => (Spec (CommRingCat.of (U1Ring R)))
 
-def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
-    Matrix.specialOrthogonalGroup (Fin 2) R := sorry
-#min_imports
+def bar :
+    (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
+      Matrix.specialOrthogonalGroup (Fin 2) R := sorry
