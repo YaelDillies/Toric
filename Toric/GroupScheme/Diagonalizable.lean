@@ -7,6 +7,7 @@ import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
+import Toric.Mathlib.AlgebraicGeometry.Scheme
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra Hom
@@ -23,7 +24,7 @@ variable (S M) in
 /-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
 def Diag : Scheme.{u} :=
   pullback
-    (Spec (.of <| MonoidAlgebra (ULift.{u} ℤ) <| Multiplicative M) ↘ Spec (.of <| ULift.{u} ℤ))
+    (Spec(MonoidAlgebra (ULift.{u} ℤ) <| Multiplicative M) ↘ Spec(ULift.{u} ℤ))
     (specULiftZIsTerminal.from S)
 
 variable (S) in
@@ -46,7 +47,7 @@ instance Diag.isOver_map {f : M →+ N} : (Diag.map S f).IsOver S where
 variable {R : CommRingCat.{u}}
 
 variable (R M) in
-def diagSpecIso : Diag (Spec R) M ≅ Spec (.of <| MonoidAlgebra R <| Multiplicative M) :=
+def diagSpecIso : Diag (Spec R) M ≅ Spec(MonoidAlgebra R <| Multiplicative M) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
   (isoWhiskerRight (specCommMonAlgPullback (CommRingCat.ofHom f) _
     (specULiftZIsTerminal.hom_ext _ _)) (Mon_.forget _ ⋙ Over.forget _)).app <|
@@ -159,11 +160,11 @@ def diagFunctorIso :
 lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
     ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso M.unop _).hom := rfl
 
-instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor (Spec (.of R))).Full :=
+instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Full :=
   have : (hopfSpec (CommRingCat.of R)).Full := hopfSpec.instFull
   .of_iso (diagFunctorIso (.of R)).symm
 
-instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor (Spec (.of R))).Faithful :=
+instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Faithful :=
   have : (hopfSpec (CommRingCat.of R)).Faithful := hopfSpec.instFaithful
   .of_iso (diagFunctorIso (.of R)).symm
 
@@ -244,8 +245,8 @@ lemma diagHomGrp_add {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f g : M �
   simpa [diagHomGrp] using congr(Additive.ofMul $(diagFunctor_map_add (S := S) f g))
 
 def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [AddCommGroup N] :
-    (N →+ M) ≃+ HomGrp (Diag (Spec (.of R)) M) (Diag (Spec (.of R)) N) (Spec (.of R)) :=
-  letI e := Functor.FullyFaithful.homEquiv (.ofFullyFaithful (diagFunctor (Spec <| .of R)))
+    (N →+ M) ≃+ HomGrp (Diag Spec(R) M) (Diag Spec(R) N) Spec(R) :=
+  letI e := Functor.FullyFaithful.homEquiv (.ofFullyFaithful (diagFunctor Spec(R)))
     (X := .op (.of M)) (Y := .op (.of N))
   { toFun f := Additive.ofMul <| by have := e (AddCommGrp.ofHom f).op; dsimp at this; exact this
     invFun f := (e.symm <| by dsimp; exact f.toMul).unop.hom
@@ -293,7 +294,7 @@ section CommRing
 variable {R : CommRingCat.{u}} {G : Scheme.{u}} [G.Over (Spec R)] [Grp_Class (asOver G (Spec R))]
   {A : Type u} [AddCommGroup A]
 
-instance : IsDiagonalisable (Spec R) (Spec <| .of R[A]) := .of_isIso (diagSpecIso A R).inv
+instance : IsDiagonalisable (Spec R) Spec(R[A]) := .of_isIso (diagSpecIso A R).inv
 
 variable [IsDomain R]
 

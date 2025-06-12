@@ -31,27 +31,27 @@ variable {𝕜 : Type u} [Field 𝕜] {T X : Scheme.{u}}
 `T → X` and an action `T × X → X` extending the standard action `T × T → T`
 
 Note that we do not assume `T` to be a torus within the definition. -/
-class ToricVariety (𝕜 : Type u) [Field 𝕜] (X : Scheme.{u}) extends X.Over (Spec <| .of 𝕜) where
+class ToricVariety (𝕜 : Type u) [Field 𝕜] (X : Scheme.{u}) extends X.Over Spec(𝕜) where
   /-- The torus. -/
   torus : Scheme.{u}
-  [torusIsOver : torus.Over <| Spec <| .of 𝕜]
-  [grp_ClassTorus : Grp_Class (torus.asOver <| Spec <| .of 𝕜)]
-  [mod_ClassTorus : Mod_Class (torus.asOver <| Spec <| .of 𝕜) (X.asOver <| Spec <| .of 𝕜)]
+  [torusIsOver : torus.Over Spec(𝕜)]
+  [grp_ClassTorus : Grp_Class (torus.asOver Spec(𝕜))]
+  [mod_ClassTorus : Mod_Class (torus.asOver Spec(𝕜)) (X.asOver Spec(𝕜))]
   [torusIsTorusOver : torus.IsTorusOver 𝕜]
   /-- The torus embedding. -/
   torusEmb (𝕜 X) : torus ⟶ X
-  [isOver_torusEmb : torusEmb.IsOver <| Spec <| .of 𝕜]
+  [isOver_torusEmb : torusEmb.IsOver Spec(𝕜)]
   /-- The torus embedding is an open immersion. -/
   [isOpenImmersion_torusEmb : IsOpenImmersion torusEmb]
   /-- The torus embedding is dominant. -/
   [isDominant_torusEmb : IsDominant torusEmb]
   /-- The torus action extends the torus multiplication. -/
   torusMul_comp_torusEmb :
-      (𝟙 (torus.asOver <| Spec <| .of 𝕜) ⊗ torusEmb.asOver (Spec <| .of 𝕜)) ≫ γ =
-        μ ≫ torusEmb.asOver (Spec <| .of 𝕜) := by aesop_cat
+    (𝟙 (torus.asOver Spec(𝕜)) ⊗ torusEmb.asOver Spec(𝕜)) ≫ γ = μ ≫ torusEmb.asOver Spec(𝕜) := by
+      aesop_cat
 
 namespace ToricVariety
-variable [T.Over <| Spec <| .of 𝕜] [Grp_Class (T.asOver <| Spec <| .of 𝕜)] [T.IsTorusOver 𝕜]
+variable [T.Over Spec(𝕜)] [Grp_Class (T.asOver Spec(𝕜))] [T.IsTorusOver 𝕜]
 
 /-- A torus `T` is a toric variety over itself. -/
 noncomputable instance : ToricVariety 𝕜 T where
