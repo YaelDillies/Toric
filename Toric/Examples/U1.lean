@@ -256,13 +256,12 @@ def U1Ring.baseChangeEquiv : S ⊗[R] U1Ring R ≃ₐc[S] U1Ring S:= by
 open AlgebraicGeometry CategoryTheory Limits
 open scoped Hom
 
-local notation3 "Spec("R")" => (Spec (CommRingCat.of R))
-local notation3 "SO₂("R")" => (Spec (CommRingCat.of (U1Ring R)))
+local notation3 "SO₂("R")" => Spec(U1Ring R)
 
 instance : (pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ))).IsSplitTorusOver Spec(ℂ) where
   existsIso := sorry
 
-instance : Scheme.IsTorusOver ℝ Spec(U1Ring ℝ) where
+instance : Spec(U1Ring ℝ).IsTorusOver ℝ where
   existsSplit := by
     use ℂ, inferInstance, inferInstance, inferInstance
 
