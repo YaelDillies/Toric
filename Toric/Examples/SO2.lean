@@ -67,6 +67,8 @@ lemma SO2relation : SO2Ring.X (R := R) ^ 2 + .Y ^ 2 = 1 := by
 
 lemma SO2relation' : SO2Ring.X (R := R) ^ 2 = 1 - .Y ^ 2 := by simp [← SO2relation]
 
+@[simp] lemma SO2relation'' : SO2Ring.X (R := R) * .X + .Y * .Y = 1 := by simp [← pow_two]
+
 /- @[ext]
 lemma SO2Ring.linearMap_ext {M : Type*} [AddCommGroup M] [Module R M] {f g : SO2Ring R →ₗ[R] M}
     (h1 : f .X = g .X) (h2 : f .Y = g .Y) : f = g := by
@@ -161,8 +163,7 @@ attribute [semireducible] MonoidAlgebra.single
 
 @[simps!]
 def SO2Ring.T : (SO2Ring ℂ)ˣ :=
-  .mkOfMulEqOne (α := SO2Ring ℂ) (.X + Complex.I • .Y) (.X - Complex.I • .Y) (by ring_nf; simp [foo])
-
+  .mkOfMulEqOne (.X + Complex.I • .Y) (.X - Complex.I • .Y) (by ring_nf; simp [foo])
 
 private def SO2Ring.complexEquivFun : MonoidAlgebra ℂ (Multiplicative ℤ) →ₐc[ℂ] SO2Ring ℂ :=
   (MonoidAlgebra.liftGroupLikeBialgHom _ _).comp
@@ -246,6 +247,46 @@ def SO2Ring.complexEquiv : MonoidAlgebra ℂ (Multiplicative (ℤ)) ≃ₐc[ℂ]
       ext
       simp [complexEquivFun_single, complexEquivInv, smul_smul, mul_div, smul_sub]
       ring)
+
+@[simp] lemma AlgHom.mul_apply' {R A C : Type*} [CommSemiring R] [CommSemiring A]
+  [Semiring C] [Bialgebra R C] [Algebra R A] (f g : C →ₐ[R] A) (c : C) :
+    (f * g) c = Algebra.TensorProduct.lift f g (fun _ _ ↦ .all _ _) (Coalgebra.comul c) := by
+  simp only [mul_def, coe_comp, Function.comp_apply, Bialgebra.comulAlgHom_apply]
+  rw [← AlgHom.comp_apply]
+  congr 1
+  ext <;> simp
+
+lemma mem_specialOrthogonalGroup_fin_two_iff {M : Matrix (Fin 2) (Fin 2) S} :
+    M ∈ Matrix.specialOrthogonalGroup (Fin 2) S ↔
+      M 0 0 = M 1 1 ∧ M 0 1 = - M 1 0 ∧ M 0 0 ^ 2 + M 0 1 ^ 2 = 1 := by
+  obtain ⟨a, b, c, d, rfl⟩ : ∃ a b c d, M = !![a, b; c, d] :=
+    ⟨M 0 0, M 0 1, M 1 0, M 1 1, by ext i j; fin_cases i, j <;> rfl⟩
+  trans ((a * a + b * b = 1 ∧ a * c + b * d = 0) ∧
+    c * a + d * b = 0 ∧ c * c + d * d = 1) ∧ a * d - b * c = 1
+  · simp [Matrix.mem_specialOrthogonalGroup_iff, Matrix.mem_orthogonalGroup_iff,
+      ← Matrix.ext_iff, Fin.forall_fin_succ, Matrix.mul_apply, Matrix.vecHead, Matrix.vecTail]
+  dsimp
+  refine ⟨?_, ?_⟩
+  · rintro ⟨⟨⟨h₀, h₁⟩, ⟨-, h₂⟩⟩, h₃⟩
+    refine ⟨?_, ?_, ?_⟩
+    · linear_combination - a * h₂ + c * h₁ + d * h₃
+    · linear_combination - c * h₀ + a * h₁ - b * h₃
+    · linear_combination h₀
+  · rintro ⟨rfl, rfl, H⟩
+    ring_nf at H ⊢
+    tauto
+
+def SO2Ring.algHomMulEquiv :
+    (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup (Fin 2) S where
+  toFun f := ⟨!![f .X, f .Y; - f .Y, f .X], by
+    simp [← map_mul, ← map_add, mem_specialOrthogonalGroup_fin_two_iff, pow_two]⟩
+  invFun M := SO2Ring.liftₐ (M.1 0 0) (M.1 0 1)
+    (mem_specialOrthogonalGroup_fin_two_iff.mp M.2).2.2
+  left_inv f := by ext <;> simp
+  right_inv M := by ext i j; fin_cases i, j <;>
+    simp [(mem_specialOrthogonalGroup_fin_two_iff.mp M.2).2.1,
+      (mem_specialOrthogonalGroup_fin_two_iff.mp M.2).1]
+  map_mul' f g := by ext i j; fin_cases i, j <;> simp [sub_eq_add_neg, add_comm]
 
 instance : Algebra S (S ⊗[R] SO2Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := SO2Ring R)
