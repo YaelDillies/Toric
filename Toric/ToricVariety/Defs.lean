@@ -7,7 +7,6 @@ Authors: Yaël Dillies, Paul Lezeau, Patrick Luo, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Morphisms.UnderlyingMap
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.CategoryTheory.Monoidal.Mod_
-import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.GroupScheme.Torus
 
 /-!

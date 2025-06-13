@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
+-/
 import Mathlib.Data.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.RingTheory.AdjoinRoot
@@ -22,7 +27,8 @@ def SO2Ring : Type _ := AdjoinRoot (X ^ 2 + Y ^ 2 - 1 : R[X][Y])
 namespace SO2Ring
 
 instance : CommRing (SO2Ring R) := by delta SO2Ring; infer_instance
-instance : Algebra R (SO2Ring R) := by delta SO2Ring; infer_instance
+instance : Algebra R (SO2Ring S) := by delta SO2Ring; infer_instance
+instance : IsScalarTower R S (SO2Ring S) := by delta SO2Ring; infer_instance
 
 def mk : R[X][Y] →ₐ[R] SO2Ring R := Ideal.Quotient.mkₐ R _
 
@@ -78,7 +84,7 @@ def counitAlgHom : SO2Ring R →ₐ[R] R := liftₐ 1 0 (by simp)
 @[simp] lemma counitAlgHom.apply_X : counitAlgHom (R := R) .X = 1 := by simp [counitAlgHom]
 @[simp] lemma counitAlgHom.apply_Y : counitAlgHom (R := R) .Y = 0 := by simp [counitAlgHom]
 
-instance : Bialgebra R (SO2Ring R) := Bialgebra.ofAlgHom comulAlgHom counitAlgHom
+instance : Bialgebra R (SO2Ring R) := .ofAlgHom comulAlgHom counitAlgHom
   (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul] <;> ring)
   (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
   (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
@@ -123,13 +129,13 @@ private def complexEquivFun : MonoidAlgebra ℂ (Multiplicative ℤ) →ₐc[ℂ
     simp
     ring
 
-lemma complexEquivFun_single (a : Multiplicative ℤ) (b : ℂ) :
+private lemma complexEquivFun_single (a : Multiplicative ℤ) (b : ℂ) :
     complexEquivFun (.single a b) = b • (T ^ a.toAdd).1 := by
   simp [complexEquivFun, Algebra.ofId_apply, Algebra.smul_def]
 
 set_option allowUnsafeReducibility true in
 attribute [local semireducible] MonoidAlgebra.single in
-private def complexEquivInv : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multiplicative (ℤ)) := by
+private def complexEquivInv : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multiplicative ℤ) := by
   refine .ofAlgHom'
     (liftₐ
       ((1 / 2 : ℂ) • (.single (.ofAdd 1) 1 + .single (.ofAdd (-1)) 1))
@@ -148,21 +154,27 @@ private def complexEquivInv : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multip
         neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm, Complex.I_mul_I]
       module
 
-def complexEquiv : MonoidAlgebra ℂ (Multiplicative (ℤ)) ≃ₐc[ℂ] SO2Ring ℂ where
+def complexEquiv : MonoidAlgebra ℂ (Multiplicative ℤ) ≃ₐc[ℂ] SO2Ring ℂ where
   __ := complexEquivFun
-  __ := AlgEquiv.ofAlgHom (AlgHomClass.toAlgHom complexEquivFun) complexEquivInv
-    (by
-      ext
+  __ : MonoidAlgebra ℂ (Multiplicative ℤ) ≃ₐ[ℂ] SO2Ring ℂ := by
+    refine .ofAlgHom (AlgHomClass.toAlgHom complexEquivFun) complexEquivInv ?_ ?_
+    · ext
       · simp [complexEquivFun_single, complexEquivInv]
         module
       simp [complexEquivInv, complexEquivFun_single, ←two_smul, smul_smul, div_mul_eq_mul_div,
          -nsmul_eq_mul]
-      module)
-    (by
-      ext
+      module
+    · ext
       simp [complexEquivFun_single, complexEquivInv, smul_smul, mul_div, smul_sub, neg_div,
         MonoidAlgebra.single, ← sub_eq_add_neg, ← Finsupp.single_add_apply, -Finsupp.single_add]
-      norm_num)
+      norm_num
+
+@[simp] lemma complexEquiv_single (a : Multiplicative ℤ) (b : ℂ) :
+    complexEquiv (.single a b) = b • (T ^ a.toAdd).1 := complexEquivFun_single ..
+
+@[simp] lemma complexEquiv_comp_algebraMap :
+    .comp complexEquiv (algebraMap ℂ <| MonoidAlgebra ℂ <| Multiplicative ℤ) =
+      algebraMap ℂ (SO2Ring ℂ) := by ext; simp [Algebra.algebraMap_eq_smul_one]
 
 def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup (Fin 2) S where
   toFun f := ⟨!![f .X, f .Y; - f .Y, f .X], by
@@ -178,12 +190,15 @@ def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup 
 instance : Algebra S (S ⊗[R] SO2Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := SO2Ring R)
 
-instance : Algebra R (SO2Ring S) := by delta SO2Ring; infer_instance
+variable (R S) in
+def baseChangeEquiv : SO2Ring S ≃ₐc[S] S ⊗[R] SO2Ring R := sorry
 
-instance : IsScalarTower R S (SO2Ring S) := by delta SO2Ring; infer_instance
+@[simp] lemma baseChangeEquiv_comp_algebraMap :
+  .comp (baseChangeEquiv R S) (algebraMap S (SO2Ring S)) =
+    Algebra.TensorProduct.includeLeftRingHom (R := R) (B := SO2Ring R) := sorry
 
 def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S where
-  toFun := Algebra.TensorProduct.lift (Algebra.algHom S S (SO2Ring S)) _ sorry
+  toFun := Algebra.TensorProduct.lift (Algebra.algHom S S (SO2Ring S)) sorry sorry
   invFun := sorry
   left_inv := sorry
   right_inv := sorry
@@ -195,23 +210,67 @@ def baseChangeBialgEquiv : S ⊗[R] SO2Ring R ≃ₐc[S] SO2Ring S:= by
   dsimp [SO2Ring]
   sorry
 
-open AlgebraicGeometry CategoryTheory Limits
+end SO2Ring
+
+open AlgebraicGeometry CategoryTheory Limits SO2Ring
 open scoped Hom
 
-namespace AlgebraicGeometry
+namespace AlgebraicGeometry.SO₂
+
+open Scheme
 
 scoped notation3 "SO₂("R")" => Spec <| .of <| SO2Ring R
 
-instance : (pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ))).IsSplitTorusOver Spec(ℂ) where
-  existsIso := sorry
+def so₂ComplexIso : SO₂(ℂ) ≅ Diag Spec(ℂ) ℤ :=
+  Scheme.Spec.mapIso complexEquiv.toAlgEquiv.toRingEquiv.toCommRingCatIso.op |>.trans
+    (diagSpecIso ℤ <| .of ℂ).symm
+
+@[simp] lemma so₂ComplexIso_hom :
+    so₂ComplexIso.hom =
+      Spec.map (CommRingCat.ofHom complexEquiv.toAlgEquiv.toRingEquiv.toRingHom) ≫
+        (diagSpecIso ℤ <| .of ℂ).inv := rfl
+
+@[simp] lemma so₂ComplexIso_inv :
+    so₂ComplexIso.inv =
+      (diagSpecIso ℤ <| .of ℂ).hom ≫
+        Spec.map (CommRingCat.ofHom complexEquiv.toAlgEquiv.toRingEquiv.symm.toRingHom) := rfl
+
+instance : so₂ComplexIso.hom.IsOver Spec(ℂ) where
+  comp_over := by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+
+instance : IsMon_Hom <| so₂ComplexIso.hom.asOver Spec(ℂ) where
+  one_hom := by ext; simp; sorry
+  mul_hom := by ext; simp; sorry
+
+instance : SO₂(ℂ).IsSplitTorusOver Spec(ℂ) := .of_iso so₂ComplexIso
+
+def pullbackSO₂RealComplex : pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ)) ≅ SO₂(ℂ) :=
+  (pullbackSymmetry ..).trans <| (pullbackSpecIso _ _ _).trans <| Scheme.Spec.mapIso
+    (baseChangeEquiv (R := ℝ) (S := ℂ)).toAlgEquiv.toRingEquiv.toCommRingCatIso.op
+
+@[simp] lemma pullbackSO₂RealComplex_hom :
+    pullbackSO₂RealComplex.hom = (pullbackSymmetry ..).hom ≫ (pullbackSpecIso _ _ _).hom ≫
+      Spec.map (baseChangeEquiv (R := ℝ) (S := ℂ)).toAlgEquiv.toRingEquiv.toCommRingCatIso.hom :=
+  rfl
+
+instance : pullbackSO₂RealComplex.hom.IsOver Spec(ℂ) where
+  comp_over := by
+    rw [← cancel_epi (pullbackSymmetry ..).inv, ← cancel_epi (pullbackSpecIso ..).inv,
+      canonicallyOverPullback_over]
+    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+
+instance : IsMon_Hom <| pullbackSO₂RealComplex.hom.asOver Spec(ℂ) := sorry
+
+instance pullback_SO₂_real_isSplitTorusOver_complex :
+    (pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ))).IsSplitTorusOver Spec(ℂ) :=
+  .of_iso pullbackSO₂RealComplex
 
 instance : Spec(SO2Ring ℝ).IsTorusOver ℝ where
-  existsSplit := by
-    use ℂ, inferInstance, inferInstance, inferInstance
-    sorry
+  existsSplit :=
+    ⟨ℂ, inferInstance, inferInstance, inferInstance, pullback_SO₂_real_isSplitTorusOver_complex⟩
 
 def bar :
     (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* Matrix.specialOrthogonalGroup (Fin 2) R :=
   sorry
 
-end AlgebraicGeometry
+end AlgebraicGeometry.SO₂

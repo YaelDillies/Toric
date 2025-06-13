@@ -88,30 +88,6 @@ end
 
 end AddMonoidAlgebra
 
-namespace AddMonoidAlgebra
-
-universe u₁ u₂
-
-variable {k : Type u₁} {G : Type u₂} [Semiring k]
-
-section
-
-@[simp, norm_cast] lemma coe_add (f g : AddMonoidAlgebra k G) : ⇑(f + g) = f + g := rfl
-
-end
-
-section
-
-@[elab_as_elim]
-theorem induction_linear [AddMonoid G] {p : AddMonoidAlgebra k G → Prop} (f : AddMonoidAlgebra k G)
-    (zero : p 0) (add : ∀ f g : AddMonoidAlgebra k G, p f → p g → p (f + g))
-    (single : ∀ a b, p (single a b)) : p f :=
-  Finsupp.induction_linear f zero add single
-
-end
-
-end AddMonoidAlgebra
-
 namespace MonoidAlgebra
 
 open Finsupp hiding single mapDomain
