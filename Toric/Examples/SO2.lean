@@ -178,9 +178,22 @@ def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup 
 instance : Algebra S (S ⊗[R] SO2Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := SO2Ring R)
 
-def baseChangeEquiv : S ⊗[R] SO2Ring R ≃ₐc[S] SO2Ring S := sorry
+instance : Algebra R (SO2Ring S) := by delta SO2Ring; infer_instance
 
-end SO2Ring
+instance : IsScalarTower R S (SO2Ring S) := by delta SO2Ring; infer_instance
+
+def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S where
+  toFun := Algebra.TensorProduct.lift (Algebra.algHom S S (SO2Ring S)) _ sorry
+  invFun := sorry
+  left_inv := sorry
+  right_inv := sorry
+  map_mul' := sorry
+  map_add' := sorry
+  commutes' := sorry
+
+def baseChangeBialgEquiv : S ⊗[R] SO2Ring R ≃ₐc[S] SO2Ring S:= by
+  dsimp [SO2Ring]
+  sorry
 
 open AlgebraicGeometry CategoryTheory Limits
 open scoped Hom
