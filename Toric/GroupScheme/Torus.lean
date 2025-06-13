@@ -5,6 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
+import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.MvLaurentPolynomial
 
 /-!
@@ -29,31 +30,26 @@ variable (G S) in
 @[mk_iff]
 class IsSplitTorusOver : Prop where
   existsIso :
-    ∃ (A : Type u) (_ : AddCommGroup A) (_ : Module.Free ℤ A),
-      Nonempty <| Grp_.mk' (asOver G S) ≅ .mk' (asOver (Diag S A) S)
+    ∃ (A : Type u) (_ : AddCommGroup A) (_ : Module.Free ℤ A) (e : G ≅ Diag S A)
+      (_ : e.hom.IsOver S), IsMon_Hom (e.hom.asOver S)
 
 instance {A : Type u} [AddCommGroup A] [Module.Free ℤ A] : (Diag S A).IsSplitTorusOver S :=
-  ⟨A, ‹_›, ‹_›, ⟨by exact .refl _⟩⟩
+  ⟨A, ‹_›, ‹_›, by exact .refl (S.Diag A), by dsimp; infer_instance, by dsimp; infer_instance⟩
 
-lemma IsSplitTorusOver.of_iso [H.IsSplitTorusOver S]
-    (e : Grp_.mk' (asOver G S) ≅ .mk' (asOver H S)) : G.IsSplitTorusOver S :=
-  let ⟨A, _, _, ⟨e'⟩⟩ := ‹H.IsSplitTorusOver S›; ⟨A, _, ‹_›, ⟨e.trans e'⟩⟩
-
-instance  (f : G ⟶ H) [IsIso f] [f.IsOver S] : IsIso (f.asOver S) :=
-  have : IsIso ((Over.forget S).map (Hom.asOver f S)) := ‹_›
-  isIso_of_reflects_iso _ (Over.forget _)
-
-lemma IsSplitTorusOver.of_isIso [H.IsSplitTorusOver S]
-    (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : G.IsSplitTorusOver S :=
-  have : IsMon_Hom (asIso (Hom.asOver f S)).hom := ‹_›
-  .of_iso (H := H) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
-    (Mon_.mkIso' (asIso (f.asOver S))))
+lemma IsSplitTorusOver.of_isIso [H.IsSplitTorusOver S] (f : G ⟶ H) [IsIso f] [f.IsOver S]
+    [IsMon_Hom (f.asOver S)] : G.IsSplitTorusOver S :=
+  have : IsMon_Hom ((asIso f).hom.asOver S) := ‹_›
+  let ⟨A, _, _, e, _, _⟩ := ‹H.IsSplitTorusOver S›
+  ⟨A, _, ‹_›, (asIso f).trans e, by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsSplitTorusOver.of_isIso' [G.IsSplitTorusOver S]
     (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : H.IsSplitTorusOver S :=
-  have : IsMon_Hom (asIso (Hom.asOver f S)).hom := ‹_›
-  .of_iso (H := G) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
-    (.symm <| Mon_.mkIso' (asIso (f.asOver S))))
+  have : IsMon_Hom ((inv f).asOver S) := by
+    simpa using inferInstanceAs <| IsMon_Hom (asIso <| f.asOver S).inv
+  .of_isIso (inv f)
+
+lemma IsSplitTorusOver.of_iso [H.IsSplitTorusOver S] (e : G ≅ H) [e.hom.IsOver S]
+    [IsMon_Hom (e.hom.asOver S)] : G.IsSplitTorusOver S := of_isIso e.hom
 
 end IsSplitTorusOver
 
@@ -77,15 +73,17 @@ instance [G.IsSplitTorusOver Spec(k)] : G.IsTorusOver k :=
     exact .of_isIso (pullback.fst (G ↘ Spec(k)) (𝟙 _))⟩⟩
 
 lemma IsTorusOver.of_iso [H.IsTorusOver k]
-    (e : Grp_.mk' (asOver G Spec(k)) ≅ .mk' (asOver H Spec(k))) : G.IsTorusOver k  :=
-  let ⟨L, _, _, _, hH⟩ := ‹H.IsTorusOver k›; ⟨L, _, ‹_›, ‹_›,
-    have e := (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap k L)))).mapGrp.mapIso e
-    .of_iso (H := (pullback (H ↘ Spec(k))
-      (Spec.map (CommRingCat.ofHom <| algebraMap k L)))) (by convert e using 1)⟩
+    (_e : Grp_.mk' (asOver G Spec(k)) ≅ .mk' (asOver H Spec(k))) : G.IsTorusOver k := by
+  obtain ⟨L, _, _, _, hH⟩ := ‹H.IsTorusOver k›
+  refine ⟨L, _, ‹_›, ‹_›, ?_⟩
+  stop
+  have e := (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap k L)))).mapGrp.mapIso e
+  exact .of_iso (H := pullback (H ↘ Spec(k)) (Spec.map (CommRingCat.ofHom <| algebraMap k L)))
+    (by convert (Grp_.forget _ ⋙ Over.forget _).mapIso e using 1)
 
 lemma IsTorusOver.of_isIso [H.IsTorusOver k]
     (f : G ⟶ H) [IsIso f] [f.IsOver Spec(k)] [IsMon_Hom (f.asOver Spec(k))] :
-    G.IsTorusOver k  :=
+    G.IsTorusOver k :=
   have : IsMon_Hom (asIso (Hom.asOver f Spec(k))).hom := ‹_›
   .of_iso (H := H) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
     (Mon_.mkIso' (asIso (f.asOver Spec(k)))))
@@ -121,7 +119,7 @@ variable {R : CommRingCat} {σ : Type*}
 
 variable (R σ) in
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-abbrev splitTorusIso (R : CommRingCat) (σ : Type*) : 
+abbrev splitTorusIso (R : CommRingCat) (σ : Type*) :
     𝔾ₘ[Spec R, σ] ≅ Spec(MvLaurentPolynomial σ R) := diagSpecIso _ _
 
 end AlgebraicGeometry.Scheme
