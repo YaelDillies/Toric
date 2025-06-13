@@ -9,7 +9,8 @@ variable (p : Polynomial S)
 
 -- TODO : find better name
 noncomputable def map (f : S →+* T) : AdjoinRoot p →+* AdjoinRoot (.map f p) :=
-  lift ((algebraMap T _).comp f) (root (.map f p)) (sorry)
+  lift ((algebraMap T _).comp f) (root (.map f p)) (by
+    rw [← Polynomial.eval₂_map, ← Polynomial.aeval_def, aeval_eq, mk_self])
 
 def tensorAlgEquiv :
     letI := Algebra.TensorProduct.rightAlgebra (R := R) (A := T) (B := S)
