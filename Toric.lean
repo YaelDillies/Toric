@@ -54,6 +54,7 @@ import Toric.Mathlib.GroupTheory.FreeAbelianGroup
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.LinearAlgebra.UnitaryGroup
+import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
