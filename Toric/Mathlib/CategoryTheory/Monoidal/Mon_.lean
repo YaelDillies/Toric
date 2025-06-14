@@ -229,3 +229,10 @@ variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M : 
 instance Mon_.mk'.X.instIsComm_Mon [Mon_Class M] [IsCommMon M] : IsCommMon (Mon_.mk M).X := ‹_›
 
 end
+
+namespace Mon_
+variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
+
+instance {f : M ⟶ N} [IsIso f] : IsIso f.hom := inferInstanceAs <| IsIso <| (forget C).map f
+
+end Mon_

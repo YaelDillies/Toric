@@ -5,6 +5,8 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
+import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
+import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Pasting
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.AlgebraicGeometry.Scheme
@@ -19,7 +21,7 @@ universe u
 
 namespace AlgebraicGeometry.Scheme
 section Diag
-variable {S : Scheme.{u}} {R : CommRingCat.{u}} {M N O G : Type u} [AddCommMonoid M]
+variable {S T : Scheme.{u}} {R : CommRingCat.{u}} {M N O G : Type u} [AddCommMonoid M]
   [AddCommMonoid N] [AddCommMonoid O] [AddCommGroup G]
 
 variable (S) in
@@ -108,6 +110,35 @@ instance : IsMon_Hom ((diagSpecIso R M).inv.asOver (Spec R)) :=
   Mon_.instIsMon_HomHom
   ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
     (specULiftZIsTerminal.hom_ext _ _)).app _).inv
+
+/-- `Diag` is invariant under pullback. -/
+def diagPullbackIso (f : T ⟶ S) : pullback f (Diag S M ↘ S) ≅ Diag T M := sorry
+
+instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S M ↘ S) := by
+  apply MorphismProperty.pullback_snd
+  simp only [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType),
+    CommRingCat.hom_ofHom, algebraMap_finiteType_iff_algebra_finiteType]
+  infer_instance
+
+@[simp] lemma locallyOfFiniteType_diag_iff [hS : Nonempty S] :
+    LocallyOfFiniteType (Diag S M ↘ S) ↔ AddMonoid.FG M where
+  mpr _ := inferInstance
+  mp h := by
+    wlog hS : ∃ R, S = Spec R
+    · obtain ⟨x⟩ := ‹Nonempty S›
+      obtain ⟨i, x, rfl⟩ := S.affineCover.exists_eq x
+      have that : Nonempty (S.affineCover.obj i) := ⟨x⟩
+      refine this (S := S.affineCover.obj i) ?_ ⟨_, rfl⟩
+      sorry
+    obtain ⟨R, rfl⟩ := hS
+    rw [Spec_carrier, PrimeSpectrum.nonempty_iff_nontrivial] at hS
+    replace h : LocallyOfFiniteType (Spec(R[M]) ↘ Spec R) := by
+      rw [← MorphismProperty.cancel_left_of_respectsIso @LocallyOfFiniteType
+        (diagSpecIso R M).hom]
+      erw [comp_over]
+      assumption
+    simpa [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType),
+      algebraMap_finiteType_iff_algebra_finiteType, AddMonoidAlgebra.finiteType_iff_fg] using h
 
 variable (S) in
 def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
