@@ -17,6 +17,20 @@ noncomputable section
 
 open CategoryTheory Opposite Limits
 
+namespace Mon_
+variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
+
+instance {f : M ⟶ N} [IsIso f] : IsIso f.hom := inferInstanceAs <| IsIso <| (forget C).map f
+
+end Mon_
+
+namespace Grp_
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C}
+
+instance {f : G ⟶ H} [IsIso f] : IsIso f.hom := inferInstanceAs <| IsIso <| (forget C).map f
+
+end Grp_
+
 namespace AlgebraicGeometry.Scheme
 
 universe u v
@@ -39,7 +53,7 @@ lemma IsSplitTorusOver.of_iso [H.IsSplitTorusOver S]
     (e : Grp_.mk' (asOver G S) ≅ .mk' (asOver H S)) : G.IsSplitTorusOver S :=
   let ⟨A, _, _, ⟨e'⟩⟩ := ‹H.IsSplitTorusOver S›; ⟨A, _, ‹_›, ⟨e.trans e'⟩⟩
 
-instance  (f : G ⟶ H) [IsIso f] [f.IsOver S] : IsIso (f.asOver S) :=
+instance (f : G ⟶ H) [IsIso f] [f.IsOver S] : IsIso (f.asOver S) :=
   have : IsIso ((Over.forget S).map (Hom.asOver f S)) := ‹_›
   isIso_of_reflects_iso _ (Over.forget _)
 
@@ -54,6 +68,22 @@ lemma IsSplitTorusOver.of_isIso' [G.IsSplitTorusOver S]
   have : IsMon_Hom (asIso (Hom.asOver f S)).hom := ‹_›
   .of_iso (H := G) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
     (.symm <| Mon_.mkIso' (asIso (f.asOver S))))
+
+variable (G S) in
+/-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
+lemma exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType [G.IsSplitTorusOver S]
+    [LocallyOfFiniteType (G ↘ S)] :
+    ∃ (ι : Type u) (_ : Finite ι),
+      Nonempty <| Grp_.mk' ((Diag S <| MonoidAlgebra ℤ ι).asOver S) ≅ .mk' (G.asOver S) := by
+  obtain ⟨A, _, _, ⟨e⟩⟩ := ‹G.IsSplitTorusOver S›
+  have : e.hom.hom.left.IsOver S := inferInstance
+  have : LocallyOfFiniteType (Diag S A ↘ S) := by
+    rw [← MorphismProperty.cancel_left_of_respectsIso @LocallyOfFiniteType e.hom.hom.left]
+    erw [comp_over e.hom.hom.left]
+    assumption
+  rw [Diag.canonicallyOver_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)] at this
+
+
 
 end IsSplitTorusOver
 
@@ -121,7 +151,7 @@ variable {R : CommRingCat} {σ : Type*}
 
 variable (R σ) in
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-abbrev splitTorusIso (R : CommRingCat) (σ : Type*) : 
+abbrev splitTorusIso (R : CommRingCat) (σ : Type*) :
     𝔾ₘ[Spec R, σ] ≅ Spec(MvLaurentPolynomial σ R) := diagSpecIso _ _
 
 end AlgebraicGeometry.Scheme

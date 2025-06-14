@@ -3,7 +3,6 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
@@ -57,7 +56,8 @@ end CommGrp_Class
 end general_base
 
 section IsDomain
-variable {R : CommRingCat.{u}} [IsDomain R] {σ : Type u} {G : Scheme.{u}} [G.Over (Spec R)]
+variable {R : CommRingCat.{u}} [IsDomain R] {σ : Type u} {G T : Scheme.{u}} [G.Over (Spec R)]
+  [T.Over (Spec R)]
 
 section AddCommGroup
 variable {G : Type u} [AddCommGroup G]
@@ -110,7 +110,7 @@ def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) :=
   (cocharGrpAlg R).trans ⟨FreeAbelianGroup.lift.symm, fun _ _ ↦ rfl⟩
 
 section CommGrp_Class
-variable [CommGrp_Class (G.asOver (Spec R))]
+variable [CommGrp_Class (G.asOver (Spec R))] [CommGrp_Class (T.asOver (Spec R))]
 
 variable (R G) in
 attribute [local instance 1000000] AddEquivClass.instAddHomClass AddMonoidHomClass.toAddHomClass
@@ -130,8 +130,10 @@ noncomputable def charPairing : X*(Spec R, G) →ₗ[ℤ] X(Spec R, G) →ₗ[�
   map_smul' _ _ := by ext; simp only [map_zsmul, AddMonoidHom.coe_smul, Pi.smul_apply, smul_eq_mul,
     LinearMap.coe_mk, AddHom.coe_mk, eq_intCast, Int.cast_eq, LinearMap.smul_apply]
 
-instance isPerfPair_charPairing [Finite σ] : (charPairing R 𝔾ₘ[Spec R, σ]).IsPerfPair := by
-  refine .congr (.id (R := ℤ) (M := Module.Dual ℤ (σ →₀ ℤ)))
+instance isPerfPair_charPairing [T.IsSplitTorusOver Spec(R)] [LocallyOfFiniteType (T ↘ Spec(R))] :
+    (charPairing R T).IsPerfPair := by
+  obtain ⟨A, _, _, ⟨e⟩⟩ := ‹T.IsSplitTorusOver Spec(R)›
+  refine .congr (.id (R := ℤ) (M := Module.Dual ℤ A))
     ((cocharTorus (R := R) (σ := σ)).trans (Finsupp.lift ..)).toIntLinearEquiv
     (charTorus (R := R) (σ := σ)).toIntLinearEquiv _ ?_
   ext f x
