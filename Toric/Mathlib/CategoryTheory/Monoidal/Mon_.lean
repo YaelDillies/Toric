@@ -55,6 +55,14 @@ instance [IsCommMon M] [IsCommMon N] : IsCommMon (M ⊗ N) where
 
 end Mon_Class
 
+section
+variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M N : C} [Mon_Class M]
+  [Mon_Class N]
+
+instance {f : M ⟶ N} [IsIso f] [IsMon_Hom f] : IsMon_Hom (asIso f).hom := ‹_›
+
+end
+
 namespace Mon_
 variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C]
 
