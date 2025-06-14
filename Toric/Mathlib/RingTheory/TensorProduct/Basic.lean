@@ -1,5 +1,7 @@
 import Mathlib.RingTheory.TensorProduct.Basic
 
+open TensorProduct
+
 namespace Algebra.TensorProduct
 variable {R S A B C D : Type*} [CommSemiring R] [CommSemiring S] [Algebra R S] [Semiring A]
   [Algebra R A] [Algebra S A] [IsScalarTower R S A] [Semiring B] [Algebra R B] [Semiring C]
@@ -15,12 +17,19 @@ lemma algebraMap_def {R S T : Type*}
 @[simp] lemma toLinearMap_map (f : A →ₐ[S] C) (g : B →ₐ[R] D) :
     (map f g).toLinearMap = TensorProduct.AlgebraTensorModule.map f.toLinearMap g.toLinearMap := rfl
 
+variable (A) in
+/-- `lTensor A f : A ⊗ B →ₐ A ⊗ C` is the natural algebra morphism induced by `f : B →ₐc C`. -/
+noncomputable abbrev lTensor (f : B →ₐ[R] C) : (A ⊗[R] B) →ₐ[R] (A ⊗[R] C ):=
+  Algebra.TensorProduct.map (.id R A) f
+
+variable (A) in
+/-- `rTensor A f : B ⊗ A →ₐc C ⊗ A` is the natural algebra morphism induced by `f : B →ₐc C`. -/
+noncomputable abbrev rTensor (f : B →ₐ[R] C) : B ⊗[R] A →ₐ[R] C ⊗[R] A :=
+  Algebra.TensorProduct.map f (.id R A)
+
 end Algebra.TensorProduct
 
 section hetero
-
-open TensorProduct
-
 variable {R S T R' S' T' : Type*}
   [CommSemiring R] [CommSemiring S] [CommSemiring T] [Algebra R S] [Algebra R T]
   [CommSemiring R'] [CommSemiring S'] [CommSemiring T'] [Algebra R' S'] [Algebra R' T']
