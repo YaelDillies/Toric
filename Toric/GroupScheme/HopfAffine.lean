@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
+import Toric.Mathlib.AlgebraicGeometry.Scheme
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
@@ -71,7 +72,17 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
-noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
+noncomputable instance algSpec.instBraided : (algSpec R).Braided where
+  ε' := Over.homMk (𝟙 _)
+  η' := Over.homMk (𝟙 _)
+  μ' (X Y) := Over.homMk (pullbackSpecIso R X Y).hom
+  δ' (X Y) := Over.homMk (pullbackSpecIso R X Y).inv
+
+@[simp] lemma algSpec_ε_left : (LaxMonoidal.ε (algSpec R)).left = 𝟙 (Spec R) := rfl
+@[simp] lemma algSpec_η_left : (OplaxMonoidal.η (algSpec R)).left = 𝟙 (Spec R) := rfl
+@[simp] lemma algSpec_μ_left : (LaxMonoidal.μ (algSpec R)).left = (pullbackSpecIso R X Y).hom := rfl
+@[simp] lemma algSpec_δ_left : (OplaxMonoidal.δ (algSpec R)).left = (pullbackSpecIso R X Y).inv :=
+  rfl
 
 @[simp]
 lemma prodComparisonIso_algSpec_hom_left (A B : (CommAlgCat R)ᵒᵖ) :
@@ -145,8 +156,21 @@ suppress_compilation
 instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 
+attribute [simp] AlgHom.toUnder in
+@[simps!? one]
 instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
   ((bialgSpec R).obj <| .op <| .of R A).mon
+
+lemma specOverSpec_one [Bialgebra R A] :
+    η[(Spec A).asOver (Spec R)] = LaxMonoidal.ε (algSpec R) ≫
+      Over.homMk (V := (Spec A).asOver (Spec R))
+        (Spec.map <| CommRingCat.ofHom <| Bialgebra.counitAlgHom R A)
+          (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) := rfl
+
+@[simp] lemma specOverSpec_one_left [Bialgebra R A] :
+    η[(Spec A).asOver (Spec R)].left =
+      (Spec.map <| CommRingCat.ofHom <| Bialgebra.counitAlgHom R A) := by
+  simp [specOverSpec_one]
 
 lemma μIso_algSpec_inv_left [Algebra R A] :
     (μIso (algSpec R) (op (.of R A)) (op (.of R A))).inv.left = (pullbackSpecIso R A A).inv := rfl
@@ -201,6 +225,16 @@ noncomputable instance [M.Over (Spec R)] [Mon_Class (M.asOver (Spec R))] [IsAffi
 prove that. -/
 noncomputable instance [G.Over (Spec R)] [Grp_Class (G.asOver (Spec R))] [IsAffine G] :
     HopfAlgebra R Γ(G, ⊤) := by sorry
+
+variable (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
+
+open TensorProduct Algebra.TensorProduct CommRingCat RingHomClass
+
+/-- The isomorphism between the fiber product of two schemes `Spec S` and `Spec T`
+over a scheme `Spec R` and the `Spec` of the tensor product `S ⊗[R] T`. -/
+noncomputable
+def pullbackSpecIso' : pullback (Spec(S) ↘ Spec(R)) (Spec(T) ↘  Spec(R)) ≅ Spec (.of <| S ⊗[R] T) :=
+  pullbackSpecIso ..
 
 end AlgebraicGeometry.Scheme
 

@@ -8,7 +8,6 @@ import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.AlgebraicGeometry.Over
-import Toric.Mathlib.AlgebraicGeometry.Scheme
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra Hom
