@@ -8,6 +8,7 @@ import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.RingTheory.AdjoinRoot
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Polynomial.AlgebraMap
+import Toric.Mathlib.AlgebraicGeometry.Over
 import Toric.Mathlib.Data.Finsupp.Single
 import Toric.Mathlib.LinearAlgebra.UnitaryGroup
 
@@ -190,13 +191,6 @@ def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup 
 instance : Algebra S (S ⊗[R] SO2Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := SO2Ring R)
 
-variable (R S) in
-def baseChangeEquiv : SO2Ring S ≃ₐc[S] S ⊗[R] SO2Ring R := sorry
-
-@[simp] lemma baseChangeEquiv_comp_algebraMap :
-  .comp (baseChangeEquiv R S) (algebraMap S (SO2Ring S)) =
-    Algebra.TensorProduct.includeLeftRingHom (R := R) (B := SO2Ring R) := sorry
-
 def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S where
   toFun := Algebra.TensorProduct.lift (Algebra.algHom S S (SO2Ring S)) sorry sorry
   invFun := sorry
@@ -206,9 +200,14 @@ def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S where
   map_add' := sorry
   commutes' := sorry
 
-def baseChangeBialgEquiv : S ⊗[R] SO2Ring R ≃ₐc[S] SO2Ring S:= by
+variable (R S) in
+def baseChangeBialgEquiv : SO2Ring S ≃ₐc[S] S ⊗[R] SO2Ring R := by
   dsimp [SO2Ring]
   sorry
+
+@[simp] lemma baseChangeBialgEquiv_comp_algebraMap :
+  .comp (baseChangeBialgEquiv R S) (algebraMap S (SO2Ring S)) =
+    algebraMap S (S ⊗[R] SO2Ring R) := sorry
 
 end SO2Ring
 
@@ -222,44 +221,69 @@ open Scheme
 scoped notation3 "SO₂("R")" => Spec <| .of <| SO2Ring R
 
 def so₂ComplexIso : SO₂(ℂ) ≅ Diag Spec(ℂ) ℤ :=
-  Scheme.Spec.mapIso complexEquiv.toAlgEquiv.toRingEquiv.toCommRingCatIso.op |>.trans
+  Scheme.Spec.mapIso complexEquiv.toAlgEquiv.toRingEquiv.toCommRingCatIso.op ≪≫
     (diagSpecIso ℤ <| .of ℂ).symm
 
 @[simp] lemma so₂ComplexIso_hom :
     so₂ComplexIso.hom =
-      Spec.map (CommRingCat.ofHom complexEquiv.toAlgEquiv.toRingEquiv.toRingHom) ≫
+      ((bialgSpec <| .of ℂ).map <| .op <| CommBialgCat.ofHom complexEquiv.toBialgHom).hom.left ≫
         (diagSpecIso ℤ <| .of ℂ).inv := rfl
 
 @[simp] lemma so₂ComplexIso_inv :
     so₂ComplexIso.inv =
       (diagSpecIso ℤ <| .of ℂ).hom ≫
-        Spec.map (CommRingCat.ofHom complexEquiv.toAlgEquiv.toRingEquiv.symm.toRingHom) := rfl
+        ((bialgSpec <| .of ℂ).map <| .op <|
+          CommBialgCat.ofHom complexEquiv.symm.toBialgHom).hom.left := rfl
 
-instance : so₂ComplexIso.hom.IsOver Spec(ℂ) where
-  comp_over := by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+instance : so₂ComplexIso.hom.IsOver Spec(ℂ) := by rw [so₂ComplexIso_hom]; infer_instance
 
-instance : IsMon_Hom <| so₂ComplexIso.hom.asOver Spec(ℂ) where
-  one_hom := by ext; simp; sorry
-  mul_hom := by ext; simp; sorry
+lemma so₂ComplexIso_hom_asOver :
+    so₂ComplexIso.hom.asOver Spec(ℂ) =
+      ((bialgSpec <| .of ℂ).map <| .op <| CommBialgCat.ofHom complexEquiv.toBialgHom).hom ≫
+        (diagSpecIso ℤ <| .of ℂ).inv.asOver Spec(ℂ) := rfl
+
+instance : IsMon_Hom <| so₂ComplexIso.hom.asOver Spec(ℂ) := by
+  rw [so₂ComplexIso_hom_asOver]; infer_instance
 
 instance : SO₂(ℂ).IsSplitTorusOver Spec(ℂ) := .of_iso so₂ComplexIso
 
 def pullbackSO₂RealComplex : pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ)) ≅ SO₂(ℂ) :=
-  (pullbackSymmetry ..).trans <| (pullbackSpecIso _ _ _).trans <| Scheme.Spec.mapIso
-    (baseChangeEquiv (R := ℝ) (S := ℂ)).toAlgEquiv.toRingEquiv.toCommRingCatIso.op
+  pullbackSymmetry .. ≪≫ pullbackSpecIso .. ≪≫ Scheme.Spec.mapIso
+    (baseChangeBialgEquiv ℝ ℂ).toAlgEquiv.toRingEquiv.toCommRingCatIso.op
 
 @[simp] lemma pullbackSO₂RealComplex_hom :
-    pullbackSO₂RealComplex.hom = (pullbackSymmetry ..).hom ≫ (pullbackSpecIso _ _ _).hom ≫
-      Spec.map (baseChangeEquiv (R := ℝ) (S := ℂ)).toAlgEquiv.toRingEquiv.toCommRingCatIso.hom :=
-  rfl
+    pullbackSO₂RealComplex.hom = (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom ≫
+      ((bialgSpec <| .of ℂ).map <| .op <|
+        CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).toBialgHom).hom.left := rfl
 
-instance : pullbackSO₂RealComplex.hom.IsOver Spec(ℂ) where
+instance : (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.IsOver Spec(ℂ) where
   comp_over := by
-    rw [← cancel_epi (pullbackSymmetry ..).inv, ← cancel_epi (pullbackSpecIso ..).inv,
+    rw [← cancel_epi (pullbackSymmetry ..).inv, ← cancel_epi (pullbackSpecIso' ..).inv,
       canonicallyOverPullback_over]
-    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
+    rfl
 
-instance : IsMon_Hom <| pullbackSO₂RealComplex.hom.asOver Spec(ℂ) := sorry
+instance :
+    IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.asOver Spec(ℂ) where
+  one_hom := by
+    ext
+    simp [mon_ClassAsOverPullback_one]
+    rw [← cancel_mono (pullbackSpecIso' ..).hom]
+    ext
+    sorry
+  mul_hom := sorry
+
+instance : pullbackSO₂RealComplex.hom.IsOver Spec(ℂ) := by
+  rw [pullbackSO₂RealComplex_hom]; infer_instance
+
+@[simp] lemma pullbackSO₂RealComplex_hom_asOver :
+    pullbackSO₂RealComplex.hom.asOver Spec(ℂ) =
+      (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.asOver Spec(ℂ) ≫
+        ((bialgSpec <| .of ℂ).map <| .op <|
+          CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).toBialgHom).hom := rfl
+
+instance : IsMon_Hom <| pullbackSO₂RealComplex.hom.asOver Spec(ℂ) := by
+  rw [pullbackSO₂RealComplex_hom_asOver]; infer_instance
 
 instance pullback_SO₂_real_isSplitTorusOver_complex :
     (pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ))).IsSplitTorusOver Spec(ℂ) :=
