@@ -31,9 +31,8 @@ def Diag : Scheme.{u} :=
 variable (S) in
 /-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
 def Diag.map (f : M →+ N) : Diag S N ⟶ Diag S M :=
-  pullback.map _ _ _ _
-    (Spec.map <| CommRingCat.ofHom <| MonoidAlgebra.mapDomainRingHom _ f.toMultiplicative)
-    (𝟙 S) (𝟙 _) (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) (by simp)
+  pullback.map _ _ _ _ Spec(MonoidAlgebra.mapDomainRingHom _ f.toMultiplicative) (𝟙 S) (𝟙 _)
+    (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) (by simp)
 
 @[simps! -isSimp]
 instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance

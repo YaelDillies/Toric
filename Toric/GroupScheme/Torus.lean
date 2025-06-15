@@ -79,9 +79,8 @@ instance [G.IsSplitTorusOver Spec(k)] : G.IsTorusOver k :=
 lemma IsTorusOver.of_iso [H.IsTorusOver k]
     (e : Grp_.mk' (asOver G Spec(k)) ≅ .mk' (asOver H Spec(k))) : G.IsTorusOver k  :=
   let ⟨L, _, _, _, hH⟩ := ‹H.IsTorusOver k›; ⟨L, _, ‹_›, ‹_›,
-    have e := (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap k L)))).mapGrp.mapIso e
-    .of_iso (H := (pullback (H ↘ Spec(k))
-      (Spec.map (CommRingCat.ofHom <| algebraMap k L)))) (by convert e using 1)⟩
+    have e := (Over.pullback Spec(algebraMap k L)).mapGrp.mapIso e
+    .of_iso (H := pullback (H ↘ Spec(k)) Spec(algebraMap k L)) (by convert e using 1)⟩
 
 lemma IsTorusOver.of_isIso [H.IsTorusOver k]
     (f : G ⟶ H) [IsIso f] [f.IsOver Spec(k)] [IsMon_Hom (f.asOver Spec(k))] :
@@ -121,7 +120,7 @@ variable {R : CommRingCat} {σ : Type*}
 
 variable (R σ) in
 /-- The split torus with dimensions `σ` over `Spec R` is isomorphic to `Spec R[ℤ^σ]`. -/
-abbrev splitTorusIso (R : CommRingCat) (σ : Type*) : 
+abbrev splitTorusIso (R : CommRingCat) (σ : Type*) :
     𝔾ₘ[Spec R, σ] ≅ Spec(MvLaurentPolynomial σ R) := diagSpecIso _ _
 
 end AlgebraicGeometry.Scheme
