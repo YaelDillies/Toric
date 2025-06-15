@@ -155,3 +155,60 @@
 
   Transfer everything across the isos $X(\G_m^n) = \Z^n, X*(\G_m^n) = \Hom(\Z^n, \Z)$.
 \end{proof}
+
+
+\begin{proposition}[The image of a torus is a torus]
+  \label{1-1-1-group-hom-torus} % Proposition 1.1.1(a)
+  \uses{0-torus}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a domain. Let $T$ be a split torus over $R$.
+  Let $G$ be a diagonalisable group scheme over $R$ and let $\phi: T \to G$ be a homomorphism.
+  Then the (scheme theoretic) image of $\phi$ is a split torus over $R$ and the maps
+  \[
+    T \xrightarrow{\hat{\phi}} \operatorname{im}\phi \xrightarrow{\iota} G
+  \]
+  are group homomorphisms, and $\hat{\phi}$ is fpqc.
+  Furthermore, if $T = D_R(H), G = D_R(I), \phi = D_R(f)$
+  for $H$ a finitely generated free abelian group, $I$ an abelian group, $f : I \to H$ a group hom,
+  then $\operatorname{im} \phi \cong D_R(\operatorname{im}(f))$.
+\end{proposition}
+\begin{proof}
+  \uses{0-full-faithful-diag, 0-diag-spec, 0-diag-closed-emb, 0-diag-aff-hom}
+  % \leanok
+
+  By fullness of $D_R$ (Proposition \ref{0-full-faithful-diag}),
+  it's enough to handle the case where $T = D_R(H), G = D_R(I), \phi = D_R(f)$
+  for $H$ a finitely generated free abelian group, $I$ an abelian group, $f : I \to H$ a group hom.
+
+  Then $\operatorname{im}(f)$ is a subgroup of the finitely-generated free abelian group $H$,
+  hence itself a finitely-generated free abelian group
+  (since free is equivalent to torsion-free for finitely-generated abelian groups,
+  and a subgroup of a torsion-free group is torsion-free).
+\end{proof}
+
+
+\begin{proposition}[A subgroup of a torus is a torus]
+  \label{1-1-1-subgroup-torus}
+  \uses{0-torus}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a commutative ring of characteristic zero.
+  Let $T$ be a split torus.
+  If $H \subseteq T$ is a connected closed subgroup, then $H$ is a split torus.
+\end{proposition}
+\begin{proof}
+  \uses{0-subgroup-diag, 0-full-faithful-diag, 0-diag-spec, 0-diag-tors}
+  % \leanok
+
+  By assumption, write $T \cong D_k[G]$ for $G$ a free abelian group.
+  By Proposition \ref{0-subgroup-diag}, $H$ is a diagonalisable group scheme,
+  say $H \cong D_k(I)$ for $I$ an abelian group.
+  Since $H$ is a closed subscheme, the map $G \to I$ is surjective,
+  so $I$ is a finitely-generated abelian group.
+  Since $H$ is connected, Proposition \ref{0-diag-tors} says $I$ is torsion-free, hence free.
+  Thus $H$ is a split torus.
+\end{proof}
+
