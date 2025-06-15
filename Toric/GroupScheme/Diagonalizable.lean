@@ -7,6 +7,7 @@ import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
+import Toric.Mathlib.AlgebraicGeometry.Over
 import Toric.Mathlib.AlgebraicGeometry.Scheme
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
@@ -289,25 +290,21 @@ variable (S G) in
 @[mk_iff]
 class IsDiagonalisable : Prop where
   existsIso :
-    ∃ (A : Type u) (_ : AddCommGroup A),
-      Nonempty <| Grp_.mk (asOver G S) ≅ .mk (asOver (Diag S A) S)
+    ∃ (A : Type u) (_ : AddCommGroup A) (e : G ≅ Diag S A) (_ : e.hom.IsOver S),
+      IsMon_Hom <| e.hom.asOver S
 
 instance {A : Type u} [AddCommGroup A] : IsDiagonalisable S (Diag S A) :=
-  ⟨A, ‹_›, ⟨by exact .refl _⟩⟩
+  ⟨A, ‹_›, by exact .refl _, by dsimp; infer_instance, by dsimp; infer_instance⟩
 
-lemma IsDiagonalisable.ofIso [IsDiagonalisable S H]
-    (e : Grp_.mk (asOver G S) ≅ .mk (asOver H S)) : IsDiagonalisable S G :=
-  let ⟨A, _, ⟨e'⟩⟩ := ‹IsDiagonalisable S H›; ⟨A, _, ⟨e.trans e'⟩⟩
-
-instance  (f : G ⟶ H) [IsIso f] [f.IsOver S] : IsIso (f.asOver S) :=
-  have : IsIso ((Over.forget S).map (Hom.asOver f S)) := ‹_›
-  isIso_of_reflects_iso _ (Over.forget _)
+lemma IsDiagonalisable.of_iso [IsDiagonalisable S H]
+    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : IsDiagonalisable S G :=
+  let ⟨A, _, e', _, _⟩ := ‹IsDiagonalisable S H›
+  ⟨A, _, e.trans e', by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsDiagonalisable.of_isIso [IsDiagonalisable S H]
     (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : IsDiagonalisable S G :=
-  have : IsMon_Hom (asIso (Hom.asOver f S)).hom := ‹_›
-  IsDiagonalisable.ofIso (H := H) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
-    (Mon_.mkIso' (asIso (f.asOver S))))
+  have : IsMon_Hom (Hom.asOver (asIso f).hom S) := ‹_›
+  .of_iso (asIso f)
 
 end Scheme
 
