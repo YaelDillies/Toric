@@ -46,8 +46,8 @@ def FullyFaithful.homMulEquiv (hF : F.FullyFaithful) : (X ⟶ M) ≃* (F.obj X �
 
 end CategoryTheory.Functor
 
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
-  [Mon_Class N]
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N O X Y : C} [Mon_Class M]
+  [Mon_Class N] [Mon_Class O]
 
 @[reassoc]
 lemma Mon_Class.comp_pow (f : X ⟶ M) (n : ℕ) (h : Y ⟶ X) : h ≫ f ^ n = (h ≫ f) ^ n := by
@@ -67,8 +67,19 @@ lemma one_tensor_one : (1 : X ⟶ M) ⊗ (1 : Y ⟶ N) = 1 := by
 
 attribute [local simp] tensorObj.one_def tensorObj.mul_def
 
+@[reassoc (attr := simp)]
+lemma Mon_Class.mul_mul_mul_comm [IsCommMon M] :
+    tensorμ M M M M ≫ (μ ⊗ μ) ≫ μ = (μ[M] ⊗ μ) ≫ μ := sorry
+
+instance : IsMon_Hom (toUnit M) where
 instance : IsMon_Hom (fst M N) where
 instance : IsMon_Hom (snd M N) where
+instance {f : M ⟶ N} {g : M ⟶ O} [IsMon_Hom f] [IsMon_Hom g] : IsMon_Hom (lift f g) where
+  mul_hom := by ext <;> simp [← tensor_comp_assoc]
+instance [IsCommMon M] : IsMon_Hom η[M] where
+  mul_hom := by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]
+instance [IsCommMon M] : IsMon_Hom μ[M] where
+  one_hom := by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]
 
 /-- If `M` is a commutative monoid object, then `Hom(X, M)` has a commutative monoid structure. -/
 abbrev Hom.commMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
@@ -88,8 +99,7 @@ variable {M N N₁ N₂ : Mon_ C}
 
 instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) where
   isTerminalTensorUnit :=
-    .ofUniqueHom (fun M ↦ .mk (toUnit _) (toUnit_unique ..))
-      fun M f ↦ by ext; exact toUnit_unique ..
+    .ofUniqueHom (fun M ↦ .mk (toUnit _)) fun M f ↦ by ext; exact toUnit_unique ..
   fst M N := .mk (fst M.X N.X)
   snd M N := .mk (snd M.X N.X)
   tensorProductIsBinaryProduct M N :=
@@ -104,10 +114,8 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) wher
 
 /-- A commutative monoid object is a monoid object in the category of monoid objects. -/
 instance [IsCommMon M.X] : Mon_Class M where
-  one :=
-    .mk η[M.X] (by simp) (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom])
-  mul := .mk μ[M.X] (by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]) <| by
-    simp [mul_mul_mul_comm]
+  one := .mk η[M.X]
+  mul := .mk μ[M.X]
   one_mul' := by ext; simp [leftUnitor_hom]
   mul_one' := by ext; simp [rightUnitor_hom]
   mul_assoc' := by ext; simp [_root_.mul_assoc]

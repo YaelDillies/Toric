@@ -7,12 +7,6 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
-/-!
-# TODO
-
-Deprecate `Grp_.mk'`
--/
-
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 open scoped Hom
 
@@ -29,7 +23,7 @@ scoped[Obj] attribute [instance] CategoryTheory.Functor.obj.instMon_Class
 open scoped Obj
 
 /-- The image of a group object under a monoidal functor is a group object. -/
-noncomputable abbrev grp_ClassObj : Grp_Class (F.obj G) := (F.mapGrp.obj (.mk' G)).grp
+noncomputable abbrev grp_ClassObj : Grp_Class (F.obj G) := (F.mapGrp.obj ⟨G⟩).grp
 
 scoped[Obj] attribute [instance] CategoryTheory.Functor.grp_ClassObj
 
@@ -43,7 +37,7 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C}
 
 @[simps]
 def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f] :
-    Grp_.mk' G ⟶ Grp_.mk' H := Mon_.Hom.mk' f
+    mk G ⟶ mk H := Mon_.Hom.mk' f
 
 @[simp] lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) :
     homMk (G := G.X) (H := H.X) f.hom = f := rfl
@@ -51,12 +45,12 @@ def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f]
 @[reassoc]
 lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H] :
     h ≫ (f / g) = h ≫ f / h ≫ g :=
-  (((yonedaGrp.obj (.mk' H)).map (h.op)).hom.map_div f g)
+  ((yonedaGrp.obj ⟨H⟩).map h.op).hom.map_div f g
 
 @[reassoc]
 lemma Grp_Class.div_comp {G H K : C} (f g : G ⟶ H) (h : H ⟶ K) [Grp_Class H] [Grp_Class K]
     [IsMon_Hom h] : (f / g) ≫ h = (f ≫ h) / (g ≫ h) :=
-    (((yonedaGrp.map (Grp_.homMk h)).app (.op G)).hom.map_div f g)
+    ((yonedaGrp.map (Grp_.homMk h)).app (.op G)).hom.map_div f g
 
 lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι = f⁻¹ := rfl
 
@@ -124,11 +118,11 @@ variable [BraidedCategory C] {G H H₁ H₂ : Grp_ C}
 
 @[simps! tensorObj_X tensorHom_hom]
 instance instMonoidalCategoryStruct : MonoidalCategoryStruct (Grp_ C) where
-  tensorObj G H := mk' (G.X ⊗ H.X)
+  tensorObj G H := ⟨G.X ⊗ H.X⟩
   tensorHom := tensorHom (C := Mon_ C)
   whiskerRight f G := whiskerRight (C := Mon_ C) f G.toMon_
   whiskerLeft G _ _ f := MonoidalCategoryStruct.whiskerLeft (C := Mon_ C) G.toMon_ f
-  tensorUnit := mk' (𝟙_ C)
+  tensorUnit := ⟨𝟙_ C⟩
   associator X Y Z :=
     (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (associator X.toMon_ Y.toMon_ Z.toMon_)
   leftUnitor G := (Grp_.fullyFaithfulForget₂Mon_ C).preimageIso (leftUnitor G.toMon_)
@@ -168,8 +162,8 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Grp_ C) wher
   fst G H := fst G.toMon_ H.toMon_
   snd G H := snd G.toMon_ H.toMon_
   tensorProductIsBinaryProduct G H :=
-    BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom)
-      (by aesop_cat) (by aesop_cat)) (by aesop_cat) (by aesop_cat) (by aesop_cat)
+    BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom))
+      (by aesop_cat) (by aesop_cat) (by aesop_cat)
   fst_def G H := Mon_.Hom.ext <| fst_def _ _
   snd_def G H := Mon_.Hom.ext <| snd_def _ _
 
@@ -222,7 +216,7 @@ end Grp_
 
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C] {G : C}
 
-instance Grp_.mk'.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk' G).X := ‹_›
+instance mk.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk G).X := ‹_›
 
 end
 
@@ -272,9 +266,9 @@ same on group objects as on objects. -/
     rintro ⟨H, ⟨e⟩⟩
     letI h₁ := Grp_Class.ofIso e.symm
     letI h₂ := FullyFaithful.grp_Class (.ofFullyFaithful F) H
-    refine ⟨.mk' H, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
-      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class,
-        FullyFaithful.grp_Class, Grp_.mk', h₁, h₂]
+    refine ⟨⟨H⟩, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
+      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class, FullyFaithful.grp_Class,
+        mk, h₁, h₂]
 
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 

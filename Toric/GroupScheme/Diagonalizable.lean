@@ -115,14 +115,14 @@ def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
       (Over.pullback (specULiftZIsTerminal.from S)).mapGrp
 
 @[simp] lemma diagFunctor_obj (M : AddCommGrpᵒᵖ) :
-    (diagFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
+    (diagFunctor S).obj M = ⟨(Diag S M.unop).asOver S⟩ := rfl
 
 @[simp] lemma diagFunctor_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
-    (diagFunctor S).map f = .mk ((Diag.map S f.unop.hom).asOver S) := rfl
+    (diagFunctor S).map f = ⟨(Diag.map S f.unop.hom).asOver S⟩ := rfl
 
 instance {C : Type*} [Category C] {X : C} [CartesianMonoidalCategory C] [BraidedCategory C]
-    [Grp_Class X] [IsCommMon X] : IsCommMon (Grp_.mk' X) :=
-  letI : IsCommMon (Grp_.mk' X).X := ‹_›
+    [Grp_Class X] [IsCommMon X] : IsCommMon (Grp_.mk X) :=
+  letI : IsCommMon (Grp_.mk X).X := ‹_›
   inferInstance
 
 instance (M : AddCommMonCatᵒᵖ) : IsCommMon ((diagMonFunctor S).obj M).X :=
@@ -195,7 +195,7 @@ variable {G G' G'' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S]
   [Grp_Class (G.asOver S)] [Grp_Class (G'.asOver S)] [Grp_Class (G''.asOver S)]
 
 variable (G G' S) in
-def HomGrp : Type u := Additive (Grp_.mk' (G.asOver S) ⟶ Grp_.mk' (G'.asOver S))
+def HomGrp : Type u := Additive (Grp_.mk (G.asOver S) ⟶ .mk (G'.asOver S))
 
 instance [IsCommMon (G'.asOver S)] : AddCommGroup (HomGrp G G' S) := by
   delta HomGrp; infer_instance
@@ -290,13 +290,13 @@ variable (S G) in
 class IsDiagonalisable : Prop where
   existsIso :
     ∃ (A : Type u) (_ : AddCommGroup A),
-      Nonempty <| Grp_.mk' (asOver G S) ≅ .mk' (asOver (Diag S A) S)
+      Nonempty <| Grp_.mk (asOver G S) ≅ .mk (asOver (Diag S A) S)
 
 instance {A : Type u} [AddCommGroup A] : IsDiagonalisable S (Diag S A) :=
   ⟨A, ‹_›, ⟨by exact .refl _⟩⟩
 
 lemma IsDiagonalisable.ofIso [IsDiagonalisable S H]
-    (e : Grp_.mk' (asOver G S) ≅ .mk' (asOver H S)) : IsDiagonalisable S G :=
+    (e : Grp_.mk (asOver G S) ≅ .mk (asOver H S)) : IsDiagonalisable S G :=
   let ⟨A, _, ⟨e'⟩⟩ := ‹IsDiagonalisable S H›; ⟨A, _, ⟨e.trans e'⟩⟩
 
 instance  (f : G ⟶ H) [IsIso f] [f.IsOver S] : IsIso (f.asOver S) :=

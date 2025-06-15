@@ -98,6 +98,11 @@ same on group objects as on objects. -/
     letI h₂ := FullyFaithful.mon_Class (.ofFullyFaithful F) (X := N)
     refine ⟨.mk N, ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;> simp [Mon_Class.ofIso, FullyFaithful.mon_Class, h₁, h₂]
 
+attribute [local instance] obj.instMon_Class
+
+attribute [local simp] tensorHom_ε_left_μ_assoc in
+instance [F.LaxMonoidal] : IsMon_Hom (ε F) where
+
 variable [BraidedCategory C] [BraidedCategory D] (F)
 
 @[reassoc]
@@ -122,16 +127,18 @@ lemma tensorμ_tensorHom_μ_μ_μ {W X Y Z : C} [F.LaxBraided] :
   simp only [← map_comp, whisker_assoc, Category.assoc, pentagon_inv_inv_hom_hom_inv,
     pentagon_inv_hom_hom_hom_inv_assoc]
 
-attribute [local instance] obj.instMon_Class
-
-open scoped Mon_Class
+attribute [-simp] IsMon_Hom.one_hom_assoc in
+attribute [simp] tensorμ_tensorHom_μ_μ_μ_assoc Mon_Class.tensorObj.one_def
+  Mon_Class.tensorObj.mul_def in
+instance [F.LaxBraided] (M N : C) [Mon_Class M] [Mon_Class N] : IsMon_Hom («μ» F M N) where
+  one_hom := by simp [← Functor.map_comp]
 
 attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom in
 attribute [simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc
   Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def in
 instance [F.LaxBraided] : F.mapMon.LaxMonoidal where
-  ε' := .mk (ε F)
-  μ' M N := .mk («μ» F M.X N.X) <| by simp [← Functor.map_comp]
+  ε := .mk (ε F)
+  μ M N := .mk («μ» F M.X N.X)
 
 attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom in
 attribute [simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc

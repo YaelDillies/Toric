@@ -46,6 +46,8 @@ variable {D E : Type*} [Category D] [Category E] [CartesianMonoidalCategory E]
 
 open CategoryTheory MonoidalCategory Limits CartesianMonoidalCategory
 
+attribute [ext] toUnit_unique
+
 @[simps]
 def homToProd {X Y Z : C} : (Z ⟶ X ⊗ Y) ≃ (Z ⟶ X) × (Z ⟶ Y) where
   toFun f := ⟨f ≫ fst _ _, f ≫ snd _ _⟩
