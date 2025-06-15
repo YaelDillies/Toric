@@ -27,8 +27,11 @@ def tensorAlgEquiv :
   __ := Algebra.TensorProduct.lift (Algebra.algHom T T _) (mapAlgHom _ _) fun t y ↦ .all ..
   invFun := lift
     (Algebra.TensorProduct.lTensor _ ((Algebra.ofId S (AdjoinRoot p)).restrictScalars R)).toRingHom
-    (1 ⊗ₜ (root _))
-    sorry
+    (1 ⊗ₜ (root _)) <| by
+    trans Algebra.TensorProduct.includeRight (Polynomial.aeval (root p) p)
+    · rw [Polynomial.eval₂_map, Polynomial.aeval_def, ← AlgHom.coe_toRingHom, Polynomial.hom_eval₂]
+      rfl
+    · simp
   left_inv := sorry
   right_inv := sorry
 
