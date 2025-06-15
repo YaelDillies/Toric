@@ -1,5 +1,4 @@
 import Mathlib.RingTheory.HopfAlgebra.Basic
-import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 /-!
 # TODO
@@ -10,7 +9,7 @@ import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 export HopfAlgebraStruct (antipode)
 
-open Coalgebra Bialgebra TensorProduct Algebra
+open Coalgebra Bialgebra TensorProduct
 
 namespace HopfAlgebra
 variable {R A : Type*} [CommSemiring R] [Semiring A] [HopfAlgebra R A]
