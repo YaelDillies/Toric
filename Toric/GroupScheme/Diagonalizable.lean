@@ -18,7 +18,8 @@ universe u v
 
 namespace AlgebraicGeometry.Scheme
 section Diag
-variable {S : Scheme.{u}} {M N G : Type u} [AddCommMonoid M] [AddCommMonoid N] [AddCommGroup G]
+variable {S : Scheme.{u}} {R : CommRingCat.{u}} {M N G : Type u} [AddCommMonoid M]
+  [AddCommMonoid N] [AddCommGroup G]
 
 variable (S M) in
 /-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
@@ -44,8 +45,6 @@ instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Di
 attribute [local simp] Diag.map Diag.canonicallyOver_over in
 instance Diag.isOver_map {f : M →+ N} : (Diag.map S f).IsOver S where
 
-variable {R : CommRingCat.{u}}
-
 variable (R M) in
 def diagSpecIso : Diag (Spec R) M ≅ Spec(MonoidAlgebra R <| Multiplicative M) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
@@ -53,23 +52,23 @@ def diagSpecIso : Diag (Spec R) M ≅ Spec(MonoidAlgebra R <| Multiplicative M) 
     (specULiftZIsTerminal.hom_ext _ _)) (Mon_.forget _ ⋙ Over.forget _)).app <|
       .op <| .of <| Multiplicative M
 
-instance isOver_diagSpecIso_hom : (diagSpecIso M R).hom.IsOver (Spec R) where
+instance isOver_diagSpecIso_hom : (diagSpecIso R M).hom.IsOver (Spec R) where
   comp_over := by
     rw [← Iso.eq_inv_comp]
     exact (specCommMonAlgPullback_inv_app_hom_left_snd _ _ (specULiftZIsTerminal.hom_ext _ _) <|
       .op <| .of <| Multiplicative M).symm
 
-instance isOver_diagSpecIso_inv : (diagSpecIso M R).inv.IsOver (Spec R) where
+instance isOver_diagSpecIso_inv : (diagSpecIso R M).inv.IsOver (Spec R) where
   comp_over := specCommMonAlgPullback_inv_app_hom_left_snd _ _
       (specULiftZIsTerminal.hom_ext _ _) <| .op <| .of <| Multiplicative M
 
-instance : IsMon_Hom ((diagSpecIso M R).hom.asOver (Spec R)) :=
+instance : IsMon_Hom ((diagSpecIso R M).hom.asOver (Spec R)) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
   Mon_.instIsMon_HomHom
   ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
     (specULiftZIsTerminal.hom_ext _ _)).app <| .op <| .of <| Multiplicative M).hom
 
-instance : IsMon_Hom ((diagSpecIso M R).inv.asOver (Spec R)) :=
+instance : IsMon_Hom ((diagSpecIso R M).inv.asOver (Spec R)) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
   Mon_.instIsMon_HomHom
   ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
@@ -146,7 +145,7 @@ def diagMonFunctorIso :
       (specULiftZIsTerminal.hom_ext _ _))
 
 lemma diagMonFunctorIso_app (M : AddCommMonCatᵒᵖ) :
-    ((diagMonFunctorIso R).app M).hom.hom.left = (diagSpecIso M.unop _).hom := rfl
+    ((diagMonFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
 
 variable (R) in
 def diagFunctorIso :
@@ -158,7 +157,7 @@ def diagFunctorIso :
       (specULiftZIsTerminal.hom_ext _ _))
 
 lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
-    ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso M.unop _).hom := rfl
+    ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
 
 instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Full :=
   have : (hopfSpec (CommRingCat.of R)).Full := hopfSpec.instFull
@@ -294,7 +293,7 @@ section CommRing
 variable {R : CommRingCat.{u}} {G : Scheme.{u}} [G.Over (Spec R)] [Grp_Class (asOver G (Spec R))]
   {A : Type u} [AddCommGroup A]
 
-instance : IsDiagonalisable (Spec R) Spec(R[A]) := .of_isIso (diagSpecIso A R).inv
+instance : IsDiagonalisable (Spec R) Spec(R[A]) := .of_isIso (diagSpecIso R A).inv
 
 variable [IsDomain R]
 
