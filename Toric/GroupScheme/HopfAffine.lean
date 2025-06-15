@@ -143,7 +143,7 @@ suppress_compilation
 
 @[simps -isSimp]
 instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
-  hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
+  hom := Spec(algebraMap ..)
 
 instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
   ((bialgSpec R).obj <| .op <| .of R A).mon
