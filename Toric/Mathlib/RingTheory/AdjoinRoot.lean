@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.AdjoinRoot
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 open TensorProduct
 
@@ -23,15 +24,10 @@ def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.t
 def tensorAlgEquiv :
     letI := Algebra.TensorProduct.rightAlgebra (R := R) (A := T) (B := S)
     T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot (R := T ⊗[R] S) (.map (algebraMap S (T ⊗[R] S)) p) where
-  toFun := Algebra.TensorProduct.lift (Algebra.algHom T T _)
-      (mapAlgHom _ _)
-      sorry
-  invFun := sorry
+  __ := Algebra.TensorProduct.lift (Algebra.algHom T T _) (mapAlgHom _ _) (fun t y ↦ .all ..)
+  invFun := lift (Algebra.TensorProduct.lTensor _ (Algebra.ofId S _).restrictScalars).toRingHom _ _
   left_inv := sorry
   right_inv := sorry
-  map_mul' := sorry
-  map_add' := sorry
-  commutes' := sorry
 
 end AdjoinRoot
 
