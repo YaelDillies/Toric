@@ -38,6 +38,7 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Functor
+import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
