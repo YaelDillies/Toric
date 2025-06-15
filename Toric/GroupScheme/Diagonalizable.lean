@@ -18,8 +18,14 @@ universe u v
 
 namespace AlgebraicGeometry.Scheme
 section Diag
-variable {S : Scheme.{u}} {R : CommRingCat.{u}} {M N G : Type u} [AddCommMonoid M]
-  [AddCommMonoid N] [AddCommGroup G]
+variable {S : Scheme.{u}} {R : CommRingCat.{u}} {M N O G : Type u} [AddCommMonoid M]
+  [AddCommMonoid N] [AddCommMonoid O] [AddCommGroup G]
+
+variable (S) in
+def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon_ (Over S) :=
+  AddCommMonCat.equivalence.functor.op ⋙
+    (commMonAlg (ULift.{u} ℤ)).op ⋙ bialgSpec (.of <| ULift.{u} ℤ) ⋙
+      (Over.pullback (specULiftZIsTerminal.from S)).mapMon
 
 variable (S M) in
 /-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
@@ -28,22 +34,50 @@ def Diag : Scheme.{u} :=
     (Spec(MonoidAlgebra (ULift.{u} ℤ) <| Multiplicative M) ↘ Spec(ULift.{u} ℤ))
     (specULiftZIsTerminal.from S)
 
+@[simps! -isSimp]
+instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance
+@[simps! -isSimp one_left mul_left]
+instance Diag.mon_ClassAsOver : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
+@[simps! -isSimp inv_left]
+instance Diag.grp_ClassAsOver : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
+instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
+
+@[simp] lemma diagMonFunctor_obj (M : AddCommMonCatᵒᵖ) :
+    (diagMonFunctor S).obj M = .mk ((Diag S M.unop).asOver S) := rfl
+
 variable (S) in
-/-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
+/-- A monoid hom `M → N` induces a monoid morphism `Diag S N ⟶ Diag S M`. -/
 def Diag.map (f : M →+ N) : Diag S N ⟶ Diag S M :=
   pullback.map _ _ _ _
     (Spec.map <| CommRingCat.ofHom <| MonoidAlgebra.mapDomainRingHom _ f.toMultiplicative)
     (𝟙 S) (𝟙 _) (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) (by simp)
 
-@[simps! -isSimp]
-instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance
-@[simps! -isSimp one_left]
-instance Diag.mon_ClassAsOver : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
-instance Diag.grp_ClassAsOver : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
-instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
-
 attribute [local simp] Diag.map Diag.canonicallyOver_over in
 instance Diag.isOver_map {f : M →+ N} : (Diag.map S f).IsOver S where
+
+instance Diag.isMon_Hom_map {f : M →+ N} : IsMon_Hom <| (Diag.map S f).asOver S :=
+  inferInstanceAs <| IsMon_Hom <| ((diagMonFunctor S).map <| .op <| AddCommMonCat.ofHom f).hom
+
+@[simp] lemma diagMonFunctor_map {M N : AddCommMonCatᵒᵖ} (f : M ⟶ N) :
+    (diagMonFunctor S).map f = .mk ((Diag.map S f.unop.hom).asOver S) := rfl
+
+variable (S M) in
+@[simp] lemma Diag.map_id : Diag.map S (.id M) = 𝟙 (Diag S M) := by simp [Diag.map]; rfl
+
+variable (S) in
+@[simp] lemma Diag.map_comp (f : N →+ O) (g : M →+ N) :
+    Diag.map S (f.comp g) = Diag.map S f ≫ Diag.map S g :=
+  congr(($((diagMonFunctor S).map_comp (.op <| AddCommMonCat.ofHom f)
+    (.op <| AddCommMonCat.ofHom g))).hom.left)
+
+variable (S) in
+/-- A monoid iso `M ≃ N` induces a monoid isomorphism `Diag S M ≅ Diag S N`. -/
+@[simps]
+def Diag.mapIso (f : M ≃+ N) : Diag S M ≅ Diag S N where
+  hom := Diag.map S f.symm
+  inv := Diag.map S f
+  hom_inv_id := by simp [← Diag.map_comp]
+  inv_hom_id := by simp [← Diag.map_comp]
 
 variable (R M) in
 def diagSpecIso : Diag (Spec R) M ≅ Spec(MonoidAlgebra R <| Multiplicative M) :=
@@ -75,22 +109,10 @@ instance : IsMon_Hom ((diagSpecIso R M).inv.asOver (Spec R)) :=
     (specULiftZIsTerminal.hom_ext _ _)).app _).inv
 
 variable (S) in
-def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon_ (Over S) :=
-  AddCommMonCat.equivalence.functor.op ⋙
-    (commMonAlg (ULift.{u} ℤ)).op ⋙ bialgSpec (.of <| ULift.{u} ℤ) ⋙
-      (Over.pullback (specULiftZIsTerminal.from S)).mapMon
-
-@[simp] lemma diagMonFunctor_obj (M : AddCommMonCatᵒᵖ) :
-    (diagMonFunctor S).obj M = .mk ((Diag S M.unop).asOver S) := rfl
-
-variable (S) in
 def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
   commGroupAddCommGroupEquivalence.inverse.op ⋙
     (commGrpAlg (ULift.{u} ℤ)).op ⋙ hopfSpec (.of <| ULift.{u} ℤ) ⋙
       (Over.pullback (specULiftZIsTerminal.from S)).mapGrp
-
-instance Diag.isMon_Hom_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
-    IsMon_Hom ((Diag.map S f.unop.hom).asOver S) := Mon_.instIsMon_HomHom ((diagFunctor S).map f)
 
 @[simp] lemma diagFunctor_obj (M : AddCommGrpᵒᵖ) :
     (diagFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
