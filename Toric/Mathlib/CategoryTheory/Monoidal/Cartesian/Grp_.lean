@@ -201,7 +201,7 @@ instance : Mon_Class H where
 /-- A commutative group object is a group object in the category of group objects. -/
 instance : Grp_Class H where inv := .mk ι[H.X]
 
-instance {f : G ⟶ H} [IsCommMon H.X] : IsMon_Hom f.hom⁻¹ where
+instance {f : G ⟶ H} : IsMon_Hom f.hom⁻¹ where
 
 @[simp] lemma hom_inv (f : G ⟶ H) : f⁻¹.hom = f.hom⁻¹ := rfl
 @[simp] lemma hom_div (f g : G ⟶ H) : (f / g).hom = f.hom / g.hom := rfl
@@ -219,6 +219,11 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory
 instance mk.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk G).X := ‹_›
 
 end
+
+instance {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
+    {G H : Grp_ C} [IsCommMon G.X] [IsCommMon H.X] (f : G ⟶ H) : IsMon_Hom f where
+  one_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
+  mul_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
 
 namespace CategoryTheory
 variable {C : Type u₁} [Category.{v₁} C] [CartesianMonoidalCategory C]

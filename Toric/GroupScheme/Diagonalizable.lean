@@ -121,11 +121,6 @@ def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
 @[simp] lemma diagFunctor_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
     (diagFunctor S).map f = ⟨(Diag.map S f.unop.hom).asOver S⟩ := rfl
 
-instance {C : Type*} [Category C] {X : C} [CartesianMonoidalCategory C] [BraidedCategory C]
-    [Grp_Class X] [IsCommMon X] : IsCommMon (Grp_.mk X) :=
-  letI : IsCommMon (Grp_.mk X).X := ‹_›
-  inferInstance
-
 instance (M : AddCommMonCatᵒᵖ) : IsCommMon ((diagMonFunctor S).obj M).X :=
   inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
 
@@ -212,12 +207,6 @@ lemma HomGrp.toHom_injective : Function.Injective (HomGrp.hom (G := G) (G' := G'
 
 def HomGrp.comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) : HomGrp G G'' S :=
   .ofMul (f.toMul ≫ g.toMul)
-
-instance {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
-    {X Y : Grp_ C} [IsCommMon X.X] [IsCommMon Y.X] (f : X ⟶ Y) :
-    IsMon_Hom f where
-  one_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
-  mul_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
 
 lemma HomGrp.comp_add [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
     (f f' : HomGrp G G' S) (g : HomGrp G' G'' S) :
