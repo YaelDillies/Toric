@@ -159,8 +159,8 @@ lemma μ_algSpec_left [Algebra R A] :
     Monoidal.μ_δ, Over.id_left]
 
 lemma mul_left [Bialgebra R A] :
-    μ[(Spec A).asOver (Spec R)].left =
-      (pullbackSpecIso R A A).hom ≫ Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R A)) := by
+    μ[(Spec A).asOver (Spec R)].left = 
+      (pullbackSpecIso R A A).hom ≫ Spec(Bialgebra.comulAlgHom R A) := by
   rw [← μ_algSpec_left]; rfl
 
 instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
