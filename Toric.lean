@@ -46,7 +46,6 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.Data.Finsupp.Single
-import Toric.Mathlib.Data.Nat.Cast.Basic
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
