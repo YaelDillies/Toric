@@ -62,52 +62,53 @@ variable {R : CommRingCat.{u}} [IsDomain R] {σ : Type u} {G : Scheme.{u}} [G.Ov
 section AddCommGroup
 variable {G : Type u} [AddCommGroup G]
 
-variable (R) in
+variable (R G) in
 /-- Characters of a diagonal group scheme over a domain are exactly the input group.
 
-Note: This is true over a general ring using Cartier duality, but we do not prove that. -/
+Note: This is true over a general base using Cartier duality, but we do not prove that. -/
 def charDiag : X(Spec R, Diag (Spec R) G) ≃+ G :=
-  Scheme.diagHomEquiv.symm.trans
-    (FreeAbelianGroup.liftAddEquiv.symm.trans (AddEquiv.piUnique fun _ ↦ G))
+  diagHomEquiv.symm.trans <| FreeAbelianGroup.liftAddEquiv.symm.trans <| .piUnique fun _ ↦ G
 
 lemma charDiag_symm_apply (g : G) :
-  ((charDiag R (G := G)).symm g) = diagHomGrp _ (FreeAbelianGroup.lift fun _ ↦ g) := rfl
+    (charDiag R G).symm g = diagHomGrp _ (FreeAbelianGroup.lift fun _ ↦ g) := rfl
 
-lemma charDiag_apply_diag (f : _ →+ G) :
-    ((charDiag R (G := G)) (diagHomGrp _ f)) = f (.of 0) := by
-  apply (charDiag R (G := G)).symm.injective
+lemma charDiag_diagHomGrp (f : _ →+ G) : charDiag R G (diagHomGrp _ f) = f (.of 0) := by
+  apply (charDiag R G).symm.injective
   simp [charDiag_symm_apply]
   congr 1
   ext
   simp only [FreeAbelianGroup.lift.of]
 
-variable (R) in
+variable (R G) in
 /-- Cocharacters of a diagonal group scheme over a domain are exactly the dual of the input group.
 
-Note: This is true over a general ring using Cartier duality, but we do not prove that. -/
+Note: This is true over a general base using Cartier duality, but we do not prove that. -/
 def cocharDiag : X*(Spec R, Diag (Spec R) G) ≃+ (G →+ ℤ) :=
-  Scheme.diagHomEquiv.symm.trans (AddMonoidHom.postcompAddEquiv (FreeAbelianGroup.punitEquiv _))
+  diagHomEquiv.symm.trans <| AddMonoidHom.postcompAddEquiv <| FreeAbelianGroup.punitEquiv _
 
 lemma cocharDiag_symm_apply (g : G →+ ℤ) :
-  ((cocharDiag R (G := G)).symm g) =
+  (cocharDiag R G).symm g =
     diagHomGrp _ ((FreeAbelianGroup.punitEquiv _).symm.toAddMonoidHom.comp g) := rfl
 
 end AddCommGroup
 
+variable (R σ) in
 /-- Characters of the algebraic torus with dimensions `σ`over a domain `R` are exactly `ℤ^σ`.
 
 Note: This is true over a general base using Cartier duality, but we do not prove that. -/
 def charTorus : X(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ →₀ ℤ) :=
-  (charDiag R).trans (FreeAbelianGroup.equivFinsupp _)
+  (charDiag R _).trans (FreeAbelianGroup.equivFinsupp _)
 
+variable (R) in
 def charTorusUnit : X(Spec R, 𝔾ₘ[Spec R]) ≃+ ℤ :=
-  (charDiag R).trans (FreeAbelianGroup.punitEquiv _)
+  (charDiag R _).trans (FreeAbelianGroup.punitEquiv _)
 
+variable (R σ) in
 /-- Cocharacters of the algebraic torus with dimensions `σ`over a domain `R` are exactly `ℤ^σ`.
 
 Note: This is true over a general base using Cartier duality, but we do not prove that. -/
 def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) :=
-  (cocharDiag R).trans ⟨FreeAbelianGroup.lift.symm, fun _ _ ↦ rfl⟩
+  (cocharDiag R _).trans ⟨FreeAbelianGroup.lift.symm, fun _ _ ↦ rfl⟩
 
 section CommGrp_Class
 variable [CommGrp_Class (G.asOver (Spec R))]
@@ -139,7 +140,7 @@ instance isPerfPair_charPairing [Finite σ] : (charPairing R 𝔾ₘ[Spec R, σ]
   apply Additive.ofMul.symm.injective
   dsimp [charDiag_symm_apply, charPairing, charTorusUnit, charTorus, cocharTorus,
     cocharDiag_symm_apply]
-  simp only [Char, AddEquiv.symm_apply_apply, diagHomGrp_comp, charDiag_apply_diag]
+  simp only [Char, AddEquiv.symm_apply_apply, diagHomGrp_comp, charDiag_diagHomGrp]
   simp only [PUnit.zero_eq, AddMonoidHom.coe_comp, AddMonoidHom.coe_coe, Function.comp_apply,
     FreeAbelianGroup.lift.of, EmbeddingLike.apply_eq_iff_eq, Finsupp.toFreeAbelianGroup_single]
   congr! 4 with x
