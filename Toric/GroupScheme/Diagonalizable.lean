@@ -15,7 +15,7 @@ open scoped AddMonoidAlgebra Hom
 
 noncomputable section
 
-universe u v
+universe u
 
 namespace AlgebraicGeometry.Scheme
 section Diag

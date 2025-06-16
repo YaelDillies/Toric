@@ -19,10 +19,9 @@ noncomputable section
 
 open CategoryTheory Opposite Limits
 
+universe u
+
 namespace AlgebraicGeometry.Scheme
-
-universe u v
-
 section IsSplitTorusOver
 variable {G H S : Scheme.{u}} [G.Over S] [H.Over S] [Grp_Class (asOver G S)]
   [Grp_Class (asOver H S)]
@@ -34,7 +33,8 @@ class IsSplitTorusOver : Prop where
     ∃ (A : Type u) (_ : AddCommGroup A) (_ : Module.Free ℤ A) (e : G ≅ Diag S A)
       (_ : e.hom.IsOver S), IsMon_Hom (e.hom.asOver S)
 
-instance {A : Type u} [AddCommGroup A] [Module.Free ℤ A] : (Diag S A).IsSplitTorusOver S :=
+instance diag_isSplitTorusOver {A : Type u} [AddCommGroup A] [Module.Free ℤ A] :
+    (Diag S A).IsSplitTorusOver S :=
   ⟨A, ‹_›, ‹_›, by exact .refl (S.Diag A), by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsSplitTorusOver.of_isIso [H.IsSplitTorusOver S] (f : G ⟶ H) [IsIso f] [f.IsOver S]
@@ -66,12 +66,12 @@ class IsTorusOver : Prop where
       (pullback (G ↘ Spec(k)) <| Spec.map <| CommRingCat.ofHom <|
         algebraMap k L).IsSplitTorusOver Spec(L)
 
-instance [G.IsSplitTorusOver Spec(k)] : G.IsTorusOver k :=
-  ⟨⟨k, ‹_›, inferInstance, inferInstance, by
-    simp only [Algebra.id.map_eq_id, CommRingCat.ofHom_id]
-    suffices (pullback (G ↘ Spec(k)) (𝟙 _)).IsSplitTorusOver Spec(k) by
-      convert this <;> simp
-    exact .of_isIso (pullback.fst (G ↘ Spec(k)) (𝟙 _))⟩⟩
+instance [G.IsSplitTorusOver Spec(k)] : G.IsTorusOver k := by
+  refine ⟨k, ‹_›, inferInstance, inferInstance, ?_⟩
+  simp only [Algebra.id.map_eq_id, CommRingCat.ofHom_id]
+  suffices (pullback (G ↘ Spec(k)) (𝟙 _)).IsSplitTorusOver Spec(k) by
+    convert this <;> simp
+  exact .of_isIso (pullback.fst (G ↘ Spec(k)) (𝟙 _))
 
 lemma IsTorusOver.of_iso (e : G ≅ H) [e.hom.IsOver Spec(k)] [IsMon_Hom (e.hom.asOver Spec(k))]
     [H.IsTorusOver k] : G.IsTorusOver k := by
