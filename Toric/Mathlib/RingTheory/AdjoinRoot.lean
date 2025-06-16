@@ -5,10 +5,19 @@ open TensorProduct
 
 noncomputable section
 
+
 namespace AdjoinRoot
 
+section
 variable {R S T : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
 variable (p : Polynomial S)
+
+-- TODO : replace liftHom by this
+variable {p} in
+def liftAlgHom (i : S →ₐ[R] T) (x : T) (h : Polynomial.eval₂ i x p = 0) : AdjoinRoot p →ₐ[R] T where
+  __ := lift i.toRingHom _ h
+  commutes' r := by
+    simp [lift_of h, AdjoinRoot.algebraMap_eq']
 
 -- TODO : find better name
 def map (f : S →+* T) : AdjoinRoot p →+* AdjoinRoot (.map f p) :=
@@ -25,8 +34,8 @@ def tensorAlgEquiv :
     letI := Algebra.TensorProduct.rightAlgebra (R := R) (A := T) (B := S)
     T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot (R := T ⊗[R] S) (.map (algebraMap S (T ⊗[R] S)) p) where
   __ := Algebra.TensorProduct.lift (Algebra.algHom T T _) (mapAlgHom _ _) fun t y ↦ .all ..
-  invFun := lift
-    (Algebra.TensorProduct.lTensor _ ((Algebra.ofId S (AdjoinRoot p)).restrictScalars R)).toRingHom
+  invFun := liftAlgHom
+    (Algebra.TensorProduct.lTensor _ ((Algebra.ofId S (AdjoinRoot p)).restrictScalars R))
     (1 ⊗ₜ (root _)) <| by
     trans Algebra.TensorProduct.includeRight (Polynomial.aeval (root p) p)
     · rw [Polynomial.eval₂_map, Polynomial.aeval_def, ← AlgHom.coe_toRingHom, Polynomial.hom_eval₂]
@@ -35,6 +44,7 @@ def tensorAlgEquiv :
   left_inv := sorry
   right_inv := sorry
 
+end
 end AdjoinRoot
 
 end
