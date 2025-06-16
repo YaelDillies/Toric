@@ -1,0 +1,639 @@
+\documentclass[10pt, handout]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\usepackage{nth}
+\usepackage{amssymb}
+
+\usepackage{tikz}
+\usetikzlibrary{cd}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{decorations.markings}
+
+
+\def\id{\mathrm{id}}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\SO}{SO}
+\DeclareMathOperator{\CommRingCat}{CommRingCat}
+\DeclareMathOperator{\CommAlgCat}{CommAlgCat}
+\DeclareMathOperator{\CommHopfAlgCat}{CommHopfAlgCat}
+\providecommand{\C}{{\mathbb C}}
+\providecommand{\G}{{\mathbb G}}
+\providecommand{\N}{{\mathbb N}}
+\providecommand{\R}{{\mathbb R}}
+\providecommand{\Z}{{\mathbb Z}}
+
+
+\title{Why should Mathlib know about toric varieties?}
+\subtitle{The Toric project}
+% \date{\today}
+\date{\nth{24} June 2025}
+\author{\texorpdfstring{\alert{Yaël Dillies (Stockholm Uni)}}{Yaël Dillies (Stockholm Uni)}, Michał Mrugała (ENS Lyon), Andrew Yang (ICL)}
+\institute{British Mathematical Colloquium}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{Introduction}
+
+
+\begin{frame}{What is algebraic geometry?}
+    Algebraic geometry is the study of \emph{geometric spaces} through \emph{algebra}.
+\end{frame}
+
+
+\begin{frame}{What is algebraic geometry?}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+
+      \begin{block}{"algebra"}
+        \begin{itemize}
+            \item groups
+            \item rings
+            \item modules
+            \item algebras
+        \end{itemize}
+      \end{block}
+
+    \column{0.5\textwidth}\pause
+
+      \begin{block}{"geometric spaces"}
+        \begin{itemize}
+            \item topological spaces
+            \item manifolds
+            \item varieties
+            \item schemes
+        \end{itemize}
+      \end{block}
+
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{What is a scheme?}
+    A scheme is a space that \emph{locally} looks like the zero set of some \emph{polynomial equations}.
+
+    \pause
+
+    A variety is pretty much the same, with extra conditions.
+\end{frame}
+
+
+\begin{frame}{Okay, so what's a variety?}
+    \centering
+    \includegraphics[width=0.75\linewidth]{varieties-1.png}
+
+    \includegraphics[width=0.75\linewidth]{varieties-2.png}
+
+    \pause
+    \includegraphics[width=0.75\linewidth]{varieties-3.png}
+
+    \includegraphics[width=0.75\linewidth]{varieties-4.png}
+
+    \pause
+    \includegraphics[width=0.75\linewidth]{varieties-5.png}
+
+    $\implies$ I will stick to schemes for this talk
+\end{frame}
+
+
+\begin{frame}{What do schemes look like?}
+    \begin{columns}
+
+        \column{0.5\textwidth}
+
+        \begin{tikzpicture}
+            \begin{axis}[
+                xmin=-3,
+                xmax=3,
+                ymin=-4,
+                ymax=4,
+                xlabel={$x$},
+                ylabel={$y$},
+                scale only axis,
+                axis lines=middle,
+                domain=-1:1,
+                samples=200,
+                smooth,
+                % to avoid that the "plot node" is clipped (partially)
+                clip=false,
+                % use same unit vectors on the axis
+                axis equal image=true,
+            ]
+                \addplot [blue] {sqrt(1 - x^2)}
+                    node[above right] {$x^2 + y^2=1$};
+                \addplot [blue] {-sqrt(1 - x^2)};
+            \end{axis}
+        \end{tikzpicture}
+
+        \column{0.5\textwidth}
+
+        \begin{tikzpicture}
+            \begin{axis}[
+                xmin=-2,
+                xmax=4,
+                ymin=-7,
+                ymax=7,
+                xlabel={$x$},
+                ylabel={$y$},
+                scale only axis,
+                axis lines=middle,
+                domain=-1.912931:3,
+                samples=200,
+                smooth,
+                clip=false,
+                axis equal image=true,
+            ]
+                \addplot [red] {sqrt(x^3+7)}
+                    node[right] {$y^2=x^3+7$};
+                \addplot [red] {-sqrt(x^3+7)};
+            \end{axis}
+        \end{tikzpicture}
+    \end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Toric varieties}
+    General schemes are \emph{complicated}.
+
+    $\implies$ Algebraic geometers need \alert{examples} to grasp that complexity.
+
+    \pause
+
+    \emph{Toric varieties} are a class of varieties which are
+    \begin{itemize}
+        \item simple enough that we can \emph{compute} with them
+        \item complicated enough that they display a lot of the \emph{richness} of general varieties
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{The Toric project}
+    The \alert{Toric} project\footnote{\url{https://yaeldillies.github.io/Toric/}} is about the "compute" part of toric varieties:
+    \begin{itemize}
+        \item formalise the reduction from toric varieties to convex geometry
+        \item formalise said convex geometry
+        \item (in the far future) implement relevant convex geometry algorithms
+    \end{itemize}
+
+    Undertaken in \emph{Lean 4}\footnote{\url{https://lean-lang.org}} using its maths library \emph{Mathlib}\footnote{\url{https://leanprover-community.github.io/}}.
+
+    \pause
+
+    We currently can't tackle the "richness" part because Mathlib doesn't know enough algebraic geometry.
+\end{frame}
+
+
+\begin{frame}{Aim of this talk}
+    My goal with this talk is to
+    \begin{enumerate}
+        \item teach you some mathematics (maybe)
+        \item spread the word of the lessons we learned along the way
+        \item give you an idea of how much algebraic geometry we can do \emph{today} in Lean
+        \item recruit \emph{you} for the second part of the project
+    \end{enumerate}
+\end{frame}
+
+
+\section{Mathematical content}
+
+
+\begin{frame}{Schemes}
+    Recall:
+
+    \begin{quote}
+         A scheme is a space that locally looks like the zero set of some polynomial equations.
+    \end{quote}
+
+    A scheme is \alert{affine} if it looks like the zero set of some polynomial equations \emph{everywhere}.
+
+    \pause
+
+    \alert{$\Spec$} is the functor from commutative rings to schemes that constructs affine schemes.
+    \[
+        X \text{ affine } \iff \exists R \text{ commutative ring}, X \cong \Spec R
+    \]
+
+    Affine schemes are fully described by their underlying rings:
+    \[
+        (\Spec R \to \Spec S) \cong (S \to R)
+    \]
+\end{frame}
+
+
+\begin{frame}{$k$-schemes}
+    Let $k$ be a field.
+
+    If we consider all commutative rings $R$ with a designated ring hom $k \to R$, we get (commutative) \emph{$k$-algebras}.
+
+    If we consider all schemes $X$ with a designated scheme morphism $X \to \Spec k$, we get \emph{$k$-schemes}.
+
+    \pause
+
+    These are the \emph{under category} of $k$ and \emph{over category} of $\Spec k$ respectively.
+
+    \pause
+
+    If $R$ is a $k$-algebra, then $\Spec R$ is a $k$-scheme.
+
+    Tensor product of $k$-algebras corresponds to product of $k$-schemes:
+    \[
+        \Spec (R \otimes_k S) \cong \Spec R \times_k \Spec S
+    \]
+\end{frame}
+
+
+\begin{frame}{Group objects}
+    Let $\mathsf C$ be a category with a binary product $(\cdot \times \cdot)$ and terminal object $\mathbf 1_C$.
+    A \emph{group object} $G \in \mathsf C$ consists of:
+    \begin{itemize}
+        \item a \emph{unit morphism} $\eta : \mathbf{1}_C \to G$.
+        \item a \emph{multiplication morphism} $\mu : G \times G \to G$.
+        \item an \emph{inverse morphism} $\iota : G \to G$.
+    \end{itemize}
+
+    \pause
+
+    satisfying the "group axioms":
+    \[
+    \begin{tikzcd}[ampersand replacement=\&, column sep=small]
+        G \times G \times G  \ar[r,"\id \times \mu"] \ar[d,"\mu \times \id"']
+        \& G \times G  \ar[d,"\mu"]
+        \& G \ar[r, "{(\eta ,\id)}"] \ar[d,"{(\id ,\eta)}"'] \ar[dr,"\id"]
+        \& G \times G \ar[d,"\mu"]
+        \& G \ar[r,"{(\iota ,\id)}"] \ar[d,"{(\id ,\iota)}"']  \ar[dr,"\nu"]
+        \& G \times G \ar[d,"\mu"]
+        \\
+        G \times G \ar[r,"\mu"']
+        \& G
+        \& G \times G \ar[r,"\mu"']
+        \& G
+        \& G \times G \ar[r,"\mu"']
+        \& G
+    \end{tikzcd}
+    \]
+     ($\nu$ is the composition $G \to \mathbf{1}_C \xrightarrow{\eta} G$)
+\end{frame}
+
+
+\begin{frame}{Group schemes}
+    A group object in the category of $k$-schemes is called a \emph{group scheme over $k$}.
+
+    \pause
+
+    Affine schemes come from commutative rings.
+
+    Affine $k$-schemes come from $k$-algebras.
+
+    Affine group schemes over $k$ come from... \pause $k$-Hopf algebras!
+\end{frame}
+
+
+\begin{frame}{Hopf algebras}
+    A commutative $k$-algebra $A$ is a \emph{Hopf algebra} if we equip it with:
+    \begin{itemize}
+        \item a \emph{counit homomorphism} $\varepsilon: A\to k$.
+        \item a \emph{comultiplication homomorphism} $\Delta: A \to A \otimes_k A$.
+        \item an \emph{antipode homomorphism} $S: A \to A$.
+    \end{itemize}
+
+    \pause
+
+    satisfying the following axioms:
+    \[
+    \begin{tikzcd}[ampersand replacement=\&, column sep=small]
+        A \otimes A \otimes A
+        \& A \otimes A \ar[l,"\id \otimes \Delta"']
+        \& A
+        \& A \otimes A \ar[l, "\varepsilon \cdot\id"']
+        \& A
+        \& A \otimes A \ar[l,"S \cdot\id"']
+        \\
+        A \otimes A \ar[u,"\Delta \otimes \id"]
+        \& A \ar[u,"\Delta"'] \ar[l,"\Delta"]
+        \& A \otimes A \ar[u,"\id \cdot\varepsilon"]
+        \& A \ar[u,"\Delta"'] \ar[ul,"\id"'] \ar[l,"\Delta"]
+        \& A \otimes A \ar[u,"\id \cdot S"]
+        \& A \ar[ul,"\nu'"'] \ar[u,"\Delta"'] \ar[l,"\Delta"]
+    \end{tikzcd}
+    \]
+     ($\nu'$ is the composition $A \xrightarrow{\varepsilon} R \to A$)
+\end{frame}
+
+
+\begin{frame}{The general story}
+    The Hopf algebra axioms are the same as that of group objects, but with arrows reversed.
+
+    $\implies$ They are a \emph{cogroup objects} in the category of $k$-algebraS.
+
+    \pause
+
+    In this story, $\Spec$ plays \emph{no specific role}. Could be replaced with any functor that's
+    \begin{itemize}
+        \item between cartesian-monoidal categories (= with finite products)
+        \item fully faithful (= bijective on hom sets)
+        \item finite-product-preserving (= sends finite product to finite product)
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Tori}
+    A \emph{(split) torus over $k$} is any scheme isomorphic to $\G_m^n := \Spec k[\Z^n]$ for some (possibly infinite) $n$.
+
+    For a commutative group scheme $G$, both the \emph{characters} $G \to \G_m$ and the \emph{cocharacters} $G_m \to G$ form a commutative group.
+
+    \pause
+
+    Composition gives a pairing
+    \[
+        (G \to \G_m) \times (\G_m \to G) \to (\G_m \to \G_m)
+    \]
+    which is \emph{perfect} when $G$ is a \emph{finite-dimensional} split torus.
+\end{frame}
+
+
+\begin{frame}{Convex cones}
+    The pairing of characters and cocharacters is the bridge to convex geometry:
+    \begin{table}[]
+        \begin{tabular}{ccc}
+            group scheme          & $\leftrightarrow$ & chars, cochars \\
+            subgroup scheme       & $\leftrightarrow$ & subspace       \\
+            affine toric variety  & $\leftrightarrow$ & cone           \\
+            toric variety         & $\leftrightarrow$ & fan            \\
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+
+\begin{frame}{An example: \texorpdfstring{$\SO(2)$}{SO(2)}}
+    The \emph{special orthogonal group} of dimension 2 over a field $k$ is
+    \[
+        \SO(2, k) := R[X][Y] / \{X ^ 2 + Y ^ 2 - 1\}
+    \]
+
+    \pause
+
+    When is $\SO(2, k)$ a split torus?
+
+    If $k = \C$, then $\SO(2, \C) \cong \G_m$. Proof: Write down explicit iso.
+
+    If $k = \R$, then $\SO(2, \R) \not\cong \G_m^n$. Proof: Compare torsion characters.
+\end{frame}
+
+
+\begin{frame}{What we have done}
+    In Toric, we have proved that, under appropriate conditions, functors:
+
+    \begin{itemize}
+        \item lift to over categories/group objects
+        \item are fully faithful on both of those
+        \item are finite-product-preserving
+    \end{itemize}
+
+    \pause
+
+    We also:
+
+    \begin{itemize}
+        \item constructed the char-cochar pairing of a comm group scheme
+        \item proved that this pairing is perfect for a split torus
+        \item constructed $\SO(2)$ as a group scheme
+        \item showed that $\SO(2, \C)$ is a split torus and $\SO(2, \R)$ isn't
+    \end{itemize}
+\end{frame}
+
+
+\section{Concrete categories}
+
+
+\begin{frame}[fragile]{What is a concrete category?}
+    Usual mathematics cares about \emph{individual} objects with \emph{extra} structure:
+    \begin{verbatim}
+structure CommRing (R : Type) where
+  ...
+
+instance : CommRing Int := ...
+    \end{verbatim}
+    You have a house and you paint it (with possibly several colors).
+\end{frame}
+
+
+\begin{frame}[fragile]{What is a concrete category?}
+    Category theory instead cares about the \emph{collection} of all objects \emph{and} a given structure:
+    \begin{verbatim}
+structure CommRingCat : Type 1 where
+  Carrier : Type
+  commRing : CommRing Carrier
+
+def IntAsCommRingCat : CommRingCat := mk Int
+    \end{verbatim}
+    You buy all houses and all the colors that suit them in bulk.
+\end{frame}
+
+
+\begin{frame}[fragile]{What is a concrete category?}
+    A \emph{concrete category} is a category made of bulk-bought painted houses.
+
+    \pause
+
+    It is important to be able to go back and forth between bulk-bought and individual houses with paint pots.
+    \begin{verbatim}
+def CommRingCat.mk (R : Type) [CommRing R] :
+    CommRingCat := ...
+
+def CommRingCat.Carrier (R : CommRingCat) :
+    Type := ...
+
+instance CommRingCat.commRing :
+    CommRing R.Carrier := ...
+    \end{verbatim}
+\end{frame}
+
+
+\begin{frame}{The concrete categories we need}
+    In Toric, we care about the following concrete categories:
+    \begin{itemize}
+        \item $\CommRingCat$, the category of commutative rings
+        \item $\CommAlgCat k$, the category of commutative algebras over a field $k$
+        \item $\CommHopfAlgCat k$, the category of commutative Hopf algebras over a field $k$
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{$}
+
+
+
+\section{Yoneda-less Yoneda}
+
+
+\section{Tautologies}
+
+
+\begin{frame}{\texorpdfstring{$(ab)(cd)=(ac)(bd)$}{(ab)(cd)=(ac)(bd)}}
+    Let $M$ be a monoid. Is $(\cdot, \cdot) : M \times M \to M$ a monoid hom?
+
+    Let $M$ be a monoid object. Is $\mu : M \times M \to M$ a monoid morphism?
+
+    \pause
+
+    \emph{Yes if $M$ is commutative}
+
+    \pause
+
+    \begin{block}{Proof}
+        Let $(a, c), (b, d) \in M \times M$.
+        \[
+            (\cdot, \cdot)((a, c) * (b, d)) = (\cdot, \cdot)(a, c) * (\cdot, \cdot)(b, d)
+        \]
+        is equivalent to
+        \[
+            (ab)(cd)=(ac)(bd)
+        \]
+        which is true if $M$ is commutative.
+    \end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]{An unexpected issue}
+    Wait, what if $M$ is a commutative monoid \emph{object}?
+
+    How do I even write down the statement?
+
+    \pause
+
+
+    % If $M$ is a commutative monoid, then
+    % \[
+    %     (ab)(cd)=(ac)(bd)
+    % \]
+    % for all $a, b, c, d \in M$.
+
+    % \pause
+    % \metroset{block=fill}
+
+    % \begin{block}{Proof}
+    %     \begin{align*}
+    %         (ab)(cd)
+    %         & = a(b(cd)) \\
+    %         & = a((bc)d) \\
+    %         & = a((cb)d) \\
+    %         & = a(c(bd)) \\
+    %         & = (ac)(bd) \\
+    %     \end{align*}
+    % \end{block}
+\end{frame}
+
+
+\section{The role of examples}
+
+
+
+
+
+\section{Why formalising toric varieties?}
+
+
+
+
+
+\section{The future}
+
+
+\begin{frame}{TODO(Michal)}
+    \begin{itemize}
+        \item \textbf{Goal 1}: the simplest toric varieties come from polyhedral cones. \pause
+        \item \textbf{Goal 2}: geometric data of simple toric varieties corresponds to operations on polyhedra. \pause
+        \item \textbf{Goal 3}: toric varieties come from fans of polyhedral cones.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Yoneda}
+    \begin{itemize}
+        \item Dealing with the multiplication morphism is annoying.
+        \item We want actual elements in actual groups and reuse the mathlib libarary and tactics.
+        \item Recall that group objects are just representable presheaves of groups, so we can embed them via yoneda into the category of presheaves, and check pointwise on presheaves.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Yoneda without yoneda}
+    \begin{itemize}
+        \item Dealing with the yoneda embedding is annoying.
+        \item It would be a lot easier to work in a single category.
+        \item If $G$ is a group object, $\mathrm{Hom}(X, G)$ has a group structure by $f \cdot g := \Delta \circ (f, g)$ (this is exactly how a group object represents a presheaf of groups).
+        \item To reason via "yoneda", rewrite with the lemma $\Delta = \pi_1 \cdot \pi_2$ and $\varepsilon = 1$ and $S = \id^{-1}$. \texttt{simp} (along with naturality lemmas about the group structure) should do the rest.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Convex geometry}
+
+    Goal: Do everything in an "algebraic" setting, i.e. over an arbitrary linearly ordered field (no topology!).
+    (A possible justification for this goal is that we want things to be as computable as possible, so we can later have provably correct algorithms for Toric geometry that can actually be run. Having things not depend on topology means we can apply it to e.g. the rationals, which are much nicer to compute with than reals)
+
+    Current projects:
+
+    Define polyhedral cones (done).
+    Cone is polyhedral iff its dual is polyhedral (done).
+    Define faces, partial order on faces (partially done).
+    Get correspondence between faces of cone and faces of its dual (open).
+    More basic API for cones, faces, relative interiors (open)...
+    Prove Gordan's Lemma (open).
+    Define category of lattice cones (open).
+    (The category of lattice cones should proven equivalent to the category of normal affine toric varities later)
+
+    Define category of lattice fans (open).
+    (The category of lattice cones should proven equivalent to the category of normal toric varities later)
+
+    Define polytopes, normal fan of a polytope (open).
+
+\end{frame}
+
+
+\begin{frame}{Acknowledgements}
+    \begin{columns}
+
+        \begin{column}{0.25\textwidth}
+            \centering
+            \includegraphics[width=0.9\textwidth]{photo/Yaël.jpg}
+            \scriptsize Yaël Dillies\textsuperscript{1} yael.dillies@math.su.se
+        \end{column}
+
+        \begin{column}{0.25\textwidth}
+            \centering
+
+            \includegraphics[width=0.9\textwidth]{photo/Yaël.jpg}
+            \scriptsize Michał Mrugała kiolterino@gmail.com
+        \end{column}
+
+        \begin{column}{0.25\textwidth}
+            \centering
+            \includegraphics[width=0.9\textwidth]{photo/Andrew.jpg}
+            \scriptsize Andrew Yang\textsuperscript{2} a.yang24@imperial.ac.uk
+        \end{column}
+
+    \end{columns}
+
+    Thanks to the people who contributed to the content of this talk: Moisés Herradón Cueto, Paul Lezeau, Christian Merten, Sophie Morel
+
+    \emph{Funding}: This work was funded by the Swedish Research Council grant 2023-04124\textsuperscript{1} and the ERC grant n°???\textsuperscript{2}.
+\end{frame}
+
+
+\end{document}
