@@ -30,19 +30,22 @@ def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.t
     simp [map]
     sorry
 
+
 def tensorAlgEquiv :
     letI := Algebra.TensorProduct.rightAlgebra (R := R) (A := T) (B := S)
-    T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot (R := T ⊗[R] S) (.map (algebraMap S (T ⊗[R] S)) p) where
-  __ := Algebra.TensorProduct.lift (Algebra.algHom T T _) (mapAlgHom _ _) fun t y ↦ .all ..
-  invFun := liftAlgHom
-    (Algebra.TensorProduct.lTensor _ ((Algebra.ofId S (AdjoinRoot p)).restrictScalars R))
+    T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot (R := T ⊗[R] S) (.map (algebraMap S (T ⊗[R] S)) p) :=
+  .ofAlgHom (Algebra.TensorProduct.lift (Algebra.algHom T T _) (mapAlgHom _ _) fun t y ↦ .all ..)
+  (liftAlgHom (Algebra.TensorProduct.map (AlgHom.id T T)
+    (((Algebra.ofId S (AdjoinRoot p))).restrictScalars R))
     (1 ⊗ₜ (root _)) <| by
     trans Algebra.TensorProduct.includeRight (Polynomial.aeval (root p) p)
     · rw [Polynomial.eval₂_map, Polynomial.aeval_def, ← AlgHom.coe_toRingHom, Polynomial.hom_eval₂]
       rfl
-    · simp
-  left_inv := sorry
-  right_inv := sorry
+    · simp)
+  (by
+    -- ext lemma missing here!
+    sorry)
+  sorry
 
 end
 end AdjoinRoot
