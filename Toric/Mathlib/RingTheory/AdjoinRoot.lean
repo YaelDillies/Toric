@@ -44,13 +44,12 @@ theorem map_of {s : S} {f : S →+* T} : map p f ((of p) s) = f s := by simp [ma
 theorem map_root {f : S →+* T} : map p f (root p) = root (p.map f) := by simp [map]
 
 variable (p) in
-def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.toRingHom) where
-  __ := map p f.toRingHom
-  commutes' r := by
-    simp [map, AdjoinRoot.algebraMap_eq']
+def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.mapAlgHom f) :=
+  liftAlgHom (((Algebra.ofId T _).restrictScalars R).comp f) (root (p.mapAlgHom f)) sorry
 
 @[simp]
-theorem mapAlgHom_of {s : S} {f : S →ₐ[R] T} : mapAlgHom p f ((of p) s) = f s := by simp [mapAlgHom]
+theorem mapAlgHom_of {s : S} {f : S →ₐ[R] T} : mapAlgHom p f ((of p) s) = f s := by
+  simp [mapAlgHom, Algebra.ofId_apply]
 
 @[simp]
 theorem mapAlgHom_root {f : S →ₐ[R] T} : mapAlgHom p f (root p) = root (p.map f.toRingHom) := by
@@ -88,7 +87,15 @@ def tensorAlgEquiv :
     simp
     erw [mapAlgHom_root]
     rfl)
-  sorry
+  <| by
+    apply Algebra.TensorProduct.ext
+    · ext
+    apply algHom_ext'
+    · ext
+      simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq']
+      sorry
+    simp
+    sorry
 
 end
 end AdjoinRoot
