@@ -27,9 +27,19 @@ def map (f : S →+* T) : AdjoinRoot p →+* AdjoinRoot (.map f p) :=
 def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.toRingHom) where
   __ := map p f.toRingHom
   commutes' r := by
-    simp [map]
-    sorry
+    simp [map, AdjoinRoot.algebraMap_eq']
 
+variable {p} in
+theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
+    f.comp ((Algebra.ofId S _).restrictScalars R) = g.comp ((Algebra.ofId S _).restrictScalars R))
+    (hRoot : f (root p) = g (root p)) : f = g := by
+  apply Ideal.Quotient.algHom_ext
+  ext x
+  · show f (AdjoinRoot.mk _ _) = g (AdjoinRoot.mk _ _)
+    simp
+    exact congr($(hAlg) x)
+  show f (AdjoinRoot.mk _ _) = g (AdjoinRoot.mk _ _)
+  simpa
 
 def tensorAlgEquiv :
     letI := Algebra.TensorProduct.rightAlgebra (R := R) (A := T) (B := S)
@@ -43,7 +53,10 @@ def tensorAlgEquiv :
       rfl
     · simp)
   (by
-    -- ext lemma missing here!
+    apply algHom_ext'
+    · ext s
+      simp
+      sorry
     sorry)
   sorry
 
