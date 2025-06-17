@@ -10,26 +10,41 @@ namespace AdjoinRoot
 
 section
 variable {R S T : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
-variable (p : Polynomial S)
+variable {p : Polynomial S}
 
 -- TODO : replace liftHom by this
-variable {p} in
-def liftAlgHom (i : S →ₐ[R] T) (x : T) (h : Polynomial.eval₂ i x p = 0) : AdjoinRoot p →ₐ[R] T where
+def liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) : AdjoinRoot p →ₐ[R] T where
   __ := lift i.toRingHom _ h
   commutes' r := by
     simp [lift_of h, AdjoinRoot.algebraMap_eq']
 
+@[simp]
+theorem coe_liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) :
+    (liftAlgHom i x h : AdjoinRoot p →+* T) = lift i.toRingHom _ h :=
+  rfl
+
+@[simp]
+theorem liftAlgHom_of {s : S} {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
+    liftAlgHom i x h (of p s) = i s := by simp [liftAlgHom]
+
+variable (p) in
 -- TODO : find better name
 def map (f : S →+* T) : AdjoinRoot p →+* AdjoinRoot (.map f p) :=
   lift ((algebraMap T _).comp f) (root (.map f p)) (by
     rw [← Polynomial.eval₂_map, ← Polynomial.aeval_def, aeval_eq, mk_self])
 
+@[simp]
+theorem map_of {s : S} {f : S →+* T} : map p f ((of p) s) = f s := by simp [map]
+
+variable (p) in
 def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.toRingHom) where
   __ := map p f.toRingHom
   commutes' r := by
     simp [map, AdjoinRoot.algebraMap_eq']
 
-variable {p} in
+@[simp]
+theorem mapAlgHom_of {s : S} {f : S →ₐ[R] T} : mapAlgHom p f ((of p) s) = f s := by simp [mapAlgHom]
+
 theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
     f.comp ((Algebra.ofId S _).restrictScalars R) = g.comp ((Algebra.ofId S _).restrictScalars R))
     (hRoot : f (root p) = g (root p)) : f = g := by
@@ -41,6 +56,7 @@ theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
   show f (AdjoinRoot.mk _ _) = g (AdjoinRoot.mk _ _)
   simpa
 
+variable (p) in
 def tensorAlgEquiv :
     letI := Algebra.TensorProduct.rightAlgebra (R := R) (A := T) (B := S)
     T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot (R := T ⊗[R] S) (.map (algebraMap S (T ⊗[R] S)) p) :=
@@ -55,8 +71,10 @@ def tensorAlgEquiv :
   (by
     apply algHom_ext'
     · ext s
-      simp
-      sorry
+      simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq']
+      erw [mapAlgHom_of]
+      rfl
+    simp
     sorry)
   sorry
 
