@@ -44,8 +44,10 @@ theorem map_of {s : S} {f : S →+* T} : map p f ((of p) s) = f s := by simp [ma
 theorem map_root {f : S →+* T} : map p f (root p) = root (p.map f) := by simp [map]
 
 variable (p) in
-def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.mapAlgHom f) :=
-  liftAlgHom (((Algebra.ofId T _).restrictScalars R).comp f) (root (p.mapAlgHom f)) sorry
+def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.toRingHom) where
+  __ := map p f.toRingHom
+  commutes' r := by
+    simp [map, AdjoinRoot.algebraMap_eq']
 
 @[simp]
 theorem mapAlgHom_of {s : S} {f : S →ₐ[R] T} : mapAlgHom p f ((of p) s) = f s := by
@@ -55,6 +57,7 @@ theorem mapAlgHom_of {s : S} {f : S →ₐ[R] T} : mapAlgHom p f ((of p) s) = f 
 theorem mapAlgHom_root {f : S →ₐ[R] T} : mapAlgHom p f (root p) = root (p.map f.toRingHom) := by
   simp [mapAlgHom]
 
+@[ext]
 theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
     f.comp ((Algebra.ofId S _).restrictScalars R) = g.comp ((Algebra.ofId S _).restrictScalars R))
     (hRoot : f (root p) = g (root p)) : f = g := by
@@ -69,33 +72,30 @@ theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
 variable (p) in
 def tensorAlgEquiv :
     letI := Algebra.TensorProduct.rightAlgebra (R := R) (A := T) (B := S)
-    T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot (R := T ⊗[R] S) (.map (algebraMap S (T ⊗[R] S)) p) :=
-  .ofAlgHom (Algebra.TensorProduct.lift (Algebra.algHom T T _) (mapAlgHom _ _) fun t y ↦ .all ..)
-  (liftAlgHom (Algebra.TensorProduct.map (AlgHom.id T T)
-    (((Algebra.ofId S (AdjoinRoot p))).restrictScalars R))
-    (1 ⊗ₜ (root _)) <| by
-    trans Algebra.TensorProduct.includeRight (Polynomial.aeval (root p) p)
+    T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot (.map (algebraMap S (T ⊗[R] S)) p) := by
+  refine .ofAlgHom (Algebra.TensorProduct.lift (Algebra.algHom T T _) (mapAlgHom _ _) ?_)
+      (liftAlgHom (Algebra.TensorProduct.map (AlgHom.id T T)
+      (((Algebra.ofId S (AdjoinRoot p))).restrictScalars R)) (1 ⊗ₜ (root _)) ?_) ?_ ?_
+  · intro t y
+    exact .all ..
+  · trans Algebra.TensorProduct.includeRight (Polynomial.aeval (root p) p)
     · rw [Polynomial.eval₂_map, Polynomial.aeval_def, ← AlgHom.coe_toRingHom, Polynomial.hom_eval₂]
       rfl
-    · simp)
-  (by
-    apply algHom_ext'
-    · ext s
-      simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq']
-      erw [mapAlgHom_of]
-      rfl
+    · simp
+  · ext
+    · simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq',
+        Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
     simp
     erw [mapAlgHom_root]
-    rfl)
-  <| by
-    apply Algebra.TensorProduct.ext
+    rfl
+  · apply Algebra.TensorProduct.ext
     · ext
     apply algHom_ext'
     · ext
-      simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq']
-      sorry
-    simp
-    sorry
+      simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq',
+      Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
+    simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq',
+      Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
 
 end
 end AdjoinRoot
