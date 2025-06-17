@@ -27,6 +27,10 @@ theorem coe_liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) :
 theorem liftAlgHom_of {s : S} {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
     liftAlgHom i x h (of p s) = i s := by simp [liftAlgHom]
 
+@[simp]
+theorem liftAlgHom_root {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
+    liftAlgHom i x h (root p) = x := by simp [liftAlgHom]
+
 variable (p) in
 -- TODO : find better name
 def map (f : S →+* T) : AdjoinRoot p →+* AdjoinRoot (.map f p) :=
@@ -36,6 +40,9 @@ def map (f : S →+* T) : AdjoinRoot p →+* AdjoinRoot (.map f p) :=
 @[simp]
 theorem map_of {s : S} {f : S →+* T} : map p f ((of p) s) = f s := by simp [map]
 
+@[simp]
+theorem map_root {f : S →+* T} : map p f (root p) = root (p.map f) := by simp [map]
+
 variable (p) in
 def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.toRingHom) where
   __ := map p f.toRingHom
@@ -44,6 +51,10 @@ def mapAlgHom (f : S →ₐ[R] T) : AdjoinRoot p →ₐ[R] AdjoinRoot (p.map f.t
 
 @[simp]
 theorem mapAlgHom_of {s : S} {f : S →ₐ[R] T} : mapAlgHom p f ((of p) s) = f s := by simp [mapAlgHom]
+
+@[simp]
+theorem mapAlgHom_root {f : S →ₐ[R] T} : mapAlgHom p f (root p) = root (p.map f.toRingHom) := by
+  simp [mapAlgHom]
 
 theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
     f.comp ((Algebra.ofId S _).restrictScalars R) = g.comp ((Algebra.ofId S _).restrictScalars R))
@@ -75,7 +86,8 @@ def tensorAlgEquiv :
       erw [mapAlgHom_of]
       rfl
     simp
-    sorry)
+    erw [mapAlgHom_root]
+    rfl)
   sorry
 
 end
