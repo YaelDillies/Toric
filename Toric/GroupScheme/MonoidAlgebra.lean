@@ -46,12 +46,11 @@ lemma specCommMonAlgPullbackObjXIso_one :
   have h₁ := counitAlgHom_comp_mapRangeRingHom f.hom (M := M)
   have h₂ := (Bialgebra.counitAlgHom S S[M]).comp_algebraMap
   apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
-  simp only [CommRingCat.ofHom_comp, Algebra.id.map_eq_id, CommRingCat.ofHom_id,
-    Spec.map_comp, CommRingCat.ofHom_hom, AlgHom.toRingHom_eq_coe, CommRingCat.mkUnder] at h₁ h₂
+  simp only [CommRingCat.ofHom_comp, Spec.map_comp, AlgHom.toRingHom_eq_coe] at h₁ h₂
   ext
   apply ((CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec).hom_ext <;>
     simp [Functor.Monoidal.ε_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
-      AlgHom.toUnder, ← h₁, h₂, CommRingCat.mkUnder]
+      AlgHom.toUnder, h₁, h₂, CommRingCat.mkUnder]
 
 @[reassoc]
 private
