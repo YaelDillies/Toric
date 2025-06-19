@@ -290,9 +290,8 @@ instance :
     simp
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
-    · simp
-      erw [pullbackSpecIso_inv_fst]
-      simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp]
+    · simp [pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
+      ← CommRingCat.ofHom_comp]
       change _ = _ ≫ (Spec.map <| CommRingCat.ofHom (
         (Bialgebra.counitAlgHom ℂ (ℂ ⊗[ℝ] SO2Ring ℝ)).comp
         Algebra.TensorProduct.includeLeft).toRingHom)
@@ -301,9 +300,9 @@ instance :
         Algebra.ext_id_iff.mpr trivial
       rw [this]
       simp
-    simp
-    erw [pullbackSpecIso_inv_snd]
-    simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp]
+    simp [pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
+      ← CommRingCat.ofHom_comp]
+    
     sorry
   mul_hom := sorry
 
