@@ -1,18 +1,43 @@
 import Mathlib.Algebra.MonoidAlgebra.Defs
 import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
+variable {R M : Type*}
+
 namespace MonoidAlgebra
-variable {R M : Type*} [Semiring R] [MulOneClass M]
+section Semiring
+variable [Semiring R]
+
+@[simp] lemma smul_apply (r : R) (m : M) (x : MonoidAlgebra R M) : (r • x) m = r • x m := rfl
+
+variable [MulOneClass M]
 
 @[simp] lemma linearCombination_of : Finsupp.linearCombination R (of R M) = .id := by ext; simp
 
+end Semiring
+
+section Ring
+variable [Ring R]
+
+@[simp] lemma single_neg (a : M) (b : R) : single a (-b) = -single a b := Finsupp.single_neg ..
+@[simp] lemma neg_apply (m : M) (x : MonoidAlgebra R M) : (-x) m = -x m := rfl
+
+end Ring
 end MonoidAlgebra
 
 namespace AddMonoidAlgebra
-variable {R M : Type*} [Semiring R] [AddZeroClass M]
+section Semiring
+variable [Semiring R] [AddZeroClass M]
 
 @[simp] lemma linearCombination_of : Finsupp.linearCombination R (of R M) = .id := by ext; simp; rfl
 
+end Semiring
+
+section Ring
+variable [Ring R]
+
+@[simp] lemma single_neg (a : M) (b : R) : single a (-b) = - single a b := Finsupp.single_neg ..
+
+end Ring
 end AddMonoidAlgebra
 
 namespace MonoidAlgebra
@@ -38,6 +63,30 @@ theorem induction_linear [Monoid G] {p : MonoidAlgebra k G → Prop}
 end
 
 end MonoidAlgebra
+
+namespace AddMonoidAlgebra
+
+universe u₁ u₂
+
+variable {k : Type u₁} {G : Type u₂} [Semiring k]
+
+section
+
+@[simp, norm_cast] lemma coe_add (f g : AddMonoidAlgebra k G) : ⇑(f + g) = f + g := rfl
+
+end
+
+section
+
+@[elab_as_elim]
+theorem induction_linear [AddMonoid G] {p : AddMonoidAlgebra k G → Prop} (f : AddMonoidAlgebra k G)
+    (zero : p 0) (add : ∀ f g : AddMonoidAlgebra k G, p f → p g → p (f + g))
+    (single : ∀ a b, p (single a b)) : p f :=
+  Finsupp.induction_linear f zero add single
+
+end
+
+end AddMonoidAlgebra
 
 namespace MonoidAlgebra
 

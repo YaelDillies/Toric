@@ -45,6 +45,13 @@ lemma pow_succ (f : C →ₐ[R] A) (n : ℕ) : f ^ (n + 1) = (f ^ n) * f := rfl
 
 @[simp] lemma one_apply' (c : C) : (1 : C →ₐ[R] A) c = algebraMap R A (counit c) := rfl
 
+@[simp] lemma mul_apply' (f g : C →ₐ[R] A) (c : C) :
+    (f * g) c = Algebra.TensorProduct.lift f g (fun _ _ ↦ .all _ _) (comul c) := by
+  simp only [mul_def, coe_comp, Function.comp_apply, Bialgebra.comulAlgHom_apply]
+  rw [← comp_apply]
+  congr 1
+  ext <;> simp
+
 lemma toLinearMap_one : (1 : C →ₐ[R] A) = (1 : C →ₗ[R] A) := rfl
 lemma toLinearMap_mul (f g : C →ₐ[R] A) : (f * g).toLinearMap = f.toLinearMap * g.toLinearMap := rfl
 lemma toLinearMap_pow (f : C →ₐ[R] A) (n : ℕ) : (f ^ n).toLinearMap = f.toLinearMap ^ n := by

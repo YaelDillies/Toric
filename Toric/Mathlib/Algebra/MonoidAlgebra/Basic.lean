@@ -18,27 +18,33 @@ namespace MonoidAlgebra
 
 section mapRange
 
-variable {R S M N : Type*} [Monoid M] [Monoid N]
+variable {R S T A M N : Type*} [CommSemiring R] [Semiring A] [Algebra R A] [Monoid M] [Monoid N]
 
 @[simp]
-lemma mapRangeRingHom_comp_algebraMap [CommSemiring R] [CommSemiring S] (f : R →+* S) :
+lemma mapDomainRingHom_comp_algebraMap (f : M →* N) :
+    (mapDomainRingHom A f).comp (algebraMap R <| MonoidAlgebra A M) =
+      algebraMap R (MonoidAlgebra A N) := by
+  ext; simp
+
+@[simp]
+lemma mapRangeRingHom_comp_algebraMap [CommSemiring S] (f : R →+* S) :
     (mapRangeRingHom (M := M) f).comp (algebraMap _ _) = (algebraMap _ _).comp f := by
   ext
   simp
 
 /-- The algebra homomorphism of monoid algebras induced by a homomorphism of the base algebras. -/
-noncomputable def mapRangeAlgHom {T : Type*} [CommSemiring R] [Semiring S]
+noncomputable def mapRangeAlgHom {T : Type*} [Semiring S]
     [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) :
     MonoidAlgebra S M →ₐ[R] MonoidAlgebra T M :=
   liftNCAlgHom (singleOneAlgHom.comp f) (of T M) (by intro x y; simp[commute_iff_eq])
 
 @[simp]
-lemma mapRangeAlgHom_apply {T : Type*} [CommSemiring R] [Semiring S]
-    [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) (x : MonoidAlgebra S M) (m : M) :
+lemma mapRangeAlgHom_apply {T : Type*} [Semiring S] [Semiring T] [Algebra R S] [Algebra R T]
+   (f : S →ₐ[R] T) (x : MonoidAlgebra S M) (m : M) :
     mapRangeAlgHom f x m = f (x m) := mapRangeRingHom_apply f.toRingHom x m
 
 @[simp]
-lemma mapRangeAlgHom_single {T : Type*} [CommSemiring R] [Semiring S]
+lemma mapRangeAlgHom_single {T : Type*} [Semiring S]
     [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) (a : M) (b : S) :
     mapRangeAlgHom f (single a b) = single a (f b) := by
   classical
@@ -47,7 +53,7 @@ lemma mapRangeAlgHom_single {T : Type*} [CommSemiring R] [Semiring S]
 
 /-- The algebra isomorphism of monoid algebras induced by an isomorphism of the base algebras. -/
 @[simps apply]
-noncomputable def mapRangeAlgEquiv {T : Type*} [CommSemiring R] [Semiring S] [Semiring T]
+noncomputable def mapRangeAlgEquiv {T : Type*} [Semiring S] [Semiring T]
     [Algebra R S] [Algebra R T] (f : S ≃ₐ[R] T) :
     MonoidAlgebra S M ≃ₐ[R] MonoidAlgebra T M where
   __ := mapRangeAlgHom f
@@ -85,3 +91,12 @@ instance {T : Type*} [CommSemiring T] [Algebra R T] [Algebra S T] [IsScalarTower
 end
 
 end MonoidAlgebra
+
+namespace AddMonoidAlgebra
+variable {R A M N : Type*} [CommSemiring R] [Semiring A] [Algebra R A] [AddMonoid M] [AddMonoid N]
+
+@[simp]
+lemma mapDomainRingHom_comp_algebraMap (f : M →+ N) :
+    (mapDomainRingHom A f).comp (algebraMap R A[M]) = algebraMap R A[N] := by ext; simp
+
+end AddMonoidAlgebra

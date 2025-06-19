@@ -7,6 +7,7 @@ import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.GroupTheory.MonoidLocalization.DivPairs
 import Mathlib.GroupTheory.MonoidLocalization.GrothendieckGroup
+import Toric.Mathlib.AlgebraicGeometry.Scheme
 
 /-!
 # Toric ideals
@@ -71,10 +72,10 @@ lemma isToricIdeal_iff_exists_span_single_sub_single :
   mpr := by
     let G := AddLocalization (⊤ : AddSubmonoid M)
     rintro ⟨_, s, hsI⟩
-    letI V := Spec (.of <| k[M] ⧸ I)
-    let _ : V.Over (Spec (.of k[M])) := sorry
-    let _ : (Spec (.of k[G])).Over (Spec (.of k[M])) := sorry
-    let VinterT := pullback (V ↘ Spec (.of k[M])) (Spec (.of k[G]) ↘ Spec (.of k[M]))
+    letI V := Spec(k[M] ⧸ I)
+    let _ : V.Over Spec(k[M]) := sorry
+    let _ : Spec(k[G]).Over Spec(k[M]) := sorry
+    let VinterT := pullback (V ↘ Spec(k[M])) (Spec(k[G]) ↘ Spec(k[M]))
     refine ⟨?_⟩
     sorry
 

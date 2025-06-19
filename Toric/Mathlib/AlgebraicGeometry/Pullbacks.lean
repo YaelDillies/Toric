@@ -13,6 +13,7 @@ variable {M S T : Scheme.{u}} [M.Over S] {f : T ⟶ S}
 
 instance : (Over.pullback f).Braided := .ofChosenFiniteProducts _
 
+@[simps]
 instance canonicallyOverPullback : (pullback (M ↘ S) f).CanonicallyOver T where
   hom := pullback.snd (M ↘ S) f
 
@@ -29,7 +30,7 @@ instance Grp_ClassAsOverPullback [Grp_Class (asOver M S)] :
     Grp_Class (asOver (pullback (M ↘ S) f) T) :=
   ((Over.pullback f).mapGrp.obj <| .mk <| asOver M S).grp
 
-instance : (pullback.fst (M ↘ S) (𝟙 S)).IsOver S := ⟨(pullback.condition).trans (by simp; rfl)⟩
+instance : (pullback.fst (M ↘ S) (𝟙 S)).IsOver S := ⟨(pullback.condition).trans (by simp)⟩
 
 @[simp]
 lemma η_pullback_left :
@@ -87,7 +88,7 @@ instance isMon_hom_fst_id_right [Mon_Class (asOver M S)] :
     simp only [Category.assoc, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app]
     simp only [← Category.assoc]
     congr 1
-    ext <;> simp [Scheme.asOver, OverClass.asOver] <;> rfl
+    ext <;> simp [Scheme.asOver, OverClass.asOver]
 
 @[simp]
 lemma preservesTerminalIso_pullback {R S : CommRingCat.{u}} (f : R ⟶ S) :

@@ -18,7 +18,7 @@ open CategoryTheory CartesianMonoidalCategory Limits TensorProduct
 noncomputable section
 
 namespace CategoryTheory.CommAlgCat
-universe u v
+universe u
 variable {R : Type u} [CommRing R] {A B : CommAlgCat.{u} R}
 
 variable (A B) in

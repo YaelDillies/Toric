@@ -7,61 +7,20 @@ import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
+import Toric.Mathlib.AlgebraicGeometry.Over
+import Toric.Mathlib.AlgebraicGeometry.Scheme
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra Hom
 
 noncomputable section
 
-universe u v
+universe u
 
 namespace AlgebraicGeometry.Scheme
 section Diag
-variable {S : Scheme.{u}} {M G : Type u} [AddCommMonoid M] [AddCommGroup G]
-
-variable (S M) in
-/-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
-def Diag : Scheme.{u} :=
-  pullback
-    (Spec (.of <| MonoidAlgebra (ULift.{u} ℤ) <| Multiplicative M) ↘ Spec (.of <| ULift.{u} ℤ))
-    (specULiftZIsTerminal.from S)
-
-@[simps! -isSimp]
-instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance
-instance Diag.mon_ClassAsOver : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
-instance Diag.grp_ClassAsOver : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
-instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
-
-variable {R : CommRingCat.{u}}
-
-variable (R M) in
-def diagSpecIso : Diag (Spec R) M ≅ Spec (.of <| MonoidAlgebra R <| Multiplicative M) :=
-  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  (isoWhiskerRight (specCommMonAlgPullback (CommRingCat.ofHom f) _
-    (specULiftZIsTerminal.hom_ext _ _)) (Mon_.forget _ ⋙ Over.forget _)).app <|
-      .op <| .of <| Multiplicative M
-
-instance isOver_diagSpecIso_hom : (diagSpecIso M R).hom.IsOver (Spec R) where
-  comp_over := by
-    rw [← Iso.eq_inv_comp]
-    exact (specCommMonAlgPullback_inv_app_hom_left_snd _ _ (specULiftZIsTerminal.hom_ext _ _) <|
-      .op <| .of <| Multiplicative M).symm
-
-instance isOver_diagSpecIso_inv : (diagSpecIso M R).inv.IsOver (Spec R) where
-  comp_over := specCommMonAlgPullback_inv_app_hom_left_snd _ _
-      (specULiftZIsTerminal.hom_ext _ _) <| .op <| .of <| Multiplicative M
-
-instance : IsMon_Hom ((diagSpecIso M R).hom.asOver (Spec R)) :=
-  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  Mon_.instIsMon_HomHom
-  ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
-    (specULiftZIsTerminal.hom_ext _ _)).app <| .op <| .of <| Multiplicative M).hom
-
-instance : IsMon_Hom ((diagSpecIso M R).inv.asOver (Spec R)) :=
-  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  Mon_.instIsMon_HomHom
-  ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
-    (specULiftZIsTerminal.hom_ext _ _)).app _).inv
+variable {S : Scheme.{u}} {R : CommRingCat.{u}} {M N O G : Type u} [AddCommMonoid M]
+  [AddCommMonoid N] [AddCommMonoid O] [AddCommGroup G]
 
 variable (S) in
 def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon_ (Over S) :=
@@ -69,8 +28,86 @@ def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon_ (Over S) :=
     (commMonAlg (ULift.{u} ℤ)).op ⋙ bialgSpec (.of <| ULift.{u} ℤ) ⋙
       (Over.pullback (specULiftZIsTerminal.from S)).mapMon
 
+variable (S M) in
+/-- The spectrum of a monoid algebra over an arbitrary base scheme `S`. -/
+def Diag : Scheme.{u} :=
+  pullback
+    (Spec(MonoidAlgebra (ULift.{u} ℤ) <| Multiplicative M) ↘ Spec(ULift.{u} ℤ))
+    (specULiftZIsTerminal.from S)
+
+@[simps! -isSimp]
+instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance
+@[simps! -isSimp one_left mul_left]
+instance Diag.mon_ClassAsOver : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
+@[simps! -isSimp inv_left]
+instance Diag.grp_ClassAsOver : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
+instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
+
 @[simp] lemma diagMonFunctor_obj (M : AddCommMonCatᵒᵖ) :
     (diagMonFunctor S).obj M = .mk ((Diag S M.unop).asOver S) := rfl
+
+variable (S) in
+/-- A monoid hom `M → N` induces a monoid morphism `Diag S N ⟶ Diag S M`. -/
+def Diag.map (f : M →+ N) : Diag S N ⟶ Diag S M :=
+  pullback.map _ _ _ _
+    (Spec.map <| CommRingCat.ofHom <| MonoidAlgebra.mapDomainRingHom _ f.toMultiplicative)
+    (𝟙 S) (𝟙 _) (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) (by simp)
+
+attribute [local simp] Diag.map Diag.canonicallyOver_over in
+instance Diag.isOver_map {f : M →+ N} : (Diag.map S f).IsOver S where
+
+instance Diag.isMon_Hom_map {f : M →+ N} : IsMon_Hom <| (Diag.map S f).asOver S :=
+  inferInstanceAs <| IsMon_Hom <| ((diagMonFunctor S).map <| .op <| AddCommMonCat.ofHom f).hom
+
+@[simp] lemma diagMonFunctor_map {M N : AddCommMonCatᵒᵖ} (f : M ⟶ N) :
+    (diagMonFunctor S).map f = .mk ((Diag.map S f.unop.hom).asOver S) := rfl
+
+variable (S M) in
+@[simp] lemma Diag.map_id : Diag.map S (.id M) = 𝟙 (Diag S M) := by simp [Diag.map]; rfl
+
+variable (S) in
+@[simp] lemma Diag.map_comp (f : N →+ O) (g : M →+ N) :
+    Diag.map S (f.comp g) = Diag.map S f ≫ Diag.map S g :=
+  congr(($((diagMonFunctor S).map_comp (.op <| AddCommMonCat.ofHom f)
+    (.op <| AddCommMonCat.ofHom g))).hom.left)
+
+variable (S) in
+/-- A monoid iso `M ≃ N` induces a monoid isomorphism `Diag S M ≅ Diag S N`. -/
+@[simps]
+def Diag.mapIso (f : M ≃+ N) : Diag S M ≅ Diag S N where
+  hom := Diag.map S f.symm
+  inv := Diag.map S f
+  hom_inv_id := by simp [← Diag.map_comp]
+  inv_hom_id := by simp [← Diag.map_comp]
+
+variable (R M) in
+def diagSpecIso : Diag (Spec R) M ≅ Spec(MonoidAlgebra R <| Multiplicative M) :=
+  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
+  (isoWhiskerRight (specCommMonAlgPullback (CommRingCat.ofHom f) _
+    (specULiftZIsTerminal.hom_ext _ _)) (Mon_.forget _ ⋙ Over.forget _)).app <|
+      .op <| .of <| Multiplicative M
+
+instance isOver_diagSpecIso_hom : (diagSpecIso R M).hom.IsOver (Spec R) where
+  comp_over := by
+    rw [← Iso.eq_inv_comp]
+    exact (specCommMonAlgPullback_inv_app_hom_left_snd _ _ (specULiftZIsTerminal.hom_ext _ _) <|
+      .op <| .of <| Multiplicative M).symm
+
+instance isOver_diagSpecIso_inv : (diagSpecIso R M).inv.IsOver (Spec R) where
+  comp_over := specCommMonAlgPullback_inv_app_hom_left_snd _ _
+      (specULiftZIsTerminal.hom_ext _ _) <| .op <| .of <| Multiplicative M
+
+instance : IsMon_Hom ((diagSpecIso R M).hom.asOver (Spec R)) :=
+  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
+  Mon_.instIsMon_HomHom
+  ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
+    (specULiftZIsTerminal.hom_ext _ _)).app <| .op <| .of <| Multiplicative M).hom
+
+instance : IsMon_Hom ((diagSpecIso R M).inv.asOver (Spec R)) :=
+  letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
+  Mon_.instIsMon_HomHom
+  ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
+    (specULiftZIsTerminal.hom_ext _ _)).app _).inv
 
 variable (S) in
 def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
@@ -79,12 +116,10 @@ def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
       (Over.pullback (specULiftZIsTerminal.from S)).mapGrp
 
 @[simp] lemma diagFunctor_obj (M : AddCommGrpᵒᵖ) :
-    (diagFunctor S).obj M = .mk' ((Diag S M.unop).asOver S) := rfl
+    (diagFunctor S).obj M = ⟨(Diag S M.unop).asOver S⟩ := rfl
 
-instance {C : Type*} [Category C] {X : C} [CartesianMonoidalCategory C] [BraidedCategory C]
-    [Grp_Class X] [IsCommMon X] : IsCommMon (Grp_.mk' X) :=
-  letI : IsCommMon (Grp_.mk' X).X := ‹_›
-  inferInstance
+@[simp] lemma diagFunctor_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
+    (diagFunctor S).map f = ⟨(Diag.map S f.unop.hom).asOver S⟩ := rfl
 
 instance (M : AddCommMonCatᵒᵖ) : IsCommMon ((diagMonFunctor S).obj M).X :=
   inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
@@ -128,7 +163,7 @@ def diagMonFunctorIso :
       (specULiftZIsTerminal.hom_ext _ _))
 
 lemma diagMonFunctorIso_app (M : AddCommMonCatᵒᵖ) :
-    ((diagMonFunctorIso R).app M).hom.hom.left = (diagSpecIso M.unop _).hom := rfl
+    ((diagMonFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
 
 variable (R) in
 def diagFunctorIso :
@@ -140,13 +175,13 @@ def diagFunctorIso :
       (specULiftZIsTerminal.hom_ext _ _))
 
 lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
-    ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso M.unop _).hom := rfl
+    ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
 
-instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor (Spec (.of R))).Full :=
+instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Full :=
   have : (hopfSpec (CommRingCat.of R)).Full := hopfSpec.instFull
   .of_iso (diagFunctorIso (.of R)).symm
 
-instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor (Spec (.of R))).Faithful :=
+instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Faithful :=
   have : (hopfSpec (CommRingCat.of R)).Faithful := hopfSpec.instFaithful
   .of_iso (diagFunctorIso (.of R)).symm
 
@@ -156,7 +191,7 @@ variable {G G' G'' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S]
   [Grp_Class (G.asOver S)] [Grp_Class (G'.asOver S)] [Grp_Class (G''.asOver S)]
 
 variable (G G' S) in
-def HomGrp : Type u := Additive (Grp_.mk' (G.asOver S) ⟶ Grp_.mk' (G'.asOver S))
+def HomGrp : Type u := Additive (Grp_.mk (G.asOver S) ⟶ .mk (G'.asOver S))
 
 instance [IsCommMon (G'.asOver S)] : AddCommGroup (HomGrp G G' S) := by
   delta HomGrp; infer_instance
@@ -172,12 +207,6 @@ lemma HomGrp.toHom_injective : Function.Injective (HomGrp.hom (G := G) (G' := G'
 
 def HomGrp.comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) : HomGrp G G'' S :=
   .ofMul (f.toMul ≫ g.toMul)
-
-instance {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
-    {X Y : Grp_ C} [IsCommMon X.X] [IsCommMon Y.X] (f : X ⟶ Y) :
-    IsMon_Hom f where
-  one_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
-  mul_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
 
 lemma HomGrp.comp_add [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
     (f f' : HomGrp G G' S) (g : HomGrp G' G'' S) :
@@ -210,33 +239,30 @@ lemma HomGrp.add_comp [IsCommMon (G''.asOver S)]
 end
 
 variable (S) in
-set_option maxHeartbeats 0 in
 def diagHomGrp {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f : M →+ N) :
-    HomGrp (Diag S N) (Diag S M) S := .ofMul ((diagFunctor S).map (AddCommGrp.ofHom f).op)
+    HomGrp (Diag S N) (Diag S M) S := .ofMul <| by
+  have := (diagFunctor S).map (AddCommGrp.ofHom f).op
+  dsimp at this
+  exact this
 
-set_option maxHeartbeats 0 in
 lemma diagHomGrp_comp {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCommGroup O]
     (f : M →+ N) (g : N →+ O) :
     (diagHomGrp S g).comp (diagHomGrp S f) = diagHomGrp S (g.comp f) := by
-  apply Additive.toMul.injective
-  dsimp [HomGrp, diagHomGrp, HomGrp.comp]
-  exact (S.diagFunctor.map_comp ..).symm
+  simpa [HomGrp, diagHomGrp, HomGrp.comp]
+    using (S.diagFunctor.map_comp (AddCommGrp.ofHom g).op (AddCommGrp.ofHom f).op).symm
 
-set_option maxHeartbeats 0 in
 lemma diagHomGrp_add {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
-    diagHomGrp S (f + g) = diagHomGrp S f + diagHomGrp S g :=
-  congr(Additive.ofMul $(diagFunctor_map_add f g))
+    diagHomGrp S (f + g) = diagHomGrp S f + diagHomGrp S g := by
+  simpa [diagHomGrp] using congr(Additive.ofMul $(diagFunctor_map_add (S := S) f g))
 
-set_option maxHeartbeats 0 in
 def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [AddCommGroup N] :
-    (N →+ M) ≃+ HomGrp (Diag (Spec (.of R)) M) (Diag (Spec (.of R)) N) (Spec (.of R)) :=
-  letI e := Functor.FullyFaithful.homEquiv (.ofFullyFaithful (diagFunctor (Spec <| .of R)))
+    (N →+ M) ≃+ HomGrp (Diag Spec(R) M) (Diag Spec(R) N) Spec(R) :=
+  letI e := Functor.FullyFaithful.homEquiv (.ofFullyFaithful (diagFunctor Spec(R)))
     (X := .op (.of M)) (Y := .op (.of N))
-  { toFun f := Additive.ofMul (e (AddCommGrp.ofHom f).op)
-    invFun f := (e.symm f.toMul).unop.hom
-    left_inv _ := by simp only [toMul_ofMul, e.symm_apply_apply]; rfl
-    right_inv _ := by simp only [AddCommGrp.ofHom_hom, Quiver.Hom.op_unop, e.apply_symm_apply,
-      ofMul_toMul]
+  { toFun f := Additive.ofMul <| by have := e (AddCommGrp.ofHom f).op; dsimp at this; exact this
+    invFun f := (e.symm <| by dsimp; exact f.toMul).unop.hom
+    left_inv _ := by dsimp at *; erw [e.symm_apply_apply]; rfl
+    right_inv _ := by dsimp at *; erw [e.apply_symm_apply]; rfl
     map_add' := diagHomGrp_add  }
 
 lemma diagHomEquiv_apply {R M N : Type u}
@@ -253,25 +279,21 @@ variable (S G) in
 @[mk_iff]
 class IsDiagonalisable : Prop where
   existsIso :
-    ∃ (A : Type u) (_ : AddCommGroup A),
-      Nonempty <| Grp_.mk' (asOver G S) ≅ .mk' (asOver (Diag S A) S)
+    ∃ (A : Type u) (_ : AddCommGroup A) (e : G ≅ Diag S A) (_ : e.hom.IsOver S),
+      IsMon_Hom <| e.hom.asOver S
 
 instance {A : Type u} [AddCommGroup A] : IsDiagonalisable S (Diag S A) :=
-  ⟨A, ‹_›, ⟨by exact .refl _⟩⟩
+  ⟨A, ‹_›, by exact .refl _, by dsimp; infer_instance, by dsimp; infer_instance⟩
 
-lemma IsDiagonalisable.ofIso [IsDiagonalisable S H]
-    (e : Grp_.mk' (asOver G S) ≅ .mk' (asOver H S)) : IsDiagonalisable S G :=
-  let ⟨A, _, ⟨e'⟩⟩ := ‹IsDiagonalisable S H›; ⟨A, _, ⟨e.trans e'⟩⟩
-
-instance  (f : G ⟶ H) [IsIso f] [f.IsOver S] : IsIso (f.asOver S) :=
-  have : IsIso ((Over.forget S).map (Hom.asOver f S)) := ‹_›
-  isIso_of_reflects_iso _ (Over.forget _)
+lemma IsDiagonalisable.of_iso [IsDiagonalisable S H]
+    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : IsDiagonalisable S G :=
+  let ⟨A, _, e', _, _⟩ := ‹IsDiagonalisable S H›
+  ⟨A, _, e.trans e', by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsDiagonalisable.of_isIso [IsDiagonalisable S H]
     (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : IsDiagonalisable S G :=
-  have : IsMon_Hom (asIso (Hom.asOver f S)).hom := ‹_›
-  IsDiagonalisable.ofIso (H := H) ((Grp_.fullyFaithfulForget₂Mon_ _).preimageIso
-    (Mon_.mkIso' (asIso (f.asOver S))))
+  have : IsMon_Hom (Hom.asOver (asIso f).hom S) := ‹_›
+  .of_iso (asIso f)
 
 end Scheme
 
@@ -279,7 +301,7 @@ section CommRing
 variable {R : CommRingCat.{u}} {G : Scheme.{u}} [G.Over (Spec R)] [Grp_Class (asOver G (Spec R))]
   {A : Type u} [AddCommGroup A]
 
-instance : IsDiagonalisable (Spec R) (Spec <| .of R[A]) := .of_isIso (diagSpecIso A R).inv
+instance : IsDiagonalisable (Spec R) Spec(R[A]) := .of_isIso (diagSpecIso R A).inv
 
 variable [IsDomain R]
 
