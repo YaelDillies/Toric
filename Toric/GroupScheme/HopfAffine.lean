@@ -42,7 +42,7 @@ so that in particular we do not easily know that its inverse is given by `Γ`.
 -/
 
 open AlgebraicGeometry Coalgebra Scheme CategoryTheory MonoidalCategory Functor Monoidal Opposite
-  Limits Mon_Class Grp_Class TensorProduct
+  Limits TensorProduct
 
 universe u
 variable {R : CommRingCat.{u}}
@@ -73,15 +73,30 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 noncomputable instance algSpec.instBraided : (algSpec R).Braided where
-  ε' := Over.homMk (𝟙 _)
-  η' := Over.homMk (𝟙 _)
-  μ' (X Y) := Over.homMk (pullbackSpecIso R X Y).hom
-  δ' (X Y) := Over.homMk (pullbackSpecIso R X Y).inv
+  ε := Over.homMk <| 𝟙 (Spec R)
+  η := Over.homMk <| 𝟙 (Spec R)
+  μ (X Y) := Over.homMk (pullbackSpecIso R X.unop Y.unop).hom <| by
+    simp [← Spec.map_comp, IsScalarTower.algebraMap_eq R X.unop (X.unop ⊗[R] Y.unop),
+      ← Iso.eq_inv_comp]
+    rfl
+  δ (X Y) := Over.homMk (pullbackSpecIso R X.unop Y.unop).inv <| by
+    simp [← Spec.map_comp, IsScalarTower.algebraMap_eq R X.unop (X.unop ⊗[R] Y.unop),
+      ← Iso.eq_inv_comp]
+    rfl
+  μ_natural_left := sorry
+  μ_natural_right := sorry
+  associativity := sorry
+  left_unitality := sorry
+  right_unitality := sorry
+
+open Mon_Class Grp_Class
 
 @[simp] lemma algSpec_ε_left : (LaxMonoidal.ε (algSpec R)).left = 𝟙 (Spec R) := rfl
 @[simp] lemma algSpec_η_left : (OplaxMonoidal.η (algSpec R)).left = 𝟙 (Spec R) := rfl
-@[simp] lemma algSpec_μ_left : (LaxMonoidal.μ (algSpec R)).left = (pullbackSpecIso R X Y).hom := rfl
-@[simp] lemma algSpec_δ_left : (OplaxMonoidal.δ (algSpec R)).left = (pullbackSpecIso R X Y).inv :=
+@[simp] lemma algSpec_μ_left {X Y : (CommAlgCat R)ᵒᵖ} :
+    (LaxMonoidal.μ (algSpec R) X Y).left = (pullbackSpecIso R X.unop Y.unop).hom := rfl
+@[simp] lemma algSpec_δ_left {X Y : (CommAlgCat R)ᵒᵖ} :
+    (OplaxMonoidal.δ (algSpec R) X Y).left = (pullbackSpecIso R X.unop Y.unop).inv :=
   rfl
 
 @[simp]
