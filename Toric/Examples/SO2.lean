@@ -11,6 +11,7 @@ import Toric.Mathlib.Algebra.Polynomial.AlgebraMap
 import Toric.Mathlib.AlgebraicGeometry.Over
 import Toric.Mathlib.Data.Finsupp.Single
 import Toric.Mathlib.LinearAlgebra.UnitaryGroup
+import Toric.Mathlib.RingTheory.AdjoinRoot
 
 noncomputable section
 
@@ -191,14 +192,7 @@ def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup 
 instance : Algebra S (S ⊗[R] SO2Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := SO2Ring R)
 
-def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S where
-  toFun := Algebra.TensorProduct.lift (Algebra.algHom S S (SO2Ring S)) sorry sorry
-  invFun := sorry
-  left_inv := sorry
-  right_inv := sorry
-  map_mul' := sorry
-  map_add' := sorry
-  commutes' := sorry
+def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S := sorry
 
 variable (R S) in
 def baseChangeBialgEquiv : SO2Ring S ≃ₐc[S] S ⊗[R] SO2Ring R := by
@@ -222,16 +216,16 @@ scoped notation3 "SO₂("R")" => Spec <| .of <| SO2Ring R
 
 def so₂ComplexIso : SO₂(ℂ) ≅ Diag Spec(ℂ) ℤ :=
   Scheme.Spec.mapIso complexEquiv.toAlgEquiv.toRingEquiv.toCommRingCatIso.op ≪≫
-    (diagSpecIso ℤ <| .of ℂ).symm
+    (diagSpecIso (.of ℂ) ℤ).symm
 
 @[simp] lemma so₂ComplexIso_hom :
     so₂ComplexIso.hom =
       ((bialgSpec <| .of ℂ).map <| .op <| CommBialgCat.ofHom complexEquiv.toBialgHom).hom.left ≫
-        (diagSpecIso ℤ <| .of ℂ).inv := rfl
+        (diagSpecIso (.of ℂ) ℤ).inv := rfl
 
 @[simp] lemma so₂ComplexIso_inv :
     so₂ComplexIso.inv =
-      (diagSpecIso ℤ <| .of ℂ).hom ≫
+      (diagSpecIso (.of ℂ) ℤ).hom ≫
         ((bialgSpec <| .of ℂ).map <| .op <|
           CommBialgCat.ofHom complexEquiv.symm.toBialgHom).hom.left := rfl
 
@@ -240,7 +234,7 @@ instance : so₂ComplexIso.hom.IsOver Spec(ℂ) := by rw [so₂ComplexIso_hom]; 
 lemma so₂ComplexIso_hom_asOver :
     so₂ComplexIso.hom.asOver Spec(ℂ) =
       ((bialgSpec <| .of ℂ).map <| .op <| CommBialgCat.ofHom complexEquiv.toBialgHom).hom ≫
-        (diagSpecIso ℤ <| .of ℂ).inv.asOver Spec(ℂ) := rfl
+        (diagSpecIso (.of ℂ) ℤ).inv.asOver Spec(ℂ) := rfl
 
 instance : IsMon_Hom <| so₂ComplexIso.hom.asOver Spec(ℂ) := by
   rw [so₂ComplexIso_hom_asOver]; infer_instance
@@ -268,8 +262,8 @@ instance :
   one_hom := by
     ext
     simp [mon_ClassAsOverPullback_one]
-    rw [← cancel_mono (pullbackSpecIso' ..).hom]
-    ext
+    -- rw [← cancel_mono (pullbackSpecIso' ..).hom]
+    -- ext
     sorry
   mul_hom := sorry
 
