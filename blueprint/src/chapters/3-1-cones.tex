@@ -43,7 +43,7 @@ element has a multiplicative inverse.
 \end{definition}
 
 \begin{definition}
-  \label{3-cone-dual}
+  \label{3-dual-cone}
   \uses{3-pointed-cone}
   \lean{PointedCone.dual'}
   \leanok
@@ -57,7 +57,7 @@ element has a multiplicative inverse.
 
 \begin{definition}
   \label{3-polyhedral-cone}
-  \uses{3-cone-dual}
+  \uses{3-dual-cone}
   \lean{PointedCone.IsPolyhedral}
   \leanok
   A pointed cone \( \sigma \subseteq N \) is called {\bf polyhedral},
@@ -233,8 +233,12 @@ element has a multiplicative inverse.
 \end{proof}
 
 
-\subsection{Faces, edges and facets}
+\subsection{Faces and the relative interior}
 
+We define faces of polyhedral cones. The main goal is the partial
+order relation on the set of faces and showing that there is a
+bijection between faces of \( \sigma \) and faces of \( \sigma^{\vee}
+\). On the way, we also define relative interiors.
 
 \begin{definition}
   \label{3-perp}
@@ -344,7 +348,7 @@ element has a multiplicative inverse.
   0 \).
 \end{proof}
 
-\begin{lemma}[]
+\begin{lemma}
   \label{3-face-dual-eq-sum}
   \uses{3-face}
   % \lean{}
@@ -397,114 +401,117 @@ element has a multiplicative inverse.
   \).
 \end{proof}
 
+In particular, Lemma~\ref{3-face-face} establishes a partial order on
+the set of faces of a polyhedral cone \( \sigma \), which is finite
+by~\ref{3-faces-polyhedral-cone-finite}. Next, we need the notion of
+relative interior, which we define here completely algebraically. When
+working over \( \R \), it is the same as the topological interior of
+\( \sigma \) in its span.
 
-\begin{lemma}
-  \label{3-face-mem-of-add}
-  \uses{3-polyhedral-cone, 3-face}
+\begin{definition}[Relative interior]
+  \label{3-rel-interior}
+  \uses{3-dual-cone, 3-perp}
   % \lean{}
   % \leanok
-  Let \( \tau \) be a face of a polyhedral cone \( \sigma \). If \( v,
-  w \in \sigma \) and \( v + w \in \tau \), then \( v, w \in \tau \).
+  The \emph{relative interior} of a pointed cone \( \sigma \subseteq N
+  \) (written \( \sigma^{\circ} \)) is the subset of all \( v \in
+  \sigma \) such that \( \langle v, u \rangle > 0 \) for all \( u \in
+  \sigma^{\vee} \backslash \sigma^{\perp} \). Note that \(
+  \sigma^{\circ} \) is not a pointed cone (it does not contain \( 0
+  \)), but it is closed under addition and \( \Bbbk_{\geq 0} \)-scalar
+  multiplication.
+\end{definition}
+
+\begin{lemma}
+  \label{3-rel-interior-perp}
+  \uses{}
+  % \lean{}
+  % \leanok
+  For a pointed cone \( \sigma \), we have \( v \in \sigma^{\circ} \)
+  if and only if \( \sigma^{\perp} = \sigma^{\vee} \cap v^{\perp} \).
 \end{lemma}
 \begin{proof}
   \uses{}
   % \leanok
-  Write \( \tau = \sigma \cap u^{\perp} \). Then \( v + w \in \tau \)
-  means \( \langle v, u \rangle + \langle w, u \rangle = 0 \). Since
-  \( u \in \sigma^{\perp} \) and \( v, w \in \sigma \), both summands
-  are nonnegative, hence \( \langle v, u \rangle = \langle w, u
-  \rangle = 0 \).
+  Easy, just reformulating the definition.
 \end{proof}
 
-\begin{definition}[Dimension of cone]
-  \label{3-pointed-cone-dimension}
-  \uses{3-pointed-cone}
+\begin{lemma}
+  \label{3-rel-interior-positive-lincomb}
+  \uses{3-rel-interior}
   % \lean{}
   % \leanok
-  The \emph{dimension} of a pointed cone \( \sigma \subseteq N \) is
-  the dimension of the \( \Bbbk \)-linear subspace \(
-  \Span_{\Bbbk}(\sigma) \).
-\end{definition}
-
-\begin{definition}[Facets]
-  \label{3-facet}
-  \uses{3-pointed-cone-dimension}
-  % \lean{}
-  % \leanok
-  A \emph{facet} of a pointed cone is a codimension one face.
-\end{definition}
-
-\begin{definition}[Edges]
-  \label{3-edge}
-  \uses{3-pointed-cone-dimension}
-  % \lean{}
-  % \leanok
-  An \emph{edge} of a pointed cone is a face of dimension one.
-\end{definition}
-
-\begin{proposition}[Facets of a full dimensional cone]
-  \label{3-facet-full-dim-cone}
-  \uses{3-facet, 3-polyhedral-cone}
-  % \lean{}
-  % \leanok
-  If \( \sigma = S^{\vee} \subseteq N \) is a full-dimensional
-  polyhedral cone for some finite \( S \subseteq M \), then the facets
-  of \( \sigma \) are \( \sigma \cap u^{\perp} \), where \( u \in S
+  Let \( \sigma = \Cone(S) \) be a polyhedral cone with \( S = \{v_1,
+  \dots, v_n\} \). Then \( v \in \sigma^{\perp} \) iff \( v =
+  \sum_{i=1}^n \lambda_i v_i \) for positive scalars \( \lambda_i > 0
   \).
-\end{proposition}
+\end{lemma}
 \begin{proof}
   \uses{}
-  TODO
+  % \leanok
+  One direction is easy: Suppose \( v = \sum_{i=1}^n \lambda_i v_i \)
+  for \( \lambda_i > 0 \). We claim \( v \in \sigma^{\circ} \). Let \(
+  u \in \sigma^{\vee} \backslash \sigma^{\perp} \) be arbitrary. Since
+  \( u \notin \sigma^{\perp} \), there exists an \( i \) with \(
+  \langle v_i, u \rangle > 0 \). This implies
+  \[
+      \langle v, u \rangle = \sum_{i=1}^n \lambda_i \langle v_i, u
+      \rangle > 0.
+  \]
+  The other direction is a bit more involved, TODO.
 \end{proof}
 
-\begin{proposition}[Intersection of facets containing a face]
-  \label{3-face-equals-inter-facets}
-  \uses{3-facet}
+\begin{lemma}
+  \label{3-rel-interior-nonempty}
+  \uses{}
   % \lean{}
   % \leanok
-  Every proper face \( \tau \prec \sigma \) of a polyhedral cone \(
-  \sigma \) is the intersection of the facets of \( \sigma \) containing
-  \( \tau \).
-\end{proposition}
+  The relative interior of a polyhedral cone is nonempty.
+\end{lemma}
 \begin{proof}
-  \uses{}
+  \uses{3-rel-interior-positive-lincomb}
   % \leanok
-  TODO
+  Follows directly from~\ref{3-rel-interior-positive-lincomb}
 \end{proof}
-
 
 \begin{definition}[Dual face]
   \label{3-dual-face}
   \uses{3-dual-cone, 3-face}
   % \lean{}
   % \leanok
-  Given a cone $\sigma$ and a face $\tau \preceq \sigma$, the {\bf dual face} to $\tau$ is
-  $$\tau^* := \sigma^\vee \cap \tau^\perp$$
+  Given a cone \( \sigma \) and a face \( \tau \preceq \sigma \), the
+  \emph{dual face} to \( \tau \) is
+  \[
+      \tau^* := \sigma^{\vee} \cap \tau^{\perp}.
+  \]
 \end{definition}
 
+The dual face is actually a face:
 
-\begin{proposition}[The dual face is a face of the dual]
+\begin{proposition}
   \label{3-dual-face-face-dual}
-  \uses{3-dual-face}
+  \uses{3-dual-face, 3-rel-interior-nonempty}
   % \lean{}
   % \leanok
-
-  If $\tau \preceq \sigma$, then $\tau^* \preceq \sigma^\vee$.
+  If \( \tau \preceq \sigma \), then \( \tau^* \preceq \sigma^\vee \).
 \end{proposition}
 \begin{proof}
-  \uses{}
+  \uses{3-rel-interior-nonempty, 3-double-dual-polyhedral-cone,
+  3-rel-interior-perp}
   % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
+  Let \( \tau = \sigma \cap u^{\perp} \) for \( u \in \sigma^{\vee}
+  \). We need to find a \( v \in \sigma^{\vee\vee} = \sigma \) such
+  that \( \tau^* = \sigma \cap v^{\perp} \).
+  By~\ref{3-rel-interior-nonempty}, we may pick \( v \in
+  \sigma^{\circ} \), which works by~\ref{3-rel-interior-perp}.
 \end{proof}
 
 
-\begin{proposition}[The double dual of a face]
+\begin{proposition}
   \label{3-double-dual-face-dual-face}
   \uses{3-dual-face}
   % \lean{}
   % \leanok
-
   If $\tau \preceq \sigma$, then $\tau^{**} = \tau$.
 \end{proposition}
 \begin{proof}
@@ -547,69 +554,6 @@ element has a multiplicative inverse.
   Classic. See \cite{Oda_1988} maybe.
 \end{proof}
 
-
-\subsection{Relative Interiors}
-
-
-\begin{definition}[Relative interior]
-  \label{1-2-rel-interior}
-  \uses{}
-  \lean{intrinsicInterior}
-  \leanok
-
-  The {\bf relative interior}, aka {\bf intrinsic interior}, of a cone $\sigma$ is the interior of $\sigma$ as a subset of its span.
-\end{definition}
-
-
-\begin{lemma}[The relative interior in terms of the inner product]
-  \label{1-2-rel-interior-inner}
-  \uses{1-2-rel-interior}
-  % \lean{}
-  % \leanok
-
-  For a cone $\sigma$,
-  $$u \in \Relint(\sigma) \iff \forall m \in \sigma^\vee \setminus \sigma^\perp, \langle m, u\rangle > 0$$
-\end{lemma}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
-
-
-\begin{lemma}[Relative interior of a dual face]
-  \label{1-2-rel-interior-dual-face}
-  \uses{03-dual-face, 1-2-rel-interior}
-  % \lean{}
-  % \leanok
-
-  If $\tau \preceq \sigma$ and $m \in \sigma^\vee$, then
-  $$m \in \Relint(\tau^*) \iff \tau = H_m \cap \sigma$$
-\end{lemma}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
-
-
-\begin{lemma}[Minimal face of a cone]
-  \label{1-2-min-face}
-  \uses{1-2-5-face, 1-2-rel-interior}
-  % \lean{}
-  % \leanok
-
-  If $\sigma$ is a cone, then $W := \sigma \cap (-\sigma)$ is a subspace. Furthermore,
-  $W = H_m \cap \sigma$ whenever $m \in \Relint(\sigma^\vee)$.
-\end{lemma}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
 
 
 \subsection{Strong Convexity}
