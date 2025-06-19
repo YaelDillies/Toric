@@ -24,7 +24,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 
 
 variable (R) in
-def SO2Ring : Type _ := AdjoinRoot (X ^ 2 + Y ^ 2 - 1 : R[X][Y])
+abbrev SO2Ring : Type _ := AdjoinRoot (X ^ 2 + Y ^ 2 - 1 : R[X][Y])
 
 namespace SO2Ring
 
@@ -187,21 +187,44 @@ def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup 
   right_inv M := by ext i j; fin_cases i, j <;>
     simp [(Matrix.mem_specialOrthogonalGroup_fin_two_iff.mp M.2).2.1,
       (Matrix.mem_specialOrthogonalGroup_fin_two_iff.mp M.2).1]
-  map_mul' f g := by ext i j; fin_cases i, j <;> simp [sub_eq_add_neg, add_comm]
+  map_mul' f g := by
+    ext i j
+    fin_cases i, j
+    · simp [sub_eq_add_neg]
+    · simp [sub_eq_add_neg]
+    · simp [sub_eq_add_neg]
+    · simp [sub_eq_neg_add]
 
 instance : Algebra S (S ⊗[R] SO2Ring R) :=
   Algebra.TensorProduct.leftAlgebra (A := S) (B := SO2Ring R)
 
-def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S := sorry
+variable (R S) in
+def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S := .trans
+  (AdjoinRoot.tensorAlgEquiv _ _ rfl) <|
+  AdjoinRoot.mapAlgEquiv _ _ (polyEquivTensor' _ _).symm (by simp)
+
+@[simp]
+lemma baseChangeAlgEquiv_X : (baseChangeAlgEquiv R S) (1 ⊗ₜ X) = X := by
+  change (baseChangeAlgEquiv R S) (1 ⊗ₜ (AdjoinRoot.root _)) = AdjoinRoot.root _
+  simp [baseChangeAlgEquiv]
+
+@[simp]
+lemma baseChangeAlgEquiv_Y : (baseChangeAlgEquiv R S) (1 ⊗ₜ «Y») = «Y» := by
+  change (baseChangeAlgEquiv R S) (1 ⊗ₜ (AdjoinRoot.of _ _)) = AdjoinRoot.of _ _
+  simp [baseChangeAlgEquiv]
 
 variable (R S) in
-def baseChangeBialgEquiv : SO2Ring S ≃ₐc[S] S ⊗[R] SO2Ring R := by
-  dsimp [SO2Ring]
-  sorry
+def baseChangeBialgEquiv : S ⊗[R] SO2Ring R ≃ₐc[S] SO2Ring S :=
+  .ofAlgEquiv' (baseChangeAlgEquiv R S)
+  (by aesop)
+  (by aesop (add simp [tmul_add, tmul_sub]))
+
+@[simp]
+lemma coe_baseChangeBialgEquiv : ⇑(baseChangeBialgEquiv R S) = baseChangeAlgEquiv R S := rfl
 
 @[simp] lemma baseChangeBialgEquiv_comp_algebraMap :
-  .comp (baseChangeBialgEquiv R S) (algebraMap S (SO2Ring S)) =
-    algebraMap S (S ⊗[R] SO2Ring R) := sorry
+  .comp (baseChangeBialgEquiv R S) (Algebra.ofId S (S ⊗[R] SO2Ring R)) =
+    Algebra.ofId S (SO2Ring S) := by ext
 
 end SO2Ring
 
@@ -243,25 +266,28 @@ instance : SO₂(ℂ).IsSplitTorusOver Spec(ℂ) := .of_iso so₂ComplexIso
 
 def pullbackSO₂RealComplex : pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ)) ≅ SO₂(ℂ) :=
   pullbackSymmetry .. ≪≫ pullbackSpecIso .. ≪≫ Scheme.Spec.mapIso
-    (baseChangeBialgEquiv ℝ ℂ).toAlgEquiv.toRingEquiv.toCommRingCatIso.op
+    (baseChangeBialgEquiv ℝ ℂ).symm.toAlgEquiv.toRingEquiv.toCommRingCatIso.op
 
 @[simp] lemma pullbackSO₂RealComplex_hom :
     pullbackSO₂RealComplex.hom = (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom ≫
       ((bialgSpec <| .of ℂ).map <| .op <|
-        CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).toBialgHom).hom.left := rfl
+        CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).symm.toBialgHom).hom.left := rfl
 
+-- generalize this
 instance : (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.IsOver Spec(ℂ) where
   comp_over := by
-    rw [← cancel_epi (pullbackSymmetry ..).inv, ← cancel_epi (pullbackSpecIso' ..).inv,
-      canonicallyOverPullback_over]
+    rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv, canonicallyOverPullback_over]
     simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
     rfl
 
+-- generalize this
 instance :
     IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.asOver Spec(ℂ) where
   one_hom := by
     ext
     simp [mon_ClassAsOverPullback_one]
+    simp_rw [algSpec_ε_left (R := CommRingCat.of ℝ), algSpec_ε_left (R := CommRingCat.of ℂ)]
+    simp
     -- rw [← cancel_mono (pullbackSpecIso' ..).hom]
     -- ext
     sorry
@@ -274,7 +300,7 @@ instance : pullbackSO₂RealComplex.hom.IsOver Spec(ℂ) := by
     pullbackSO₂RealComplex.hom.asOver Spec(ℂ) =
       (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.asOver Spec(ℂ) ≫
         ((bialgSpec <| .of ℂ).map <| .op <|
-          CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).toBialgHom).hom := rfl
+          CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).symm.toBialgHom).hom := rfl
 
 instance : IsMon_Hom <| pullbackSO₂RealComplex.hom.asOver Spec(ℂ) := by
   rw [pullbackSO₂RealComplex_hom_asOver]; infer_instance
