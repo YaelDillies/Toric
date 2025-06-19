@@ -72,16 +72,26 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
-noncomputable instance algSpec.instBraided : (algSpec R).Braided where
-  ε' := Over.homMk (𝟙 _)
-  η' := Over.homMk (𝟙 _)
-  μ' (X Y) := Over.homMk (pullbackSpecIso R X Y).hom
-  δ' (X Y) := Over.homMk (pullbackSpecIso R X Y).inv
+noncomputable instance algSpec.instBraided : (algSpec R).Braided :=
+  .ofChosenFiniteProducts _
 
-@[simp] lemma algSpec_ε_left : (LaxMonoidal.ε (algSpec R)).left = 𝟙 (Spec R) := rfl
-@[simp] lemma algSpec_η_left : (OplaxMonoidal.η (algSpec R)).left = 𝟙 (Spec R) := rfl
-@[simp] lemma algSpec_μ_left : (LaxMonoidal.μ (algSpec R)).left = (pullbackSpecIso R X Y).hom := rfl
-@[simp] lemma algSpec_δ_left : (OplaxMonoidal.δ (algSpec R)).left = (pullbackSpecIso R X Y).inv :=
+@[simp] lemma algSpec_ε_left : (LaxMonoidal.ε (algSpec R)).left = 𝟙 (Spec R) := by
+  convert (LaxMonoidal.ε (algSpec R)).w
+  simpa [-Category.comp_id] using (Category.comp_id _).symm
+
+@[simp] lemma algSpec_η_left : (OplaxMonoidal.η (algSpec R)).left = 𝟙 (Spec R) := by
+  convert (OplaxMonoidal.η (algSpec R)).w
+  simpa [-Category.comp_id] using (Category.comp_id _).symm
+
+@[simp] lemma algSpec_δ_left (X Y : (CommAlgCat R)ᵒᵖ) :
+    (OplaxMonoidal.δ (algSpec R) X Y).left = (pullbackSpecIso R X.unop Y.unop).inv :=
+  rfl
+
+@[simp] lemma algSpec_μ_left (X Y : (CommAlgCat R)ᵒᵖ) :
+    (LaxMonoidal.μ (algSpec R) X Y).left = (pullbackSpecIso R X.unop Y.unop).hom := by
+  rw [← cancel_epi (pullbackSpecIso R X.unop Y.unop).inv, Iso.inv_hom_id, ← algSpec_δ_left,
+    ← Over.comp_left]
+  simp [-Over.comp_left]
   rfl
 
 @[simp]
