@@ -42,7 +42,7 @@ so that in particular we do not easily know that its inverse is given by `Γ`.
 -/
 
 open AlgebraicGeometry Coalgebra Scheme CategoryTheory MonoidalCategory Functor Monoidal Opposite
-  Limits TensorProduct
+  Limits TensorProduct Mon_Class Grp_Class
 
 universe u
 variable {R : CommRingCat.{u}}
@@ -166,8 +166,8 @@ suppress_compilation
 instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 
-attribute [simp] AlgHom.toUnder in
-@[simps!? one]
+attribute [local simp] AlgHom.toUnder in
+@[simps! one]
 instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
   ((bialgSpec R).obj <| .op <| .of R A).mon
 
