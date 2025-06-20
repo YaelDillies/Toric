@@ -368,14 +368,10 @@ instance :
     IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.asOver Spec(ℂ) where
   one_hom := by
     ext
-    simp [mon_ClassAsOverPullback_one]
-    simp_rw [algSpec_ε_left (R := CommRingCat.of ℝ), algSpec_ε_left (R := CommRingCat.of ℂ)]
-    simp
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
-    ext
-    · simp [pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
-      ← CommRingCat.ofHom_comp]
-      change _ = _ ≫ (Spec.map <| CommRingCat.ofHom (
+    ext <;> simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+      pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+    · change _ = (Spec.map <| CommRingCat.ofHom (
         (Bialgebra.counitAlgHom ℂ (ℂ ⊗[ℝ] SO2Ring ℝ)).comp
         Algebra.TensorProduct.includeLeft).toRingHom)
       have : ((Bialgebra.counitAlgHom ℂ (ℂ ⊗[ℝ] SO2Ring ℝ)).comp
@@ -383,11 +379,21 @@ instance :
         Algebra.ext_id_iff.mpr trivial
       rw [this]
       simp
-    simp [pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
-      ← CommRingCat.ofHom_comp]
-    
+    congr 2
+    change ((Algebra.ofId ℝ ℂ).comp _).toRingHom =
+      (((Bialgebra.counitAlgHom ℂ (ℂ ⊗[ℝ] SO2Ring ℝ)).restrictScalars ℝ).comp _).toRingHom
+    congr 1
+    -- TODO : generalize this
+    ext
+    · simp
+    simp
+  mul_hom := by
+    ext
+    rw [← cancel_mono (pullbackSpecIso' ..).inv]
+    ext <;> simp [mon_ClassAsOverPullback_mul, algSpec_μ_left (R := CommRingCat.of _),
+      pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+    · sorry
     sorry
-  mul_hom := sorry
 
 instance : pullbackSO₂RealComplex.hom.IsOver Spec(ℂ) := by
   rw [pullbackSO₂RealComplex_hom]; infer_instance
