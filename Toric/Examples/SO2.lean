@@ -282,7 +282,7 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
     rfl
 
-lemma TensorProduct.algebraMap_eq_includeLeftRingHom
+lemma _root_.Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom
     {R S T : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T] :
     algebraMap S (S ⊗[R] T) = Algebra.TensorProduct.includeLeftRingHom := rfl
 
@@ -294,15 +294,31 @@ lemma pullbackSpecIso_hom_base (R S T : Type u) [CommRing R] [CommRing S] [CommR
     (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R _)) =
       pullback.fst _ _ ≫ Spec.map (CommRingCat.ofHom (algebraMap _ _)) := by
   simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-    ← TensorProduct.algebraMap_eq_includeLeftRingHom, ← IsScalarTower.algebraMap_eq]
+    ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom, ← IsScalarTower.algebraMap_eq]
 
 @[reassoc (attr := simp)]
 lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
     [Algebra R T] :
     (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap S _)) =
       pullback.fst _ _ := by
-  simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-    ← TensorProduct.algebraMap_eq_includeLeftRingHom, ← IsScalarTower.algebraMap_eq]
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst,
+    ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_inv_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).inv ≫ pullback.fst _ _ =
+    Spec.map (CommRingCat.ofHom (algebraMap S _)) := by
+  simp [← cancel_epi (pullbackSpecIso R S T).hom]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_snd' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom
+      (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T) : _ →+* _)) =
+      pullback.snd _ _ := by
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst,
+    ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
 
 attribute [local instance] Over.cartesianMonoidalCategory  in
 open MonoidalCategory in
@@ -311,6 +327,29 @@ lemma Over.tensorHom_left_fst' {C : Type*} [Category C] [HasPullbacks C]
     {X S U : C} {fS : S ⟶ X} {fU : U ⟶ X} {R T : Over X} (f : R ⟶ .mk fS) (g : T ⟶ .mk fU) :
     (tensorHom f g).left ≫ pullback.fst fS fU = pullback.fst _ _ ≫ f.left :=
   limit.lift_π _ _
+
+lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R S] [Bialgebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom =
+    (pullbackSpecIso' ..).hom ≫
+    Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.comm R S T)) := by
+  simp
+  rw [← cancel_mono (pullbackSpecIso' R S T).inv]
+  ext
+  · simp
+    erw [pullbackSpecIso_inv_fst']
+    simp [← Spec.map_comp, ← CommRingCat.ofHom_comp,
+      Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
+    have : (Algebra.TensorProduct.comm R S T).toAlgHom.comp
+      Algebra.TensorProduct.includeLeft = Algebra.TensorProduct.includeRight := rfl
+    have := congr(RingHomClass.toRingHom $(this))
+    rw [AlgHom.comp_toRingHom] at this
+    simp at this
+    erw [this]
+    simp [pullbackSpecIso']
+    rfl
+  sorry
+
+example {C : Type*} [Category C] {A B : C} {f : A ⟶ B} : f ≫ (𝟙 _) = f := Category.comp_id f
 
 lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
       (Functor.LaxMonoidal.μ (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap R S))))
@@ -327,7 +366,18 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
       Algebra.TensorProduct.includeRight.toRingHom
       (by simp [← IsScalarTower.algebraMap_eq])
       (by simp [← IsScalarTower.algebraMap_eq]))) := by
+  rw [← cancel_mono (pullbackSpecIso ..).inv]
+  simp
+  ext <;> simp
+  · slice_rhs 3 3 =>
+      rw [← Category.comp_id («Y» := Spec(T ⊗[R] T)) (Spec.map _),
+        ← (pullbackSpecIso R T T).inv_hom_id]
+    slice_rhs 5 6 =>
+      simp [pullbackSpecIso_hom_fst]
+    slice_rhs 3 4 =>
+      simp
     sorry
+  sorry
 
 instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
     IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
@@ -336,7 +386,7 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext <;> simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
       pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← TensorProduct.algebraMap_eq_includeLeftRingHom]
+      ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
     sorry -- prove this and add this to the simp above
   mul_hom := by
     ext
@@ -344,7 +394,7 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     ext
     · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
         ← CommRingCat.ofHom_comp, asOver, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
-        ← TensorProduct.algebraMap_eq_includeLeftRingHom, Hom.asOver, OverClass.asOverHom,
+        ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom, Hom.asOver, OverClass.asOverHom,
         pullback.condition]
       rfl
     · convert congr($(foo R S T) ≫
@@ -360,8 +410,7 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
 instance : (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.IsOver Spec(ℂ) where
   comp_over := by
     rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv, canonicallyOverPullback_over]
-    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
-    rfl
+    simp [specOverSpec_over, pullbackSpecIso']
 
 -- generalize this
 instance :
