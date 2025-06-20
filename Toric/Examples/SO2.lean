@@ -273,6 +273,89 @@ def pullbackSO₂RealComplex : pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) �
       ((bialgSpec <| .of ℂ).map <| .op <|
         CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).symm.toBialgHom).hom.left := rfl
 
+universe u in
+instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
+    (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.IsOver Spec(S) where
+  comp_over := by
+    rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv,
+      canonicallyOverPullback_over]
+    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
+    rfl
+
+lemma TensorProduct.algebraMap_eq_includeLeftRingHom
+    {R S T : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T] :
+    algebraMap S (S ⊗[R] T) = Algebra.TensorProduct.includeLeftRingHom := rfl
+
+universe u
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_base (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R _)) =
+      pullback.fst _ _ ≫ Spec.map (CommRingCat.ofHom (algebraMap _ _)) := by
+  simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+    ← TensorProduct.algebraMap_eq_includeLeftRingHom, ← IsScalarTower.algebraMap_eq]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap S _)) =
+      pullback.fst _ _ := by
+  simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+    ← TensorProduct.algebraMap_eq_includeLeftRingHom, ← IsScalarTower.algebraMap_eq]
+
+attribute [local instance] Over.cartesianMonoidalCategory  in
+open MonoidalCategory in
+@[reassoc (attr := simp)]
+lemma Over.tensorHom_left_fst' {C : Type*} [Category C] [HasPullbacks C]
+    {X S U : C} {fS : S ⟶ X} {fU : U ⟶ X} {R T : Over X} (f : R ⟶ .mk fS) (g : T ⟶ .mk fU) :
+    (tensorHom f g).left ≫ pullback.fst fS fU = pullback.fst _ _ ≫ f.left :=
+  limit.lift_π _ _
+
+lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
+      (Functor.LaxMonoidal.μ (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap R S))))
+        (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))
+        (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))).left ≫
+    pullback.fst _ _ ≫
+      (pullbackSpecIso R T T).hom =
+    (MonoidalCategoryStruct.tensorHom
+        ((pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver (Spec(S)))
+        ((pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver (Spec(S)))).left ≫
+    (pullbackSpecIso S (S ⊗[R] T) (S ⊗[R] T)).hom ≫
+    Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.mapRingHom (algebraMap _ _)
+      Algebra.TensorProduct.includeRight.toRingHom
+      Algebra.TensorProduct.includeRight.toRingHom
+      (by simp [← IsScalarTower.algebraMap_eq])
+      (by simp [← IsScalarTower.algebraMap_eq]))) := by
+    sorry
+
+instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
+    IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
+  one_hom := by
+    ext
+    rw [← cancel_mono (pullbackSpecIso' ..).inv]
+    ext <;> simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+      pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+      ← TensorProduct.algebraMap_eq_includeLeftRingHom]
+    sorry -- prove this and add this to the simp above
+  mul_hom := by
+    ext
+    rw [← cancel_mono (pullbackSpecIso' ..).inv]
+    ext
+    · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
+        ← CommRingCat.ofHom_comp, asOver, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
+        ← TensorProduct.algebraMap_eq_includeLeftRingHom, Hom.asOver, OverClass.asOverHom,
+        pullback.condition]
+      rfl
+    · convert congr($(foo R S T) ≫
+        Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
+      · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
+          Hom.asOver, OverClass.asOverHom, mul_left]
+      · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
+          Hom.asOver, OverClass.asOverHom, mul_left, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+        congr 4
+        sorry -- prove this and add this to the simp above
+
 -- generalize this
 instance : (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.IsOver Spec(ℂ) where
   comp_over := by
