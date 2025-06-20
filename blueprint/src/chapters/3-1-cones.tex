@@ -286,29 +286,34 @@ bijection between faces of \( \sigma \) and faces of \( \sigma^{\vee}
 \end{definition}
 
 \begin{proposition}
+  \label{3-cone-inter-perp}
+  \uses{3-perp, 3-dual-cone}
+  % \lean{}
+  % \leanok
+  For any subset \( S \subseteq N \) and \( u \in S^{\vee} \), we have
+  \[
+      \Cone(S) \cap u^{\perp} = \Cone(S \cap u^{\perp}).
+  \]
+\end{proposition}
+\begin{proof}
+    Both inclusions should be a simple Span-induction.
+\end{proof}
+
+\begin{lemma}
   \label{3-face-polyhedral}
   \uses{3-face, 3-polyhedral-cone}
   % \lean{}
   % \leanok
-  Let \( \sigma = \Cone(S) \) be a polyhedral cone with \( S \subseteq
-  N \) finite. Then for \( u \in \sigma^{\vee} \), we have
-  \[
-      \sigma \cap u^{\perp} = \Cone(S \cap u^{\perp}).
-  \]
-  In particular, since \( S \cap u^{\perp} \) is also finite, a face
-  of a polyhedral cone is polyhedral.
-\end{proposition}
+  A face of a polyhedral cone is polyhedral.
+\end{lemma}
 \begin{proof}
-    Let \( \sigma = S^{\vee} \) be polyhedral, where \( S \subseteq M
-    \) finite and consider a face \( \tau = \sigma \cap u^{\perp} \)
-    for \( u \in \sigma^{\vee} \). We claim that \( \tau = (S \cup
-    \{-u\})^\vee \). The inclusion ``\( \subseteq \)'' is obvious. For
-    the converse, suppose \( v \in (S \cup \{-u\})\vee = \sigma \cap
-    \{-u\}^\vee \). Then \( \langle v, u \rangle \leq 0 \). But since
-    \( u \in \sigma^{\vee} \), we also have \( \langle v, u \rangle
-    \geq 0 \). We obtain \( \langle v, u \rangle = 0 \), which shows
-    the claim.
+  \uses{3-cone-inter-perp}
+  % \leanok
+  Use \ref{3-cone-inter-perp} and the fact that if \( S \) is finite,
+  so is \( S \cap u^{\perp} \).
 \end{proof}
+
+
 
 \begin{lemma}
   \label{3-faces-polyhedral-cone-finite}
@@ -402,7 +407,8 @@ bijection between faces of \( \sigma \) and faces of \( \sigma^{\vee}
 \end{proof}
 
 In particular, Lemma~\ref{3-face-face} establishes a partial order on
-the set of faces of a polyhedral cone \( \sigma \), which is finite
+the set of faces of a polyhedral cone \( \sigma \) (written \(
+\faces(\sigma) \)), which is finite
 by~\ref{3-faces-polyhedral-cone-finite}. Next, we need the notion of
 relative interior, which we define here completely algebraically. When
 working over \( \R \), it is the same as the topological interior of
@@ -507,6 +513,22 @@ The dual face is actually a face:
 \end{proof}
 
 
+\begin{proposition}[The dual of a face is antitone]
+  \label{3-dual-face-antitone}
+  \uses{3-dual-face}
+  % \lean{}
+  % \leanok
+  For two faces \( \tau_1, \tau_2 \preceq \sigma \) of a polyhedral
+  cone \( \sigma \), we have \( \tau_1 \preceq \tau_2 \) if and only
+  if \( \tau_2^* \preceq \tau_1^* \).
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+  TODO (Shouldn't be too hard hopefully, see maybe Propositions
+  A.5/A.6 of \cite{Oda_1988}).
+\end{proof}
+
 \begin{proposition}
   \label{3-double-dual-face-dual-face}
   \uses{3-dual-face}
@@ -517,280 +539,256 @@ The dual face is actually a face:
 \begin{proof}
   \uses{1-2-4-double-dual-polyhedral-cone}
   % \leanok
-
   Classic. See \cite{Oda_1988} maybe.
 \end{proof}
 
-
-\begin{proposition}[The dual of a face is antitone]
-  \label{3-dual-face-antitone}
-  \uses{3-dual-face}
+\begin{proposition}
+  \label{3-faces-galois-connection}
+  \uses{}
   % \lean{}
   % \leanok
-
-  If $\tau' \preceq \tau \preceq \sigma$, then $\tau' \preceq \tau$.
+  There is a Galois connection \( \faces(\sigma) \cong
+  \faces(\sigma^{\vee})^{op} \) between the partial orders of faces of
+  \( \sigma \) and faces of \( \sigma^{\vee} \).
 \end{proposition}
-\begin{proof}
-  \uses{}
-  % \leanok
 
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
-
-
-\begin{proposition}[The dimension of the dual of a face]
-  \label{3-dim-dual-face}
-  \uses{3-dual-face}
-  % \lean{}
-  % \leanok
-
-  If $\tau \preceq \sigma$, then
-  $$\dim \tau + \dim \tau^* = \dim N.$$
-\end{proposition}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
-
-
+In particular, since \( \faces(\sigma) \) has a maximal (top) element,
+namely \( \sigma \) itself, it must also have a minimal (bottom)
+element. This will also be called the lineality space, which we define
+in the next section.
 
 \subsection{Strong Convexity}
 
+\emph{Strongly convex cones} are those containing no nontrivial linear
+subspace. Confusingly, they are sometimes called \emph{pointed cones}
+in the literature, a terminology we cannot use because for us, pointed
+cones are just any \( \Bbbk_{\geq} \)-submodules. Another name is
+\emph{salient cones}.
 
-\begin{definition}[Salient cones]
-  \label{02-salient-cone}
-  \uses{}
-  \lean{ConvexCone.Salient}
-  \leanok
-
-  A cone $\sigma$ is {\bf salient}, aka {\bf pointed} or {\bf strongly convex}, if $\sigma \cap (-\sigma) = \{0\}$.
+\begin{definition}
+  \label{3-lineality}
+  \uses{3-pointed-cone}
+  % \lean{}
+  % \leanok
+  The \emph{lineality space} of a pointed cone \( \sigma \) is defined
+  as \( \sigma_{\lin} := \sigma \cap (-\sigma) \). Clearly, \(
+  \sigma_{\lin} \) is a \( \Bbbk \)-subvectorspace of \( N \).
 \end{definition}
 
-
-\begin{proposition}[Alternative definitions of salient cones]
-  \label{02-salient-cone-tfae}
-  \uses{3-dual-cone, 02-salient-cone}
+\begin{lemma}
+  \label{3-lineality-eq-bottom}
+  \uses{3-lineality, 3-faces-galois-connection}
   % \lean{}
   % \leanok
-
-  The following are equivalent
-  \begin{enumerate}
-    \item $\sigma$ is salient
-    \item $\{0\} \preceq \sigma$
-    \item $\sigma$ contains no positive dimensional subspace
-    \item $\dim \sigma^\vee = \dim N$
-  \end{enumerate}
-\end{proposition}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
-
-
-\subsection{Separation}
-
-
-\begin{lemma}[Separation lemma]
-  \label{03-separation-lemma}
-  \uses{3-polyhedral-cone, 1-2-5-face}
-  % \lean{}
-  % \leanok
-
-  Let $\sigma_1, \sigma_2$ be polyhedral cones meeting along a common face $\tau$. Then
-  $$\tau = H_m \cap \sigma_1 = H_m \cap \sigma_2$$
-  for any $m \in \Relint(\sigma_1^\vee \cap (-\sigma_2)^\vee)$.
+  The lineality space \( \sigma_{\lin} \) is the minimal (bottom)
+  element in the partial order of the faces of \( \sigma \) (In
+  particular, it is a face).
 \end{lemma}
 \begin{proof}
-  \uses{1-2-dual-cone-add, 1-2-min-face}
+  \uses{3-perp-closed-negation}
   % \leanok
-
-  See \cite{Cox_2011}.
+  By the Galois connection~\ref{3-faces-galois-connection}, it is
+  enough to show \( \sigma_{\lin}^* = \sigma^{\vee} \) (the top
+  element in \( \faces(\sigma^{\vee}) \)). We have \( \sigma_{\lin}^* =
+  \sigma^{\vee} \cap \sigma_{\lin}^{\perp} \). Hence we need to show
+  \( \sigma^{\vee} \subseteq \sigma_{\lin}^{\perp} \). This follows by
+  applying the dual to \( \sigma_{\lin} \subseteq \sigma \) and
+  using~\ref{3-perp-closed-negation}.
 \end{proof}
 
-
-\subsection{Rational Polyhedral Cones}
-
-
-Let $M$ and $N$ be dual lattices with associated vector spaces $M_\R := M \ox_\Z \R, N_\R := N \ox_\Z \R$.
-
-
-\begin{definition}[Rational cone]
-  \label{04-rat-cone}
-  \uses{1-2-cone-span}
+\begin{definition}
+  \label{3-strongly-convex}
+  \uses{3-lineality}
   % \lean{}
   % \leanok
-
-  A cone $\sigma \subseteq N_\R$ is {\bf rational} if $\sigma = \Cone(S)$ for some finite set $S \subseteq N$.
+  A pointed cone \( \sigma \) is called \emph{strongly convex}, if \(
+  \sigma_{\lin} = \{0\} \).
 \end{definition}
 
-
-\begin{lemma}[Faces of a rational cone]
-  \label{04-face-rat-cone}
-  \uses{1-2-5-face, 04-rat-cone}
+\begin{lemma}
+  \label{3-strongly-convex-iff-zero-face}
+  \uses{3-lineality-eq-bottom}
   % \lean{}
   % \leanok
-
-  If $\tau \preceq \sigma$ is a face of a rational cone, then $\tau$ itself is rational.
+  A polyhedral cone \( \sigma \) is strongly convex iff \( \{0\}
+  \preceq \sigma \).
 \end{lemma}
 \begin{proof}
   \uses{}
   % \leanok
+  Both directions follow immediately from \ref{3-lineality-eq-bottom}.
+\end{proof}
 
-  Classic. See \cite{Oda_1988} maybe.
+\begin{lemma}
+  \label{3-subvectorspace-contained-in-faces}
+  \uses{3-face}
+  % \lean{}
+  % \leanok
+  Let \( V \subseteq N \) be closed under negation (for instance, a \(
+  \Bbbk \)-submodule) with \( V \subseteq \sigma \) for a polyhedral
+  cone \( \sigma \). Then \( V \) is contained in any face of \(
+  \sigma \).
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+  Let \( \tau = \sigma \cap u^{\perp} \) be a face with \( u \in
+  \sigma^{\vee} \) and let \( x \in V \). Since \( V \subseteq \sigma
+  \), we have \( \langle x, u \rangle \geq 0 \). But also \( -x \in V
+  \), hence \( -\langle x, u \rangle \geq 0 \). We get \( \langle x,
+  u \rangle = 0 \).
+\end{proof}
+
+\begin{lemma}
+  \label{3-strongly-convex-iff-no-subspace}
+  \uses{}
+  % \lean{}
+  % \leanok
+  A polyhedral cone \( \sigma \) is strongly convex iff it contains no
+  nontrivial \( \Bbbk \)-subvectorspace.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+  Both directions follow immediately from
+  \ref{3-subvectorspace-contained-in-faces}.
 \end{proof}
 
 
-\begin{lemma}[The dual of a rational cone]
-  \label{04-dual-rat-cone}
+\subsection{Lattice Cones}
+
+In this section, \( N \) and \( M \) denote mutually dual lattices (=
+torsion-free finitely generated \( \Z \)-modules). Extending scalars,
+we get vector spaces \( N_{\Bbbk} := N \otimes_{\Z} \Bbbk \) and \(
+M_{\Bbbk} := M \otimes_{\Z} \Bbbk \) which are mutually dual vector
+spaces as before (over any linearly ordered field \( \Bbbk \)). We
+regard the lattices as subsets of the vector spaces, i.e. \( N
+\subseteq N_{\Bbbk} \) and \( M \subseteq M_{\Bbbk} \). The
+\emph{lattice cones} are those polyhedral cones which are generated by
+a subset of the lattice \( S \subseteq N \) (as opposed to an
+arbitrary subset of the vector space). Cox, Little and Schenck
+\cite{Cox_2011} call them~\emph{rational cones}, which might be
+confusing because they can be defined over any field and don't
+necessarily involve the rational numbers. However, if \( \Bbbk = \Q
+\), every polyhedral cone is indeed rational.
+
+\begin{definition}
+  \label{3-lattice-cone}
+  \uses{3-cone-span}
+  % \lean{}
+  % \leanok
+  A polyhedral cone \( \sigma \subseteq N_{\Bbbk} \) is called a
+  \emph{lattice cone}, if \( \sigma = \Cone(S) \) for some finite set
+  \( S \subseteq N \).
+\end{definition}
+
+\begin{lemma}
+  \label{3-face-lattice-cone}
+  \uses{3-face, 3-lattice-cone}
+  % \lean{}
+  % \leanok
+  If \( \tau \preceq \sigma \) is a face of a lattice cone, then
+  \( \tau \) is also a lattice cone.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+  Follows directly from~\ref{3-cone-inter-perp}.
+\end{proof}
+
+
+\begin{lemma}
+  \label{3-dual-lattice-cone}
   \uses{3-dual-cone, 04-rat-cone}
   % \lean{}
   % \leanok
-
-  $\sigma^\vee$ is a rational cone iff $\sigma$ is.
+  A polyhedral cone \( \sigma \) is a lattice cone iff \(
+  \sigma^{\vee} \) is.
 \end{lemma}
 \begin{proof}
   \uses{}
   % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
+  This should be provable by going through the generating set \( T \)
+  defined in the proof of \ref{3-fourier-motzkin} and seeing that if
+  \( S \subseteq M \) is contained in the lattice, so is \( T \).
 \end{proof}
-
-
-\begin{definition}[Ray generator]
-  \label{1-2-ray-gen}
-  \uses{1-2-5-edge, 04-rat-cone}
-  % \lean{}
-  % \leanok
-
-  If $\rho$ is an edge of a rational cone $\sigma$, then the monoid $\rho \cap N$ is generated by a unique element $u_\rho \in \rho \cap N$, which we call the {\bf ray generator} of $\rho$.
-\end{definition}
-
-
-\begin{definition}[Minimal generators]
-  \label{1-2-min-gen}
-  \uses{1-2-ray-gen}
-  % \lean{}
-  % \leanok
-
-  The {\bf minimal generators} of a rational cone $\sigma$ are the ray generators of its edges.
-\end{definition}
-
-
-\begin{lemma}[A rational cone is generated by its minimal generators]
-  \label{05-cone-hull-min-gen}
-  \uses{02-salient-cone, 1-2-min-gen}
-  % \lean{}
-  % \leanok
-
-  A salient convex rational polyhedral cone is generated by its minimal generators.
-\end{lemma}
-\begin{proof}
-  \uses{}
-  % \leanok
-
-  Classic. See \cite{Oda_1988} maybe.
-\end{proof}
-
-
-\begin{definition}[Regular cone]
-  \label{06-reg-cone}
-  \uses{1-2-min-gen}
-  % \lean{}
-  % \leanok
-
-  A salient rational polyhedral cone $\sigma$ is {\bf regular}, aka {\bf smooth}, if its minimal generators form part of a $\Z$-basis of $N$.
-\end{definition}
-
-
-\begin{definition}[Simplicial cone]
-  \label{06-simplicial-cone}
-  \uses{1-2-min-gen}
-  % \lean{}
-  % \leanok
-
-  A salient rational polyhedral cone $\sigma$ is {\bf simplicial} if its minimal generators are $\R$-linearly independent.
-\end{definition}
-
-
-\subsection{Semigroup Algebras and Affine Toric Varieties}
-
-
-\begin{definition}[Dual lattice of a cone]
-  \label{07-dual-lat-cone}
-  \uses{3-dual-cone}
-  % \lean{}
-  % \leanok
-
-  If $\sigma \subseteq N_\R$ is a polyhedral cone, then the lattice points
-  \[
-    S_\sigma := \sigma^\vee \cap M
-  \]
-  form a monoid.
-\end{definition}
-
 
 \begin{proposition}[Gordan's lemma]
-  \label{07-gordan-lemma}
-  \uses{07-dual-lat-cone}
+  \label{3-gordan-lemma}
+  \uses{3-lattice-cone}
   % \lean{}
   % \leanok
-
-  $S_\sigma$ is finitely generated as a monoid.
+  If \( \sigma \subset N_{\Bbbk} \) is a polyhedral lattice cone, then
+  \( \sigma \cap N \) is finitely generated as a submonoid of \( N \).
 \end{proposition}
 \begin{proof}
-  \uses{04-dual-rat-cone}
+  \uses{}
   % \leanok
-
-  See \cite{Cox_2011}.
+  TODO (Classic).
 \end{proof}
 
-
-\begin{definition}[Affine toric variety of a rational polyhedral cone]
-  \label{08-aff-tor-var-rat-polyhedral-cone}
-  \uses{1-1-3-aff-tor-var, 07-dual-lat-cone}
+\begin{definition}
+  \label{3-ray-gen}
+  \uses{3-edge, 3-lattice-cone}
   % \lean{}
   % \leanok
-
-  $U_\sigma := \Spec \bbC[S_\sigma]$ is an affine toric variety.
+  If \( \rho \) is an edge of a lattice cone $\sigma$, then the
+  monoid $\rho \cap N$ is generated by a unique element $u_\rho \in
+  \rho \cap N$, which we call the \emph{ray generator} of $\rho$.
 \end{definition}
 
 
-\begin{theorem}[Dimension of the affine toric variety of a rational polyhedral cone]
-  \label{08-dim-aff-tor-var-rat-polyhedral-cone}
-  \uses{02-salient-cone, 1-2-18-aff-tor-var-rat-polyhedral-cone}
+\begin{definition}
+  \label{3-min-gen}
+  \uses{3-ray-gen}
   % \lean{}
   % \leanok
+  The \emph{minimal generators} of a lattice cone $\sigma$ are the
+  ray generators of its edges.
+\end{definition}
 
-  \[
-    \dim U_\sigma = \dim N \iff \text{ the torus of $U_\sigma$ is } T_N = N \ox_[\Z] \bbC^* \iff \sigma \text{ is salient}.
-  \]
-\end{theorem}
-\begin{proof}
-  \uses{1-1-14-char-spec-aff-mon-alg, 02-salient-cone-tfae, 1-2-17-gordan-lemma}
+
+\begin{lemma}
+  \label{3-min-gen-generate}
+  \uses{3-strongly-convex, 3-min-gen}
+  % \lean{}
   % \leanok
-
-  See \cite{Cox_2011}.
+  A strongly convex polyhedral lattice polyhedral cone is generated by
+  its minimal generators.
+\end{lemma}
+\begin{proof}
+  \uses{}
+  % \leanok
+  TODO.
 \end{proof}
 
 
-\begin{proposition}[The irreducible elements of the dual lattice of a cone]
-  \label{02-irred-dual-lat}
-  \uses{3-irred, 1-2-min-gen, 02-salient-cone, 1-2-17-dual-lat-cone}
+\begin{definition}
+  \label{3-regular-cone}
+  \uses{3-min-gen}
   % \lean{}
   % \leanok
+  A strongly convex polyhedral lattice cone $\sigma$ is \emph{regular}
+  (also called \emph{smooth}), if its minimal generators form part of
+  a $\Z$-basis of $N$.
+\end{definition}
 
-  If $\sigma \subseteq N_\R$ is salient of maximal dimension, then the irreducible elements of $S_\sigma$ are precisely the minimal generators of $\sigma^\vee$.
-\end{proposition}
-\begin{proof}
-  \uses{3-irred-subset-gen, 3-irred-gen}
+
+\begin{definition}
+  \label{3-simplicial-cone}
+  \uses{3-min-gen}
+  % \lean{}
   % \leanok
+  A strongly convex polyhedral lattice cone $\sigma$ is
+  \emph{simplicial} if its minimal generators are $\R$-linearly
+  independent.
+\end{definition}
 
-  See \cite{Cox_2011}.
-\end{proof}
+
+\subsection{Lattice Fans}
+
+TODO: Define lattice fans, smooth and simplicial, support, ray
+generators, face fan of a cone.
 
 \subsection{Polytopes}
 
