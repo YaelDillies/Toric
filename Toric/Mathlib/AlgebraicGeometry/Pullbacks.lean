@@ -63,6 +63,15 @@ lemma μ_pullback_left_fst_snd (X Y : Over S) :
   rfl
 
 @[simp]
+lemma μ_pullback_left_snd (X Y : Over S) :
+    ((Functor.LaxMonoidal.μ (Over.pullback f) X Y)).left ≫
+      pullback.snd _ _ = pullback.snd _ _ ≫ pullback.snd _ _ := by
+  rw [Functor.Monoidal.μ_of_cartesianMonoidalCategory,
+    ← cancel_epi (CartesianMonoidalCategory.prodComparisonIso (Over.pullback f) X Y).hom.left,
+    ← Over.comp_left_assoc, Iso.hom_inv_id]
+  simp [CartesianMonoidalCategory.prodComparison]
+
+@[simp]
 lemma μ_pullback_left_fst_fst' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S) :
     ((Functor.LaxMonoidal.μ (Over.pullback f) (.mk g₁) (.mk g₂))).left ≫
       pullback.fst (pullback.fst g₁ g₂ ≫ g₁) f ≫ pullback.fst g₁ g₂ =
@@ -75,6 +84,13 @@ lemma μ_pullback_left_fst_snd' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S)
       pullback.fst (pullback.fst g₁ g₂ ≫ g₁) f ≫ pullback.snd g₁ g₂ =
         pullback.snd _ _ ≫ pullback.fst _ _ :=
   μ_pullback_left_fst_snd ..
+
+@[simp]
+lemma μ_pullback_left_snd' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S) :
+    ((Functor.LaxMonoidal.μ (Over.pullback f) (.mk g₁) (.mk g₂))).left ≫
+      pullback.snd (pullback.fst g₁ g₂ ≫ g₁) f =
+        pullback.snd _ _ ≫ pullback.snd _ _ :=
+  μ_pullback_left_snd ..
 
 attribute [local simp] mon_ClassAsOverPullback_one in
 instance isMon_hom_fst_id_right [Mon_Class (asOver M S)] :

@@ -365,13 +365,13 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
   · simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp,
       Algebra.TensorProduct.mapRingHom_comp_includeLeftRingHom]
     simp [specOverSpec_over]
-    erw? [Over.tensorHom_left_fst_assoc]
+    erw [Over.tensorHom_left_fst_assoc]
     simp [pullbackSpecIso']
     rfl
   · simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp,
       Algebra.TensorProduct.mapRingHom_comp_includeRight]
     simp [specOverSpec_over]
-    erw? [Over.tensorHom_left_snd_assoc]
+    erw [Over.tensorHom_left_snd_assoc]
     simp [pullbackSpecIso']
     rfl
 
