@@ -332,21 +332,11 @@ lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommR
     [Algebra R S] [Bialgebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom =
     (pullbackSpecIso' ..).hom ≫
     Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.comm R S T)) := by
-  simp
-  rw [← cancel_mono (pullbackSpecIso' R S T).inv]
+  simp_rw [Iso.trans_hom, ← Iso.eq_comp_inv, Category.assoc, ← Iso.inv_comp_eq]
   ext
-  · simp
-    erw [pullbackSpecIso_inv_fst']
-    simp [← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
-    have : (Algebra.TensorProduct.comm R S T).toAlgHom.comp
-      Algebra.TensorProduct.includeLeft = Algebra.TensorProduct.includeRight := rfl
-    have := congr(RingHomClass.toRingHom $(this))
-    rw [AlgHom.comp_toRingHom] at this
-    simp at this
-    erw [this]
-    simp [pullbackSpecIso']
-    rfl
+  · have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
+      Algebra.TensorProduct.includeLeftRingHom = Algebra.TensorProduct.includeRight.toRingHom := rfl
+    simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
   sorry
 
 example {C : Type*} [Category C] {A B : C} {f : A ⟶ B} : f ≫ (𝟙 _) = f := Category.comp_id f
