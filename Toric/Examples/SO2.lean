@@ -404,8 +404,7 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
         ← CommRingCat.ofHom_comp, asOver, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
         ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom, Hom.asOver, OverClass.asOverHom,
         pullback.condition]
-      -- rfl
-      sorry
+      rfl
     · convert congr($(foo R S T) ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
