@@ -24,8 +24,8 @@ section CommSemiring
 variable [CommSemiring R] [Semiring A] [Bialgebra R A] [Group G] {x : MonoidAlgebra A G}
 
 lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
-  isUnit := .map _ <| Group.isUnit _
-  comul_eq_tmul_self := by simp; rfl
+  counit_eq_one := by simp
+  comul_eq_tmul_self := by simp [Algebra.TensorProduct.one_def]
 
 @[simp]
 lemma isGroupLikeElem_single_one (g : G) : IsGroupLikeElem R (single g 1 : MonoidAlgebra A G) :=
@@ -129,9 +129,8 @@ namespace AddMonoidAlgebra
 section CommSemiring
 variable [CommSemiring R] [Semiring A] [HopfAlgebra R A] [AddGroup G] {x : A[G]}
 
-lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) where
-  isUnit := .map _ <| Group.isUnit _
-  comul_eq_tmul_self := by simp; rfl
+lemma isGroupLikeElem_of (g : G) : IsGroupLikeElem R (of A G g) :=
+  MonoidAlgebra.isGroupLikeElem_of _
 
 @[simp]
 lemma isGroupLikeElem_single (g : G) : IsGroupLikeElem R (single g 1 : A[G]) := isGroupLikeElem_of _
@@ -147,16 +146,8 @@ variable [AddGroup G] [AddGroup H] [AddGroup I]
 open Submodule in
 @[simp]
 lemma isGroupLikeElem_iff_mem_range_of {x : R[G]} :
-    IsGroupLikeElem R x ↔ x ∈ Set.range (of R G) where
-  mp hx := by
-    by_contra h
-    have : LinearIndepOn R id (insert x <| .range (of R G)) :=
-      linearIndepOn_isGroupLikeElem.mono <| by simp [Set.subset_def, hx]
-    have : x.sum single ∉ span R (.range (of R G)) := by simpa using this.notMem_span_of_insert h
-    refine this <| sum_mem fun g hg ↦ ?_
-    rw [← mul_one (x g), ← smul_eq_mul, ← smul_single]
-    refine smul_mem _ _ <| subset_span <| Set.mem_range_self _
-  mpr := by rintro ⟨g, rfl⟩; exact isGroupLikeElem_of _
+    IsGroupLikeElem R x ↔ x ∈ Set.range (of R G) :=
+  MonoidAlgebra.isGroupLikeElem_iff_mem_range_of (G := Multiplicative G)
 
 private noncomputable def mapDomainOfBialgHomFun (f : R[G] →ₐc[R] R[H]) : G → H :=
   fun g ↦ (isGroupLikeElem_iff_mem_range_of.1 <| (isGroupLikeElem_of g).map f).choose
@@ -238,17 +229,11 @@ variable (R A) [CommSemiring R] [Semiring A] [Bialgebra R A]
 /-- The `R`-algebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
 noncomputable def liftGroupLikeAlgHom : MonoidAlgebra R (GroupLike R A) →ₐ[R] A :=
-  lift R (GroupLike R A) A {
-    toFun g := g.1
-    map_one' := by simp
-    map_mul' := by simp
-  }
+  lift R (GroupLike R A) A { toFun g := g.1, map_one' := by simp, map_mul' := by simp }
 
 /-- The `R`-bialgebra map from the group algebra on the group-like elements of `A` to `A`. -/
 @[simps!]
-noncomputable def liftGroupLikeBialgHom : MonoidAlgebra R (GroupLike R A) →ₐc[R] A := .ofAlgHom
-  (liftGroupLikeAlgHom R A)
-  (by ext ⟨x, hx⟩; simpa using hx.counit_eq_one)
-  (by ext ⟨x, hx⟩; simpa using hx.comul_eq_tmul_self.symm)
+noncomputable def liftGroupLikeBialgHom : MonoidAlgebra R (GroupLike R A) →ₐc[R] A :=
+  .ofAlgHom (liftGroupLikeAlgHom R A) (by aesop) (by aesop)
 
 end MonoidAlgebra
