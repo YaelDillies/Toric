@@ -144,12 +144,21 @@ variable [CommGrp_Class (G.asOver (Spec R))] [CommGrp_Class (T.asOver (Spec R))]
 
 variable (R G) in
 attribute [local instance 1000000] AddEquivClass.instAddHomClass AddMonoidHomClass.toAddHomClass
+  AddEquivClass.instAddMonoidHomClass in
 attribute [-simp] charPairingAux_apply_apply in
 /-- The `ℤ`-valued perfect pairing between characters and cocharacters of group schemes over a
 domain.
 
 Note: This exists over a general base using Cartier duality, but we do not prove that.  -/
 noncomputable def charPairing : X*(Spec R, G) →ₗ[ℤ] X(Spec R, G) →ₗ[ℤ] ℤ where
+  toFun x :=
+  { toFun y := charTorusUnit (R := R) (charPairingAux (S := Spec R) (G := G) x y)
+    map_add' _ _ := by simp only [map_add]
+    map_smul' _ _ := by simp only [map_zsmul, smul_eq_mul, eq_intCast, Int.cast_eq] }
+  map_add' _ _ := by ext; simp only [map_add, AddMonoidHom.add_apply, LinearMap.coe_mk,
+    AddHom.coe_mk, LinearMap.add_apply]
+  map_smul' _ _ := by ext; simp only [map_zsmul, AddMonoidHom.coe_smul, Pi.smul_apply, smul_eq_mul,
+    LinearMap.coe_mk, AddHom.coe_mk, eq_intCast, Int.cast_eq, LinearMap.smul_apply]
 
 instance isPerfPair_charPairing [T.IsSplitTorusOver Spec(R)] [LocallyOfFiniteType (T ↘ Spec(R))] :
     (charPairing R T).IsPerfPair := by
