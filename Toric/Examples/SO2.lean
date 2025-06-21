@@ -511,4 +511,8 @@ def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
     Matrix.specialOrthogonalGroup (Fin 2) R :=
   Spec.mulEquiv.symm.trans (algHomMulEquiv (R := R))
 
+def SplitTorus.mulEquiv {R : CommRingCat.{u}} (σ : Type u) :
+    (σ → Rˣ) ≃* ((Spec R).asOver (Spec R) ⟶ (SplitTorus (Spec R) σ).asOver (Spec R)) := by
+  sorry
+
 end AlgebraicGeometry.SO₂
