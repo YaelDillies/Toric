@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.Data.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.RingTheory.AdjoinRoot
+import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Polynomial.AlgebraMap
 import Toric.Mathlib.AlgebraicGeometry.Over
@@ -384,6 +385,19 @@ theorem _root_.Bialgebra.counitAlgHom_comp_includeRight
   ext
   simp [Algebra.ofId_apply, Algebra.algebraMap_eq_smul_one]
 
+theorem name1
+  {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
+    (RingHomClass.toRingHom (Bialgebra.comulAlgHom S (S ⊗[R] T))).comp
+    (RingHomClass.toRingHom (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T))) =
+    (Algebra.TensorProduct.mapRingHom (algebraMap R S)
+    (RingHomClass.toRingHom (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T)))
+    (RingHomClass.toRingHom (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T)))
+    (by simp; rfl)
+    (by simp; rfl)).comp
+    (RingHomClass.toRingHom (Bialgebra.comulAlgHom R T)) := by
+  ext x
+  simp [← (ℛ R x).eq, tmul_sum]
+
 instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
     IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
   one_hom := by
@@ -413,47 +427,15 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
           Hom.asOver, OverClass.asOverHom, mul_left]
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
-          Hom.asOver, OverClass.asOverHom, mul_left, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-        congr 4
-        sorry -- prove this and add this to the simp above
+          Hom.asOver, OverClass.asOverHom, mul_left, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+          name1]
+
 
 -- generalize this
 instance : (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.IsOver Spec(ℂ) where
   comp_over := by
     rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv, canonicallyOverPullback_over]
     simp [specOverSpec_over, pullbackSpecIso']
-
--- generalize this
-instance :
-    IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.asOver Spec(ℂ) where
-  one_hom := by
-    ext
-    rw [← cancel_mono (pullbackSpecIso' ..).inv]
-    ext <;> simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
-      pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-    · change _ = (Spec.map <| CommRingCat.ofHom (
-        (Bialgebra.counitAlgHom ℂ (ℂ ⊗[ℝ] SO2Ring ℝ)).comp
-        Algebra.TensorProduct.includeLeft).toRingHom)
-      have : ((Bialgebra.counitAlgHom ℂ (ℂ ⊗[ℝ] SO2Ring ℝ)).comp
-        Algebra.TensorProduct.includeLeft) = AlgHom.id ℂ ℂ :=
-        Algebra.ext_id_iff.mpr trivial
-      rw [this]
-      simp
-    congr 2
-    change ((Algebra.ofId ℝ ℂ).comp _).toRingHom =
-      (((Bialgebra.counitAlgHom ℂ (ℂ ⊗[ℝ] SO2Ring ℝ)).restrictScalars ℝ).comp _).toRingHom
-    congr 1
-    -- TODO : generalize this
-    ext
-    · simp
-    simp
-  mul_hom := by
-    ext
-    rw [← cancel_mono (pullbackSpecIso' ..).inv]
-    ext <;> simp [mon_ClassAsOverPullback_mul, algSpec_μ_left (R := CommRingCat.of _),
-      pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-    · sorry
-    sorry
 
 instance : pullbackSO₂RealComplex.hom.IsOver Spec(ℂ) := by
   rw [pullbackSO₂RealComplex_hom]; infer_instance
@@ -511,8 +493,33 @@ def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
     Matrix.specialOrthogonalGroup (Fin 2) R :=
   Spec.mulEquiv.symm.trans (algHomMulEquiv (R := R))
 
+
 def SplitTorus.mulEquiv {R : CommRingCat.{u}} (σ : Type u) :
     (σ → Rˣ) ≃* ((Spec R).asOver (Spec R) ⟶ (SplitTorus (Spec R) σ).asOver (Spec R)) := by
   sorry
+
+def I : Matrix.specialOrthogonalGroup (Fin 2) ℝ :=
+  ⟨!![0, 1; -1, 0], by simp [Matrix.mem_specialOrthogonalGroup_fin_two_iff]⟩
+
+example : I ^ 2 ≠ 1 := by
+  intro h
+  have := congr_fun₂ congr(($h).val) 0 0
+  norm_num [I, pow_two] at this
+
+example : I ^ 4 = 1 := by
+  simp [I, pow_succ, Matrix.one_fin_two]
+
+example {x : ℝˣ} : x ^ 4 = 1 -> x ^ 2 = 1 := by
+  intro h
+  simp only [← Units.eq_iff] at *
+  have : x ^ 4 = (x ^ 2) ^ 2 := by rw [← pow_mul]
+  rw [this] at h
+  simp only [Units.val_pow_eq_pow_val, Units.val_one] at h ⊢
+  rw [sq_eq_one_iff] at h
+  cases h with
+  | inl h => assumption
+  | inr h =>
+    have : 0 ≤ x.val ^ 2 := sq_nonneg x.val
+    linarith
 
 end AlgebraicGeometry.SO₂
