@@ -18,6 +18,7 @@ This file defines the standard algebraic torus over `Spec R` as `Spec (R ⊗ ℤ
 noncomputable section
 
 open CategoryTheory Opposite Limits
+open scoped AddMonoidAlgebra
 
 universe u
 
@@ -51,6 +52,22 @@ lemma IsSplitTorusOver.of_isIso' [G.IsSplitTorusOver S]
 
 lemma IsSplitTorusOver.of_iso [H.IsSplitTorusOver S] (e : G ≅ H) [e.hom.IsOver S]
     [IsMon_Hom (e.hom.asOver S)] : G.IsSplitTorusOver S := of_isIso e.hom
+
+variable (G S) in
+/-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
+lemma exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType [G.IsSplitTorusOver S]
+    [hG : LocallyOfFiniteType (G ↘ S)] [Nonempty S] :
+    ∃ (ι : Type u) (_ : Finite ι) (e : G ≅ Diag S ℤ[ι]) (_ : e.hom.IsOver S),
+      IsMon_Hom (e.hom.asOver S) := by
+  obtain ⟨A, _, _, e, _, _⟩ := ‹G.IsSplitTorusOver S›
+  replace hG : LocallyOfFiniteType (Diag S A ↘ S) := by
+    rw [← MorphismProperty.cancel_left_of_respectsIso @LocallyOfFiniteType e.hom]
+    erw [comp_over e.hom]
+    assumption
+  rw [locallyOfFiniteType_diag_iff] at hG
+  exact ⟨Module.Free.ChooseBasisIndex ℤ A, inferInstance,
+    e.trans <| Diag.mapIso S (Module.Free.chooseBasis ℤ A).repr.toAddEquiv,
+    by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 end IsSplitTorusOver
 

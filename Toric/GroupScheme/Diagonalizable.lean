@@ -5,6 +5,8 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
+import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
+import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Pasting
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.AlgebraicGeometry.Scheme
@@ -19,7 +21,7 @@ universe u
 
 namespace AlgebraicGeometry.Scheme
 section Diag
-variable {S : Scheme.{u}} {R : CommRingCat.{u}} {M N O G : Type u} [AddCommMonoid M]
+variable {S T : Scheme.{u}} {R : CommRingCat.{u}} {M N O G : Type u} [AddCommMonoid M]
   [AddCommMonoid N] [AddCommMonoid O] [AddCommGroup G]
 
 variable (S) in
@@ -109,6 +111,50 @@ instance : IsMon_Hom ((diagSpecIso R M).inv.asOver (Spec R)) :=
   ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
     (specULiftZIsTerminal.hom_ext _ _)).app _).inv
 
+/-- `Diag` is invariant under pullback. -/
+def diagPullbackIso (f : T ⟶ S) : pullback f (Diag S M ↘ S) ≅ Diag T M :=
+  pullbackSymmetry _ _ ≪≫ pullbackLeftPullbackSndIso _ _ _ ≪≫
+    pullback.congrHom (by simp) (by simp)
+
+@[reassoc (attr := simp)]
+lemma diagPullbackIso_hom_over (f : T ⟶ S) :
+    (diagPullbackIso f).hom ≫ Diag T M ↘ T = pullback.fst _ _ := by
+  simp [diagPullbackIso, Diag.canonicallyOver_over]
+
+@[reassoc (attr := simp)]
+lemma diagPullbackIso_inv_fst (f : T ⟶ S) :
+    (diagPullbackIso f).inv ≫ pullback.fst _ _ = Diag T M ↘ T := by
+  simp [diagPullbackIso, Diag.canonicallyOver_over]
+
+instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S M ↘ S) := by
+  apply MorphismProperty.pullback_snd
+  simp only [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType),
+    CommRingCat.hom_ofHom, algebraMap_finiteType_iff_algebra_finiteType]
+  infer_instance
+
+@[simp] lemma locallyOfFiniteType_diag_iff [hS : Nonempty S] :
+    LocallyOfFiniteType (Diag S M ↘ S) ↔ AddMonoid.FG M where
+  mpr _ := inferInstance
+  mp h := by
+    wlog hS : ∃ R, S = Spec R
+    · obtain ⟨x⟩ := ‹Nonempty S›
+      obtain ⟨i, x, rfl⟩ := S.affineCover.exists_eq x
+      have that : Nonempty (S.affineCover.obj i) := ⟨x⟩
+      refine this (S := S.affineCover.obj i) ?_ ⟨_, rfl⟩
+      have : LocallyOfFiniteType (pullback.fst (S.affineCover.map i) (S.Diag M ↘ S)) :=
+        MorphismProperty.pullback_fst _ _ ‹_›
+      rw [← diagPullbackIso_inv_fst (S.affineCover.map i)]
+      infer_instance
+    obtain ⟨R, rfl⟩ := hS
+    rw [Spec_carrier, PrimeSpectrum.nonempty_iff_nontrivial] at hS
+    replace h : LocallyOfFiniteType (Spec(R[M]) ↘ Spec R) := by
+      rw [← MorphismProperty.cancel_left_of_respectsIso @LocallyOfFiniteType
+        (diagSpecIso R M).hom]
+      erw [comp_over]
+      assumption
+    simpa [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType),
+      algebraMap_finiteType_iff_algebra_finiteType, AddMonoidAlgebra.finiteType_iff_fg] using h
+
 variable (S) in
 def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
   commGroupAddCommGroupEquivalence.inverse.op ⋙
@@ -187,8 +233,9 @@ instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Faithful 
 
 section
 
-variable {G G' G'' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S]
+variable {G G' G'' H H' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S] [H.Over S] [H'.Over S]
   [Grp_Class (G.asOver S)] [Grp_Class (G'.asOver S)] [Grp_Class (G''.asOver S)]
+  [Grp_Class (H.asOver S)] [Grp_Class (H'.asOver S)]
 
 variable (G G' S) in
 def HomGrp : Type u := Additive (Grp_.mk (G.asOver S) ⟶ .mk (G'.asOver S))
@@ -201,12 +248,20 @@ def HomGrp.ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] : HomGrp G
 
 def HomGrp.hom (f : HomGrp G G' S) : G ⟶ G' := f.toMul.hom.left
 
+@[simp]
+lemma HomGrp.hom_ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] :
+  hom (ofHom (S := S) f) = f := rfl
+
 @[ext]
 lemma HomGrp.toHom_injective : Function.Injective (HomGrp.hom (G := G) (G' := G') (S := S)) := by
   intros _ _ H; delta HomGrp; ext; exact H
 
 def HomGrp.comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) : HomGrp G G'' S :=
   .ofMul (f.toMul ≫ g.toMul)
+
+@[simp]
+lemma HomGrp.hom_comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) :
+    (f.comp g).hom = f.hom ≫ g.hom := rfl
 
 lemma HomGrp.comp_add [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
     (f f' : HomGrp G G' S) (g : HomGrp G' G'' S) :
@@ -235,6 +290,37 @@ lemma HomGrp.add_comp [IsCommMon (G''.asOver S)]
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
   exact Mon_Class.comp_mul _ _ _
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] : e.inv.IsOver S where
+  comp_over := by rw [Iso.inv_comp_eq, comp_over]
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] [Mon_Class (X.asOver S)] [Mon_Class (Y.asOver S)]
+    (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] : IsMon_Hom (e.inv.asOver S) := by
+  let e' : X.asOver S ≅ Y.asOver S := Over.isoMk e (by simp)
+  have : IsMon_Hom e'.hom := ‹_›
+  exact inferInstanceAs (IsMon_Hom e'.inv)
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] :
+    e.symm.hom.IsOver S where
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] [Mon_Class (X.asOver S)] [Mon_Class (Y.asOver S)]
+    (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] :
+  IsMon_Hom (e.symm.hom.asOver S) where
+
+instance {X S : Scheme.{u}} [X.Over S] : (Iso.refl X).hom.IsOver S where
+
+instance {X S : Scheme.{u}} [X.Over S] [Mon_Class (X.asOver S)] :
+    IsMon_Hom ((Iso.refl X).hom.asOver S) where
+
+def HomGrp.congr (e₁ : G ≅ G') (e₂ : H ≅ H') [IsCommMon (H.asOver S)] [IsCommMon (H'.asOver S)]
+    [e₁.hom.IsOver S] [IsMon_Hom (e₁.hom.asOver S)]
+    [e₂.hom.IsOver S] [IsMon_Hom (e₂.hom.asOver S)] :
+    HomGrp G H S ≃+ HomGrp G' H' S where
+  toFun f := .comp (.comp (.ofHom e₁.inv) f) (.ofHom e₂.hom)
+  invFun f := .comp (.comp (.ofHom e₁.hom) f) (.ofHom e₂.inv)
+  left_inv f := by ext; simp
+  right_inv f := by ext; simp
+  map_add' f g := by simp [add_comp, comp_add]
 
 end
 
