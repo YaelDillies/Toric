@@ -475,8 +475,40 @@ instance : Spec(SO2Ring ℝ).IsTorusOver ℝ where
   existsSplit :=
     ⟨ℂ, inferInstance, inferInstance, inferInstance, pullback_SO₂_real_isSplitTorusOver_complex⟩
 
-def bar :
-    (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* Matrix.specialOrthogonalGroup (Fin 2) R :=
-  sorry
+instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] (f : S →ₐ[R] T) : (Spec.map (CommRingCat.ofHom f.toRingHom)).IsOver Spec(R) where
+  comp_over := by
+    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+
+def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialgebra R S]
+    [Algebra R T] :
+    (S →ₐ[R] T) ≃* (Spec(T).asOver Spec(R) ⟶ Spec(S).asOver Spec(R)) where
+  toFun f := (Spec.map (CommRingCat.ofHom f.toRingHom)).asOver _
+  invFun f := ⟨(Spec.preimage f.left).hom, by
+    suffices CommRingCat.ofHom (algebraMap R S) ≫ Spec.preimage f.left =
+      CommRingCat.ofHom (algebraMap R T) from fun r ↦ congr($this r)
+    apply Spec.map_injective
+    simpa [-comp_over] using f.w⟩
+  left_inv f := by
+    apply AlgHom.coe_ringHom_injective
+    simp
+  right_inv f := by ext1; simp
+  map_mul' f g := by
+    ext1
+    dsimp [AlgHom.mul_def, AlgHom.comp_toRingHom, Hom.mul_def]
+    simp only [← Category.assoc, Spec.map_comp, AlgebraicGeometry.Scheme.mul_left]
+    congr 1
+    rw [← Iso.comp_inv_eq]
+    ext <;> simp only [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+      ← AlgHom.comp_toRingHom, Category.assoc, pullbackSpecIso_inv_fst, pullbackSpecIso_inv_snd,
+      limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app]
+    · congr 3
+      ext; simp
+    · congr 3
+      ext; simp
+
+def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
+    Matrix.specialOrthogonalGroup (Fin 2) R :=
+  Spec.mulEquiv.symm.trans (algHomMulEquiv (R := R))
 
 end AlgebraicGeometry.SO₂
