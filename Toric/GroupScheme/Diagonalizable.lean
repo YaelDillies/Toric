@@ -7,11 +7,11 @@ import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
-import Toric.Mathlib.AlgebraicGeometry.Over
 import Toric.Mathlib.AlgebraicGeometry.Scheme
+import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
-open scoped AddMonoidAlgebra Hom
+open scoped AddMonoidAlgebra Mon_Class
 
 noncomputable section
 

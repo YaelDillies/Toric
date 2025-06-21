@@ -84,11 +84,11 @@ variable (R G) in
 
 Note: This is true over a general base using Cartier duality, but we do not prove that. -/
 def cocharDiag : X*(Spec R, Diag (Spec R) G) ≃+ (G →+ ℤ) :=
-  diagHomEquiv.symm.trans <| AddMonoidHom.postcompAddEquiv <| FreeAbelianGroup.punitEquiv _
+  diagHomEquiv.symm.trans <| AddMonoidHom.postcompAddEquiv <| FreeAbelianGroup.uniqueEquiv _
 
 lemma cocharDiag_symm_apply (g : G →+ ℤ) :
   (cocharDiag R G).symm g =
-    diagHomGrp _ ((FreeAbelianGroup.punitEquiv _).symm.toAddMonoidHom.comp g) := rfl
+    diagHomGrp _ ((FreeAbelianGroup.uniqueEquiv _).symm.toAddMonoidHom.comp g) := rfl
 
 end AddCommGroup
 
@@ -101,7 +101,7 @@ def charTorus : X(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ →₀ ℤ) :=
 
 variable (R) in
 def charTorusUnit : X(Spec R, 𝔾ₘ[Spec R]) ≃+ ℤ :=
-  (charDiag R _).trans (FreeAbelianGroup.punitEquiv _)
+  (charDiag R _).trans (FreeAbelianGroup.uniqueEquiv _)
 
 variable (R σ) in
 /-- Cocharacters of the algebraic torus with dimensions `σ`over a domain `R` are exactly `ℤ^σ`.

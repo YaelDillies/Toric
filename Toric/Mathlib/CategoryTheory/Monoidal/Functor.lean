@@ -10,22 +10,22 @@ variable (F : C ⥤ D) [F.LaxMonoidal]
 
 @[reassoc]
 lemma tensorHom_ε_left_μ {X : C} {Y : D} (f : Y ⟶ F.obj X) :
-    (ε F ⊗ f) ≫ μ F (𝟙_ C) X = 𝟙_ D ◁ f ≫ (λ_ (F.obj X)).hom ≫ F.map (λ_ X).inv := by
+    (ε F ⊗ₘ f) ≫ μ F (𝟙_ C) X = 𝟙_ D ◁ f ≫ (λ_ (F.obj X)).hom ≫ F.map (λ_ X).inv := by
   rw [left_unitality]; simp [tensorHom_def']
 
 @[reassoc]
 lemma tensorHom_ε_right_μ {X : C} {Y : D} (f : Y ⟶ F.obj X) :
-    (f ⊗ ε F) ≫ μ F X (𝟙_ C) = f ▷ 𝟙_ D ≫ (ρ_ (F.obj X)).hom ≫ F.map (ρ_ X).inv := by
+    (f ⊗ₘ ε F) ≫ μ F X (𝟙_ C) = f ▷ 𝟙_ D ≫ (ρ_ (F.obj X)).hom ≫ F.map (ρ_ X).inv := by
   rw [right_unitality]; simp [tensorHom_def]
 
 @[reassoc]
 lemma wiskerLeft_left_unitality {X : C} {Y : D} (f : Y ⟶ F.obj X) :
-    𝟙_ D ◁ f ≫ (λ_ (F.obj X)).hom = (ε F ⊗ f) ≫ μ F (𝟙_ C) X ≫ F.map (λ_ X).hom := by
+    𝟙_ D ◁ f ≫ (λ_ (F.obj X)).hom = (ε F ⊗ₘ f) ≫ μ F (𝟙_ C) X ≫ F.map (λ_ X).hom := by
   rw [left_unitality]; simp [tensorHom_def']
 
 @[reassoc]
 lemma wiskerRight_right_unitality {X : C} {Y : D} (f : Y ⟶ F.obj X) :
-    f ▷ 𝟙_ D ≫ (ρ_ (F.obj X)).hom = (f ⊗ ε F) ≫ μ F X (𝟙_ C) ≫ F.map (ρ_ X).hom := by
+    f ▷ 𝟙_ D ≫ (ρ_ (F.obj X)).hom = (f ⊗ₘ ε F) ≫ μ F X (𝟙_ C) ≫ F.map (ρ_ X).hom := by
   rw [right_unitality]; simp [tensorHom_def]
 
 @[reassoc]
@@ -47,12 +47,12 @@ variable (F : C ⥤ D) [F.OplaxMonoidal]
 
 @[reassoc]
 lemma δ_tensorHom_η_left {X : C} {Y : D} (f : F.obj X ⟶ Y) :
-    δ F (𝟙_ C) X ≫ (η F ⊗ f) = F.map (λ_ X).hom ≫ (λ_ (F.obj X)).inv ≫ 𝟙_ D ◁ f := by
+    δ F (𝟙_ C) X ≫ (η F ⊗ₘ f) = F.map (λ_ X).hom ≫ (λ_ (F.obj X)).inv ≫ 𝟙_ D ◁ f := by
   rw [left_unitality]; simp [tensorHom_def]
 
 @[reassoc]
 lemma δ_tensorHom_η_right {X : C} {Y : D} (f : F.obj X ⟶ Y) :
-    δ F X (𝟙_ C) ≫ (f ⊗ η F) = F.map (ρ_ X).hom ≫ (ρ_ (F.obj X)).inv ≫ f ▷ 𝟙_ D := by
+    δ F X (𝟙_ C) ≫ (f ⊗ₘ η F) = F.map (ρ_ X).hom ≫ (ρ_ (F.obj X)).inv ≫ f ▷ 𝟙_ D := by
   rw [right_unitality]; simp [tensorHom_def']
 
 @[reassoc]

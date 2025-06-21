@@ -8,6 +8,7 @@ import Toric.Hopf.GrpAlg
 import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
+import Toric.Mathlib.AlgebraicGeometry.Scheme
 import Toric.Mathlib.CategoryTheory.Functor.FullyFaithful
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
@@ -42,7 +43,7 @@ lemma specCommMonAlgPullbackObjXIso_one :
   subst H
   dsimp [AlgHom.toUnder]
   erw [CategoryTheory.Functor.mapMon_obj_mon_one,
-    CategoryTheory.Functor.mapMon_obj_mon_one] --erw? says nothing
+    CategoryTheory.Functor.mapMon_obj_mon_one] -- FIXME: `erw?` says nothing
   letI := f.hom.toAlgebra
   have h₁ := counitAlgHom_comp_mapRangeRingHom f.hom (M := M)
   have h₂ := (Bialgebra.counitAlgHom S S[M]).comp_algebraMap
@@ -58,7 +59,7 @@ private
 lemma specCommMonAlgPullbackObjIso_mul_aux :
     (CartesianMonoidalCategory.prodComparisonIso (Over.pullback Sf) _ _).inv.left ≫
       pullback.fst _ _ ≫ (pullbackSpecIso R R[M] R[M]).hom =
-    ((specCommMonAlgPullbackObjXIso M f Sf H).hom ⊗
+    ((specCommMonAlgPullbackObjXIso M f Sf H).hom ⊗ₘ
       (specCommMonAlgPullbackObjXIso M f Sf H).hom).left ≫
       (pullbackSpecIso S _ _).hom ≫
         Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.mapRingHom f.hom _ _
@@ -83,7 +84,7 @@ set_option maxHeartbeats 0 in
 private
 lemma specCommMonAlgPullbackObjXIso_mul :
     μ ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom =
-    ((specCommMonAlgPullbackObjXIso M f Sf H).hom ⊗
+    ((specCommMonAlgPullbackObjXIso M f Sf H).hom ⊗ₘ
       (specCommMonAlgPullbackObjXIso M f Sf H).hom) ≫ μ := by
   dsimp [AlgHom.toUnder]
   -- FIXME: `erw?` says nothing

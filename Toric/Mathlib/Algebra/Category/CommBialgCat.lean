@@ -3,10 +3,9 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
+import Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
 
 /-!
 # The category of commutative bialgebras over a commutative ring
@@ -179,9 +178,9 @@ instance CommAlgCat.mon_ClassOpOf {A : Type u} [CommRing A] [Bialgebra R A] :
     Mon_Class (op <| CommAlgCat.of R A) where
   one := (CommAlgCat.ofHom <| counitAlgHom R A).op
   mul := (CommAlgCat.ofHom <| comulAlgHom R A).op
-  one_mul' := by ext; exact Coalgebra.rTensor_counit_comul _
-  mul_one' := by ext; exact Coalgebra.lTensor_counit_comul _
-  mul_assoc' := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
+  one_mul := by ext; exact Coalgebra.rTensor_counit_comul _
+  mul_one := by ext; exact Coalgebra.lTensor_counit_comul _
+  mul_assoc := by ext; exact (Coalgebra.coassoc_symm_apply _).symm
 
 @[simp]
 lemma CommAlgCat.one_op_of_unop_hom {A : Type u} [CommRing A] [Bialgebra R A] :
@@ -193,7 +192,7 @@ lemma CommAlgCat.mul_op_of_unop_hom {A : Type u} [CommRing A] [Bialgebra R A] :
 
 instance {A : Type u} [CommRing A] [Bialgebra R A] [IsCocomm R A] :
     IsCommMon (Opposite.op <| CommAlgCat.of R A) where
-  mul_comm' := by ext; exact comm_comul R _
+  mul_comm := by ext; exact comm_comul R _
 
 instance {A B : Type u} [CommRing A] [Bialgebra R A] [CommRing B] [Bialgebra R B]
     (f : A →ₐc[R] B) : IsMon_Hom (CommAlgCat.ofHom (f : A →ₐ[R] B)).op where

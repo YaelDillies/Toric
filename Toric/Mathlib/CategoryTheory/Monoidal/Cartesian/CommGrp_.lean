@@ -3,7 +3,7 @@ import Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
 open CategoryTheory CartesianMonoidalCategory MonoidalCategory Grp_Class Opposite
-open scoped Hom
+open scoped Mon_Class
 
 universe w v u
 
@@ -15,7 +15,7 @@ namespace CommGrp_
 set_option allowUnsafeReducibility true in
 attribute [reducible] CommGrp_.toGrp_
 
-instance (G : CommGrp_ C) : CommGrp_Class G.X where mul_comm' := G.comm.mul_comm'
+instance (G : CommGrp_ C) : CommGrp_Class G.X where mul_comm := G.comm.mul_comm
 
 section GrpGrp
 

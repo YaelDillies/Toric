@@ -165,7 +165,7 @@ lemma mul_left [Bialgebra R A] :
 
 instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
     IsCommMon ((Spec A).asOver (Spec R)) where
-  mul_comm' := by
+  mul_comm := by
     ext
     have := LaxMonoidal.μ (algSpec R) (.op <| .of R A) (.op <| .of R A)
     have := congr((pullbackSpecIso R A A).hom ≫ ((bialgSpec R).map <| .op <| CommBialgCat.ofHom <|
