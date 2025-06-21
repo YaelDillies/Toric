@@ -489,6 +489,7 @@ def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialg
     · congr 3
       ext; simp
 
+variable (R) in
 def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
     Matrix.specialOrthogonalGroup (Fin 2) R :=
   Spec.mulEquiv.symm.trans (algHomMulEquiv (R := R))
@@ -508,7 +509,7 @@ def _root_.CategoryTheory.Iso.asOver
     (e : A ≅ B) [HomIsOver e.hom S] : (OverClass.asOver A S) ≅ (OverClass.asOver B S) :=
   Over.isoMk e (by simp)
 
-def SplitTorus.mulEquiv {R : CommRingCat.{u}} (σ : Type u) :
+def SplitTorus.mulEquiv (R : CommRingCat.{u}) (σ : Type u) :
     (σ → Rˣ) ≃* ((Spec R).asOver (Spec R) ⟶ (SplitTorus (Spec R) σ).asOver (Spec R)) := by
   refine (MvLaurentPolynomial.liftEquiv (R := R) ..).trans ?_
   refine Spec.mulEquiv.trans ?_
@@ -566,7 +567,13 @@ def aux4 {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C} (
 
 theorem SO2RealNotSplit : ¬ IsSplitTorusOver SO₂(ℝ) Spec(ℝ) := by
   intro
-  rcases ⟨_⟩ with AlgebraicGeometry.Scheme.exists_iso_diag_finite_of_isSplitTorusOver
-  sorry
+  rcases exists_iso_diag_finite_of_isSplitTorusOver SO₂(ℝ) Spec(ℝ) with ⟨σ, e, _, _⟩
+  haveI : IsMon_Hom (Iso.asOver Spec(ℝ) e).hom := ‹_›
+  have e₁ := aux4 (Grp_.mkIso' <| e.asOver Spec(ℝ)) (Spec(ℝ).asOver Spec(ℝ))
+  simp at e₁
+  have e₂ := bar ℝ
+  have e₃ := SplitTorus.mulEquiv (.of ℝ) σ
+  have E := (e₂.symm.trans e₁).trans e₃.symm
+  exact (aux3 σ).1 E
 
 end AlgebraicGeometry.SO₂
