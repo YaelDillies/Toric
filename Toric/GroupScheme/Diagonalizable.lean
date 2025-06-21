@@ -112,7 +112,19 @@ instance : IsMon_Hom ((diagSpecIso R M).inv.asOver (Spec R)) :=
     (specULiftZIsTerminal.hom_ext _ _)).app _).inv
 
 /-- `Diag` is invariant under pullback. -/
-def diagPullbackIso (f : T ⟶ S) : pullback f (Diag S M ↘ S) ≅ Diag T M := sorry
+def diagPullbackIso (f : T ⟶ S) : pullback f (Diag S M ↘ S) ≅ Diag T M :=
+  pullbackSymmetry _ _ ≪≫ pullbackLeftPullbackSndIso _ _ _ ≪≫
+    pullback.congrHom (by simp) (by simp)
+
+@[reassoc (attr := simp)]
+lemma diagPullbackIso_hom_over (f : T ⟶ S) :
+    (diagPullbackIso f).hom ≫ Diag T M ↘ T = pullback.fst _ _ := by
+  simp [diagPullbackIso, Diag.canonicallyOver_over]
+
+@[reassoc (attr := simp)]
+lemma diagPullbackIso_inv_fst (f : T ⟶ S) :
+    (diagPullbackIso f).inv ≫ pullback.fst _ _ = Diag T M ↘ T := by
+  simp [diagPullbackIso, Diag.canonicallyOver_over]
 
 instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S M ↘ S) := by
   apply MorphismProperty.pullback_snd
@@ -129,7 +141,10 @@ instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S
       obtain ⟨i, x, rfl⟩ := S.affineCover.exists_eq x
       have that : Nonempty (S.affineCover.obj i) := ⟨x⟩
       refine this (S := S.affineCover.obj i) ?_ ⟨_, rfl⟩
-      sorry
+      have : LocallyOfFiniteType (pullback.fst (S.affineCover.map i) (S.Diag M ↘ S)) :=
+        MorphismProperty.pullback_fst _ _ ‹_›
+      rw [← diagPullbackIso_inv_fst (S.affineCover.map i)]
+      infer_instance
     obtain ⟨R, rfl⟩ := hS
     rw [Spec_carrier, PrimeSpectrum.nonempty_iff_nontrivial] at hS
     replace h : LocallyOfFiniteType (Spec(R[M]) ↘ Spec R) := by
