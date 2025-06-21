@@ -501,25 +501,42 @@ def SplitTorus.mulEquiv {R : CommRingCat.{u}} (σ : Type u) :
 def I : Matrix.specialOrthogonalGroup (Fin 2) ℝ :=
   ⟨!![0, 1; -1, 0], by simp [Matrix.mem_specialOrthogonalGroup_fin_two_iff]⟩
 
-example : I ^ 2 ≠ 1 := by
+lemma I_sq_ne_1 : I ^ 2 ≠ 1 := by
   intro h
   have := congr_fun₂ congr(($h).val) 0 0
   norm_num [I, pow_two] at this
 
-example : I ^ 4 = 1 := by
+@[simp]
+lemma I_ord_4' : I ^ 4 = 1 := by
   simp [I, pow_succ, Matrix.one_fin_two]
 
-example {x : ℝˣ} : x ^ 4 = 1 -> x ^ 2 = 1 := by
+private lemma aux1 {x : ℝ} : x ^ 4 = 1 -> x ^ 2 = 1 := by
   intro h
-  simp only [← Units.eq_iff] at *
   have : x ^ 4 = (x ^ 2) ^ 2 := by rw [← pow_mul]
   rw [this] at h
-  simp only [Units.val_pow_eq_pow_val, Units.val_one] at h ⊢
   rw [sq_eq_one_iff] at h
   cases h with
   | inl h => assumption
   | inr h =>
-    have : 0 ≤ x.val ^ 2 := sq_nonneg x.val
+    have : 0 ≤ x ^ 2 := sq_nonneg x
     linarith
+
+private lemma aux2 {σ : Type*} {x : σ → ℝˣ} : x ^ 4 = 1 → x ^ 2 = 1 := by
+  intro h
+  ext y
+  have := congr_fun h y
+  simp only [Pi.pow_apply, Units.val_pow_eq_pow_val, Pi.one_apply, Units.val_one]
+  have := congr(($this).val)
+  simp at this
+  exact aux1 this
+
+example (σ : Type*) : IsEmpty <| Matrix.specialOrthogonalGroup (Fin 2) ℝ ≃* (σ → ℝˣ) := by
+  constructor
+  intro e
+  have h₁ : (e I) ^ 4 = 1 := by simp [← map_pow]
+  have h₂ : (e I) ^ 2 ≠ 1 := by
+    rw [← map_pow, ← e.map_one, e.injective.ne_iff]
+    exact I_sq_ne_1
+  exact h₂ <| aux2 h₁
 
 end AlgebraicGeometry.SO₂
