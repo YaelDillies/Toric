@@ -11,11 +11,6 @@ namespace AdjoinRoot
 section
 
 @[simp]
-lemma _root_.bullshit {A B C D : Type*} [CommSemiring A] [Semiring B] [Algebra A B] [Semiring C]
-    [Algebra A C] [Semiring D] [Algebra A D] {f : B →ₐ[A] C} {g : C →ₐ[A] D} :
-    (g.comp f : B →+* D) = .comp g (f : B →+* C) := rfl
-
-@[simp]
 lemma _root_.bullshit2 {A B C D : Type*} [CommSemiring A] [Semiring B] [Algebra A B] [Semiring C]
     [Algebra A C] [Semiring D] [Algebra A D] {f : B ≃ₐ[A] C} {g : C ≃ₐ[A] D} :
     (f.trans g : B →+* D) = .comp g (f : B →+* C) := rfl
@@ -117,7 +112,8 @@ lemma coe_mapAlgHom (f : S →ₐ[R] T) (h : p.map f = q) : ⇑(mapAlgHom p q f 
 
 lemma mapAlgHom_mapAlghom {f : S →ₐ[R] T} {g : T →ₐ[R] U} {h₁ : p.map f = q} {h₂ : q.map g = u} :
     (mapAlgHom q u g h₂).comp (mapAlgHom p q f h₁) =
-    mapAlgHom p u (g.comp f) (by simp [← Polynomial.map_map, h₁, h₂]) := by aesop
+    mapAlgHom p u (g.comp f) (by simp [AlgHom.comp_toRingHom, ← Polynomial.map_map, h₁, h₂]) := by
+  aesop
 
 variable (p q) in
 def mapAlgEquiv (f : S ≃ₐ[R] T) (h : p.map f = q) : AdjoinRoot p ≃ₐ[R] AdjoinRoot q :=
@@ -149,7 +145,8 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
   · simp [← h]
     rw [Polynomial.eval₂_map]
     change Polynomial.eval₂ ((Algebra.TensorProduct.map (AlgHom.id R T) _).comp _).toRingHom _ _ = _
-    simp [← Polynomial.eval₂_map]
+    simp only [map_comp_includeRight, AlgHom.toRingHom_eq_coe, AlgHom.comp_toRingHom,
+      AlgHom.coe_restrictScalars, ← Polynomial.eval₂_map]
     change Polynomial.eval₂ _ ((RingHomClass.toRingHom includeRight) (root p)) (p.map (of _)) = _
     rw [Polynomial.eval₂_hom]
     simp [Polynomial.eval_map]
