@@ -7,46 +7,23 @@
 \begin{definition}[Group-like elements]
   \label{0-grp-like}
   \uses{}
-  \lean{Bialgebra.IsGroupLikeElem}
+  \lean{IsGroupLikeElem}
   \leanok
 
-  An element $a$ of a bialgebra $A$ is \emph{group-like} if it is a unit and $\Delta(a) = a \ox a$,
-  where $\Delta$ is the comultiplication map.
+  An element $a$ of a coalgebra $A$ is \emph{group-like} if $\eta(a) = 1$ and $\Delta(a) = a \ox a$,
+  where $\eta$ is the counit and $\Delta$ is the comultiplication map.
 
   We write $\GrpLike A$ for the set of group-like elements of $A$.
 \end{definition}
 
 
-\begin{lemma}[The image of a group-like element by the counit is $1$]
-  \label{0-grp-like-counit}
-  \uses{0-grp-like}
-  \lean{Bialgebra.IsGroupLikeElem.counit_eq_one}
-  \leanok
-
-  If $A$ is a bialgebra, then the counit of $A$ sends every group-like element of
-  $A$ to $1$.
-\end{lemma}
-\begin{proof}
-  \uses{}
-  \leanok
-
-  Let $\Delta$ be the comultiplication map and $\epsilon$ be the counit map.
-  Let $a$ be a group-like element of $A$.
-  Using the coalgebra axioms and the fact that $\Delta(x) = x\otimes x$, we get:
-  \[x \otimes 1 = (\mathbf{1}_A\otimes\epsilon)(\Delta(x))= x \otimes\epsilon(x).\]
-  As $x$ is invertible, this implies that $1\otimes 1 = 1\otimes\epsilon(x)$ in
-  $R\otimes_R A$. But the algebra map from $R$ to $A$ is injective because $A$
-  is a bialgebra (hence the counit is a left inverse of this map), so $1=\epsilon(x)$.
-\end{proof}
-
-
 \begin{proposition}[Group-like elements form a group]
   \label{0-grp-like-grp}
   \uses{0-grp-like}
-  \lean{Bialgebra.GroupLike.instGroup, Bialgebra.GroupLike.instCommGroup}
+  \lean{GroupLike.instGroup, GroupLike.instCommGroup}
   \leanok
 
-  Group-like elements $\GrpLike A$ of a bialgebra $A$ form a group under multiplication.
+  Group-like elements $\GrpLike A$ of a Hopf algebra $A$ form a group under multiplication.
 \end{proposition}
 \begin{proof}
   \uses{}
@@ -59,7 +36,7 @@
 \begin{lemma}[Bialgebra homs preserve group-like elements]
   \label{0-grp-like-map}
   \uses{0-grp-like}
-  \lean{Bialgebra.IsGroupLikeElem.map}
+  \lean{IsGroupLikeElem.map}
   \leanok
 
   Let $f : A \to B$ be a bi-algebra hom. If $a \in A$ is group-like, then $f(a)$ is group-like too.
@@ -206,7 +183,7 @@
   \lean{Bialgebra.liftGroupLikeBialgHom_bijective_of_span_isGroupLikeElem_eq_top}
   \leanok
 
-  Let $A$ be a bialgebra over a domain $R$, and let $G$ be the set of group-like
+  Let $A$ be a Hopf algebra over a domain $R$, and let $G$ be the set of group-like
   elements of $A$ (which is a group by \ref{0-grp-like-grp}). If $A$ is generated
   by $G$, then the unique bialgebra morphism from $R[G]$ to $A$ sending each
   element of $G$ to itself is bijective.

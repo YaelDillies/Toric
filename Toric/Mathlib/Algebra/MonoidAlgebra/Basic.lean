@@ -40,7 +40,7 @@ noncomputable def mapRangeAlgHom {T : Type*} [Semiring S]
 
 @[simp]
 lemma mapRangeAlgHom_apply {T : Type*} [Semiring S] [Semiring T] [Algebra R S] [Algebra R T]
-   (f : S →ₐ[R] T) (x : MonoidAlgebra S M) (m : M) :
+    (f : S →ₐ[R] T) (x : MonoidAlgebra S M) (m : M) :
     mapRangeAlgHom f x m = f (x m) := mapRangeRingHom_apply f.toRingHom x m
 
 @[simp]
