@@ -343,7 +343,7 @@ lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommR
   simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
 
 example {C : Type*} [Category C] {A B : C} {f : A ⟶ B} : f ≫ (𝟙 _) = f := Category.comp_id f
-
+--- (f a).1 = f a.1
 lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
       (Functor.LaxMonoidal.μ (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap R S))))
         (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))
@@ -362,16 +362,18 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
   rw [← cancel_mono (pullbackSpecIso ..).inv]
   simp
   ext <;> simp
-  ·
-    slice_rhs 3 3 =>
-      rw [← Category.comp_id («Y» := Spec(T ⊗[R] T)) (Spec.map _),
-        ← (pullbackSpecIso R T T).inv_hom_id]
-    slice_rhs 5 6 =>
-      simp [pullbackSpecIso_hom_fst]
-    slice_rhs 3 4 =>
-      simp
-    sorry
-  sorry
+  · simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp,
+      Algebra.TensorProduct.mapRingHom_comp_includeLeftRingHom]
+    simp [specOverSpec_over]
+    erw? [Over.tensorHom_left_fst_assoc]
+    simp [pullbackSpecIso']
+    rfl
+  · simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp,
+      Algebra.TensorProduct.mapRingHom_comp_includeRight]
+    simp [specOverSpec_over]
+    erw? [Over.tensorHom_left_snd_assoc]
+    simp [pullbackSpecIso']
+    rfl
 
 -- TODO : maybe refactor counitAlgHom/comulAlgHom to take in 3 arguments, if you care
 @[simp]
