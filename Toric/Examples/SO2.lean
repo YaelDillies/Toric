@@ -493,10 +493,30 @@ def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
     Matrix.specialOrthogonalGroup (Fin 2) R :=
   Spec.mulEquiv.symm.trans (algHomMulEquiv (R := R))
 
+/-- Construct an isomorphism of monoids by giving an isomorphism between the underlying objects
+and checking compatibility with unit and multiplication only in the forward direction.
+-/
+@[simps]
+def Grp_.mkIso' {C : Type*} [Category C] {M N : C} (f : M ≅ N) [CartesianMonoidalCategory C]
+    [Grp_Class M] [Grp_Class N] [IsMon_Hom f.hom] : (Grp_.mk M) ≅ (Grp_.mk N) where
+  hom := .mk f.hom
+  inv := .mk f.inv
+
+@[simps!]
+def _root_.CategoryTheory.Iso.asOver
+    {C : Type*} [Category C] {A B : C} (S : C) [OverClass A S] [OverClass B S]
+    (e : A ≅ B) [HomIsOver e.hom S] : (OverClass.asOver A S) ≅ (OverClass.asOver B S) :=
+  Over.isoMk e (by simp)
 
 def SplitTorus.mulEquiv {R : CommRingCat.{u}} (σ : Type u) :
     (σ → Rˣ) ≃* ((Spec R).asOver (Spec R) ⟶ (SplitTorus (Spec R) σ).asOver (Spec R)) := by
-  sorry
+  refine (MvLaurentPolynomial.liftEquiv (R := R) ..).trans ?_
+  refine Spec.mulEquiv.trans ?_
+  haveI : IsMon_Hom (Iso.asOver (Spec R) (splitTorusIso R σ)).hom := by
+    change IsMon_Hom ((splitTorusIso R σ).hom.asOver _)
+    infer_instance
+  exact ((yonedaGrp.mapIso (Grp_.mkIso' ((Scheme.splitTorusIso R σ).asOver (Spec R)))).app
+    (.op ((Spec R).asOver (Spec R)))).groupIsoToMulEquiv.symm
 
 def I : Matrix.specialOrthogonalGroup (Fin 2) ℝ :=
   ⟨!![0, 1; -1, 0], by simp [Matrix.mem_specialOrthogonalGroup_fin_two_iff]⟩

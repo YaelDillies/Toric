@@ -7,6 +7,9 @@ import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
+import Toric.Mathlib.Algebra.Category.Grp.Basic
+import Mathlib.Algebra.Category.Grp.Adjunctions
+import Mathlib.Algebra.Category.Ring.Adjunctions
 import Toric.MvLaurentPolynomial
 
 /-!
@@ -120,21 +123,29 @@ notation3 "𝔾ₘ[" S ", " σ "]" => SplitTorus S σ
 /-- The multiplicative group over `S`. -/
 notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 
+-- attribute [ext] Comma
+
 -- def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
 --     ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
---       CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
---       (𝔾ₘ[S, σ].asOver S) :=
---   ((((Over.mapPullbackAdj (terminal.from S)).comp
---     (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
+--       CommGrp.coyonedaRight.obj (op σ) ⋙ CategoryTheory.forget _).RepresentableBy
+--       (𝔾ₘ[S, σ].asOver S) := by
+--   letI X :=
+--   (((((Over.mapPullbackAdj (specULiftZIsTerminal.from S)).comp
+--     (Over.equivalenceOfIsTerminal specULiftZIsTerminal).toAdjunction).comp <|
 --     (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
 --       CommGrp.forget₂CommMonAdj.op.comp <|
 --         commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
 --           AddCommGrp.adj.op)).representableBy (op σ)).ofIso <|
 --     isoWhiskerRight (NatIso.op (Over.forgetMapTerminal _ _))
 --       (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
---         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
+--         CommMonCat.units ⋙ CategoryTheory.forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
 --         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
---           CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
+--           CommMonCat.units ⋙ CategoryTheory.forget CommGrp) (Coyoneda.opIso.app _)))
+--   convert X using 1
+--   apply Comma.ext
+--   · dsimp [SplitTorus, Diag]
+--     congr 1
+
 
 variable {R : CommRingCat} {σ : Type*}
 
