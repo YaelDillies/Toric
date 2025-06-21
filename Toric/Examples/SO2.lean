@@ -337,7 +337,10 @@ lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommR
   · have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
       Algebra.TensorProduct.includeLeftRingHom = Algebra.TensorProduct.includeRight.toRingHom := rfl
     simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
-  sorry
+  have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
+      (RingHomClass.toRingHom Algebra.TensorProduct.includeRight) =
+      Algebra.TensorProduct.includeLeftRingHom := rfl
+  simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
 
 example {C : Type*} [Category C] {A B : C} {f : A ⟶ B} : f ≫ (𝟙 _) = f := Category.comp_id f
 
@@ -359,7 +362,8 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
   rw [← cancel_mono (pullbackSpecIso ..).inv]
   simp
   ext <;> simp
-  · slice_rhs 3 3 =>
+  ·
+    slice_rhs 3 3 =>
       rw [← Category.comp_id («Y» := Spec(T ⊗[R] T)) (Spec.map _),
         ← (pullbackSpecIso R T T).inv_hom_id]
     slice_rhs 5 6 =>
@@ -369,6 +373,13 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
     sorry
   sorry
 
+theorem _root_.name1
+  {R S T : Type u} [inst : CommRing R] [inst_1 : CommRing S] [inst_2 : CommRing T] [inst_3 : Algebra R S]
+  [inst_4 : Bialgebra R T] :
+  (algebraMap R S).comp (RingHomClass.toRingHom (Bialgebra.counitAlgHom R T)) =
+    (RingHomClass.toRingHom (Bialgebra.counitAlgHom S (S ⊗[R] T))).comp
+    (RingHomClass.toRingHom Algebra.TensorProduct.includeRight) := sorry
+
 instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
     IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
   one_hom := by
@@ -377,7 +388,8 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     ext <;> simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
       pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
       ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
-    sorry -- prove this and add this to the simp above
+    congr 2
+    exact name1
   mul_hom := by
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
@@ -386,7 +398,8 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
         ← CommRingCat.ofHom_comp, asOver, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
         ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom, Hom.asOver, OverClass.asOverHom,
         pullback.condition]
-      rfl
+      -- rfl
+      sorry
     · convert congr($(foo R S T) ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
