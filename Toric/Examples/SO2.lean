@@ -550,7 +550,8 @@ private lemma aux2 {σ : Type*} {x : σ → ℝˣ} : x ^ 4 = 1 → x ^ 2 = 1 := 
   simp at this
   exact aux1 this
 
-example (σ : Type*) : IsEmpty <| Matrix.specialOrthogonalGroup (Fin 2) ℝ ≃* (σ → ℝˣ) := by
+private lemma aux3 (σ : Type*) :
+    IsEmpty <| Matrix.specialOrthogonalGroup (Fin 2) ℝ ≃* (σ → ℝˣ) := by
   constructor
   intro e
   have h₁ : (e I) ^ 4 = 1 := by simp [← map_pow]
@@ -558,5 +559,14 @@ example (σ : Type*) : IsEmpty <| Matrix.specialOrthogonalGroup (Fin 2) ℝ ≃*
     rw [← map_pow, ← e.map_one, e.injective.ne_iff]
     exact I_sq_ne_1
   exact h₂ <| aux2 h₁
+
+def aux4 {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C} (e : G ≅ H) (X : C) :
+    (X ⟶ G.X) ≃* (X ⟶ H.X) :=
+  ((yonedaGrp.mapIso e).app (.op X)).groupIsoToMulEquiv
+
+theorem SO2RealNotSplit : ¬ IsSplitTorusOver SO₂(ℝ) Spec(ℝ) := by
+  intro
+  rcases ⟨_⟩ with AlgebraicGeometry.Scheme.exists_iso_diag_finite_of_isSplitTorusOver
+  sorry
 
 end AlgebraicGeometry.SO₂
