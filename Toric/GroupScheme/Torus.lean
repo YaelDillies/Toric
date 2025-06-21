@@ -10,6 +10,7 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Mathlib.Algebra.Category.Grp.Adjunctions
 import Mathlib.Algebra.Category.Ring.Adjunctions
+import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.MvLaurentPolynomial
 
 /-!
@@ -149,10 +150,14 @@ notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 
 variable (G S : Scheme.{u}) [G.Over S] [Grp_Class (G.asOver S)] in
 /-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
-lemma exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType [G.IsSplitTorusOver S] :
+lemma exists_iso_splitTorus_of_isSplitTorusOver [G.IsSplitTorusOver S] :
     ∃ (σ : Type u) (e : G ≅ SplitTorus S σ) (_ : e.hom.IsOver S),
       IsMon_Hom (e.hom.asOver S) := by
-  sorry
+  obtain ⟨A, _, _, e, _, _⟩ := ‹G.IsSplitTorusOver S›
+  exact ⟨Module.Free.ChooseBasisIndex ℤ A,
+    e.trans <| Diag.mapIso S ((Module.Free.chooseBasis ℤ A).repr.toAddEquiv.trans
+      (FreeAbelianGroup.equivFinsupp _).symm),
+    by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 variable {R : CommRingCat} {σ : Type*}
 
