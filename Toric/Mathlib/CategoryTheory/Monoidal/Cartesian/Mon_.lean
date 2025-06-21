@@ -5,13 +5,12 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
+import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
 open scoped Hom Obj
-
-scoped[Hom] attribute [instance] Hom.monoid
 
 universe v₁ v₂ u₁ u₂
 
@@ -46,56 +45,56 @@ def FullyFaithful.homMulEquiv (hF : F.FullyFaithful) : (X ⟶ M) ≃* (F.obj X �
 
 end CategoryTheory.Functor
 
+namespace Mon_Class
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N O X Y : C} [Mon_Class M]
   [Mon_Class N] [Mon_Class O]
 
-@[reassoc]
-lemma Mon_Class.comp_pow (f : X ⟶ M) (n : ℕ) (h : Y ⟶ X) : h ≫ f ^ n = (h ≫ f) ^ n := by
-  induction n <;> simp [pow_succ, Mon_Class.comp_mul, *]
+instance : IsMon_Hom (toUnit M) where
+instance : IsMon_Hom η[M] where
+  mul_hom := by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]
 
 variable [BraidedCategory C]
 
-lemma mul_tensor_mul (f f' : X ⟶ M) (g g' : Y ⟶ N) :
-    (f * f') ⊗ (g * g') = (f ⊗ g) * (f' ⊗ g') := by
+attribute [local simp] tensorObj.one_def tensorObj.mul_def in
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
+  IsMon_Hom.mul_hom_assoc in
+instance : IsMon_Hom (fst M N) where
+
+attribute [local simp] tensorObj.one_def tensorObj.mul_def in
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
+  IsMon_Hom.mul_hom_assoc in
+instance : IsMon_Hom (snd M N) where
+
+lemma mul_tensorHom_mul (f f' : X ⟶ M) (g g' : Y ⟶ N) :
+    (f * f') ⊗ₘ (g * g') = (f ⊗ₘ g) * (f' ⊗ₘ g') := by
   simp [Hom.mul_def, Hom.one_def, tensorObj.mul_def]
 
-lemma one_tensor_one : (1 : X ⟶ M) ⊗ (1 : Y ⟶ N) = 1 := by
+lemma one_tensorHom_one : (1 : X ⟶ M) ⊗ₘ (1 : Y ⟶ N) = 1 := by
   simp only [Hom.one_def, tensor_comp, tensorObj.one_def, ← Category.assoc]
   congr 1
   rw [Iso.eq_comp_inv]
   exact toUnit_unique _ _
 
-attribute [local simp] tensorObj.one_def tensorObj.mul_def
-
-@[reassoc (attr := simp)]
-lemma Mon_Class.mul_mul_mul_comm [IsCommMon M] :
-    tensorμ M M M M ≫ (μ ⊗ μ) ≫ μ = (μ[M] ⊗ μ) ≫ μ := sorry
-
-instance : IsMon_Hom (toUnit M) where
-instance : IsMon_Hom (fst M N) where
-instance : IsMon_Hom (snd M N) where
+attribute [local simp] tensorObj.one_def tensorObj.mul_def in
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
+  IsMon_Hom.mul_hom_assoc in
 instance {f : M ⟶ N} {g : M ⟶ O} [IsMon_Hom f] [IsMon_Hom g] : IsMon_Hom (lift f g) where
-  mul_hom := by ext <;> simp [← tensor_comp_assoc]
-instance [IsCommMon M] : IsMon_Hom η[M] where
-  mul_hom := by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]
+  one_hom := by ext <;> simp [IsMon_Hom.one_hom f, IsMon_Hom.one_hom g]
+  mul_hom := by ext <;> simp [← tensor_comp_assoc, IsMon_Hom.mul_hom f, IsMon_Hom.mul_hom g]
+
+attribute [local simp] tensorObj.one_def tensorObj.mul_def in
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
+  IsMon_Hom.mul_hom_assoc in
 instance [IsCommMon M] : IsMon_Hom μ[M] where
   one_hom := by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]
 
-/-- If `M` is a commutative monoid object, then `Hom(X, M)` has a commutative monoid structure. -/
-abbrev Hom.commMonoid [IsCommMon M] : CommMonoid (X ⟶ M) where
-  mul_comm f g := by
-    show lift _ _ ≫ _ = lift _ _ ≫ _
-    conv_lhs => rw [← IsCommMon.mul_comm]
-    rw [← Category.assoc]
-    congr 1
-    ext <;> simp
-
-scoped[Hom] attribute [instance] Hom.commMonoid
+end Mon_Class
 
 attribute [local simp] mul_eq_mul comp_mul mul_comp one_eq_one
 
 namespace Mon_
-variable {M N N₁ N₂ : Mon_ C}
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
+  {M N N₁ N₂ : Mon_ C}
 
 instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) where
   isTerminalTensorUnit :=
@@ -116,9 +115,9 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) wher
 instance [IsCommMon M.X] : Mon_Class M where
   one := .mk η[M.X]
   mul := .mk μ[M.X]
-  one_mul' := by ext; simp [leftUnitor_hom]
-  mul_one' := by ext; simp [rightUnitor_hom]
-  mul_assoc' := by ext; simp [_root_.mul_assoc]
+  one_mul := by ext; simp [leftUnitor_hom]
+  mul_one := by ext; simp [rightUnitor_hom]
+  mul_assoc := by ext; simp [_root_.mul_assoc]
 
 @[simp] lemma hom_η (M : Mon_ C) [IsCommMon M.X] : η[M].hom = η[M.X] := rfl
 @[simp] lemma hom_μ (M : Mon_ C) [IsCommMon M.X] : μ[M].hom = μ[M.X] := rfl
@@ -136,6 +135,6 @@ variable [IsCommMon N.X]
 end Hom
 
 /-- A commutative monoid object is a commutative monoid object in the category of monoid objects. -/
-instance [IsCommMon M.X] : IsCommMon M where mul_comm' := by ext; simp [_root_.mul_comm]
+instance [IsCommMon M.X] : IsCommMon M where mul_comm := by ext; simp [_root_.mul_comm]
 
 end Mon_

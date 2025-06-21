@@ -1,5 +1,8 @@
 {"ignore":
  {"Toric.Util.TrackSorry": ["Init", "Mathlib.Init"],
+  "Toric.ToricVariety.FromMonoid":
+  ["Toric.Mathlib.Algebra.AffineMonoid.Embedding"],
+  "Toric.ToricIdeal": ["Toric.Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.Mathlib.RingTheory.HopfAlgebra.Convolution":
   ["Toric.Mathlib.Algebra.Algebra.Defs"],
   "Toric.Mathlib.RingTheory.Coalgebra.SimpAttr":
@@ -11,9 +14,21 @@
   ["Toric.Mathlib.RingTheory.Coalgebra.SimpAttr"],
   "Toric.Mathlib.RingTheory.Bialgebra.TensorProduct":
   ["Mathlib.RingTheory.Bialgebra.TensorProduct"],
+  "Toric.Mathlib.CategoryTheory.Monoidal.Mon_":
+  ["Toric.Mathlib.CategoryTheory.Monoidal.Attr"],
   "Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_":
   ["Toric.Mathlib.CategoryTheory.Monoidal.CommMon_"],
+  "Toric.Mathlib.CategoryTheory.Monoidal.Attr":
+  ["Init",
+   "Lean.LabelAttribute",
+   "Lean.Meta.Tactic.Simp.RegisterCommand",
+   "Mathlib.Init"],
+  "Toric.Mathlib.AlgebraicGeometry.Scheme":
+  ["Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.Mathlib.Algebra.Group.Equiv.Basic": ["Mathlib.Tactic.Spread"],
-  "Toric.GroupScheme.MonoidAlgebra": ["Toric.Mathlib.Algebra.Algebra.Hom"],
+  "Toric.GroupScheme.Torus": ["Toric.Mathlib.CategoryTheory.Monoidal.Grp_"],
+  "Toric.GroupScheme.MonoidAlgebra":
+  ["Toric.Mathlib.Algebra.Algebra.Hom",
+   "Toric.Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.GroupScheme.Diagonalizable":
   ["Toric.Mathlib.Algebra.Group.TypeTags.Hom"]}}

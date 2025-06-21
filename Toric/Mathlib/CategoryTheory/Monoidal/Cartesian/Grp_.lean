@@ -12,8 +12,6 @@ open scoped Hom
 
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
-scoped[Hom] attribute [instance] Hom.group
-
 namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
   [CartesianMonoidalCategory D] {G : C} [Grp_Class G] (F : C ⥤ D) [F.Monoidal]
@@ -35,22 +33,8 @@ open CartesianMonoidalCategory MonoidalCategory
 
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C}
 
-@[simps]
-def Grp_.homMk {G H : C} [Grp_Class G] [Grp_Class H] (f : G ⟶ H) [IsMon_Hom f] :
-    mk G ⟶ mk H := Mon_.Hom.mk' f
-
 @[simp] lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) :
     homMk (G := G.X) (H := H.X) f.hom = f := rfl
-
-@[reassoc]
-lemma Grp_Class.comp_div {G H K : C} (f g : G ⟶ H) (h : K ⟶ G) [Grp_Class H] :
-    h ≫ (f / g) = h ≫ f / h ≫ g :=
-  ((yonedaGrp.obj ⟨H⟩).map h.op).hom.map_div f g
-
-@[reassoc]
-lemma Grp_Class.div_comp {G H K : C} (f g : G ⟶ H) (h : H ⟶ K) [Grp_Class H] [Grp_Class K]
-    [IsMon_Hom h] : (f / g) ≫ h = (f ≫ h) / (g ≫ h) :=
-    ((yonedaGrp.map (Grp_.homMk h)).app (.op G)).hom.map_div f g
 
 lemma Grp_Class.inv_eq_comp_inv {G H : C} (f : G ⟶ H) [Grp_Class H] : f ≫ ι = f⁻¹ := rfl
 
@@ -60,32 +44,10 @@ attribute [local simp] mul_eq_mul Grp_Class.inv_eq_inv comp_mul comp_mul_assoc
   mul_comp mul_comp_assoc Grp_Class.comp_inv one_eq_one
   Grp_Class.div_comp Grp_Class.div_comp_assoc one_comp
 
-lemma Grp_Class.mul_inv_rev [BraidedCategory C] {G : C} [Grp_Class G] :
-    μ ≫ ι = ((ι : G ⟶ G) ⊗ ι) ≫ (β_ _ _).hom ≫ μ := by
-  simp
-
 @[reassoc (attr := simp)]
-lemma Grp_Class.one_inv [BraidedCategory C] {G : C} [Grp_Class G] :
-    η[G] ≫ ι[G] = η[G] := by
-  simp
+lemma Grp_Class.one_inv [BraidedCategory C] {G : C} [Grp_Class G] : η[G] ≫ ι = η := by simp
 
 attribute [local simp] mul_comm mul_div_mul_comm
-
-instance [BraidedCategory C] {G : C} [Grp_Class G] [IsCommMon G] : IsMon_Hom ι[G] where
-
-/-- If `G` is a commutative group object, then `Hom(X, G)` has a commutative group structure. -/
-abbrev Hom.commGroup [BraidedCategory C] {G H : C} [Grp_Class H] [IsCommMon H] :
-    CommGroup (G ⟶ H) where
-  __ := Hom.commMonoid
-  inv_mul_cancel f := by simp
-
-scoped[Hom] attribute [instance] Hom.commGroup
-
-@[reassoc]
-lemma Grp_Class.comp_zpow {G H K : C} [Grp_Class H] (f : G ⟶ H) (h : K ⟶ G) :
-    ∀ n : ℤ, h ≫ f ^ n = (h ≫ f) ^ n
-  | (n : ℕ) => by simp [comp_pow]
-  | .negSucc n => by simp [comp_pow, comp_inv]
 
 namespace Grp_Class
 variable [BraidedCategory C]
@@ -99,15 +61,15 @@ namespace tensorObj
 
 @[simps inv]
 instance {G H : C} [Grp_Class G] [Grp_Class H] : Grp_Class (G ⊗ H) where
-  inv := ι ⊗ ι
+  inv := ι ⊗ₘ ι
   left_inv' := by
-    have H : ((𝟙 G)⁻¹ ⊗ (𝟙 H)⁻¹) * 𝟙 (G ⊗ H) = 1 := by
-      simp only [← tensor_id, ← mul_tensor_mul, inv_mul_cancel, one_tensor_one]
-    simpa [mul_tensor_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensor_one]
+    have H : ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) * 𝟙 (G ⊗ H) = 1 := by
+      simp only [← tensor_id, ← mul_tensorHom_mul, inv_mul_cancel, one_tensorHom_one]
+    simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
   right_inv' := by
-    have H : 𝟙 (G ⊗ H) * ((𝟙 G)⁻¹ ⊗ (𝟙 H)⁻¹) = 1 := by
-      simp only [← tensor_id, ← mul_tensor_mul, mul_inv_cancel, one_tensor_one]
-    simpa [mul_tensor_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensor_one]
+    have H : 𝟙 (G ⊗ H) * ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) = 1 := by
+      simp only [← tensor_id, ← mul_tensorHom_mul, mul_inv_cancel, one_tensorHom_one]
+    simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
 
 end tensorObj
 end Grp_Class
@@ -187,9 +149,9 @@ namespace Hom
 instance : Mon_Class H where
   one := η[H.toMon_]
   mul := μ[H.toMon_]
-  one_mul' := Mon_Class.one_mul H.toMon_
-  mul_one' := Mon_Class.mul_one H.toMon_
-  mul_assoc' := Mon_Class.mul_assoc H.toMon_
+  one_mul := Mon_Class.one_mul H.toMon_
+  mul_one := Mon_Class.mul_one H.toMon_
+  mul_assoc := Mon_Class.mul_assoc H.toMon_
 
 @[simp] lemma hom_one : (1 : G ⟶ H).hom = 1 := rfl
 

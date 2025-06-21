@@ -47,7 +47,7 @@ class ToricVariety (𝕜 : Type u) [Field 𝕜] (X : Scheme.{u}) extends X.Over 
   [isDominant_torusEmb : IsDominant torusEmb]
   /-- The torus action extends the torus multiplication. -/
   torusMul_comp_torusEmb :
-    (𝟙 (torus.asOver Spec(𝕜)) ⊗ torusEmb.asOver Spec(𝕜)) ≫ γ = μ ≫ torusEmb.asOver Spec(𝕜) := by
+    (𝟙 (torus.asOver Spec(𝕜)) ⊗ₘ torusEmb.asOver Spec(𝕜)) ≫ γ = μ ≫ torusEmb.asOver Spec(𝕜) := by
       aesop_cat
 
 namespace ToricVariety

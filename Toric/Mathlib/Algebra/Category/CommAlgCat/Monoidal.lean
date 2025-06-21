@@ -122,7 +122,7 @@ variable {A B C D : (CommAlgCat.{u} R)ᵒᵖ}
     (β_ A B).inv.unop.hom = (Algebra.TensorProduct.comm R A.unop B.unop).toAlgHom := rfl
 
 @[simp] lemma tensorHom_unop_hom (f : A ⟶ C) (g : B ⟶ D) :
-    (f ⊗ g).unop.hom = Algebra.TensorProduct.map f.unop.hom g.unop.hom := rfl
+    (f ⊗ₘ g).unop.hom = Algebra.TensorProduct.map f.unop.hom g.unop.hom := rfl
 
 @[simp] lemma toUnit_unop_hom (A : (CommAlgCat R)ᵒᵖ) :
     (toUnit A).unop.hom = Algebra.ofId R A.unop := rfl
