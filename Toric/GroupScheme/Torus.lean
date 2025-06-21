@@ -147,6 +147,13 @@ notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 --     congr 1
 
 
+variable (G S : Scheme.{u}) [G.Over S] [Grp_Class (G.asOver S)] in
+/-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
+lemma exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType [G.IsSplitTorusOver S] :
+    ∃ (σ : Type u) (e : G ≅ SplitTorus S σ) (_ : e.hom.IsOver S),
+      IsMon_Hom (e.hom.asOver S) := by
+  sorry
+
 variable {R : CommRingCat} {σ : Type*}
 
 variable (R σ) in
