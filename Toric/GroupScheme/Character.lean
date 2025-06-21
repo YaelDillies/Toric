@@ -42,30 +42,30 @@ abbrev Cochar := HomGrp 𝔾ₘ[S] G S
 
 variable (S) in
 /-- Characters of isomorphic group schemes are isomorphic. -/
-def charCongr (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : X(S, G) ≃+ X(S, H) := by
-  have : e.inv.IsOver S := sorry
-  have : IsMon_Hom <| e.inv.asOver S := sorry
-  exact {
-    toFun := .comp <| .ofMul <| .mk <| e.inv.asOver S
-    invFun := .comp <| .ofMul <| .mk <| e.hom.asOver S
-    left_inv _ := by ext; simp [HomGrp.comp, HomGrp.hom]
-    right_inv _ := by ext; simp [HomGrp.comp, HomGrp.hom]
-    map_add' _ _ := by ext; simp [HomGrp.comp, HomGrp.hom]; sorry
-  }
+def charCongr (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : X(S, G) ≃+ X(S, H) :=
+  HomGrp.congr e (.refl _)
+
+@[simp]
+lemma charCongr_symm (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] :
+  (charCongr S e).symm = charCongr S e.symm := rfl
 
 variable (S) in
 /-- Cocharacters of isomorphic commutative group schemes are isomorphic. -/
 def cocharCongr [IsCommMon <| G.asOver S] [IsCommMon <| H.asOver S]
-    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : X*(S, G) ≃+ X*(S, H) := by
-  have : e.inv.IsOver S := sorry
-  have : IsMon_Hom <| e.inv.asOver S := sorry
-  exact {
-    toFun χ := χ.comp (.ofMul <| .mk <| e.hom.asOver S)
-    invFun χ := χ.comp (.ofMul <| .mk <| e.inv.asOver S)
-    left_inv _ := by ext; simp [HomGrp.comp, HomGrp.hom]
-    right_inv _ := by ext; simp [HomGrp.comp, HomGrp.hom]
-    map_add' _ _ := by ext; simp [HomGrp.comp, HomGrp.hom]; sorry
-  }
+    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : X*(S, G) ≃+ X*(S, H) :=
+  HomGrp.congr (.refl _) e
+
+@[simp]
+lemma cocharCongr_symm (e : G ≅ H) [IsCommMon <| G.asOver S] [IsCommMon <| H.asOver S]
+    [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] :
+  (cocharCongr S e).symm = cocharCongr S e.symm := rfl
+
+@[simp]
+lemma cocharCongr_comp_charCongr [IsCommMon <| G.asOver S] [IsCommMon <| H.asOver S]
+    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] (a b) :
+    (cocharCongr S e a).comp (charCongr S e b) = a.comp b := by
+  ext
+  simp [charCongr, cocharCongr, HomGrp.congr]
 
 end Grp_Class
 
@@ -160,24 +160,23 @@ noncomputable def charPairing : X*(Spec R, G) →ₗ[ℤ] X(Spec R, G) →ₗ[�
   map_smul' _ _ := by ext; simp only [map_zsmul, AddMonoidHom.coe_smul, Pi.smul_apply, smul_eq_mul,
     LinearMap.coe_mk, AddHom.coe_mk, eq_intCast, Int.cast_eq, LinearMap.smul_apply]
 
+set_option maxHeartbeats 0 in
 instance isPerfPair_charPairing [T.IsSplitTorusOver Spec(R)] [LocallyOfFiniteType (T ↘ Spec(R))] :
     (charPairing R T).IsPerfPair := by
-  obtain ⟨ι, _, e, _, _⟩ := exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType T Spec(R)
-  refine .congr .id
-    ((cocharCongr _ e).trans <| cocharDiag ..).toIntLinearEquiv
-    ((charCongr _ e).trans <| charDiag ..).toIntLinearEquiv _ ?_
+  obtain ⟨σ, _, e, _, _⟩ := exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType T Spec(R)
+  refine .congr (.id (R := ℤ) (M := Module.Dual ℤ (σ →₀ ℤ)))
+    ((cocharCongr _ e).trans ((cocharDiag (.of R) ℤ[σ]).trans
+      (addMonoidHomLequivInt ℤ).toAddEquiv)).toIntLinearEquiv
+    ((charCongr _ e).trans <| charDiag (.of R) ℤ[σ]).toIntLinearEquiv _ ?_
   ext f x
   apply (charTorusUnit (R := R)).symm.injective
-  stop
   apply Additive.ofMul.symm.injective
-  dsimp [charDiag_symm_apply, charPairing, charTorusUnit, charTorus, cocharTorus,
-    cocharDiag_symm_apply]
-  simp only [Char, AddEquiv.symm_apply_apply, diagHomGrp_comp, charDiag_diagHomGrp]
-  simp only [PUnit.zero_eq, AddMonoidHom.coe_comp, AddMonoidHom.coe_coe, Function.comp_apply,
-    FreeAbelianGroup.lift.of, EmbeddingLike.apply_eq_iff_eq, Finsupp.toFreeAbelianGroup_single]
-  congr! 4 with x
-  erw [Finsupp.toFreeAbelianGroup_single]
-  simp
+  dsimp [charDiag_symm_apply, charPairing, charTorusUnit, charTorus,
+    cocharDiag_symm_apply, AddMonoidAlgebra]
+  simp only [Char, cocharCongr_comp_charCongr, diagHomGrp_comp, charDiag_diagHomGrp, PUnit.zero_eq,
+    AddMonoidHom.coe_comp, AddMonoidHom.coe_coe, Function.comp_apply, FreeAbelianGroup.lift.of,
+    AddEquiv.symm_apply_apply, EmbeddingLike.apply_eq_iff_eq]
+  rfl
 
 end CommGrp_Class
 end IsDomain

@@ -233,8 +233,9 @@ instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Faithful 
 
 section
 
-variable {G G' G'' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S]
+variable {G G' G'' H H' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S] [H.Over S] [H'.Over S]
   [Grp_Class (G.asOver S)] [Grp_Class (G'.asOver S)] [Grp_Class (G''.asOver S)]
+  [Grp_Class (H.asOver S)] [Grp_Class (H'.asOver S)]
 
 variable (G G' S) in
 def HomGrp : Type u := Additive (Grp_.mk (G.asOver S) ⟶ .mk (G'.asOver S))
@@ -247,12 +248,20 @@ def HomGrp.ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] : HomGrp G
 
 def HomGrp.hom (f : HomGrp G G' S) : G ⟶ G' := f.toMul.hom.left
 
+@[simp]
+lemma HomGrp.hom_ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] :
+  hom (ofHom (S := S) f) = f := rfl
+
 @[ext]
 lemma HomGrp.toHom_injective : Function.Injective (HomGrp.hom (G := G) (G' := G') (S := S)) := by
   intros _ _ H; delta HomGrp; ext; exact H
 
 def HomGrp.comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) : HomGrp G G'' S :=
   .ofMul (f.toMul ≫ g.toMul)
+
+@[simp]
+lemma HomGrp.hom_comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) :
+    (f.comp g).hom = f.hom ≫ g.hom := rfl
 
 lemma HomGrp.comp_add [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
     (f f' : HomGrp G G' S) (g : HomGrp G' G'' S) :
@@ -281,6 +290,37 @@ lemma HomGrp.add_comp [IsCommMon (G''.asOver S)]
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
   exact Mon_Class.comp_mul _ _ _
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] : e.inv.IsOver S where
+  comp_over := by rw [Iso.inv_comp_eq, comp_over]
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] [Mon_Class (X.asOver S)] [Mon_Class (Y.asOver S)]
+    (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] : IsMon_Hom (e.inv.asOver S) := by
+  let e' : X.asOver S ≅ Y.asOver S := Over.isoMk e (by simp)
+  have : IsMon_Hom e'.hom := ‹_›
+  exact inferInstanceAs (IsMon_Hom e'.inv)
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] :
+    e.symm.hom.IsOver S where
+
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] [Mon_Class (X.asOver S)] [Mon_Class (Y.asOver S)]
+    (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] :
+  IsMon_Hom (e.symm.hom.asOver S) where
+
+instance {X S : Scheme.{u}} [X.Over S] : (Iso.refl X).hom.IsOver S where
+
+instance {X S : Scheme.{u}} [X.Over S] [Mon_Class (X.asOver S)] :
+    IsMon_Hom ((Iso.refl X).hom.asOver S) where
+
+def HomGrp.congr (e₁ : G ≅ G') (e₂ : H ≅ H') [IsCommMon (H.asOver S)] [IsCommMon (H'.asOver S)]
+    [e₁.hom.IsOver S] [IsMon_Hom (e₁.hom.asOver S)]
+    [e₂.hom.IsOver S] [IsMon_Hom (e₂.hom.asOver S)] :
+    HomGrp G H S ≃+ HomGrp G' H' S where
+  toFun f := .comp (.comp (.ofHom e₁.inv) f) (.ofHom e₂.hom)
+  invFun f := .comp (.comp (.ofHom e₁.hom) f) (.ofHom e₂.inv)
+  left_inv f := by ext; simp
+  right_inv f := by ext; simp
+  map_add' f g := by simp [add_comp, comp_add]
 
 end
 
