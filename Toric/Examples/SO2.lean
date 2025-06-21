@@ -373,12 +373,16 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
     sorry
   sorry
 
-theorem _root_.name1
-  {R S T : Type u} [inst : CommRing R] [inst_1 : CommRing S] [inst_2 : CommRing T] [inst_3 : Algebra R S]
-  [inst_4 : Bialgebra R T] :
-  (algebraMap R S).comp (RingHomClass.toRingHom (Bialgebra.counitAlgHom R T)) =
-    (RingHomClass.toRingHom (Bialgebra.counitAlgHom S (S ⊗[R] T))).comp
-    (RingHomClass.toRingHom Algebra.TensorProduct.includeRight) := sorry
+-- TODO : maybe refactor counitAlgHom/comulAlgHom to take in 3 arguments, if you care
+@[simp]
+theorem _root_.Bialgebra.counitAlgHom_comp_includeRight
+  {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
+    ((Bialgebra.counitAlgHom S (S ⊗[R] T)).restrictScalars R).comp
+    Algebra.TensorProduct.includeRight =
+    (Algebra.ofId R S).comp (Bialgebra.counitAlgHom R T)
+     := by
+  ext
+  simp [Algebra.ofId_apply, Algebra.algebraMap_eq_smul_one]
 
 instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
     IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
@@ -389,7 +393,7 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
       pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
       ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
     congr 2
-    exact name1
+    exact congr(RingHomClass.toRingHom $(Bialgebra.counitAlgHom_comp_includeRight)).symm
   mul_hom := by
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
