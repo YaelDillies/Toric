@@ -73,3 +73,13 @@ lemma Algebra.TensorProduct.mapRingHom_comp_includeRight :
   ext; simp
 
 end hetero
+
+namespace Algebra.TensorProduct
+
+variable {R A B : Type*} [CommSemiring R] [Semiring A] [CommSemiring B] [Algebra R A] [Algebra R B]
+
+lemma algebraMap_eq_includeRight :
+  letI := rightAlgebra (R := R) (A := A) (B := B)
+  algebraMap B (TensorProduct R A B) = includeRight (R := R) (A := A) (B := B) := rfl
+
+end Algebra.TensorProduct
