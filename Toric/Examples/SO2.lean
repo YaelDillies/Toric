@@ -12,6 +12,7 @@ import Toric.Mathlib.AlgebraicGeometry.Over
 import Toric.Mathlib.Data.Finsupp.Single
 import Toric.Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.Mathlib.RingTheory.AdjoinRoot
+import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 
 noncomputable section
 
@@ -106,6 +107,9 @@ instance : HopfAlgebra R (SO2Ring R) := by
   · simp
     ring_nf
 
+@[simp] lemma antipode_X : antipode R X = X (R := R) := antipodeAlgHom_X
+@[simp] lemma antipode_Y : antipode R SO2Ring.Y = - .Y (R := R) := antipodeAlgHom_Y
+
 private lemma foo : (SO2Ring.X (R := ℂ)) ^ 2 - (Complex.I • SO2Ring.Y) ^ 2 = 1 := calc
   _ = .X ^ 2 - (Complex.I • .Y) * (Complex.I • .Y) := by ring
   _ = .X ^ 2 - (Complex.I) ^ 2 • .Y ^ 2 := by
@@ -114,22 +118,16 @@ private lemma foo : (SO2Ring.X (R := ℂ)) ^ 2 - (Complex.I • SO2Ring.Y) ^ 2 =
   _ = _ := by simp
 
 @[simps!]
-def T : (SO2Ring ℂ)ˣ :=
-  .mkOfMulEqOne (.X + Complex.I • .Y) (.X - Complex.I • .Y) (by ring_nf; simp [foo])
+def T : GroupLike ℂ (SO2Ring ℂ) where
+  val := .X + Complex.I • .Y
+  isGroupLikeElem_val := ⟨by simp, by
+    simp [sub_tmul, tmul_sub, tmul_add, add_tmul, ← smul_tmul', smul_smul]
+    ring_nf⟩
 
 private def complexEquivFun : MonoidAlgebra ℂ (Multiplicative ℤ) →ₐc[ℂ] SO2Ring ℂ := by
   refine (MonoidAlgebra.liftGroupLikeBialgHom _ _).comp <|
     MonoidAlgebra.mapDomainBialgHom ℂ (M := Multiplicative ℤ) <| AddMonoidHom.toMultiplicative''  <|
-     zmultiplesHom _ <| .ofMul ⟨T, isUnit_of_mul_eq_one _ (mk .X - Complex.I • mk Y) ?_, ?_⟩
-  · simp
-    ring_nf
-    exact foo
-  · simp [sub_tmul, tmul_sub, tmul_add, add_tmul]
-    ring_nf
-    simp only [← smul_tmul']
-    rw [smul_smul]
-    simp
-    ring
+     zmultiplesHom _ <| .ofMul T
 
 private lemma complexEquivFun_single (a : Multiplicative ℤ) (b : ℂ) :
     complexEquivFun (.single a b) = b • (T ^ a.toAdd).1 := by
@@ -391,11 +389,16 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
   one_hom := by
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
-    ext <;> simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+    ext
+    · simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
       pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
       ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
-    congr 2
-    exact congr(RingHomClass.toRingHom $(Bialgebra.counitAlgHom_comp_includeRight)).symm
+    · simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+        pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+        ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom,
+        ← AlgHom.coe_restrictScalars R (Bialgebra.counitAlgHom S _), - AlgHom.coe_restrictScalars,
+        ← AlgHom.comp_toRingHom, Bialgebra.counitAlgHom_comp_includeRight]
+      rfl
   mul_hom := by
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
