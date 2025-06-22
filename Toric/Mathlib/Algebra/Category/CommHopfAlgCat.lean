@@ -179,11 +179,11 @@ attribute [local ext] Quiver.Hom.unop_inj
 instance CommAlgCat.grp_ClassOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
     Grp_Class (Opposite.op <| CommAlgCat.of R A) where
   inv := (CommAlgCat.ofHom <| antipodeAlgHom R A).op
-  left_inv' := by
+  left_inv := by
     ext x
     simpa [← Algebra.TensorProduct.lmul'_comp_map, -mul_antipode_rTensor_comul_apply] using
       mul_antipode_rTensor_comul_apply (R := R) x
-  right_inv' := by
+  right_inv := by
     ext x
     simpa [← Algebra.TensorProduct.lmul'_comp_map, -mul_antipode_lTensor_comul_apply] using
       mul_antipode_lTensor_comul_apply (R := R) x
@@ -196,8 +196,8 @@ lemma CommAlgCat.inv_op_of_unop_hom {A : Type u} [CommRing A] [HopfAlgebra R A] 
 
 instance (A : (CommAlgCat R)ᵒᵖ) [Grp_Class A] : HopfAlgebra R A.unop :=
   .ofAlgHom ι[A].unop.hom
-    congr($(Grp_Class.left_inv' (X := A)).unop.hom)
-    congr($(Grp_Class.right_inv' (X := A)).unop.hom)
+    congr($(Grp_Class.left_inv (X := A)).unop.hom)
+    congr($(Grp_Class.right_inv (X := A)).unop.hom)
 
 variable (R) in
 /-- Commutative Hopf algebras over a commutative ring `R` are the same thing as cogroup

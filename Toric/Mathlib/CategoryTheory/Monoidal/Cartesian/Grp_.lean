@@ -54,19 +54,19 @@ variable [BraidedCategory C]
 
 instance : Grp_Class (𝟙_ C) where
   inv := 𝟙 _
-  left_inv' := toUnit_unique _ _
-  right_inv' := toUnit_unique _ _
+  left_inv := toUnit_unique _ _
+  right_inv := toUnit_unique _ _
 
 namespace tensorObj
 
 @[simps inv]
 instance {G H : C} [Grp_Class G] [Grp_Class H] : Grp_Class (G ⊗ H) where
   inv := ι ⊗ₘ ι
-  left_inv' := by
+  left_inv := by
     have H : ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) * 𝟙 (G ⊗ H) = 1 := by
       simp only [← tensor_id, ← mul_tensorHom_mul, inv_mul_cancel, one_tensorHom_one]
     simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
-  right_inv' := by
+  right_inv := by
     have H : 𝟙 (G ⊗ H) * ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) = 1 := by
       simp only [← tensor_id, ← mul_tensorHom_mul, mul_inv_cancel, one_tensorHom_one]
     simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
@@ -212,15 +212,15 @@ protected noncomputable def FullyFaithful.mapGrp (hF : F.FullyFaithful) :
 def _root_.Grp_Class.ofIso {X Y : C} (e : X ≅ Y) [Grp_Class X] : Grp_Class Y where
   __ := Mon_Class.ofIso e
   inv := e.inv ≫ ι[X] ≫ e.hom
-  left_inv' := by simp [Mon_Class.ofIso]
-  right_inv' := by simp [Mon_Class.ofIso]
+  left_inv := by simp [Mon_Class.ofIso]
+  right_inv := by simp [Mon_Class.ofIso]
 
 def FullyFaithful.grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
   __ := hF.mon_Class X
   inv := hF.preimage ι[F.obj X]
-  left_inv' := hF.map_injective
+  left_inv := hF.map_injective
     (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
-  right_inv' := hF.map_injective
+  right_inv := hF.map_injective
     (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
 
 open EssImageSubcategory Monoidal in
