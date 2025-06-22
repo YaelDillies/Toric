@@ -15,12 +15,27 @@ import Toric.Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 
+namespace MonoidHom
+variable {G M : Type*} [Group G] [CommMonoid M]
+
+@[simp] lemma toHomUnits_mul (f g : G →* M) : (f * g).toHomUnits = f.toHomUnits * g.toHomUnits := by
+  ext; rfl
+
+/-- `MonoidHom.toHomUnits` as a `MulEquiv`. -/
+def toHomUnitsMulEquiv : (G →* M) ≃* (G →* Mˣ) where
+  toFun := toHomUnits
+  invFun f := (Units.coeHom _).comp f
+  map_mul' := by simp
+
+end MonoidHom
+
 noncomputable section
 
 local notation3:max R "[X][Y]" => Polynomial (Polynomial R)
 local notation3:max "Y" => Polynomial.C (Polynomial.X)
 
 open Coalgebra Polynomial TensorProduct
+open scoped Mon_Class
 
 variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 
@@ -177,15 +192,17 @@ def complexEquiv : MonoidAlgebra ℂ (Multiplicative ℤ) ≃ₐc[ℂ] SO2Ring �
     .comp complexEquiv (algebraMap ℂ <| MonoidAlgebra ℂ <| Multiplicative ℤ) =
       algebraMap ℂ (SO2Ring ℂ) := by ext; simp [Algebra.algebraMap_eq_smul_one]
 
-def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* Matrix.specialOrthogonalGroup (Fin 2) S where
+open Matrix
+
+def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* specialOrthogonalGroup (Fin 2) S where
   toFun f := ⟨!![f .X, f .Y; - f .Y, f .X], by
-    simp [← map_mul, ← map_add, Matrix.mem_specialOrthogonalGroup_fin_two_iff, pow_two]⟩
+    simp [← map_mul, ← map_add, mem_specialOrthogonalGroup_fin_two_iff, pow_two]⟩
   invFun M := SO2Ring.liftₐ (M.1 0 0) (M.1 0 1)
-    (Matrix.mem_specialOrthogonalGroup_fin_two_iff.mp M.2).2.2
+    (mem_specialOrthogonalGroup_fin_two_iff.mp M.2).2.2
   left_inv f := by ext <;> simp
   right_inv M := by ext i j; fin_cases i, j <;>
-    simp [(Matrix.mem_specialOrthogonalGroup_fin_two_iff.mp M.2).2.1,
-      (Matrix.mem_specialOrthogonalGroup_fin_two_iff.mp M.2).1]
+    simp [(mem_specialOrthogonalGroup_fin_two_iff.mp M.2).2.1,
+      (mem_specialOrthogonalGroup_fin_two_iff.mp M.2).1]
   map_mul' f g := by
     ext i j
     fin_cases i, j
@@ -281,10 +298,6 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
     rfl
 
-lemma _root_.Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom
-    {R S T : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T] :
-    algebraMap S (S ⊗[R] T) = Algebra.TensorProduct.includeLeftRingHom := rfl
-
 universe u
 
 @[reassoc (attr := simp)]
@@ -293,15 +306,14 @@ lemma pullbackSpecIso_hom_base (R S T : Type u) [CommRing R] [CommRing S] [CommR
     (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R _)) =
       pullback.fst _ _ ≫ Spec.map (CommRingCat.ofHom (algebraMap _ _)) := by
   simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-    ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom, ← IsScalarTower.algebraMap_eq]
+    ← Algebra.TensorProduct.algebraMap_def, ← IsScalarTower.algebraMap_eq]
 
 @[reassoc (attr := simp)]
 lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
     [Algebra R T] :
     (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap S _)) =
       pullback.fst _ _ := by
-  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst,
-    ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
 
 @[reassoc (attr := simp)]
 lemma pullbackSpecIso_inv_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
@@ -316,16 +328,7 @@ lemma pullbackSpecIso_hom_snd' (R S T : Type u) [CommRing R] [CommRing S] [CommR
     (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom
       (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T) : _ →+* _)) =
       pullback.snd _ _ := by
-  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst,
-    ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
-
-attribute [local instance] Over.cartesianMonoidalCategory  in
-open MonoidalCategory in
-@[reassoc (attr := simp)]
-lemma Over.tensorHom_left_fst' {C : Type*} [Category C] [HasPullbacks C]
-    {X S U : C} {fS : S ⟶ X} {fU : U ⟶ X} {R T : Over X} (f : R ⟶ .mk fS) (g : T ⟶ .mk fU) :
-    (tensorHom f g).left ≫ pullback.fst fS fU = pullback.fst _ _ ≫ f.left :=
-  limit.lift_π _ _
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
 
 lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommRing T]
     [Algebra R S] [Bialgebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom =
@@ -341,8 +344,6 @@ lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommR
       Algebra.TensorProduct.includeLeftRingHom := rfl
   simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
 
-example {C : Type*} [Category C] {A B : C} {f : A ⟶ B} : f ≫ (𝟙 _) = f := Category.comp_id f
---- (f a).1 = f a.1
 lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
       (Functor.LaxMonoidal.μ (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap R S))))
         (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))
@@ -374,17 +375,6 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
     simp [pullbackSpecIso']
     rfl
 
--- TODO : maybe refactor counitAlgHom/comulAlgHom to take in 3 arguments, if you care
-@[simp]
-theorem _root_.Bialgebra.counitAlgHom_comp_includeRight
-  {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
-    ((Bialgebra.counitAlgHom S (S ⊗[R] T)).restrictScalars R).comp
-    Algebra.TensorProduct.includeRight =
-    (Algebra.ofId R S).comp (Bialgebra.counitAlgHom R T)
-     := by
-  ext
-  simp [Algebra.ofId_apply, Algebra.algebraMap_eq_smul_one]
-
 theorem name1
   {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
     (RingHomClass.toRingHom (Bialgebra.comulAlgHom S (S ⊗[R] T))).comp
@@ -406,10 +396,10 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     ext
     · simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
       pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom]
+      ← Algebra.TensorProduct.algebraMap_def]
     · simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
         pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-        ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom,
+        ← Algebra.TensorProduct.algebraMap_def,
         ← AlgHom.coe_restrictScalars R (Bialgebra.counitAlgHom S _), - AlgHom.coe_restrictScalars,
         ← AlgHom.comp_toRingHom, Bialgebra.counitAlgHom_comp_includeRight]
       rfl
@@ -419,7 +409,7 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     ext
     · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
         ← CommRingCat.ofHom_comp, asOver, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
-        ← Algebra.TensorProduct.algebraMap_eq_includeLeftRingHom, Hom.asOver, OverClass.asOverHom,
+        ← Algebra.TensorProduct.algebraMap_def, Hom.asOver, OverClass.asOverHom,
         pullback.condition]
       rfl
     · convert congr($(foo R S T) ≫
@@ -429,7 +419,6 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
           Hom.asOver, OverClass.asOverHom, mul_left, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
           name1]
-
 
 -- generalize this
 instance : (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.IsOver Spec(ℂ) where
@@ -453,127 +442,69 @@ instance pullback_SO₂_real_isSplitTorusOver_complex :
     (pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ))).IsSplitTorusOver Spec(ℂ) :=
   .of_iso pullbackSO₂RealComplex
 
+/-- `SO(2)` is a split torus over the reals. -/
 instance : Spec(SO2Ring ℝ).IsTorusOver ℝ where
   existsSplit :=
     ⟨ℂ, inferInstance, inferInstance, inferInstance, pullback_SO₂_real_isSplitTorusOver_complex⟩
 
-instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
-    [Algebra R T] (f : S →ₐ[R] T) : (Spec.map (CommRingCat.ofHom f.toRingHom)).IsOver Spec(R) where
-  comp_over := by
-    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
-
-def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialgebra R S]
-    [Algebra R T] :
-    (S →ₐ[R] T) ≃* (Spec(T).asOver Spec(R) ⟶ Spec(S).asOver Spec(R)) where
-  toFun f := (Spec.map (CommRingCat.ofHom f.toRingHom)).asOver _
-  invFun f := ⟨(Spec.preimage f.left).hom, by
-    suffices CommRingCat.ofHom (algebraMap R S) ≫ Spec.preimage f.left =
-      CommRingCat.ofHom (algebraMap R T) from fun r ↦ congr($this r)
-    apply Spec.map_injective
-    simpa [-comp_over] using f.w⟩
-  left_inv f := by
-    apply AlgHom.coe_ringHom_injective
-    simp
-  right_inv f := by ext1; simp
-  map_mul' f g := by
-    ext1
-    dsimp [AlgHom.mul_def, AlgHom.comp_toRingHom, Hom.mul_def]
-    simp only [← Category.assoc, Spec.map_comp, AlgebraicGeometry.Scheme.mul_left]
-    congr 1
-    rw [← Iso.comp_inv_eq]
-    ext <;> simp only [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← AlgHom.comp_toRingHom, Category.assoc, pullbackSpecIso_inv_fst, pullbackSpecIso_inv_snd,
-      limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app]
-    · congr 3
-      ext; simp
-    · congr 3
-      ext; simp
+open Matrix
 
 variable (R) in
-def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃*
-    Matrix.specialOrthogonalGroup (Fin 2) R :=
-  Spec.mulEquiv.symm.trans (algHomMulEquiv (R := R))
-
-/-- Construct an isomorphism of monoids by giving an isomorphism between the underlying objects
-and checking compatibility with unit and multiplication only in the forward direction.
--/
-@[simps]
-def Grp_.mkIso' {C : Type*} [Category C] {M N : C} (f : M ≅ N) [CartesianMonoidalCategory C]
-    [Grp_Class M] [Grp_Class N] [IsMon_Hom f.hom] : (Grp_.mk M) ≅ (Grp_.mk N) where
-  hom := .mk f.hom
-  inv := .mk f.inv
-
-@[simps!]
-def _root_.CategoryTheory.Iso.asOver
-    {C : Type*} [Category C] {A B : C} (S : C) [OverClass A S] [OverClass B S]
-    (e : A ≅ B) [HomIsOver e.hom S] : (OverClass.asOver A S) ≅ (OverClass.asOver B S) :=
-  Over.isoMk e (by simp)
+def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* specialOrthogonalGroup (Fin 2) R :=
+  Spec.mulEquiv.symm.trans algHomMulEquiv
 
 def SplitTorus.mulEquiv (R : CommRingCat.{u}) (σ : Type u) :
     (σ → Rˣ) ≃* ((Spec R).asOver (Spec R) ⟶ (SplitTorus (Spec R) σ).asOver (Spec R)) := by
   refine (MvLaurentPolynomial.liftEquiv (R := R) ..).trans ?_
   refine Spec.mulEquiv.trans ?_
+  dsimp
   haveI : IsMon_Hom (Iso.asOver (Spec R) (splitTorusIso R σ)).hom := by
     change IsMon_Hom ((splitTorusIso R σ).hom.asOver _)
     infer_instance
   exact ((yonedaGrp.mapIso (Grp_.mkIso' ((Scheme.splitTorusIso R σ).asOver (Spec R)))).app
     (.op ((Spec R).asOver (Spec R)))).groupIsoToMulEquiv.symm
 
-def I : Matrix.specialOrthogonalGroup (Fin 2) ℝ :=
-  ⟨!![0, 1; -1, 0], by simp [Matrix.mem_specialOrthogonalGroup_fin_two_iff]⟩
+def I : specialOrthogonalGroup (Fin 2) ℝ :=
+  ⟨!![0, 1; -1, 0], by simp [mem_specialOrthogonalGroup_fin_two_iff]⟩
 
 lemma I_sq_ne_1 : I ^ 2 ≠ 1 := by
   intro h
   have := congr_fun₂ congr(($h).val) 0 0
   norm_num [I, pow_two] at this
 
-@[simp]
-lemma I_ord_4' : I ^ 4 = 1 := by
-  simp [I, pow_succ, Matrix.one_fin_two]
+@[simp] lemma I_ord_4' : I ^ 4 = 1 := by simp [I, pow_succ, one_fin_two]
 
-private lemma aux1 {x : ℝ} : x ^ 4 = 1 -> x ^ 2 = 1 := by
-  intro h
-  have : x ^ 4 = (x ^ 2) ^ 2 := by rw [← pow_mul]
-  rw [this] at h
-  rw [sq_eq_one_iff] at h
-  cases h with
-  | inl h => assumption
-  | inr h =>
-    have : 0 ≤ x ^ 2 := sq_nonneg x
-    linarith
+private lemma aux1 {x : ℝ} : x ^ 4 = 1 ↔ x ^ 2 = 1 := by
+  simpa [← pow_mul] using sq_eq_sq₀ (sq_nonneg x) zero_le_one
 
 private lemma aux2 {σ : Type*} {x : σ → ℝˣ} : x ^ 4 = 1 → x ^ 2 = 1 := by
-  intro h
-  ext y
-  have := congr_fun h y
-  simp only [Pi.pow_apply, Units.val_pow_eq_pow_val, Pi.one_apply, Units.val_one]
-  have := congr(($this).val)
-  simp at this
-  exact aux1 this
+  simp [aux1, funext_iff, ← Units.val_eq_one]
 
-private lemma aux3 (σ : Type*) :
-    IsEmpty <| Matrix.specialOrthogonalGroup (Fin 2) ℝ ≃* (σ → ℝˣ) := by
+private lemma aux3 (σ : Type*) : IsEmpty <| specialOrthogonalGroup (Fin 2) ℝ ≃* (σ → ℝˣ) := by
   constructor
   intro e
-  have h₁ : (e I) ^ 4 = 1 := by simp [← map_pow]
-  have h₂ : (e I) ^ 2 ≠ 1 := by
+  have h₁ : e I ^ 4 = 1 := by simp [← map_pow]
+  have h₂ : e I ^ 2 ≠ 1 := by
     rw [← map_pow, ← e.map_one, e.injective.ne_iff]
     exact I_sq_ne_1
   exact h₂ <| aux2 h₁
 
-def aux4 {C : Type*} [Category C] [CartesianMonoidalCategory C] {G H : Grp_ C} (e : G ≅ H) (X : C) :
-    (X ⟶ G.X) ≃* (X ⟶ H.X) :=
-  ((yonedaGrp.mapIso e).app (.op X)).groupIsoToMulEquiv
+instance : Algebra.FiniteType ℝ (SO2Ring ℝ) := sorry
 
-theorem SO2RealNotSplit : ¬ IsSplitTorusOver SO₂(ℝ) Spec(ℝ) := by
+open scoped AddMonoidAlgebra
+
+/-- `SO(2)` is not a split torus over the real numbers. -/
+theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(ℝ) := by
   intro
-  rcases exists_iso_diag_finite_of_isSplitTorusOver SO₂(ℝ) Spec(ℝ) with ⟨σ, e, _, _⟩
-  haveI : IsMon_Hom (Iso.asOver Spec(ℝ) e).hom := ‹_›
-  have e₁ := aux4 (Grp_.mkIso' <| e.asOver Spec(ℝ)) (Spec(ℝ).asOver Spec(ℝ))
-  simp at e₁
-  have e₂ := bar ℝ
-  have e₃ := SplitTorus.mulEquiv (.of ℝ) σ
-  have E := (e₂.symm.trans e₁).trans e₃.symm
-  exact (aux3 σ).1 E
+  obtain ⟨σ, _, e, _, _⟩ := exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType SO₂(ℝ)
+    Spec(ℝ)
+  haveI : (e ≪≫ diagSpecIso _ ℤ[σ]).hom.IsOver Spec(ℝ) := by dsimp; infer_instance
+  haveI : IsMon_Hom ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ)).hom := by dsimp; infer_instance
+  have e₁ := Mon_Class.homMulEquivRight ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ))
+    (Spec(ℝ).asOver Spec(ℝ))
+  refine (aux3 σ).1 <| (bar ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
+    (MonoidAlgebra.liftMulEquiv ..).symm.trans <| MonoidHom.toHomUnitsMulEquiv.trans <|
+      MonoidHom.toAdditive''MulEquiv.trans <| Finsupp.liftAddHom.symm.toMultiplicative.trans ?_
+  sorry
 
 end AlgebraicGeometry.SO₂

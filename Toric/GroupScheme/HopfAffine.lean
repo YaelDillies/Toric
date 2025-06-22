@@ -3,6 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yan
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
@@ -166,6 +167,11 @@ suppress_compilation
 instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
   hom := Spec.map <| CommRingCat.ofHom <| algebraMap ..
 
+instance locallyOfFiniteType_specOverSpec [Algebra R A] [Algebra.FiniteType R A] :
+    LocallyOfFiniteType (Spec A ↘ Spec R) := by
+  rw [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
+  simpa [algebraMap_finiteType_iff_algebra_finiteType]
+
 attribute [local simp] AlgHom.toUnder in
 @[simps! one]
 instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
@@ -225,6 +231,37 @@ instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class ((Spec A).asOver (Sp
 
 instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
    CommGrp_Class ((Spec A).asOver (Spec R)) where
+
+instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
+    (f : S →ₐ[R] T) : (Spec.map (CommRingCat.ofHom f.toRingHom)).IsOver Spec(R) where
+  comp_over := by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
+
+def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialgebra R S]
+    [Algebra R T] :
+    (S →ₐ[R] T) ≃* (Spec(T).asOver Spec(R) ⟶ Spec(S).asOver Spec(R)) where
+  toFun f := (Spec.map (CommRingCat.ofHom f.toRingHom)).asOver _
+  invFun f := ⟨(Spec.preimage f.left).hom, by
+    suffices CommRingCat.ofHom (algebraMap R S) ≫ Spec.preimage f.left =
+      CommRingCat.ofHom (algebraMap R T) from fun r ↦ congr($this r)
+    apply Spec.map_injective
+    simpa [-comp_over] using f.w⟩
+  left_inv f := by
+    apply AlgHom.coe_ringHom_injective
+    simp
+  right_inv f := by ext1; simp
+  map_mul' f g := by
+    ext1
+    dsimp [AlgHom.mul_def, AlgHom.comp_toRingHom, Hom.mul_def]
+    simp only [← Category.assoc, Spec.map_comp, AlgebraicGeometry.Scheme.mul_left]
+    congr 1
+    rw [← Iso.comp_inv_eq]
+    ext <;> simp only [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+      ← AlgHom.comp_toRingHom, Category.assoc, pullbackSpecIso_inv_fst, pullbackSpecIso_inv_snd,
+      limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app]
+    · congr 3
+      ext; simp
+    · congr 3
+      ext; simp
 
 /-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
 prove that. -/
