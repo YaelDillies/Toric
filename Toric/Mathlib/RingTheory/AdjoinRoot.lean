@@ -1,4 +1,5 @@
 import Mathlib.RingTheory.AdjoinRoot
+import Toric.Mathlib.RingTheory.FiniteType
 import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 open TensorProduct
@@ -24,8 +25,10 @@ lemma _root_.bullshit4 {A B : Type*} [CommSemiring A] [Semiring B] [Algebra A B]
   AlgEquiv.refl (R := A) (A₁ := B) = RingHom.id B := rfl
 
 variable {R S T U : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
-    [CommRing U] [Algebra R U]
-variable {p : Polynomial S}
+  [CommRing U] [Algebra R U] {p : Polynomial S}
+
+instance [Algebra.FiniteType R S] : Algebra.FiniteType R (AdjoinRoot p) := by
+  unfold AdjoinRoot; infer_instance
 
 section
 variable {q : Polynomial T} {u : Polynomial U}
@@ -132,7 +135,7 @@ end
 
 open Algebra TensorProduct
 
--- TODO : get rid of rfl
+-- TODO: get rid of rfl
 variable (p) in
 def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
     (h : p.map includeRight.toRingHom = q) :
@@ -140,8 +143,7 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
   refine .ofAlgHom (Algebra.TensorProduct.lift (algHom T T _) (mapAlgHom _ _ includeRight h) ?_)
       (liftAlgHom (Algebra.TensorProduct.map (AlgHom.id T T)
       (((Algebra.ofId S (AdjoinRoot p))).restrictScalars R)) (1 ⊗ₜ (root _)) ?_) ?_ ?_
-  · intro t y
-    exact .all ..
+  · exact fun _ _ ↦ .all ..
   · simp [← h]
     rw [Polynomial.eval₂_map]
     change Polynomial.eval₂ ((Algebra.TensorProduct.map (AlgHom.id R T) _).comp _).toRingHom _ _ = _
@@ -155,15 +157,12 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
         Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
       rfl
     simp
-  · apply Algebra.TensorProduct.ext
+  · ext : 1
     · ext
-    apply algHom_ext'
-    · ext
+    ext : 2 <;>
       simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq',
-      Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
-      rfl
-    simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq',
-      Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
+        Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
+    rfl
 
 variable (p) in
 @[simp]
@@ -178,5 +177,3 @@ lemma tensorAlgEquiv_of (q : Polynomial (T ⊗[R] S)) (h : p.map includeRight.to
 
 end
 end AdjoinRoot
-
-end

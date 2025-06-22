@@ -453,17 +453,6 @@ variable (R) in
 def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* specialOrthogonalGroup (Fin 2) R :=
   Spec.mulEquiv.symm.trans algHomMulEquiv
 
-def SplitTorus.mulEquiv (R : CommRingCat.{u}) (σ : Type u) :
-    (σ → Rˣ) ≃* ((Spec R).asOver (Spec R) ⟶ (SplitTorus (Spec R) σ).asOver (Spec R)) := by
-  refine (MvLaurentPolynomial.liftEquiv (R := R) ..).trans ?_
-  refine Spec.mulEquiv.trans ?_
-  dsimp
-  haveI : IsMon_Hom (Iso.asOver (Spec R) (splitTorusIso R σ)).hom := by
-    change IsMon_Hom ((splitTorusIso R σ).hom.asOver _)
-    infer_instance
-  exact ((yonedaGrp.mapIso (Grp_.mkIso' ((Scheme.splitTorusIso R σ).asOver (Spec R)))).app
-    (.op ((Spec R).asOver (Spec R)))).groupIsoToMulEquiv.symm
-
 def I : specialOrthogonalGroup (Fin 2) ℝ :=
   ⟨!![0, 1; -1, 0], by simp [mem_specialOrthogonalGroup_fin_two_iff]⟩
 
@@ -489,8 +478,6 @@ private lemma aux3 (σ : Type*) : IsEmpty <| specialOrthogonalGroup (Fin 2) ℝ 
     exact I_sq_ne_1
   exact h₂ <| aux2 h₁
 
-instance : Algebra.FiniteType ℝ (SO2Ring ℝ) := sorry
-
 open scoped AddMonoidAlgebra
 
 /-- `SO(2)` is not a split torus over the real numbers. -/
@@ -502,9 +489,10 @@ theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(�
   haveI : IsMon_Hom ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ)).hom := by dsimp; infer_instance
   have e₁ := Mon_Class.homMulEquivRight ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ))
     (Spec(ℝ).asOver Spec(ℝ))
-  refine (aux3 σ).1 <| (bar ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
+  have e₂ : (ℤ[σ] →+ Additive ℝˣ) ≃+ (σ → Additive ℝˣ) := Finsupp.liftAddHom.symm.trans <|
+    .piCongrRight («η» := σ) fun _ ↦ (zmultiplesAddHom <| Additive ℝˣ).symm
+  exact (aux3 σ).1 <| (bar ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
     (MonoidAlgebra.liftMulEquiv ..).symm.trans <| MonoidHom.toHomUnitsMulEquiv.trans <|
-      MonoidHom.toAdditive''MulEquiv.trans <| Finsupp.liftAddHom.symm.toMultiplicative.trans ?_
-  sorry
+      MonoidHom.toAdditive''MulEquiv.trans <| e₂.toMultiplicative.trans <| .refl _
 
 end AlgebraicGeometry.SO₂
