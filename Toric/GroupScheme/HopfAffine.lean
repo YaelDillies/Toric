@@ -73,8 +73,7 @@ instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
   inferInstanceAs <| PreservesLimits <|
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
-noncomputable instance algSpec.instBraided : (algSpec R).Braided :=
-  .ofChosenFiniteProducts _
+noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
 
 @[simp] lemma algSpec_ε_left : (LaxMonoidal.ε (algSpec R)).left = 𝟙 (Spec R) := by
   convert (LaxMonoidal.ε (algSpec R)).w
