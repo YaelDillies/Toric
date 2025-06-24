@@ -6,6 +6,7 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
+import Toric.Mathlib.AlgebraicGeometry.Over
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
@@ -195,7 +196,13 @@ instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
 /-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
 prove that. -/
 noncomputable instance [M.Over (Spec R)] [Mon_Class (M.asOver (Spec R))] [IsAffine M] :
-    Bialgebra R Γ(M, ⊤) := by sorry
+    Bialgebra R Γ(M, ⊤) := by
+  let algΓ := Over.post (X := ⟨Spec R, by simp [isAffine_Spec]⟩) AffineScheme.Γ.rightOp ⋙
+    (Over.opEquivOpUnder _).functor
+  let hopfAlgΓ := algΓ.mapGrp
+  dsimp at this
+  have := M.isoSpec.hom.asOver (Spec R)
+
 
 /-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
 prove that. -/
