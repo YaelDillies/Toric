@@ -7,6 +7,12 @@ instance (f : X ⟶ Y) [IsIso f] [HomIsOver f S] : IsIso (asOverHom S f) :=
   have : IsIso ((Over.forget S).map (asOverHom S f)) := ‹_›
   isIso_of_reflects_iso _ (Over.forget _)
 
+attribute [local simp] Iso.inv_comp_eq in
+instance {e : X ≅ Y} [HomIsOver e.hom S] : HomIsOver e.inv S where
+
+attribute [local simp ←] Iso.eq_inv_comp in
+instance {e : X ≅ Y} [HomIsOver e.inv S] : HomIsOver e.hom S where
+
 instance {f : X ⟶ Y} [IsIso f] [HomIsOver f S] : HomIsOver (asIso f).hom S := ‹_›
 instance {f : X ⟶ Y} [IsIso f] [HomIsOver f S] : HomIsOver (asIso f).inv S where
 instance {f : X ⟶ Y} [IsIso f] [HomIsOver f S] : HomIsOver (inv f) S where
