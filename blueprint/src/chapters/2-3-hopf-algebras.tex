@@ -421,13 +421,31 @@
   \[
     I = \langle h_1 - h_2 : h_1,h_2 \in H \rangle
   \]
-  be an ideal. The $I$ is a Hopf ideal.
+  be an ideal. Then $I$ is a Hopf ideal.
 \end{proposition}
 \begin{proof}
   \uses{}
   % \leanok
 
-  TODO
+  It suffices to check the conditions of a Hopf ideal on generators.
+
+  For the comultiplication condition:
+  \begin{align*}
+    \Delta(h_1-h_2) &= \Delta(h_1) - \Delta(h_2) \\
+    &= h_1 \otimes h_1 - h_2 \otimes h_2 \\
+    &= h_1 \otimes h_1 - h_1 \otimes h_2 + h_1 \otimes h_2 - h_2 \otimes h_2 \\
+    &= h_1 \otimes (h_1 - h_2) + (h_1 - h_2) \otimes h_2 \in \bar{A \otimes I} + \bar{I \otimes A}.
+  \end{align*}
+
+  For the counit condition:
+  \[
+    \varepsilon(h_1 - h_2) = \varepsilon(h_1) - \varepsilon(h_2) = 1 - 1 = 0.
+  \]
+
+  Finally, for the antipode condition:
+  \[
+    S(h_1 - h_2) = S(h_1) - S(h_2) = h_1^{-1} - h_2^{-1} \in I.
+  \]
 \end{proof}
 
 
