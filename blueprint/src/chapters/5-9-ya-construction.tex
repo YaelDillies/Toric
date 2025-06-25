@@ -1,0 +1,163 @@
+\section{Appendix: The \texorpfdstring{Y_\MCA}{YA} construction}
+
+
+The $Y_\MCA$ construction is an alternative construction to the one
+we use in Section \ref{sec:aff-tor-var}.
+Morally, the difference is that $Y_\MCA$ is ``extrinsic'' while our construction is ``intrinsic''.
+As a result, our construction is canonical, while $Y_\MCA$ isn't.
+$Y_\MCA$ is still useful to study toric ideals, but we do not need it in Toric.
+
+
+\begin{definition}
+  \label{1-1-phiAprime}
+  \uses{0-char}
+  % \lean{}
+  % \leanok
+
+  Let $S$ be a scheme. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Let $f'_\MCA$ be the map
+  \begin{align*}
+    \Z^{\oplus s} & \to G \\
+    e_i & \mapsto \MCA_i.
+  \end{align*}
+  and define $\Phi'_\MCA : D_S(G) \to \G_m^s$ as the image under $D_S$ of $f'_\MCA$.
+\end{definition}
+
+
+\begin{definition}
+  \label{1-1-phiA}
+  \uses{1-1-phiAprime}
+  % \lean{}
+  % \leanok
+
+  Let $S$ be a scheme. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Let $f_\MCA$ be the map
+  \begin{align*}
+    \N^{\oplus s} & \to G \\
+    e_i & \mapsto \MCA_i.
+  \end{align*}
+  and define $\Phi_\MCA : D_S(G) \to \mathbb A^s$ as the image under $D_S$ of $f_\MCA$.
+\end{definition}
+
+
+\begin{definition}
+  \label{1-1-7-ya}
+  \uses{1-1-phiA}
+  % \lean{}
+  % \leanok
+
+  $Y_\MCA$ is the scheme theoretic closure of $\im \Phi_\MCA$ in $\mathbb A^s$.
+\end{definition}
+
+
+\begin{proposition}
+  \label{1-1-8-aff-tor-var-ya}
+  \uses{1-1-7-ya}
+  % \lean{}
+  % \leanok
+
+  Let the base be $S=\Spec k$ for a field $k$, then $Y_\MCA$ is a toric variety.
+\end{proposition}
+\begin{proof}
+  \uses{1-1-1-group-hom-torus}
+  % \leanok
+
+  {\textbf Torus: }
+  Define the torus $T'$ to be the one we get from \ref{1-1-1-group-hom-torus} with quotient map $\pi:T \to T'$.
+  {\textbf Open embedding: }
+  Since both $Y_{\MCA},T'$ are closures of $\Phi,\Phi'$ and $\G_m^n\to\mathbb{A}^n$ is an open embedding
+  we get an open embedding $\iota:T' \to Y_{\MCA}$ such that the map $\phi:T \to Y_{\MCA}$ factors as
+  $\phi = \iota \circ \pi$.
+  {\textbf Dominant: } Since $\phi$ is dominant, so is $\iota$.
+  {\textbf Action: }
+  Since $\G_m^n$ acts on $\mathbb{A}^n$, we get a morphism $a':T' \times_S Y_\MCA \to \mathbb{A}^n$.
+  As $T'\times_S Y_\MCA$ is reduced (TODO add lemma), to show that this factors through $Y_\MCA$ it suffices to check
+  that the image lies in $Y_\MCA$.
+
+  First, $T'\times_S T' \to T'\times Y_\MCA$ is dominant, since $T'$ is flat and flat base change preserves dominance (TODO add lemma).
+  Since the image of $T'\times_S T'$ is $T'$ we're done for topological reasons.
+
+  {\textbf Equivariant: } The inclusion of the torus is equivariant, since $\G_m^n \to \mathbb{A}^n$ is.
+\end{proof}
+
+
+\begin{proposition}
+  \label{1-1-8-char-ya}
+  \uses{1-1-7-ya}
+  % \lean{}
+  % \leanok
+
+  The character lattice of the torus of $Y_\MCA$ is $\Z \MCA$.
+\end{proposition}
+\begin{proof}
+  \uses{0-char-torus}
+  % \leanok
+
+  $\Phi_\MCA: T_N \to \G_m^s$ factors through the torus of $Y_\MCA$.
+  The conclusion follows from looking at the corresponding maps of character lattices.
+\end{proof}
+
+
+\begin{proposition}
+  \label{1-1-9-ideal-ya}
+  \uses{1-1-phiAprime, 1-1-7-ya, 1-1-10-lat-ideal}
+  % \lean{}
+  % \leanok
+
+  Let $R$ be a commutative ring. Let $G$ be an abelian group.
+  Let $s$ be an arbitrary indexing type, and $\MCA : s \to G$ an indexed family.
+  Let $L$ be the kernel of $f'_\MCA : \Z^{\oplus s} \to G$.
+  Then the ideal of the affine toric variety $Y_\MCA$ is
+  \[
+    I(Y_\MCA) = I_L.
+  \]
+\end{proposition}
+\begin{proof}
+  \uses{0-ker-sum, 0-diag-spec}
+  % \leanok
+
+  By the definition of $Y_\MCA$ as the scheme-theoretic closure of $\Phi_\MCA$,
+  we have $I(Y_\MCA) = \ker R[f_\MCA] = \ker R[f'_\MCA]$ where, recall,
+  $f_\MCA : \N^s \to G, f'_\MCA : \Z^s \to G$ are both given by $e_i & \mapsto \MCA_i$,
+  and $R[f_\MCA] : R[\N^s] \to R[G]$ is the pushforward.
+
+  By Proposition \ref{0-ker-mon-alg} with $G := \Z, S := {1}$,
+  \[
+    \ker R[f_\MCA] = \Span\{X^\alpha - X^\beta | \alpha, \beta \in \N^s, f(\alpha) = f(\beta)\}
+      = \Span\{X^\alpha - X^\beta | \alpha, \beta \in \N^s, \alpha - \beta \in L\}.
+  \]
+\end{proof}
+
+
+\begin{proposition}
+  \label{1-1-14-spec-aff-mon-alg-eq-ya}
+  \uses{0-aff-mon, 1-1-3-aff-tor-var, 1-1-7-ya}
+  % \lean{}
+  % \leanok
+
+  If $S$ is an affine monoid and $\mathcal A$ is a finite set generating $S$ as a monoid, then $\Spec \Bbbk[S] = Y_{\mathcal A}$.
+\end{proposition}
+\begin{proof}
+  \uses{1-1-8-aff-tor-var-ya}
+  % \leanok
+
+  We get a $\Bbbk$-algebra homomorphism $\pi : \Bbbk[x_1, \dotsc, x_s] \to \Bbbk[\Z S]$ given by $\mathcal A$; this induces a morphism $\Phi_{\mathcal A} : T \to \Bbbk^s$. The kernel of $\pi$ is the toric ideal of $Y_{\mathcal A}$ and $\pi$ is clearly surjective, so $Y_{\mathcal A} = \mathbb V(\ker(\pi)) = \Spec \Bbbk[x_1, \dotsc, x_s] / \ker(\pi) = \Spec \bbC[S]$.
+\end{proof}
+
+
+\begin{proposition}
+  \label{1-1-10-tor-ideal}
+  \uses{1-1-7-ya, 1-1-9-ideal-ya}
+  % \lean{}
+  % \leanok
+
+  The ideal of $Y_\MCA$ is a toric ideal.
+\end{proposition}
+\begin{proof}
+  \uses{1-1-9-ideal-ya}
+  % \leanok
+
+  Immediate consequence of Proposition \ref{1-1-9-ideal-ya}.
+\end{proof}

@@ -1,0 +1,38 @@
+\section{Toric varieties}
+
+
+In this section, we define toric varieties and toric morphisms.
+
+
+\begin{definition}[Toric varieties]
+  \label{5-1-tor-var}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.ToricVariety}
+  \leanok
+
+  Let $k$ be a field.
+  Let $T$ be a torus over $k$.
+  A \emph{toric variety} structure on a scheme $X$ over $k$ consists the following data:
+  \begin{itemize}
+    \item a torus $T$ over $k$,
+    \item a group action $T \times X \to X$ over $k$.
+    \item a dominant open immersion $i : T \hookrightarrow X$ over $k$ that is $T$-equivariant.
+  \end{itemize}
+\end{definition}
+
+
+\begin{definition}[Torus morphisms, torus isomorphisms]
+  \label{5-1-tor-hom}
+  \uses{0-torus}
+  \lean{AlgebraicGeometry.ToricVariety}
+  \leanok
+
+  Let $k$ be a field.
+  Let $T_1, T_2$ be tori over $k$.
+  Let $X_1, X_2$ be toric varieties with torus $T_1, T_2$ respectively.
+  A \emph{toric morphism} from $X_1$ to $X_2$ is the data of a $k$-morphism $X_1 \to X_2$
+  and a $k$-group homomorphism $T_1 \to T_2$ that commute
+  with the embeddings $T_1 \to X_1, T_2 \to X_2$ and the actions.
+  A \emph{toric isomorphism} from $X_1$ to $X_2$ is the data of two isomorphisms $X_1 \cong X_2$ and
+  $T_1 \cong T_2$ that commute with the embeddings $T_1 \to X_1, T_2 \to X_2$.
+\end{definition}

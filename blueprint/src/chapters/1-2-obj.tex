@@ -75,3 +75,25 @@
 
   Toddlers and streets.
 \end{proof}
+
+
+\subsection{Module objects}
+
+
+\begin{proposition}[Pulling back a module object]
+  \label{0-comap-mod}
+  \uses{}
+  % \lean{}
+  % \leanok
+
+  Let $M, N$ be two monoid objects in a monoidal category $C$.
+  Let $f : M \to N$ be a monoid morphism.
+  If $X$ is a $N$-module object, then it is also a $M$-module object.
+\end{proposition}
+\begin{proof}
+  \uses{}
+  % \leanok
+
+  Define the multiplication $\mu_M : M \otimes X \to X$ as $f \otimes \mathbb 1 \gg \mu_N$.
+  All proofs follow easily.
+\end{proof}
