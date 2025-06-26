@@ -2,6 +2,7 @@ import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.CommMon_
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 noncomputable section
 
@@ -156,5 +157,35 @@ lemma prodComparisonIso_pullback_Spec_inv_left_snd' {R S : CommRingCat.{u}} (f :
   rw [← cancel_epi (prodComparisonIso (Over.pullback (Spec.map f)) _ _).hom.left,
     Over.hom_left_inv_left_assoc]
   simp [CartesianMonoidalCategory.prodComparison]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_base (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R _)) =
+      pullback.fst _ _ ≫ Spec.map (CommRingCat.ofHom (algebraMap _ _)) := by
+  simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+    ← Algebra.TensorProduct.algebraMap_def, ← IsScalarTower.algebraMap_eq]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap S _)) =
+      pullback.fst _ _ := by
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_inv_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).inv ≫ pullback.fst _ _ =
+    Spec.map (CommRingCat.ofHom (algebraMap S _)) := by
+  simp [← cancel_epi (pullbackSpecIso R S T).hom]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_snd' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom
+      (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T) : _ →+* _)) =
+      pullback.snd _ _ := by
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
 
 end AlgebraicGeometry.Scheme

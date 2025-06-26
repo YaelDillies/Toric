@@ -282,6 +282,20 @@ noncomputable
 def pullbackSpecIso' : pullback (Spec(S) ↘ Spec(R)) (Spec(T) ↘  Spec(R)) ≅ Spec (.of <| S ⊗[R] T) :=
   pullbackSpecIso ..
 
+lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R S] [Bialgebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom =
+    (pullbackSpecIso' ..).hom ≫
+    Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.comm R S T)) := by
+  simp_rw [Iso.trans_hom, ← Iso.eq_comp_inv, Category.assoc, ← Iso.inv_comp_eq]
+  ext
+  · have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
+      Algebra.TensorProduct.includeLeftRingHom = Algebra.TensorProduct.includeRight.toRingHom := rfl
+    simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
+  have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
+      (RingHomClass.toRingHom Algebra.TensorProduct.includeRight) =
+      Algebra.TensorProduct.includeLeftRingHom := rfl
+  simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
+
 end AlgebraicGeometry.Scheme
 
 end topEdge

@@ -15,6 +15,7 @@ import Toric.Mathlib.Data.Finsupp.Single
 import Toric.Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
+import Toric.Mathlib.AlgebraicGeometry.Over
 
 /-!
 # Demo of `SO(2, ℝ)` as a non-split torus
@@ -32,7 +33,7 @@ local notation3:max "Y" => Polynomial.C (Polynomial.X)
 open Coalgebra Polynomial TensorProduct
 open scoped AddMonoidAlgebra Mon_Class
 
-/-! ### `SO(2, R)` as a ring -/
+/-! ### `SO(2, R)` as a Hopf algebra -/
 
 variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 
@@ -132,13 +133,6 @@ instance : HopfAlgebra R (SO2Ring R) := by
 @[simp] lemma antipode_X : antipode R X = X (R := R) := antipodeAlgHom_X
 @[simp] lemma antipode_Y : antipode R SO2Ring.Y = - .Y (R := R) := antipodeAlgHom_Y
 
-private lemma foo : (SO2Ring.X (R := ℂ)) ^ 2 - (Complex.I • SO2Ring.Y) ^ 2 = 1 := calc
-  _ = .X ^ 2 - (Complex.I • .Y) * (Complex.I • .Y) := by ring
-  _ = .X ^ 2 - (Complex.I) ^ 2 • .Y ^ 2 := by
-    rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul]
-    ring_nf
-  _ = _ := by simp
-
 /-! #### `SO(2, ℂ)` -/
 
 /-- The group-like element `X + iY` of `SO2Ring ℂ`. -/
@@ -182,7 +176,7 @@ private def complexEquivFun : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multip
 /-- `SO2Ring ℂ` is isomorphic to Laurent series `ℂ[ℤ]`. -/
 def complexEquiv : SO2Ring ℂ ≃ₐc[ℂ] ℂ[ℤ] where
   __ := complexEquivFun
-  __ :  SO2Ring ℂ ≃ₐ[ℂ] MonoidAlgebra ℂ (Multiplicative ℤ) := by
+  __ : SO2Ring ℂ ≃ₐ[ℂ] MonoidAlgebra ℂ (Multiplicative ℤ) := by
     refine .symm <| .ofAlgHom (AlgHomClass.toAlgHom complexEquivInv) complexEquivFun ?_ ?_
     · ext
       · simp [complexEquivInv_single, complexEquivFun]
@@ -206,8 +200,12 @@ def complexEquiv : SO2Ring ℂ ≃ₐc[ℂ] ℂ[ℤ] where
     .comp complexEquiv.symm (algebraMap ℂ ℂ[ℤ]) = algebraMap ℂ (SO2Ring ℂ) := by
   ext; simp [Algebra.algebraMap_eq_smul_one]
 
+/-! #### `R`-points of `SO(2, R) -/
+
 open Matrix
 
+/-- The isomorphism between the `R-algebra` homomorphisms from `SO2Ring(R)` to `S` and the group
+  `SO(2,S)`. -/
 def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* specialOrthogonalGroup (Fin 2) S where
   toFun f := ⟨!![f .X, f .Y; - f .Y, f .X], by
     simp [← map_mul, ← map_add, mem_specialOrthogonalGroup_fin_two_iff, pow_two]⟩
@@ -224,6 +222,8 @@ def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* specialOrthogonalGroup (Fin 2)
     · simp [sub_eq_add_neg]
     · simp [sub_eq_add_neg]
     · simp [sub_eq_neg_add]
+
+/-! #### Base change -/
 
 instance : Algebra S (S ⊗[R] SO2Ring R) := Algebra.TensorProduct.leftAlgebra
 
@@ -268,8 +268,12 @@ namespace AlgebraicGeometry.SO₂
 
 open Scheme
 
+/-- Notation for the special orghogonal group of 2x2 matrices as a scheme. -/
 scoped notation3 "SO₂("R")" => Spec <| .of <| SO2Ring R
 
+/-! #### `SO(2, ℂ)` is a split torus -/
+
+/-- The isomorphism between `SO₂(ℂ)` and the 1-dimensional `ℂ`-torus. -/
 def so₂ComplexIso : SO₂(ℂ) ≅ Diag Spec(ℂ) ℤ :=
   Scheme.Spec.mapIso complexEquiv.toAlgEquiv.toRingEquiv.toCommRingCatIso.symm.op ≪≫
     (diagSpecIso (.of ℂ) ℤ).symm
@@ -297,6 +301,9 @@ instance : IsMon_Hom <| so₂ComplexIso.hom.asOver Spec(ℂ) := by
 
 instance : SO₂(ℂ).IsSplitTorusOver Spec(ℂ) := .of_iso so₂ComplexIso
 
+/-! #### `SO(2, ℝ) is a torus -/
+
+/-- The isomorphism between the base change of `SO₂(ℝ)` to `ℂ` and `SO₂(ℂ)`. -/
 def pullbackSO₂RealComplex : pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ)) ≅ SO₂(ℂ) :=
   pullbackSymmetry .. ≪≫ pullbackSpecIso .. ≪≫ Scheme.Spec.mapIso
     (baseChangeBialgEquiv ℝ ℂ).symm.toAlgEquiv.toRingEquiv.toCommRingCatIso.op
@@ -306,77 +313,24 @@ def pullbackSO₂RealComplex : pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) �
       ((bialgSpec <| .of ℂ).map <| .op <|
         CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).symm.toBialgHom).hom.left := rfl
 
-universe u in
-instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
-    (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.IsOver Spec(S) where
-  comp_over := by
-    rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv,
-      canonicallyOverPullback_over]
-    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
-    rfl
-
 universe u
 
-@[reassoc (attr := simp)]
-lemma pullbackSpecIso_hom_base (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
-    [Algebra R T] :
-    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R _)) =
-      pullback.fst _ _ ≫ Spec.map (CommRingCat.ofHom (algebraMap _ _)) := by
-  simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-    ← Algebra.TensorProduct.algebraMap_def, ← IsScalarTower.algebraMap_eq]
-
-@[reassoc (attr := simp)]
-lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
-    [Algebra R T] :
-    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap S _)) =
-      pullback.fst _ _ := by
-  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
-
-@[reassoc (attr := simp)]
-lemma pullbackSpecIso_inv_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
-    [Algebra R T] :
-    (pullbackSpecIso R S T).inv ≫ pullback.fst _ _ =
-    Spec.map (CommRingCat.ofHom (algebraMap S _)) := by
-  simp [← cancel_epi (pullbackSpecIso R S T).hom]
-
-@[reassoc (attr := simp)]
-lemma pullbackSpecIso_hom_snd' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
-    [Algebra R T] :
-    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom
-      (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T) : _ →+* _)) =
-      pullback.snd _ _ := by
-  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
-
-lemma pullbackSpecIso'_symmetry {R S T: Type u} [CommRing R] [CommRing S] [CommRing T]
-    [Algebra R S] [Bialgebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom =
-    (pullbackSpecIso' ..).hom ≫
-    Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.comm R S T)) := by
-  simp_rw [Iso.trans_hom, ← Iso.eq_comp_inv, Category.assoc, ← Iso.inv_comp_eq]
-  ext
-  · have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
-      Algebra.TensorProduct.includeLeftRingHom = Algebra.TensorProduct.includeRight.toRingHom := rfl
-    simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
-  have : (RingHomClass.toRingHom (Algebra.TensorProduct.comm R S T)).comp
-      (RingHomClass.toRingHom Algebra.TensorProduct.includeRight) =
-      Algebra.TensorProduct.includeLeftRingHom := rfl
-  simp [specOverSpec_over, pullbackSpecIso', ← Spec.map_comp, ← CommRingCat.ofHom_comp, this]
-
-lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
-      (Functor.LaxMonoidal.μ (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap R S))))
-        (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))
-        (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))).left ≫
-    pullback.fst _ _ ≫
-      (pullbackSpecIso R T T).hom =
-    (MonoidalCategoryStruct.tensorHom
-        ((pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver (Spec(S)))
-        ((pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver (Spec(S)))).left ≫
-    (pullbackSpecIso S (S ⊗[R] T) (S ⊗[R] T)).hom ≫
-    Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.mapRingHom (algebraMap _ _)
-      Algebra.TensorProduct.includeRight.toRingHom
-      Algebra.TensorProduct.includeRight.toRingHom
-      (by simp [← IsScalarTower.algebraMap_eq])
-      (by simp [← IsScalarTower.algebraMap_eq]))) := by
-  rw [← cancel_mono (pullbackSpecIso ..).inv]
+-- put this somewhere
+open MonoidalCategory Functor.LaxMonoidal in
+lemma μ_pullback_left_fst (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Bialgebra R T] :
+    («μ» (Over.pullback (Spec.map (CommRingCat.ofHom (algebraMap R S))))
+      (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))
+      (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap R T))))).left ≫
+        pullback.fst _ _ =
+    (((pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) ⊗ₘ
+        ((pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S))).left) ≫
+          (pullbackSpecIso S (S ⊗[R] T) (S ⊗[R] T)).hom ≫
+            Spec.map (CommRingCat.ofHom (Algebra.TensorProduct.mapRingHom (algebraMap _ _)
+              Algebra.TensorProduct.includeRight.toRingHom
+              Algebra.TensorProduct.includeRight.toRingHom
+              (by simp [← IsScalarTower.algebraMap_eq])
+              (by simp [← IsScalarTower.algebraMap_eq]))) ≫ (pullbackSpecIso R T T).inv := by
   simp
   ext <;> simp
   · simp only [← Spec.map_comp, ← CommRingCat.ofHom_comp,
@@ -392,7 +346,8 @@ lemma foo (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S] 
     simp [pullbackSpecIso']
     rfl
 
-theorem name1
+-- where does this belong
+theorem comul_includeRight
   {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
     (RingHomClass.toRingHom (Bialgebra.comulAlgHom S (S ⊗[R] T))).comp
     (RingHomClass.toRingHom (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T))) =
@@ -405,6 +360,7 @@ theorem name1
   ext x
   simp [← (ℛ R x).eq, tmul_sum]
 
+-- idk where this belongs either
 instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Bialgebra R T] :
     IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
   one_hom := by
@@ -429,19 +385,13 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
         ← Algebra.TensorProduct.algebraMap_def, Hom.asOver, OverClass.asOverHom,
         pullback.condition]
       rfl
-    · convert congr($(foo R S T) ≫
+    · convert congr($(μ_pullback_left_fst R S T) ≫ (pullbackSpecIso R T T).hom ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
           Hom.asOver, OverClass.asOverHom, mul_left]
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
           Hom.asOver, OverClass.asOverHom, mul_left, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-          name1]
-
--- generalize this
-instance : (pullbackSymmetry .. ≪≫ pullbackSpecIso' ℝ ℂ (SO2Ring ℝ)).hom.IsOver Spec(ℂ) where
-  comp_over := by
-    rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv, canonicallyOverPullback_over]
-    simp [specOverSpec_over, pullbackSpecIso']
+          comul_includeRight]
 
 instance : pullbackSO₂RealComplex.hom.IsOver Spec(ℂ) := by
   rw [pullbackSO₂RealComplex_hom]; infer_instance
@@ -459,17 +409,22 @@ instance pullback_SO₂_real_isSplitTorusOver_complex :
     (pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ))).IsSplitTorusOver Spec(ℂ) :=
   .of_iso pullbackSO₂RealComplex
 
-/-- `SO(2)` is a split torus over the reals. -/
+/-- `SO(2)` is a torus over the reals. -/
 instance : Spec(SO2Ring ℝ).IsTorusOver ℝ where
   existsSplit :=
     ⟨ℂ, inferInstance, inferInstance, inferInstance, pullback_SO₂_real_isSplitTorusOver_complex⟩
 
+/-! #### SO(2, ℝ) is not split -/
+
 open Matrix
 
 variable (R) in
-def bar : (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* specialOrthogonalGroup (Fin 2) R :=
+/-- The `R`-points of `SO₂(R)` as an `R`-scheme are isomorphic to the group `SO(2,R)`. -/
+def RPoints :
+    (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* specialOrthogonalGroup (Fin 2) R :=
   Spec.mulEquiv.symm.trans algHomMulEquiv
 
+/-- A 4-torsion element of `SO(2,ℝ)`. -/
 def I : specialOrthogonalGroup (Fin 2) ℝ :=
   ⟨!![0, 1; -1, 0], by simp [mem_specialOrthogonalGroup_fin_two_iff]⟩
 
@@ -508,7 +463,7 @@ theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(�
     (Spec(ℝ).asOver Spec(ℝ))
   have e₂ : (ℤ[σ] →+ Additive ℝˣ) ≃+ (σ → Additive ℝˣ) := Finsupp.liftAddHom.symm.trans <|
     .piCongrRight («η» := σ) fun _ ↦ (zmultiplesAddHom <| Additive ℝˣ).symm
-  exact (aux3 σ).1 <| (bar ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
+  exact (aux3 σ).1 <| (RPoints ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
     (MonoidAlgebra.liftMulEquiv ..).symm.trans <| MonoidHom.toHomUnitsMulEquiv.trans <|
       MonoidHom.toAdditive''MulEquiv.trans <| e₂.toMultiplicative.trans <| .refl _
 
