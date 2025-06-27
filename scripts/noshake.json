@@ -30,5 +30,6 @@
   "Toric.GroupScheme.MonoidAlgebra":
   ["Toric.Mathlib.Algebra.Algebra.Hom",
    "Toric.Mathlib.AlgebraicGeometry.Scheme"],
+  "Toric.GroupScheme.HopfAffine": ["Toric.Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.GroupScheme.Diagonalizable":
   ["Toric.Mathlib.Algebra.Group.TypeTags.Hom"]}}

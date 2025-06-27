@@ -7,9 +7,6 @@ import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.Algebra.Category.Grp.Basic
-import Mathlib.Algebra.Category.Grp.Adjunctions
-import Mathlib.Algebra.Category.Ring.Adjunctions
 import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.MvLaurentPolynomial
 

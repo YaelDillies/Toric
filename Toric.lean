@@ -12,6 +12,7 @@ import Toric.Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
 import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
 import Toric.Mathlib.Algebra.Algebra.Defs
+import Toric.Mathlib.Algebra.Algebra.Equiv
 import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Toric.Mathlib.Algebra.Category.CommBialgCat
@@ -22,6 +23,7 @@ import Toric.Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.Algebra.Group.Finsupp
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
+import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain

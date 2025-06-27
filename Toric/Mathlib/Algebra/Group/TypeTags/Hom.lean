@@ -1,5 +1,5 @@
+import Mathlib.Algebra.Group.Equiv.Defs
 import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Algebra.Group.Equiv.Basic
 import Mathlib.Algebra.Group.TypeTags.Hom
 
 variable {M N : Type*}

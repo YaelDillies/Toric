@@ -1,6 +1,6 @@
 import Mathlib.RingTheory.AdjoinRoot
+import Toric.Mathlib.Algebra.Algebra.Equiv
 import Toric.Mathlib.RingTheory.FiniteType
-import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 open TensorProduct
 
@@ -8,22 +8,6 @@ noncomputable section
 
 
 namespace AdjoinRoot
-
-section
-
-@[simp]
-lemma _root_.bullshit2 {A B C D : Type*} [CommSemiring A] [Semiring B] [Algebra A B] [Semiring C]
-    [Algebra A C] [Semiring D] [Algebra A D] {f : B ≃ₐ[A] C} {g : C ≃ₐ[A] D} :
-    (f.trans g : B →+* D) = .comp g (f : B →+* C) := rfl
-
-@[simp]
-lemma _root_.Algebra.bullshit3 {A B C : Type*} [CommSemiring A] [Semiring B] [Algebra A B]
-  [Semiring C] [Algebra A C] {f : B ≃ₐ[A] C} : f.trans f.symm = .refl := by aesop
-
-@[simp]
-lemma _root_.bullshit4 {A B : Type*} [CommSemiring A] [Semiring B] [Algebra A B] :
-  AlgEquiv.refl (R := A) (A₁ := B) = RingHom.id B := rfl
-
 variable {R S T U : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
   [CommRing U] [Algebra R U] {p : Polynomial S}
 
@@ -122,7 +106,7 @@ variable (p q) in
 def mapAlgEquiv (f : S ≃ₐ[R] T) (h : p.map f = q) : AdjoinRoot p ≃ₐ[R] AdjoinRoot q :=
   .ofAlgHom
     (mapAlgHom p q f h)
-    (mapAlgHom q p f.symm (by simp [← h, Polynomial.map_map, ← bullshit2]))
+    (mapAlgHom q p f.symm (by simp [← h, Polynomial.map_map, ← AlgEquiv.toRingHom_trans]))
     (by ext <;> simp)
     (by ext <;> simp)
 
@@ -153,15 +137,12 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
     rw [Polynomial.eval₂_hom]
     simp [Polynomial.eval_map]
   · ext
-    · simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq',
-        Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
+    · simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq', ← AlgHom.toRingHom_eq_coe]
       rfl
     simp
   · ext : 1
     · ext
-    ext : 2 <;>
-      simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq',
-        Algebra.TensorProduct.algebraMap_eq_includeRight, ← AlgHom.toRingHom_eq_coe]
+    ext : 2 <;> simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq', ← AlgHom.toRingHom_eq_coe]
     rfl
 
 variable (p) in
@@ -175,5 +156,4 @@ variable (p) in
 lemma tensorAlgEquiv_of (q : Polynomial (T ⊗[R] S)) (h : p.map includeRight.toRingHom = q) {x : S} :
     tensorAlgEquiv p q h (1 ⊗ₜ of p x) = of q (1 ⊗ₜ x):= by simp [tensorAlgEquiv]
 
-end
 end AdjoinRoot

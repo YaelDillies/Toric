@@ -1,6 +1,7 @@
 import Mathlib.RingTheory.Bialgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 suppress_compilation
 
@@ -8,6 +9,17 @@ open Algebra Coalgebra TensorProduct
 
 namespace Bialgebra
 variable {R A B : Type*} [CommSemiring R]
+
+lemma comul_includeRight [CommSemiring A] [CommSemiring B] [Bialgebra R B] [Algebra R A] :
+    (RingHomClass.toRingHom (Bialgebra.comulAlgHom A (A ⊗[R] B))).comp
+      (RingHomClass.toRingHom (Algebra.TensorProduct.includeRight (R := R) (A := A) (B := B))) =
+      (Algebra.TensorProduct.mapRingHom (algebraMap R A)
+        (RingHomClass.toRingHom (Algebra.TensorProduct.includeRight (R := R) (A := A) (B := B)))
+        (RingHomClass.toRingHom (Algebra.TensorProduct.includeRight (R := R) (A := A) (B := B)))
+        (by simp; rfl)
+        (by simp; rfl)).comp
+        (RingHomClass.toRingHom (Bialgebra.comulAlgHom R B)) := by
+  ext x; simp [← (ℛ R x).eq, tmul_sum]
 
 section Semiring
 variable [Semiring A] [Bialgebra R A] {a b : A}
