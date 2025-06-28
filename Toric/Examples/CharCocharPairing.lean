@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Toric.GroupScheme.Character
+import Toric.Mathlib.LinearAlgebra.Finsupp.VectorSpace
+import Toric.Mathlib.RingTheory.Finiteness.Finsupp
 
 /-!
 # Demo of the perfect pairing between characters and cocharacters of a torus

@@ -3,13 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.GroupScheme.Torus
-import Toric.Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.GroupTheory.FreeAbelianGroup
-import Toric.Mathlib.LinearAlgebra.Finsupp.VectorSpace
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
-import Toric.Mathlib.RingTheory.Finiteness.Finsupp
 
 /-!
 # The lattices of characters and cocharacters
