@@ -3,8 +3,9 @@ Copyright (c) 2025 Patrick Luo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Patrick Luo, Paul Lezeau
 -/
-import Mathlib.Algebra.MonoidAlgebra.Defs
 import Mathlib.GroupTheory.FreeAbelianGroup
+import Toric.Mathlib.GroupTheory.FreeGroup.Basic
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
 # Multivariate Laurent polynomials
@@ -15,6 +16,17 @@ with variables from a general type `σ` (which could be infinite).
 
 open AddMonoidAlgebra
 
-variable (σ R : Type*)
+variable (σ R S : Type*)
 
 abbrev MvLaurentPolynomial [Semiring R] := AddMonoidAlgebra R <| FreeAbelianGroup σ
+
+noncomputable
+def MvLaurentPolynomial.liftEquiv [CommRing R] [CommRing S] [Algebra R S] :
+    (σ → Sˣ) ≃* (MvLaurentPolynomial σ R →ₐ[R] S) := by
+  refine .trans ?_ <| MonoidAlgebra.liftMulEquiv _ _ <| Abelianization <| FreeGroup σ
+  exact
+  { toFun f := (Units.coeHom S).comp (Abelianization.lift (FreeGroup.lift f))
+    invFun f n := f.toHomUnits (.of (.of n))
+    left_inv _ := by ext; simp
+    right_inv f := by ext; simp
+    map_mul' x y := by ext; simp }

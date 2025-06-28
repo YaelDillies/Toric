@@ -42,17 +42,15 @@ lemma specCommMonAlgPullbackObjXIso_one :
     η ≫ (specCommMonAlgPullbackObjXIso M f Sf H).hom = η := by
   subst H
   dsimp [AlgHom.toUnder]
-  erw [CategoryTheory.Functor.mapMon_obj_mon_one,
-    CategoryTheory.Functor.mapMon_obj_mon_one] -- FIXME: `erw?` says nothing
   letI := f.hom.toAlgebra
   have h₁ := counitAlgHom_comp_mapRangeRingHom f.hom (M := M)
   have h₂ := (Bialgebra.counitAlgHom S S[M]).comp_algebraMap
   apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
-  simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂
+  simp only [CommRingCat.ofHom_comp, Spec.map_comp, AlgHom.toRingHom_eq_coe] at h₁ h₂
   ext
   apply ((CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec).hom_ext <;>
     simp [Functor.Monoidal.ε_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
-      AlgHom.toUnder, h₁, h₂]
+      AlgHom.toUnder, h₁, h₂, CommRingCat.mkUnder]
 
 @[reassoc]
 private

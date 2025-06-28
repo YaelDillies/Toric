@@ -1,7 +1,21 @@
 import Mathlib.CategoryTheory.Comma.Over.OverClass
 
-namespace CategoryTheory.OverClass
+namespace CategoryTheory
 variable {C : Type*} [Category C] {X Y Z S : C} [OverClass X S] [OverClass Y S] [OverClass Z S]
+
+variable (S) in
+/-- Reinterpret an isomorphism over an object `S` into an isomorphism in the category over `S`. -/
+def Iso.asOver (e : X ≅ Y) [HomIsOver e.hom S] : OverClass.asOver X S ≅ OverClass.asOver Y S :=
+  Over.isoMk e (by simp)
+
+@[simp] lemma Iso.asOver_hom (e : X ≅ Y) [HomIsOver e.hom S] :
+    (e.asOver S).hom = OverClass.asOverHom S e.hom := rfl
+
+@[simp] lemma Iso.asOver_inv (e : X ≅ Y) [HomIsOver e.hom S] :
+    have : HomIsOver e.inv S := ⟨by rw [e.inv_comp_eq]; simp⟩
+    (e.asOver S).inv = OverClass.asOverHom S e.inv := rfl
+
+namespace OverClass
 
 instance (f : X ⟶ Y) [IsIso f] [HomIsOver f S] : IsIso (asOverHom S f) :=
   have : IsIso ((Over.forget S).map (asOverHom S f)) := ‹_›

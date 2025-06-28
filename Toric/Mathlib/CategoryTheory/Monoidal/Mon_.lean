@@ -233,6 +233,15 @@ end
 namespace Mon_
 variable {C : Type*} [Category C] [MonoidalCategory C] {M N : Mon_ C}
 
+-- TODO: Replace `Mon_.mkIso'`
+/-- Construct an isomorphism of monoids by giving an isomorphism between the underlying objects
+and checking compatibility with unit and multiplication only in the forward direction.
+-/
+@[simps]
+def mkIso'' {M N : C} [Mon_Class M] [Mon_Class N] (e : M ≅ N) [IsMon_Hom e.hom] : mk M ≅ mk N where
+  hom.hom := e.hom
+  inv.hom := e.inv
+
 instance {f : M ⟶ N} [IsIso f] : IsIso f.hom := inferInstanceAs <| IsIso <| (forget C).map f
 
 end Mon_

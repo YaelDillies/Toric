@@ -2,6 +2,7 @@ import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.CommMon_
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
+import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 noncomputable section
 
@@ -63,6 +64,15 @@ lemma μ_pullback_left_fst_snd (X Y : Over S) :
   rfl
 
 @[simp]
+lemma μ_pullback_left_snd (X Y : Over S) :
+    ((Functor.LaxMonoidal.μ (Over.pullback f) X Y)).left ≫
+      pullback.snd _ _ = pullback.snd _ _ ≫ pullback.snd _ _ := by
+  rw [Functor.Monoidal.μ_of_cartesianMonoidalCategory,
+    ← cancel_epi (CartesianMonoidalCategory.prodComparisonIso (Over.pullback f) X Y).hom.left,
+    ← Over.comp_left_assoc, Iso.hom_inv_id]
+  simp [CartesianMonoidalCategory.prodComparison]
+
+@[simp]
 lemma μ_pullback_left_fst_fst' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S) :
     ((Functor.LaxMonoidal.μ (Over.pullback f) (.mk g₁) (.mk g₂))).left ≫
       pullback.fst (pullback.fst g₁ g₂ ≫ g₁) f ≫ pullback.fst g₁ g₂ =
@@ -75,6 +85,13 @@ lemma μ_pullback_left_fst_snd' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S)
       pullback.fst (pullback.fst g₁ g₂ ≫ g₁) f ≫ pullback.snd g₁ g₂ =
         pullback.snd _ _ ≫ pullback.fst _ _ :=
   μ_pullback_left_fst_snd ..
+
+@[simp]
+lemma μ_pullback_left_snd' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S) :
+    ((Functor.LaxMonoidal.μ (Over.pullback f) (.mk g₁) (.mk g₂))).left ≫
+      pullback.snd (pullback.fst g₁ g₂ ≫ g₁) f =
+        pullback.snd _ _ ≫ pullback.snd _ _ :=
+  μ_pullback_left_snd ..
 
 attribute [local simp] mon_ClassAsOverPullback_one in
 instance isMon_hom_fst_id_right [Mon_Class (asOver M S)] :
@@ -140,5 +157,35 @@ lemma prodComparisonIso_pullback_Spec_inv_left_snd' {R S : CommRingCat.{u}} (f :
   rw [← cancel_epi (prodComparisonIso (Over.pullback (Spec.map f)) _ _).hom.left,
     Over.hom_left_inv_left_assoc]
   simp [CartesianMonoidalCategory.prodComparison]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_base (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R _)) =
+      pullback.fst _ _ ≫ Spec.map (CommRingCat.ofHom (algebraMap _ _)) := by
+  simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+    ← Algebra.TensorProduct.algebraMap_def, ← IsScalarTower.algebraMap_eq]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap S _)) =
+      pullback.fst _ _ := by
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_inv_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).inv ≫ pullback.fst _ _ =
+    Spec.map (CommRingCat.ofHom (algebraMap S _)) := by
+  simp [← cancel_epi (pullbackSpecIso R S T).hom]
+
+@[reassoc (attr := simp)]
+lemma pullbackSpecIso_hom_snd' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
+    [Algebra R T] :
+    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom
+      (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T) : _ →+* _)) =
+      pullback.snd _ _ := by
+  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
 
 end AlgebraicGeometry.Scheme

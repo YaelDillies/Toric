@@ -1,4 +1,5 @@
 import Toric.Examples.CharCocharPairing
+import Toric.Examples.SO2
 import Toric.GroupScheme.Character
 import Toric.GroupScheme.Diagonalizable
 import Toric.GroupScheme.HopfAffine
@@ -11,6 +12,7 @@ import Toric.Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
 import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
 import Toric.Mathlib.Algebra.Algebra.Defs
+import Toric.Mathlib.Algebra.Algebra.Equiv
 import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Toric.Mathlib.Algebra.Category.CommBialgCat
@@ -19,10 +21,13 @@ import Toric.Mathlib.Algebra.Category.Grp.Basic
 import Toric.Mathlib.Algebra.Category.MonCat.Basic
 import Toric.Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
+import Toric.Mathlib.Algebra.Group.Finsupp
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
+import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
+import Toric.Mathlib.Algebra.Polynomial.AlgebraMap
 import Toric.Mathlib.AlgebraicGeometry.Over
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
@@ -42,14 +47,18 @@ import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.Data.Finsupp.Single
 import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
 import Toric.Mathlib.GroupTheory.FreeAbelianGroup
+import Toric.Mathlib.GroupTheory.FreeGroup.Basic
 import Toric.Mathlib.LinearAlgebra.Finsupp.VectorSpace
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
+import Toric.Mathlib.LinearAlgebra.UnitaryGroup
+import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
@@ -62,6 +71,7 @@ import Toric.Mathlib.RingTheory.Coalgebra.GroupLike
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
+import Toric.Mathlib.RingTheory.FiniteType
 import Toric.Mathlib.RingTheory.Finiteness.Finsupp
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution

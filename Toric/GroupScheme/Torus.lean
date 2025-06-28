@@ -3,6 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
@@ -120,21 +121,39 @@ notation3 "𝔾ₘ[" S ", " σ "]" => SplitTorus S σ
 /-- The multiplicative group over `S`. -/
 notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 
+-- attribute [ext] Comma
+
 -- def SplitTorus.representableBy (S : Scheme) (σ : Type*) :
 --     ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙ CommMonCat.units ⋙
---       CommGrp.coyonedaRight.obj (op σ) ⋙ forget _).RepresentableBy
---       (𝔾ₘ[S, σ].asOver S) :=
---   ((((Over.mapPullbackAdj (terminal.from S)).comp
---     (Over.equivalenceOfIsTerminal terminalIsTerminal).toAdjunction).comp <|
+--       CommGrp.coyonedaRight.obj (op σ) ⋙ CategoryTheory.forget _).RepresentableBy
+--       (𝔾ₘ[S, σ].asOver S) := by
+--   letI X :=
+--   (((((Over.mapPullbackAdj (specULiftZIsTerminal.from S)).comp
+--     (Over.equivalenceOfIsTerminal specULiftZIsTerminal).toAdjunction).comp <|
 --     (ΓSpec.adjunction.comp <| (CommRingCat.forget₂Adj CommRingCat.isInitial).op.comp <|
 --       CommGrp.forget₂CommMonAdj.op.comp <|
 --         commGroupAddCommGroupEquivalence.symm.toAdjunction.op.comp <|
 --           AddCommGrp.adj.op)).representableBy (op σ)).ofIso <|
 --     isoWhiskerRight (NatIso.op (Over.forgetMapTerminal _ _))
 --       (Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
---         CommMonCat.units ⋙ forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
+--         CommMonCat.units ⋙ CategoryTheory.forget _ ⋙ opOp _ ⋙ yoneda.obj (op σ)) ≪≫
 --         (isoWhiskerLeft ((Over.forget _).op ⋙ Scheme.Γ ⋙ forget₂ _ CommMonCat ⋙
---           CommMonCat.units ⋙ forget CommGrp) (Coyoneda.opIso.app _))
+--           CommMonCat.units ⋙ CategoryTheory.forget CommGrp) (Coyoneda.opIso.app _)))
+--   convert X using 1
+--   apply Comma.ext
+--   · dsimp [SplitTorus, Diag]
+--     congr 1
+
+variable (G S : Scheme.{u}) [G.Over S] [Grp_Class (G.asOver S)] in
+/-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
+lemma exists_iso_splitTorus_of_isSplitTorusOver [G.IsSplitTorusOver S] :
+    ∃ (σ : Type u) (e : G ≅ SplitTorus S σ) (_ : e.hom.IsOver S),
+      IsMon_Hom (e.hom.asOver S) := by
+  obtain ⟨A, _, _, e, _, _⟩ := ‹G.IsSplitTorusOver S›
+  exact ⟨Module.Free.ChooseBasisIndex ℤ A,
+    e.trans <| Diag.mapIso S ((Module.Free.chooseBasis ℤ A).repr.toAddEquiv.trans
+      (FreeAbelianGroup.equivFinsupp _).symm),
+    by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 variable {R : CommRingCat} {σ : Type*}
 
