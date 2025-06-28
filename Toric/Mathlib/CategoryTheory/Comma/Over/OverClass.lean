@@ -4,6 +4,7 @@ namespace CategoryTheory
 variable {C : Type*} [Category C] {X Y Z S : C} [OverClass X S] [OverClass Y S] [OverClass Z S]
 
 variable (S) in
+/-- Reinterpret an isomorphism over an object `S` into an isomorphism in the category over `S`. -/
 def Iso.asOver (e : X ≅ Y) [HomIsOver e.hom S] : OverClass.asOver X S ≅ OverClass.asOver Y S :=
   Over.isoMk e (by simp)
 

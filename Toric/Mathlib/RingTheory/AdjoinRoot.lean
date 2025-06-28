@@ -6,7 +6,6 @@ open TensorProduct
 
 noncomputable section
 
-
 namespace AdjoinRoot
 variable {R S T U : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
   [CommRing U] [Algebra R U] {p : Polynomial S}
@@ -30,7 +29,7 @@ lemma toRingHom_ofAlgHom : ofAlgHom R p = of p := rfl
 lemma ofAlgHom_apply (s : S) : ofAlgHom R p s = of p s := rfl
 
 @[ext]
-theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
+lemma algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
     f.comp (ofAlgHom R p) = g.comp (ofAlgHom R p))
     (hRoot : f (root p) = g (root p)) : f = g := by
   apply Ideal.Quotient.algHom_ext
@@ -41,23 +40,23 @@ theorem algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
   show f (AdjoinRoot.mk _ _) = g (AdjoinRoot.mk _ _)
   simpa
 
--- TODO : replace liftHom by this
+-- TODO: replace `liftHom` by this
 def liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) : AdjoinRoot p →ₐ[R] T where
   __ := lift i.toRingHom _ h
   commutes' r := by
     simp [lift_of h, AdjoinRoot.algebraMap_eq']
 
 @[simp]
-theorem coe_liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) :
+lemma coe_liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) :
     (liftAlgHom i x h : AdjoinRoot p →+* T) = lift i.toRingHom _ h :=
   rfl
 
 @[simp]
-theorem liftAlgHom_of {s : S} {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
+lemma liftAlgHom_of {s : S} {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
     liftAlgHom i x h (of p s) = i s := by simp [liftAlgHom]
 
 @[simp]
-theorem liftAlgHom_root {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
+lemma liftAlgHom_root {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
     liftAlgHom i x h (root p) = x := by simp [liftAlgHom]
 
 variable (p q) in
@@ -67,25 +66,11 @@ def map (f : S →+* T) (h: p.map f = q) : AdjoinRoot p →+* AdjoinRoot q :=
     rw [← Polynomial.eval₂_map, ← Polynomial.aeval_def, aeval_eq, h, mk_self])
 
 @[simp]
-theorem map_of {s : S} {f : S →+* T} {h: p.map f = q} : map p q f h ((of p) s) = f s := by
+lemma map_of {s : S} {f : S →+* T} {h: p.map f = q} : map p q f h ((of p) s) = f s := by
   simp [map]
 
 @[simp]
-theorem map_root {f : S →+* T} {h: p.map f = q} : map p q f h (root p) = root q := by simp [map]
-
-/- @[simp]
-lemma map_map {f : S →+* T} {g : T →+* U} {h₁ : p.map f = q} {h₂ : q.map g = u} :
-    (map q u g h₂).comp (map p q f h₁) =
-    map p u (g.comp f) (by simp [← Polynomial.map_map, h₁, h₂]) := by
-  simp [map, lift]
-  apply Ideal.Quotient.ringHom_ext
-  ext
-  · simp
-    rw [← RingHom.comp_apply, ← RingHom.comp_apply (of u)]
-    congr
-    sorry
-  simp [h₁, h₂]
-  sorry -/
+lemma map_root {f : S →+* T} {h: p.map f = q} : map p q f h (root p) = root q := by simp [map]
 
 variable (p q) in
 def mapAlgHom (f : S →ₐ[R] T) (h : p.map f = q) : AdjoinRoot p →ₐ[R] AdjoinRoot q where

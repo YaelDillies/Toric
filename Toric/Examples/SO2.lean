@@ -198,7 +198,7 @@ def complexEquiv : SO2Ring ℂ ≃ₐc[ℂ] ℂ[ℤ] where
     .comp complexEquiv.symm (algebraMap ℂ ℂ[ℤ]) = algebraMap ℂ (SO2Ring ℂ) := by
   ext; simp [Algebra.algebraMap_eq_smul_one]
 
-/-! #### `R`-points of `SO(2, R) -/
+/-! #### `R`-points of `SO(2, R)` -/
 
 open Matrix
 
@@ -299,7 +299,7 @@ instance : IsMon_Hom <| so₂ComplexIso.hom.asOver Spec(ℂ) := by
 
 instance : SO₂(ℂ).IsSplitTorusOver Spec(ℂ) := .of_iso so₂ComplexIso
 
-/-! #### `SO(2, ℝ) is a torus -/
+/-! #### `SO(2, ℝ)` is a torus -/
 
 /-- The isomorphism between the base change of `SO₂(ℝ)` to `ℂ` and `SO₂(ℂ)`. -/
 def pullbackSO₂RealComplex : pullback (SO₂(ℝ) ↘ Spec(ℝ)) (Spec(ℂ) ↘ Spec(ℝ)) ≅ SO₂(ℂ) :=
@@ -332,13 +332,13 @@ instance : Spec(SO2Ring ℝ).IsTorusOver ℝ where
   existsSplit :=
     ⟨ℂ, inferInstance, inferInstance, inferInstance, pullback_SO₂_real_isSplitTorusOver_complex⟩
 
-/-! #### SO(2, ℝ) is not split -/
+/-! #### `SO(2, ℝ)` is not split -/
 
 open Matrix
 
 variable (R) in
-/-- The `R`-points of `SO₂(R)` as an `R`-scheme are isomorphic to the group `SO(2,R)`. -/
-def RPoints :
+/-- The `R`-points of `SO₂(R)` as a group `R`-scheme are isomorphic to the group `SO(2, R)`. -/
+def pointsMulEquiv :
     (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* specialOrthogonalGroup (Fin 2) R :=
   Spec.mulEquiv.symm.trans algHomMulEquiv
 
@@ -381,7 +381,7 @@ theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(�
     (Spec(ℝ).asOver Spec(ℝ))
   have e₂ : (ℤ[σ] →+ Additive ℝˣ) ≃+ (σ → Additive ℝˣ) := Finsupp.liftAddHom.symm.trans <|
     .piCongrRight («η» := σ) fun _ ↦ (zmultiplesAddHom <| Additive ℝˣ).symm
-  exact (aux3 σ).1 <| (RPoints ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
+  exact (aux3 σ).1 <| (pointsMulEquiv ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
     (MonoidAlgebra.liftMulEquiv ..).symm.trans <| MonoidHom.toHomUnitsMulEquiv.trans <|
       MonoidHom.toAdditive''MulEquiv.trans <| e₂.toMultiplicative.trans <| .refl _
 

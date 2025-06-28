@@ -6,7 +6,7 @@ local notation3:max "Y" => Polynomial.C (Polynomial.X)
 namespace Polynomial
 variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
 
---TODO : bundle this
+-- TODO: bundle this
 noncomputable def aevalAEval (x y : A) : R[X][Y] →ₐ[R] A where
   toFun p := eval y (eval₂ (mapRingHom (algebraMap R A)) (C x) p)
   map_one' := by simp

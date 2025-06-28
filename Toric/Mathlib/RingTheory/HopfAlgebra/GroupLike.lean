@@ -27,6 +27,7 @@ variable [CommSemiring R] [Semiring A] [HopfAlgebra R A] {a b : A}
     a * antipode R a = 1 := by
   simpa [ha, -mul_antipode_lTensor_comul_apply] using mul_antipode_lTensor_comul_apply (R := R) a
 
+/-- The embedding of group-like elements of a Hopf algebra inside its units. -/
 @[simps]
 def GroupLike.toUnit : GroupLike R A →* Aˣ where
   toFun x := ⟨x, antipode R x, by simp, by simp⟩

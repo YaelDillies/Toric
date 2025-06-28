@@ -3,11 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.MvLaurentPolynomial
 
 /-!
@@ -143,7 +143,6 @@ notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 --   apply Comma.ext
 --   · dsimp [SplitTorus, Diag]
 --     congr 1
-
 
 variable (G S : Scheme.{u}) [G.Over S] [Grp_Class (G.asOver S)] in
 /-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
