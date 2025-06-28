@@ -47,47 +47,43 @@ def liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) : AdjoinRoot 
     simp [lift_of h, AdjoinRoot.algebraMap_eq']
 
 @[simp]
-lemma coe_liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) :
-    (liftAlgHom i x h : AdjoinRoot p →+* T) = lift i.toRingHom _ h :=
-  rfl
+lemma coe_liftAlgHom (i : S →ₐ[R] T) (x : T) (h) :
+    (liftAlgHom i x h : AdjoinRoot p →+* T) = lift i.toRingHom _ h := rfl
 
 @[simp]
-lemma liftAlgHom_of {s : S} {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
-    liftAlgHom i x h (of p s) = i s := by simp [liftAlgHom]
+lemma liftAlgHom_of (i : S →ₐ[R] T) (x : T) (h) (s : S) : liftAlgHom i x h (of p s) = i s := by
+  simp [liftAlgHom]
 
 @[simp]
-lemma liftAlgHom_root {i : S →ₐ[R] T} {x : T} {h : p.eval₂ i x = 0} :
-    liftAlgHom i x h (root p) = x := by simp [liftAlgHom]
+lemma liftAlgHom_root (i : S →ₐ[R] T) (x : T) (h) : liftAlgHom i x h (root p) = x := by
+  simp [liftAlgHom]
 
 variable (p q) in
--- TODO : find better name
-def map (f : S →+* T) (h: p.map f = q) : AdjoinRoot p →+* AdjoinRoot q :=
+def map (f : S →+* T) (h : p.map f = q) : AdjoinRoot p →+* AdjoinRoot q :=
   lift ((algebraMap T _).comp f) (root q) (by
     rw [← Polynomial.eval₂_map, ← Polynomial.aeval_def, aeval_eq, h, mk_self])
 
-@[simp]
-lemma map_of {s : S} {f : S →+* T} {h: p.map f = q} : map p q f h ((of p) s) = f s := by
-  simp [map]
+@[simp] lemma map_of (f : S →+* T) (h) (s : S) : map p q f h ((of p) s) = f s := by simp [map]
 
-@[simp]
-lemma map_root {f : S →+* T} {h: p.map f = q} : map p q f h (root p) = root q := by simp [map]
+@[simp] lemma map_root (f : S →+* T) (h) : map p q f h (root p) = root q := by simp [map]
 
 variable (p q) in
+/-- `AdjoinRoot.map` as an `AlgHom`. -/
 def mapAlgHom (f : S →ₐ[R] T) (h : p.map f = q) : AdjoinRoot p →ₐ[R] AdjoinRoot q where
   __ := map p q f h
-  commutes' r := by
-    simp [map, AdjoinRoot.algebraMap_eq']
+  commutes' r := by simp [map, AdjoinRoot.algebraMap_eq']
 
 variable (p q) in
 @[simp]
 lemma coe_mapAlgHom (f : S →ₐ[R] T) (h : p.map f = q) : ⇑(mapAlgHom p q f h) = map p q f h := rfl
 
-lemma mapAlgHom_mapAlghom {f : S →ₐ[R] T} {g : T →ₐ[R] U} {h₁ : p.map f = q} {h₂ : q.map g = u} :
-    (mapAlgHom q u g h₂).comp (mapAlgHom p q f h₁) =
-    mapAlgHom p u (g.comp f) (by simp [AlgHom.comp_toRingHom, ← Polynomial.map_map, h₁, h₂]) := by
+lemma mapAlgHom_comp_mapAlghom (f : S →ₐ[R] T) (g : T →ₐ[R] U) (hf hg) :
+    (mapAlgHom q u g hg).comp (mapAlgHom p q f hf) =
+    mapAlgHom p u (g.comp f) (by simp [AlgHom.comp_toRingHom, ← Polynomial.map_map, hf, hg]) := by
   aesop
 
 variable (p q) in
+/-- `AdjoinRoot.map` as an `AlgEquiv`. -/
 def mapAlgEquiv (f : S ≃ₐ[R] T) (h : p.map f = q) : AdjoinRoot p ≃ₐ[R] AdjoinRoot q :=
   .ofAlgHom
     (mapAlgHom p q f h)
