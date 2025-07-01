@@ -6,8 +6,11 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
+import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
+import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
+import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
@@ -45,7 +48,7 @@ so that in particular we do not easily know that its inverse is given by `Γ`.
 open AlgebraicGeometry Coalgebra Scheme CategoryTheory MonoidalCategory Functor Monoidal Opposite
   Limits TensorProduct Mon_Class Grp_Class
 
-universe u
+universe w v u
 variable {R : CommRingCat.{u}}
 
 /-!
@@ -67,13 +70,21 @@ variable (R) in
 noncomputable abbrev algSpec : (CommAlgCat R)ᵒᵖ ⥤ Over (Spec R) :=
   (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
+variable (R) in
+noncomputable abbrev algΓ : Over (Spec R) ⥤ (CommAlgCat R)ᵒᵖ :=
+  Over.post Γ.rightOp ⋙ Over.map (ΓSpecIso R).inv.op ⋙
+    (Over.opEquivOpUnder R).functor ⋙ (commAlgCatEquivUnder R).inverse.op
+
 -- FIXME: Neither `inferInstance` nor `by unfold algSpec; infer_instance` work in the following 3.
--- TODO: Do a MWE once `CommAlgCat` is in mathlib
-instance algSpec.instPreservesLimits : PreservesLimits (algSpec R) :=
-  inferInstanceAs <| PreservesLimits <|
+-- TODO: Make into a MWE
+instance preservesLimitsOfSize_algSpec : PreservesLimitsOfSize.{w, v} (algSpec R) :=
+  inferInstanceAs <| PreservesLimitsOfSize.{w, v} <|
     (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
-noncomputable instance algSpec.instBraided : (algSpec R).Braided := .ofChosenFiniteProducts _
+instance preservesColimitsOfSize_algΓ : PreservesColimitsOfSize.{w, v} (algΓ R) := by
+  unfold algΓ; infer_instance
+
+noncomputable instance braided_algSpec : (algSpec R).Braided := .ofChosenFiniteProducts _
 
 @[simp] lemma algSpec_ε_left : (LaxMonoidal.ε (algSpec R)).left = 𝟙 (Spec R) := by
   convert (LaxMonoidal.ε (algSpec R)).w
@@ -158,7 +169,7 @@ noncomputable def hopfSpec.fullyFaithful : (hopfSpec R).FullyFaithful :=
     algSpec.fullyFaithful.mapGrp
 
 namespace AlgebraicGeometry.Scheme
-variable {R A : CommRingCat.{u}} {M G : Scheme.{u}}
+variable {R A : CommRingCat.{u}} {X M G : Scheme.{u}}
 
 suppress_compilation
 
@@ -262,15 +273,44 @@ def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialg
     · congr 3
       ext; simp
 
-/-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
-prove that. -/
-noncomputable instance [M.Over (Spec R)] [Mon_Class (M.asOver (Spec R))] [IsAffine M] :
-    Bialgebra R Γ(M, ⊤) := by sorry
+/-- The adjunction between `Spec` and `Γ` as functors between commutative `R`-algebras and
+schemes over `Spec R`. -/
+def algΓAlgSpecAdjunction (R : CommRingCat) : algΓ R ⊣ algSpec R := by
+  have foo := Over.postAdjunctionRight (Y := .op <| R) ΓSpec.adjunction
+  have bar := ((Over.opEquivOpUnder R).trans (commAlgCatEquivUnder R).op.symm).toAdjunction
+  simpa using foo.comp bar
 
-/-- Note that this holds more generally for a not necessarily affine monoid scheme, but we do not
-prove that. -/
+/-- The global sections of an affine scheme over `Spec R` are a `R`-algebra. -/
+instance [X.Over (Spec R)] [IsAffine X] : Algebra R Γ(X, ⊤) :=
+  ((commAlgCatEquivUnder R).inverse.obj <|
+    .mk (Spec.fullyFaithful.preimage <| X.isoSpec.inv ≫ X ↘ Spec R).unop).algebra
+
+lemma algebraMap_Γ [X.Over (Spec R)] [IsAffine X] :
+    algebraMap R Γ(X, ⊤) = (Spec.fullyFaithful.preimage <| X.isoSpec.inv ≫ X ↘ Spec R).unop.hom :=
+  rfl
+
+-- TODO: Isn't this just a bad lemma?
+attribute [-simp] Hom.isOver_iff
+attribute [local simp] specOverSpec_over algebraMap_Γ in
+instance [X.Over (Spec R)] [IsAffine X] : X.isoSpec.inv.IsOver (Spec R) where
+
+/-- The global sections of an affine monoid scheme over `Spec R` are a `R`-bialgebra. -/
+noncomputable instance [M.Over (Spec R)] [Mon_Class (M.asOver (Spec R))] [IsAffine M] :
+    Bialgebra R Γ(M, ⊤) := by
+  have : Mon_Class ((algSpec R).obj <| .op <| CommAlgCat.of R Γ(M, ⊤)) :=
+    .ofIso <| M.isoSpec.asOver (Spec R)
+  have : Mon_Class (op <| CommAlgCat.of R Γ(M, ⊤)) := algSpec.fullyFaithful.mon_Class _
+  exact ((commBialgCatEquivComonCommAlgCat R).inverse.obj <|
+    .op <| .mk <| .op <| .of R Γ(M, ⊤)).bialgebra
+
+/-- The global sections of an affine group scheme over `Spec R` are a `R`-Hopf algebra. -/
 noncomputable instance [G.Over (Spec R)] [Grp_Class (G.asOver (Spec R))] [IsAffine G] :
-    HopfAlgebra R Γ(G, ⊤) := by sorry
+    HopfAlgebra R Γ(G, ⊤) := by
+  have : Grp_Class ((algSpec R).obj <| .op <| CommAlgCat.of R Γ(G, ⊤)) :=
+    .ofIso <| G.isoSpec.asOver (Spec R)
+  have : Grp_Class (op <| CommAlgCat.of R Γ(G, ⊤)) := algSpec.fullyFaithful.grp_Class _
+  exact ((commHopfAlgCatEquivCogrpCommAlgCat R).inverse.obj <|
+    .op <| .mk <| .op <| .of R Γ(G, ⊤)).hopfAlgebra
 
 variable {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
 
