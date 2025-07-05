@@ -16,8 +16,6 @@
   ["Mathlib.RingTheory.Bialgebra.TensorProduct"],
   "Toric.Mathlib.CategoryTheory.Monoidal.Mon_":
   ["Toric.Mathlib.CategoryTheory.Monoidal.Attr"],
-  "Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_":
-  ["Toric.Mathlib.CategoryTheory.Monoidal.CommMon_"],
   "Toric.Mathlib.CategoryTheory.Monoidal.Attr":
   ["Init",
    "Lean.LabelAttribute",

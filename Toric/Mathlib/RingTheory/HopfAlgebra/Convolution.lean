@@ -30,6 +30,8 @@ variable {R A C : Type*} [CommSemiring R]
 namespace HopfAlgebra
 variable [CommSemiring A] [HopfAlgebra R A]
 
+attribute [-simp] sum_antipode_mul_eq sum_mul_antipode_eq
+
 lemma antipode_mul_antidistrib (a b : A) :
     antipode R (a * b) = antipode R b * antipode R a := by
   let α := antipode R ∘ₗ .mul' R A
@@ -37,10 +39,9 @@ lemma antipode_mul_antidistrib (a b : A) :
   suffices α = β from congr($this (a ⊗ₜ b))
   apply left_inv_eq_right_inv (a := LinearMap.mul' R A) <;> ext a b
   · simp [α, ((ℛ R a).tmul (ℛ R b)).mul_apply, ← Bialgebra.counit_mul, mul_comm b a,
-      ((ℛ R a).mul (ℛ R b)).algebraMap_counit_eq_sum_antipode_mul]
-  · simp [((ℛ R a).tmul (ℛ R b)).mul_apply, mul_comm, mul_mul_mul_comm,
-      Finset.sum_mul_sum, ← Finset.sum_product', α, β, -sum_mul_antipode_eq,
-      (ℛ R a).algebraMap_counit_eq_sum_mul_antipode, (ℛ R b).algebraMap_counit_eq_sum_mul_antipode]
+      ← sum_antipode_mul_eq ((ℛ R a).mul (ℛ R b))]
+  · simp [((ℛ R a).tmul (ℛ R b)).mul_apply, mul_comm, mul_mul_mul_comm, Finset.sum_mul_sum,
+      ← Finset.sum_product', β, ← sum_mul_antipode_eq (ℛ R a), ← sum_mul_antipode_eq (ℛ R b)]
 
 lemma antipode_mul_distrib (a b : A) :
     antipode R (a * b) = antipode R a * antipode R b := by
@@ -132,9 +133,8 @@ lemma antipode_id_cancel : HopfAlgebra.antipodeAlgHom R A * AlgHom.id R A = 1 :=
   simp [LinearMap.antipode_mul_id]
 
 lemma counit_comp_antipode :
-    (counitAlgHom R A).comp (HopfAlgebra.antipodeAlgHom R A) = counitAlgHom R A := by
-  apply AlgHom.toLinearMap_injective
-  simp [LinearMap.counit_comp_antipode]
+    (counitAlgHom R A).comp (HopfAlgebra.antipodeAlgHom R A) = counitAlgHom R A :=
+  AlgHom.toLinearMap_injective <| by simp
 
 private lemma inv_convMul_cancel (f : C →ₐc[R] A) :
     (.comp (HopfAlgebra.antipodeAlgHom R A) f : C →ₐ[R] A) * f = 1 := calc

@@ -9,7 +9,7 @@ def CommMonCat.coyoneda : CommMonCatᵒᵖ ⥤ CommMonCat ⥤ CommMonCat where
   map f := { app N := ofHom (.compHom' f.unop.hom) }
 
 def CommMonCat.coyonedaForget :
-    coyoneda ⋙ (whiskeringRight _ _ _).obj (forget _) ≅ CategoryTheory.coyoneda :=
+    coyoneda ⋙ (Functor.whiskeringRight _ _ _).obj (forget _) ≅ CategoryTheory.coyoneda :=
   NatIso.ofComponents (fun X ↦ NatIso.ofComponents (fun Y ↦ { hom f := ofHom f, inv f := f.hom })
     (fun _ ↦ rfl)) (fun _ ↦ rfl)
 

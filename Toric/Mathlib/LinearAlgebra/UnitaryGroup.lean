@@ -11,7 +11,7 @@ lemma mem_specialOrthogonalGroup_fin_two_iff {M : Matrix (Fin 2) (Fin 2) R} :
   trans ((a * a + b * b = 1 ∧ a * c + b * d = 0) ∧
     c * a + d * b = 0 ∧ c * c + d * d = 1) ∧ a * d - b * c = 1
   · simp [Matrix.mem_specialOrthogonalGroup_iff, Matrix.mem_orthogonalGroup_iff,
-      ← Matrix.ext_iff, Fin.forall_fin_succ, Matrix.mul_apply, Matrix.vecHead, Matrix.vecTail]
+      ← Matrix.ext_iff, Fin.forall_fin_succ, Matrix.vecHead, Matrix.vecTail]
   dsimp
   refine ⟨?_, ?_⟩
   · rintro ⟨⟨⟨h₀, h₁⟩, -, h₂⟩, h₃⟩

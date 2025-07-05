@@ -156,7 +156,7 @@ same on group objects as on objects. -/
     letI h₂ := FullyFaithful.mon_Class (.ofFullyFaithful F) (X := N)
     refine ⟨.mk N, ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;> simp [Mon_Class.ofIso, FullyFaithful.mon_Class, h₁, h₂]
 
-attribute [local instance] obj.instMon_Class
+open scoped Obj
 
 attribute [local simp] tensorHom_ε_left_μ_assoc in
 instance [F.LaxMonoidal] : IsMon_Hom (ε F) where

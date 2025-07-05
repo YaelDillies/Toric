@@ -6,7 +6,7 @@ import Toric.Mathlib.RingTheory.TensorProduct.Basic
 
 noncomputable section
 
-open CategoryTheory Limits
+open CategoryTheory CartesianMonoidalCategory Limits
 
 namespace AlgebraicGeometry.Scheme
 universe u
@@ -43,32 +43,29 @@ lemma ε_pullback_left :
   apply IsIso.eq_inv_of_hom_inv_id
   rw [← η_pullback_left, ← Over.comp_left, Functor.Monoidal.η_ε, Over.id_left]
 
-@[simp]
 lemma μ_pullback_left_fst_fst (X Y : Over S) :
     ((Functor.LaxMonoidal.μ (Over.pullback f) X Y)).left ≫
       pullback.fst _ _ ≫ pullback.fst _ _ = pullback.fst _ _ ≫ pullback.fst _ _ := by
   rw [Functor.Monoidal.μ_of_cartesianMonoidalCategory,
-    ← cancel_epi (CartesianMonoidalCategory.prodComparisonIso (Over.pullback f) X Y).hom.left,
-    ← Over.comp_left_assoc, Iso.hom_inv_id]
+    ← cancel_epi (prodComparisonIso (Over.pullback f) X Y).hom.left, ← Over.comp_left_assoc,
+    Iso.hom_inv_id]
   simp [CartesianMonoidalCategory.prodComparison]
   rfl
 
-@[simp]
 lemma μ_pullback_left_fst_snd (X Y : Over S) :
     ((Functor.LaxMonoidal.μ (Over.pullback f) X Y)).left ≫
       pullback.fst _ _ ≫ pullback.snd _ _ = pullback.snd _ _ ≫ pullback.fst _ _ := by
   rw [Functor.Monoidal.μ_of_cartesianMonoidalCategory,
-    ← cancel_epi (CartesianMonoidalCategory.prodComparisonIso (Over.pullback f) X Y).hom.left,
+    ← cancel_epi (prodComparisonIso (Over.pullback f) X Y).hom.left,
     ← Over.comp_left_assoc, Iso.hom_inv_id]
   simp [CartesianMonoidalCategory.prodComparison]
   rfl
 
-@[simp]
 lemma μ_pullback_left_snd (X Y : Over S) :
     ((Functor.LaxMonoidal.μ (Over.pullback f) X Y)).left ≫
       pullback.snd _ _ = pullback.snd _ _ ≫ pullback.snd _ _ := by
   rw [Functor.Monoidal.μ_of_cartesianMonoidalCategory,
-    ← cancel_epi (CartesianMonoidalCategory.prodComparisonIso (Over.pullback f) X Y).hom.left,
+    ← cancel_epi (prodComparisonIso (Over.pullback f) X Y).hom.left,
     ← Over.comp_left_assoc, Iso.hom_inv_id]
   simp [CartesianMonoidalCategory.prodComparison]
 
@@ -105,16 +102,13 @@ instance isMon_hom_fst_id_right [Mon_Class (asOver M S)] :
     simp only [Category.assoc, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app]
     simp only [← Category.assoc]
     congr 1
-    ext <;> simp [Scheme.asOver, OverClass.asOver]
+    ext <;> simp [OverClass.asOver]
 
 @[simp]
 lemma preservesTerminalIso_pullback {R S : CommRingCat.{u}} (f : R ⟶ S) :
-    (CartesianMonoidalCategory.preservesTerminalIso (Over.pullback (Spec.map f))) =
-    Over.isoMk (asIso (pullback.snd (𝟙 _) (Spec.map f))) (by simp) := by
-  ext1
-  exact CartesianMonoidalCategory.toUnit_unique _ _
-
-open CartesianMonoidalCategory
+    (preservesTerminalIso (Over.pullback (Spec.map f))) =
+      Over.isoMk (asIso (pullback.snd (𝟙 _) (Spec.map f))) (by simp) := by
+  ext1; exact toUnit_unique _ _
 
 @[simp]
 lemma prodComparisonIso_pullback_Spec_inv_left_fst_fst {R S : CommRingCat.{u}} (f : R ⟶ S)
@@ -173,19 +167,11 @@ lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommR
       pullback.fst _ _ := by
   simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
 
-@[reassoc (attr := simp)]
+@[reassoc]
 lemma pullbackSpecIso_inv_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
     [Algebra R T] :
     (pullbackSpecIso R S T).inv ≫ pullback.fst _ _ =
     Spec.map (CommRingCat.ofHom (algebraMap S _)) := by
   simp [← cancel_epi (pullbackSpecIso R S T).hom]
-
-@[reassoc (attr := simp)]
-lemma pullbackSpecIso_hom_snd' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
-    [Algebra R T] :
-    (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom
-      (Algebra.TensorProduct.includeRight (R := R) (A := S) (B := T) : _ →+* _)) =
-      pullback.snd _ _ := by
-  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
 
 end AlgebraicGeometry.Scheme

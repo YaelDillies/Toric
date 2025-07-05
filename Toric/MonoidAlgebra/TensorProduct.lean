@@ -23,24 +23,23 @@ variable (R A B) in
 /-- Tensoring `MonoidAlgebra R σ` on the left by an `R`-algebra `A` is algebraically
 equivalent to `MonoidAlgebra A σ`. -/
 noncomputable def tensorEquiv :
-    A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlgebra (A ⊗[R] B) σ :=
-  AlgEquiv.ofAlgHom
+    A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlgebra (A ⊗[R] B) σ := by
+  refine .ofAlgHom
     (Algebra.TensorProduct.lift
       ((IsScalarTower.toAlgHom A (A ⊗[R] B) _).comp Algebra.TensorProduct.includeLeft)
       (mapRangeAlgHom Algebra.TensorProduct.includeRight)
       (fun p n => .all _ _))
     (MonoidAlgebra.liftNCAlgHom (Algebra.TensorProduct.map (.id _ _) singleOneAlgHom)
-        ((Algebra.TensorProduct.includeRight.toMonoidHom.comp (of B σ))) (fun _ _ ↦ .all _ _)) (by
-      classical
-      apply AlgHom.toLinearMap_injective
-      ext
-      simp [liftNCAlgHom, liftNCRingHom, single_one_mul_apply,
-        single_apply, apply_ite ((1 : A) ⊗ₜ[R] ·)]) (by
-      ext : 1
-      · ext
-      · apply AlgHom.toLinearMap_injective
-        ext
-        simp [liftNCAlgHom, liftNCRingHom, mapRangeAlgHom])
+        ((Algebra.TensorProduct.includeRight.toMonoidHom.comp (of B σ))) (fun _ _ ↦ .all _ _)) ?_ ?_
+  · classical
+    apply AlgHom.toLinearMap_injective
+    ext
+    simp [liftNCAlgHom, liftNCRingHom, single_apply]
+  · ext : 1
+    · ext
+    apply AlgHom.toLinearMap_injective
+    ext
+    simp [liftNCAlgHom, liftNCRingHom, mapRangeAlgHom]
 
 @[simp]
 lemma tensorEquiv_tmul (a : A) (p : MonoidAlgebra B σ) :
