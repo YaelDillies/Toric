@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
+import Mathlib.CategoryTheory.Monoidal.CommMon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Functor
-import Toric.Mathlib.CategoryTheory.Monoidal.CommMon_
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
 open scoped Hom Obj
@@ -67,7 +67,7 @@ instance : IsMon_Hom (snd M N) where
 
 lemma mul_tensorHom_mul (f f' : X ⟶ M) (g g' : Y ⟶ N) :
     (f * f') ⊗ₘ (g * g') = (f ⊗ₘ g) * (f' ⊗ₘ g') := by
-  simp [Hom.mul_def, Hom.one_def, tensorObj.mul_def]
+  simp [Hom.mul_def, tensorObj.mul_def]
 
 lemma one_tensorHom_one : (1 : X ⟶ M) ⊗ₘ (1 : Y ⟶ N) = 1 := by
   simp only [Hom.one_def, tensor_comp, tensorObj.one_def, ← Category.assoc]
@@ -82,11 +82,8 @@ instance {f : M ⟶ N} {g : M ⟶ O} [IsMon_Hom f] [IsMon_Hom g] : IsMon_Hom (li
   one_hom := by ext <;> simp [IsMon_Hom.one_hom f, IsMon_Hom.one_hom g]
   mul_hom := by ext <;> simp [← tensor_comp_assoc, IsMon_Hom.mul_hom f, IsMon_Hom.mul_hom g]
 
-attribute [local simp] tensorObj.one_def tensorObj.mul_def in
-attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
-  IsMon_Hom.mul_hom_assoc in
+attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc in
 instance [IsCommMon M] : IsMon_Hom μ[M] where
-  one_hom := by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]
 
 end Mon_Class
 

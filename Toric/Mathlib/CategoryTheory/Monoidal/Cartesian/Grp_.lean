@@ -16,7 +16,7 @@ namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
   [CartesianMonoidalCategory D] {G : C} [Grp_Class G] (F : C ⥤ D) [F.Monoidal]
 
-scoped[Obj] attribute [instance] CategoryTheory.Functor.obj.instMon_Class
+scoped[Obj] attribute [instance] CategoryTheory.Functor.mon_ClassObj
 
 open scoped Obj
 
@@ -235,7 +235,7 @@ same on group objects as on objects. -/
     letI h₂ := FullyFaithful.grp_Class (.ofFullyFaithful F) H
     refine ⟨⟨H⟩, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
       simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class, FullyFaithful.grp_Class,
-        mk, h₁, h₂]
+        h₁, h₂]
 
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 
