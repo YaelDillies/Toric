@@ -118,12 +118,12 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
     rw [Polynomial.eval₂_hom]
     simp [Polynomial.eval_map]
   · ext
-    · simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq', ← AlgHom.toRingHom_eq_coe]
+    · simp [Algebra.ofId_apply, ← AlgHom.toRingHom_eq_coe]
       rfl
     simp
   · ext : 1
     · ext
-    ext : 2 <;> simp [Algebra.ofId_apply, AdjoinRoot.algebraMap_eq', ← AlgHom.toRingHom_eq_coe]
+    ext : 2 <;> simp [← AlgHom.toRingHom_eq_coe]
     rfl
 
 variable (p) in

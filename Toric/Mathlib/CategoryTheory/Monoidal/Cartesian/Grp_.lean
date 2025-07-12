@@ -16,7 +16,7 @@ namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
   [CartesianMonoidalCategory D] {G : C} [Grp_Class G] (F : C ⥤ D) [F.Monoidal]
 
-scoped[Obj] attribute [instance] CategoryTheory.Functor.obj.instMon_Class
+scoped[Obj] attribute [instance] CategoryTheory.Functor.mon_ClassObj
 
 open scoped Obj
 
@@ -133,7 +133,15 @@ instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Grp_ C) wher
 @[simp] lemma fst_hom (G H : Grp_ C) : (fst G H).hom = fst G.X H.X := rfl
 @[simp] lemma snd_hom (G H : Grp_ C) : (snd G H).hom = snd G.X H.X := rfl
 
-instance instBraided : BraidedCategory (Grp_ C) where braiding G H := Grp_.mkIso (β_ G.X H.X)
+@[simps]
+instance : (forget₂Mon_ C).Monoidal where
+  ε := 𝟙 _
+  «μ» G H := 𝟙 _
+  «η» := 𝟙 _
+  δ G H := 𝟙 _
+
+instance instBraidedCategory : BraidedCategory (Grp_ C) :=
+  braidedCategoryOfFaithful (forget₂Mon_ C) (fun G H ↦ Grp_.mkIso (β_ G.X H.X)) (by aesop_cat)
 
 @[simp] lemma braiding_hom_hom (G H : Grp_ C) : (β_ G H).hom.hom = (β_ G.X H.X).hom := rfl
 @[simp] lemma braiding_inv_hom (G H : Grp_ C) : (β_ G H).inv.hom = (β_ G.X H.X).inv := rfl
@@ -235,7 +243,7 @@ same on group objects as on objects. -/
     letI h₂ := FullyFaithful.grp_Class (.ofFullyFaithful F) H
     refine ⟨⟨H⟩, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
       simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class, FullyFaithful.grp_Class,
-        mk, h₁, h₂]
+        h₁, h₂]
 
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 

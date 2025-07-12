@@ -85,7 +85,7 @@ def Diag.mapIso (f : M ≃+ N) : Diag S M ≅ Diag S N where
 variable (R M) in
 def diagSpecIso : Diag (Spec R) M ≅ Spec(MonoidAlgebra R <| Multiplicative M) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  (isoWhiskerRight (specCommMonAlgPullback (CommRingCat.ofHom f) _
+  (Functor.isoWhiskerRight (specCommMonAlgPullback (CommRingCat.ofHom f) _
     (specULiftZIsTerminal.hom_ext _ _)) (Mon_.forget _ ⋙ Over.forget _)).app <|
       .op <| .of <| Multiplicative M
 
@@ -204,9 +204,9 @@ def diagMonFunctorIso :
     diagMonFunctor (Spec R) ≅ AddCommMonCat.equivalence.functor.op ⋙
       (commMonAlg R).op ⋙ bialgSpec R :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  isoWhiskerLeft AddCommMonCat.equivalence.functor.op
-    (specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
-      (specULiftZIsTerminal.hom_ext _ _))
+  AddCommMonCat.equivalence.functor.op.isoWhiskerLeft <|
+    specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
+      (specULiftZIsTerminal.hom_ext _ _)
 
 lemma diagMonFunctorIso_app (M : AddCommMonCatᵒᵖ) :
     ((diagMonFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
@@ -216,9 +216,9 @@ def diagFunctorIso :
     diagFunctor (Spec R) ≅ commGroupAddCommGroupEquivalence.inverse.op ⋙
       (commGrpAlg R).op ⋙ hopfSpec R :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  isoWhiskerLeft commGroupAddCommGroupEquivalence.inverse.op
-    (specCommGrpAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
-      (specULiftZIsTerminal.hom_ext _ _))
+  commGroupAddCommGroupEquivalence.inverse.op.isoWhiskerLeft <|
+    specCommGrpAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
+      (specULiftZIsTerminal.hom_ext _ _)
 
 lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
     ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
@@ -271,21 +271,20 @@ lemma HomGrp.comp_add [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
   exact Mon_Class.mul_comp f.toMul f'.toMul g.toMul
 
 @[simp]
-lemma HomGrp.comp_zero [IsCommMon (G''.asOver S)]
-    (f : HomGrp G G' S) : f.comp (0 : HomGrp G' G'' S) = 0 := by
+lemma HomGrp.comp_zero [IsCommMon (G''.asOver S)] (f : HomGrp G G' S) :
+    f.comp (0 : HomGrp G' G'' S) = 0 := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
   exact Mon_Class.comp_one _
 
 @[simp]
-lemma HomGrp.zero_comp [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
-    (f : HomGrp G' G'' S) : (0 : HomGrp G G' S).comp f = 0 := by
+lemma HomGrp.zero_comp [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)] (f : HomGrp G' G'' S) :
+    (0 : HomGrp G G' S).comp f = 0 := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
   exact Mon_Class.one_comp f.toMul
 
-lemma HomGrp.add_comp [IsCommMon (G''.asOver S)]
-    (f : HomGrp G G' S) (g g' : HomGrp G' G'' S) :
+lemma HomGrp.add_comp [IsCommMon (G''.asOver S)] (f : HomGrp G G' S) (g g' : HomGrp G' G'' S) :
     f.comp (g + g') = f.comp g + f.comp g' := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]

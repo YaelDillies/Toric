@@ -3,8 +3,6 @@ import Mathlib.CategoryTheory.Monoidal.Mod_
 open CategoryTheory
 open scoped Mon_Class
 
-@[inherit_doc] scoped[Mon_Class] notation "γ["M' ", " X'"]" => Mod_Class.smul (M := M') (X := X')
-
 namespace Mod_Class
 variable {C : Type*} [Category C] [MonoidalCategory C]
 

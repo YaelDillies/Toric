@@ -20,9 +20,7 @@ variable {𝕜 M : Type u} [Field 𝕜] [AddCancelCommMonoid M] [AddMonoid.FG M]
 
 namespace AffineToricVarietyFromMonoid
 
-noncomputable instance instToricVariety :
-    ToricVariety 𝕜 (Diag Spec(𝕜) M) where
-  -- __ := instMod_Class
+noncomputable instance instToricVariety : ToricVariety 𝕜 (Diag Spec(𝕜) M) where
   torus := Diag Spec(𝕜) (GrothendieckAddGroup M)
   mod_ClassTorus := sorry
   torusEmb := sorry

@@ -106,10 +106,9 @@ def counitAlgHom : SO2Ring R →ₐ[R] R := liftₐ 1 0 (by simp)
 @[simp] lemma counitAlgHom.apply_X : counitAlgHom (R := R) .X = 1 := by simp [counitAlgHom]
 @[simp] lemma counitAlgHom.apply_Y : counitAlgHom (R := R) .Y = 0 := by simp [counitAlgHom]
 
-instance : Bialgebra R (SO2Ring R) := .ofAlgHom comulAlgHom counitAlgHom
-  (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul] <;> ring)
-  (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
-  (by ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul])
+instance : Bialgebra R (SO2Ring R) := by
+  refine .ofAlgHom comulAlgHom counitAlgHom ?_ ?_ ?_ <;>
+    ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul] <;> ring
 
 @[simp] lemma comul_def : comul (R := R) (A := SO2Ring R) = comulAlgHom (R := R) := rfl
 @[simp] lemma counit_def : counit (R := R) (A := SO2Ring R) = counitAlgHom (R := R) := rfl
@@ -138,7 +137,7 @@ def T : GroupLike ℂ (SO2Ring ℂ) where
   val := .X + Complex.I • .Y
   isGroupLikeElem_val.counit_eq_one := by simp
   isGroupLikeElem_val.comul_eq_tmul_self := by
-    simp [sub_tmul, tmul_sub, tmul_add, add_tmul, ← smul_tmul', smul_smul]; ring_nf
+    simp [tmul_add, add_tmul, ← smul_tmul', smul_smul]; ring_nf
 
 private def complexEquivInv : MonoidAlgebra ℂ (Multiplicative ℤ) →ₐc[ℂ] SO2Ring ℂ := by
   refine (MonoidAlgebra.liftGroupLikeBialgHom _ _).comp <|
@@ -156,18 +155,17 @@ private def complexEquivFun : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multip
     (liftₐ
       ((1 / 2 : ℂ) • (.single (.ofAdd 1) 1 + .single (.ofAdd (-1)) 1))
       (- (.I / 2 : ℂ) • (.single (.ofAdd 1) 1 - .single (.ofAdd (-1)) 1)) ?_) ?_ ?_
-  · simp [pow_two, sub_mul, mul_sub, add_mul, mul_add, MonoidAlgebra.single_mul_single, ← ofAdd_add,
+  · simp [pow_two, add_mul, mul_add, MonoidAlgebra.single_mul_single, ← ofAdd_add,
       ← two_nsmul, ← mul_smul, ← mul_inv_rev, div_mul_div_comm, neg_div, smul_sub,
       MonoidAlgebra.one_def]
     module
-  · ext <;> simp [MonoidAlgebra.counit_single]; norm_num
+  · ext <;> simp; norm_num
   · ext
-    · simp [MonoidAlgebra.comul_single, smul_add, tmul_add, add_tmul, smul_sub, sub_tmul,
-        tmul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm,
-        Complex.I_mul_I]
+    · simp [smul_add, tmul_add, add_tmul, smul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul,
+        smul_smul, div_mul_div_comm, Complex.I_mul_I]
       module
-    · simp [MonoidAlgebra.comul_single, smul_add, tmul_add, add_tmul, smul_sub, sub_tmul, tmul_sub,
-        neg_tmul, tmul_neg, ← smul_tmul', tmul_smul, smul_smul, div_mul_div_comm, Complex.I_mul_I]
+    · simp [smul_add, tmul_add, add_tmul, smul_sub, neg_tmul, tmul_neg, ← smul_tmul', tmul_smul,
+        smul_smul]
       module
 
 /-- `SO2Ring ℂ` is isomorphic to Laurent series `ℂ[ℤ]`. -/
@@ -178,8 +176,7 @@ def complexEquiv : SO2Ring ℂ ≃ₐc[ℂ] ℂ[ℤ] where
     · ext
       · simp [complexEquivInv_single, complexEquivFun]
         module
-      simp [complexEquivFun, complexEquivInv_single, ←two_smul, smul_smul, div_mul_eq_mul_div,
-         -nsmul_eq_mul]
+      simp [complexEquivFun, complexEquivInv_single, smul_smul, div_mul_eq_mul_div]
       module
     · ext
       simp [complexEquivFun, complexEquivInv_single, smul_smul, mul_div, smul_sub, neg_div,
