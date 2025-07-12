@@ -16,11 +16,7 @@ import Toric.Mathlib.Algebra.Algebra.Equiv
 import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
-import Toric.Mathlib.Algebra.Category.Grp.Basic
-import Toric.Mathlib.Algebra.Category.MonCat.Basic
-import Toric.Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
-import Toric.Mathlib.Algebra.Group.Finsupp
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
@@ -30,6 +26,7 @@ import Toric.Mathlib.Algebra.Polynomial.AlgebraMap
 import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
+import Toric.Mathlib.CategoryTheory.Adjunction.Opposites
 import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Functor.FullyFaithful
@@ -37,14 +34,11 @@ import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.FunctorCategory
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.Data.Finsupp.Single
 import Toric.Mathlib.Geometry.Convex.Cone.Dual

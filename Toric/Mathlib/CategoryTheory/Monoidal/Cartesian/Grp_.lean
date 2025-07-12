@@ -141,7 +141,7 @@ instance : (forget₂Mon_ C).Monoidal where
   δ G H := 𝟙 _
 
 instance instBraidedCategory : BraidedCategory (Grp_ C) :=
-  braidedCategoryOfFaithful (forget₂Mon_ C) (fun G H ↦ Grp_.mkIso (β_ G.X H.X)) (by aesop_cat)
+  .ofFaithful (forget₂Mon_ C) fun G H ↦ Grp_.mkIso (β_ G.X H.X)
 
 @[simp] lemma braiding_hom_hom (G H : Grp_ C) : (β_ G H).hom.hom = (β_ G.X H.X).hom := rfl
 @[simp] lemma braiding_inv_hom (G H : Grp_ C) : (β_ G H).inv.hom = (β_ G.X H.X).inv := rfl

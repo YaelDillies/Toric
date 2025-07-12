@@ -19,7 +19,7 @@ lemma algebraMap_def {R S T : Type*}
 
 variable (A) in
 /-- `lTensor A f : A ⊗ B →ₐ A ⊗ C` is the natural algebra morphism induced by `f : B →ₐc C`. -/
-noncomputable abbrev lTensor (f : B →ₐ[R] C) : (A ⊗[R] B) →ₐ[R] (A ⊗[R] C ):=
+noncomputable abbrev lTensor (f : B →ₐ[R] C) : (A ⊗[R] B) →ₐ[R] (A ⊗[R] C) :=
   Algebra.TensorProduct.map (.id R A) f
 
 variable (A) in
@@ -36,7 +36,6 @@ variable {R S T R' S' T' : Type*}
   (fR : R →+* R') (fS : S →+* S') (fT : T →+* T')
   (HS : fS.comp (algebraMap _ _) = (algebraMap _ _).comp fR)
   (HT : fT.comp (algebraMap _ _) = (algebraMap _ _).comp fR)
-
 
 /-- Heterobasic version of `Algebra.TensorProduct.map` as a ring homomorphism. -/
 noncomputable
