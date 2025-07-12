@@ -176,8 +176,7 @@ def complexEquiv : SO2Ring ℂ ≃ₐc[ℂ] ℂ[ℤ] where
     · ext
       · simp [complexEquivInv_single, complexEquivFun]
         module
-      simp [complexEquivFun, complexEquivInv_single, smul_smul, div_mul_eq_mul_div,
-         -nsmul_eq_mul]
+      simp [complexEquivFun, complexEquivInv_single, smul_smul, div_mul_eq_mul_div]
       module
     · ext
       simp [complexEquivFun, complexEquivInv_single, smul_smul, mul_div, smul_sub, neg_div,
