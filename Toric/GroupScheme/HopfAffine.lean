@@ -193,15 +193,14 @@ lemma specOverSpec_one [Bialgebra R A] :
         (Spec.map <| CommRingCat.ofHom <| Bialgebra.counitAlgHom R A)
           (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) := rfl
 
-@[simp] lemma specOverSpec_one_left [Bialgebra R A] :
+lemma specOverSpec_one_left [Bialgebra R A] :
     η[(Spec A).asOver (Spec R)].left =
-      (Spec.map <| CommRingCat.ofHom <| Bialgebra.counitAlgHom R A) := by
-  simp [specOverSpec_one]
+      (Spec.map <| CommRingCat.ofHom <| Bialgebra.counitAlgHom R A) := by simp
 
 lemma μIso_algSpec_inv_left [Algebra R A] :
     (μIso (algSpec R) (op (.of R A)) (op (.of R A))).inv.left = (pullbackSpecIso R A A).inv := rfl
 
--- arguably this should be defeq.
+-- Arguably, this should be defeq.
 lemma μ_algSpec_left [Algebra R A] :
     (LaxMonoidal.μ (algSpec R) (op (.of R A)) (op (.of R A))).left =
       (pullbackSpecIso R A A).hom := by
@@ -341,7 +340,7 @@ instance [Algebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom
   comp_over := by
     rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv,
       canonicallyOverPullback_over]
-    simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp, pullbackSpecIso']
+    simp [specOverSpec_over, pullbackSpecIso']
 
 variable (R S T) in
 lemma μ_pullback_left_fst [Algebra R T] :
@@ -383,7 +382,6 @@ instance [Bialgebra R T] :
       ← Algebra.TensorProduct.algebraMap_def]
     · simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
         pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-        ← Algebra.TensorProduct.algebraMap_def,
         ← AlgHom.coe_restrictScalars R (Bialgebra.counitAlgHom S _), - AlgHom.coe_restrictScalars,
         ← AlgHom.comp_toRingHom, Bialgebra.counitAlgHom_comp_includeRight]
       rfl
@@ -392,17 +390,15 @@ instance [Bialgebra R T] :
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
     · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
-        ← CommRingCat.ofHom_comp, asOver, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
-        ← Algebra.TensorProduct.algebraMap_def, Hom.asOver, OverClass.asOverHom,
-        pullback.condition]
+        ← CommRingCat.ofHom_comp, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
+        ← Algebra.TensorProduct.algebraMap_def, Hom.asOver, OverClass.asOverHom, pullback.condition]
       rfl
     · convert congr($(μ_pullback_left_fst R S T) ≫ (pullbackSpecIso R T T).hom ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
       · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
           Hom.asOver, OverClass.asOverHom, mul_left]
-      · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
-          Hom.asOver, OverClass.asOverHom, mul_left, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-          ← Bialgebra.comul_includeRight]
+      · simp [pullbackSpecIso', specOverSpec_over, OverClass.asOver, Hom.asOver, ← Spec.map_comp,
+          OverClass.asOverHom, mul_left, ← CommRingCat.ofHom_comp, ← Bialgebra.comul_includeRight]
 
 end AlgebraicGeometry.Scheme
 
@@ -420,7 +416,7 @@ section rightEdge
 /-- The essential image of `R`-algebras under `Spec` is precisely affine schemes over `Spec R`. -/
 @[simp]
 lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffine G.left := by
-  simp [algSpec, Functor.essImage_overPost]
+  simp [algSpec]
   rw [Functor.essImage_overPost] -- not sure why `simp` doesn't use this already
   simp
 

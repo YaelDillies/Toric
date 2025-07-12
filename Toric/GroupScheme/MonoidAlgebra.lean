@@ -49,8 +49,8 @@ lemma specCommMonAlgPullbackObjXIso_one :
   simp only [CommRingCat.ofHom_comp, Spec.map_comp, AlgHom.toRingHom_eq_coe] at h₁ h₂
   ext
   apply ((CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec).hom_ext <;>
-    simp [Functor.Monoidal.ε_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
-      AlgHom.toUnder, h₁, h₂, CommRingCat.mkUnder]
+    simp [Functor.Monoidal.ε_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra, h₁, h₂,
+      CommRingCat.mkUnder]
 
 @[reassoc]
 private
@@ -73,10 +73,10 @@ lemma specCommMonAlgPullbackObjIso_mul_aux :
   have h₂ := Algebra.TensorProduct.mapRingHom_comp_includeLeftRingHom _ _ _ hc hc
   have h₃ := Algebra.TensorProduct.mapRingHom_comp_includeRight _ _ _ hc hc
   apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₂ h₃
-  simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₂ h₃
+  simp only [CommRingCat.ofHom_comp, Spec.map_comp] at h₂ h₃
   rw [← Category.assoc, ← Iso.eq_comp_inv]
   dsimp
-  ext <;> simp [h₂, h₃, e, RingHom.algebraMap_toAlgebra]
+  ext <;> simp [h₂, h₃, RingHom.algebraMap_toAlgebra]
 
 set_option maxHeartbeats 0 in
 private
@@ -120,11 +120,11 @@ def specCommMonAlgPullback :
           (mapRangeRingHom f.hom) := mapRangeRingHom_comp_mapDomainRingHom _ _
     have h₂ := (AlgHomClass.toAlgHom (mapDomainBialgHom S φ.unop.hom)).comp_algebraMap
     apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
-    simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂
+    simp only [CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂
     ext
     apply ((CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec).hom_ext
     · simp [RingHom.algebraMap_toAlgebra,AlgHom.toUnder, Iso.eq_inv_comp, h₁]
-    · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, Iso.eq_inv_comp, ← h₂]
+    · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, ← h₂]
 
 -- TODO: Make `CommRingCat.mkUnder` abbrev or add dsimp lemmas etc.
 @[reassoc (attr := simp)]
@@ -147,7 +147,7 @@ lemma specCommMonAlgPullback_inv_app_hom_left_snd (M) :
 def specCommGrpAlgPullback :
     (commGrpAlg R).op ⋙ hopfSpec R ⋙ (Over.pullback Sf).mapGrp ≅
       (commGrpAlg S).op ⋙ hopfSpec S :=
-  (Grp_.fullyFaithfulForget₂Mon_ _).cancelRight
-    (isoWhiskerLeft (forget₂ CommGrp CommMonCat).op (specCommMonAlgPullback f _ H))
+  (Grp_.fullyFaithfulForget₂Mon_ _).cancelRight <|
+    (forget₂ CommGrp CommMonCat).op.isoWhiskerLeft (specCommMonAlgPullback f _ H)
 
 end AlgebraicGeometry.Scheme

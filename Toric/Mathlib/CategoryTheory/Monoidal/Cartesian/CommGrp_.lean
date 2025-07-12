@@ -36,7 +36,7 @@ def yonedaCommGrpGrp : CommGrp_ C ⥤ (Grp_ C)ᵒᵖ ⥤ CommGrp where
   map {X₁ X₂} ψ := {
     app Y := CommGrp.ofHom {
       toFun := (· ≫ ψ)
-      map_one' := by ext; simp [Grp_.Hom.hom_one]
+      map_one' := by ext; simp
       map_mul' f g := by
         ext; simpa using ((yonedaGrp.map ψ).app (op (unop Y).X)).hom.map_mul f.hom g.hom
     }
