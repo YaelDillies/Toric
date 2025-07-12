@@ -7,7 +7,6 @@ import Mathlib.Algebra.Category.AlgCat.Basic
 import Mathlib.Algebra.Category.Ring.Under.Basic
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.Algebra.Category.CommBialgCat
-import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 
