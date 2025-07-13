@@ -4,10 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
-import Mathlib.CategoryTheory.Monoidal.CommMon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
 open scoped Hom Obj

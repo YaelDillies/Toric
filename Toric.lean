@@ -32,6 +32,7 @@ import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Functor.FullyFaithful
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
+import Toric.Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_

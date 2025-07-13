@@ -5,8 +5,8 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
+import Toric.Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
-import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 
 open CategoryTheory MonoidalCategory Monoidal
 
@@ -145,8 +145,8 @@ def FullyFaithful.mon_Class [F.OplaxMonoidal] (hF : F.FullyFaithful) (X : C) [Mo
   mul_assoc := hF.map_injective <| by simp [← δ_natural_left_assoc, ← δ_natural_right_assoc]
 
 open Monoidal in
-/-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
-same on group objects as on objects. -/
+/-- The essential image of a fully faithful functor between cartesian-monoidal categories is the
+same on monoid objects as on objects. -/
 @[simp] lemma essImage_mapMon [F.Monoidal] [F.Full] [F.Faithful] {M : Mon_ D} :
     F.mapMon.essImage M ↔ F.essImage M.X where
   mp := by rintro ⟨N, ⟨e⟩⟩; exact ⟨N.X, ⟨(Mon_.forget _).mapIso e⟩⟩
@@ -161,29 +161,8 @@ open scoped Obj
 attribute [local simp] tensorHom_ε_left_μ_assoc in
 instance [F.LaxMonoidal] : IsMon_Hom (ε F) where
 
+section BraidedCategory
 variable [BraidedCategory C] [BraidedCategory D] (F)
-
-@[reassoc]
-lemma tensorμ_tensorHom_μ_μ_μ {W X Y Z : C} [F.LaxBraided] :
-    tensorμ (F.obj W) (F.obj X) (F.obj Y) (F.obj Z) ≫
-    (μ F W Y ⊗ₘ μ F X Z) ≫ μ F (W ⊗ Y) (X ⊗ Z) = (μ F W X ⊗ₘ μ F Y Z) ≫ μ F (W ⊗ X) (Y ⊗ Z) ≫
-      F.map (tensorμ W X Y Z) := by
-  rw [tensorHom_def]
-  simp only [tensorμ, Category.assoc]
-  rw [whiskerLeft_μ_μ,
-    associator_inv_naturality_left_assoc, ← pentagon_inv_assoc,
-    ← comp_whiskerRight_assoc, ← comp_whiskerRight_assoc, Category.assoc, whiskerRight_μ_μ,
-    whiskerLeft_hom_inv_assoc, Iso.inv_hom_id_assoc, comp_whiskerRight_assoc,
-    comp_whiskerRight_assoc, μ_natural_left_assoc, associator_inv_naturality_middle_assoc,
-    ← comp_whiskerRight_assoc, ← comp_whiskerRight_assoc, ← MonoidalCategory.whiskerLeft_comp,
-    ← Functor.LaxBraided.braided,
-    MonoidalCategory.whiskerLeft_comp_assoc, μ_natural_right, whiskerLeft_μ_μ_assoc,
-    comp_whiskerRight_assoc, comp_whiskerRight_assoc, comp_whiskerRight_assoc,
-    comp_whiskerRight_assoc, pentagon_inv_assoc, μ_natural_left_assoc, μ_natural_left_assoc,
-    Iso.hom_inv_id_assoc, ← associator_inv_naturality_left_assoc, whiskerRight_μ_μ_assoc,
-    Iso.inv_hom_id_assoc, ← tensorHom_def_assoc]
-  simp only [← map_comp, whisker_assoc, Category.assoc, pentagon_inv_inv_hom_hom_inv,
-    pentagon_inv_hom_hom_hom_inv_assoc]
 
 attribute [-simp] IsMon_Hom.one_hom_assoc in
 attribute [simp] tensorμ_tensorHom_μ_μ_μ_assoc Mon_Class.tensorObj.one_def
@@ -207,16 +186,20 @@ instance [F.Braided] : F.mapMon.Monoidal :=
     μIso M N := Mon_.mkIso (Monoidal.μIso F M.X N.X) <| by simp [← Functor.map_comp]
   }
 
-end CategoryTheory.Functor
+end BraidedCategory
 
-namespace Mon_
-variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D]
-  [SymmetricCategory C] [SymmetricCategory D] {M N X : C} [Mon_Class M] [Mon_Class N] (F : C ⥤ D)
+variable [SymmetricCategory C] [SymmetricCategory D]
 
 instance [F.LaxBraided] : F.mapMon.LaxBraided where
   braided M N := by ext; exact Functor.LaxBraided.braided ..
 
 instance [F.Braided] : F.mapMon.Braided where
+
+end CategoryTheory.Functor
+
+namespace Mon_
+variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D]
+  [SymmetricCategory C] [SymmetricCategory D] {M N X : C} [Mon_Class M] [Mon_Class N] (F : C ⥤ D)
 
 @[simp] lemma braiding_hom_hom (M N : Mon_ C) : (β_ M N).hom.hom = (β_ M.X N.X).hom := rfl
 @[simp] lemma braiding_inv_hom (M N : Mon_ C) : (β_ M N).inv.hom = (β_ M.X N.X).inv := rfl
