@@ -9,7 +9,6 @@ import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
-import Toric.Mathlib.CategoryTheory.Functor.FullyFaithful
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
 
@@ -147,7 +146,7 @@ lemma specCommMonAlgPullback_inv_app_hom_left_snd (M) :
 def specCommGrpAlgPullback :
     (commGrpAlg R).op ⋙ hopfSpec R ⋙ (Over.pullback Sf).mapGrp ≅
       (commGrpAlg S).op ⋙ hopfSpec S :=
-  (Grp_.fullyFaithfulForget₂Mon_ _).cancelRight <|
+  ((Grp_.fullyFaithfulForget₂Mon_ _).whiskeringRight _).preimageIso <|
     (forget₂ CommGrp CommMonCat).op.isoWhiskerLeft (specCommMonAlgPullback f _ H)
 
 end AlgebraicGeometry.Scheme
