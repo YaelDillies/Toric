@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
-import Toric.Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
 import Toric.Mathlib.CategoryTheory.Comma.Over.Basic

@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Group.Equiv.Basic
-import Toric.Mathlib.GroupTheory.FreeAbelianGroup
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 
 /-!
