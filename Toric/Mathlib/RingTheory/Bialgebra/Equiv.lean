@@ -3,26 +3,6 @@ import Mathlib.RingTheory.Bialgebra.Equiv
 open Coalgebra Function TensorProduct
 
 namespace BialgEquiv
-variable {R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
-  [CoalgebraStruct R A] [CoalgebraStruct R B]
-
-@[simp]
-lemma apply_symm_apply (e : A ≃ₐc[R] B) : ∀ x, e (e.symm x) = x := e.toEquiv.apply_symm_apply
-
-@[simp]
-lemma symm_apply_apply (e : A ≃ₐc[R] B) : ∀ x, e.symm (e x) = x := e.toEquiv.symm_apply_apply
-
-@[simp] lemma comp_symm (e : A ≃ₐc[R] B) : (e : A →ₐc[R] B).comp e.symm = .id R B := by ext; simp
-@[simp] lemma symm_comp (e : A ≃ₐc[R] B) : (e.symm : B →ₐc[R] A).comp e = .id R A := by ext; simp
-
-@[simp] lemma toRingEquiv_toRingHom (e : A ≃ₐc[R] B) : ((e : A ≃+* B) : A →+* B) = e := rfl
-@[simp] lemma toAlgEquiv_toRingHom (e : A ≃ₐc[R] B) : ((e : A ≃ₐ[R] B) : A →+* B) = e := rfl
-
-@[simp] lemma mk_apply (e : A ≃ₗc[R] B) (h) (a : A) : mk e h a = e a := rfl
-
-end BialgEquiv
-
-namespace BialgEquiv
 
 variable {R A B : Type*} [CommSemiring R] [Semiring A] [Semiring B] [Bialgebra R A] [Bialgebra R B]
 

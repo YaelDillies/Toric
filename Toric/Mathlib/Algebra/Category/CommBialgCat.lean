@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.Algebra.Category.CommAlgCat.Monoidal
 import Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.RingTheory.Bialgebra.Equiv
+import Mathlib.RingTheory.Bialgebra.Equiv
 
 /-!
 # The category of commutative bialgebras over a commutative ring
@@ -14,12 +14,10 @@ This file defines the bundled category `CommBialgCat` of commutative bialgebras 
 commutative ring `R` along with the forgetful functor to `CommAlgCat`.
 -/
 
-open Bialgebra Coalgebra Opposite CategoryTheory Limits Mon_Class
-open scoped MonoidalCategory
-
 noncomputable section
 
-namespace CategoryTheory
+open Bialgebra Coalgebra Opposite CategoryTheory Limits Mon_Class
+open scoped MonoidalCategory
 
 universe v u
 variable {R : Type u} [CommRing R]
@@ -234,5 +232,3 @@ lemma commBialgCatEquivComonCommAlgCat_inverse_map_unop_hom
 instance {A : CommBialgCat.{u} R} [IsCocomm R A] :
     IsCommMon ((commBialgCatEquivComonCommAlgCat R).functor.obj A).unop.X := by
   dsimp; infer_instance
-
-end CategoryTheory

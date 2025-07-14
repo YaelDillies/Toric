@@ -19,9 +19,7 @@ commutative ring `R` along with the forgetful functor to `CommBialgCat`.
 
 noncomputable section
 
-namespace CategoryTheory
-
-open Coalgebra HopfAlgebra Limits
+open CategoryTheory Coalgebra HopfAlgebra Limits
 
 universe v u
 variable {R : Type u} [CommRing R]
@@ -218,5 +216,3 @@ def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat 
 instance {A : CommHopfAlgCat.{u} R} [IsCocomm R A] :
     IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X := by
   dsimp; infer_instance
-
-end CategoryTheory
