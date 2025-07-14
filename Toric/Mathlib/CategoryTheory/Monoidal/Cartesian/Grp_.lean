@@ -64,11 +64,11 @@ instance {G H : C} [Grp_Class G] [Grp_Class H] : Grp_Class (G ⊗ H) where
   inv := ι ⊗ₘ ι
   left_inv := by
     have H : ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) * 𝟙 (G ⊗ H) = 1 := by
-      simp only [← tensor_id, ← mul_tensorHom_mul, inv_mul_cancel, one_tensorHom_one]
+      simp only [← id_tensorHom_id, ← mul_tensorHom_mul, inv_mul_cancel, one_tensorHom_one]
     simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
   right_inv := by
     have H : 𝟙 (G ⊗ H) * ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) = 1 := by
-      simp only [← tensor_id, ← mul_tensorHom_mul, mul_inv_cancel, one_tensorHom_one]
+      simp only [← id_tensorHom_id, ← mul_tensorHom_mul, mul_inv_cancel, one_tensorHom_one]
     simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
 
 end tensorObj

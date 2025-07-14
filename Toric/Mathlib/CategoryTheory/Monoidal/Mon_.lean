@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
-import Toric.Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
 
 open CategoryTheory MonoidalCategory Monoidal
@@ -158,27 +157,27 @@ same on monoid objects as on objects. -/
 
 open scoped Obj
 
-attribute [local simp] tensorHom_ε_left_μ_assoc in
+attribute [local simp] ε_tensorHom_comp_μ_assoc in
 instance [F.LaxMonoidal] : IsMon_Hom (ε F) where
 
 section BraidedCategory
 variable [BraidedCategory C] [BraidedCategory D] (F)
 
 attribute [-simp] IsMon_Hom.one_hom_assoc in
-attribute [simp] tensorμ_tensorHom_μ_μ_μ_assoc Mon_Class.tensorObj.one_def
+attribute [simp] tensorμ_comp_μ_tensorHom_μ_comp_μ_assoc Mon_Class.tensorObj.one_def
   Mon_Class.tensorObj.mul_def in
 instance [F.LaxBraided] (M N : C) [Mon_Class M] [Mon_Class N] : IsMon_Hom («μ» F M N) where
   one_hom := by simp [← Functor.map_comp]
 
 attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom in
-attribute [simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc
+attribute [simp] ε_tensorHom_comp_μ_assoc tensorμ_comp_μ_tensorHom_μ_comp_μ_assoc
   Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def in
 instance [F.LaxBraided] : F.mapMon.LaxMonoidal where
   ε := .mk (ε F)
   μ M N := .mk («μ» F M.X N.X)
 
 attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom in
-attribute [simp] tensorHom_ε_left_μ_assoc tensorμ_tensorHom_μ_μ_μ_assoc
+attribute [simp] ε_tensorHom_comp_μ_assoc tensorμ_comp_μ_tensorHom_μ_comp_μ_assoc
   Mon_Class.tensorObj.one_def Mon_Class.tensorObj.mul_def in
 instance [F.Braided] : F.mapMon.Monoidal :=
   CoreMonoidal.toMonoidal {

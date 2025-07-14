@@ -29,13 +29,11 @@ import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
-import Toric.Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Category
-import Toric.Mathlib.CategoryTheory.Monoidal.Functor
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.Data.Finsupp.Single
