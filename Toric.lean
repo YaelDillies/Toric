@@ -41,7 +41,6 @@ import Toric.Mathlib.Geometry.Convex.Cone.Dual
 import Toric.Mathlib.Geometry.Convex.Cone.Pointed
 import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
-import Toric.Mathlib.GroupTheory.FreeGroup.Basic
 import Toric.Mathlib.LinearAlgebra.Finsupp.VectorSpace
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
