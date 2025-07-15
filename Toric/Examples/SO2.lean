@@ -9,7 +9,6 @@ import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.Polynomial.AlgebraMap
 import Toric.Mathlib.Data.Finsupp.Single
-import Toric.Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
