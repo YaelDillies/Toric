@@ -81,6 +81,7 @@ instance {f : M ⟶ N} {g : M ⟶ O} [IsMon_Hom f] [IsMon_Hom g] : IsMon_Hom (li
   mul_hom := by ext <;> simp [← tensor_comp_assoc, IsMon_Hom.mul_hom f, IsMon_Hom.mul_hom g]
 
 attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc in
+attribute [local simp] leftUnitor_inv_comp_tensorHom in
 instance [IsCommMon M] : IsMon_Hom μ[M] where
 
 end Mon_Class

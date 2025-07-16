@@ -3,11 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
+import Mathlib.CategoryTheory.Monoidal.Category
 import Mathlib.CategoryTheory.Monoidal.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
-import Toric.Mathlib.CategoryTheory.Monoidal.Category
 
-open CategoryTheory MonoidalCategory Monoidal
+open CategoryTheory MonoidalCategory
 
 assert_not_exists CartesianMonoidalCategory
 
@@ -79,12 +79,12 @@ def ofIso (e : M ≅ X) : Mon_Class X where
     rw [← cancel_epi (λ_ X).inv]
     simp only [comp_whiskerRight, tensorHom_def, Category.assoc,
       hom_inv_whiskerRight_assoc]
-    simp [← tensorHom_def_assoc]
+    simp [← tensorHom_def_assoc, leftUnitor_inv_comp_tensorHom_assoc]
   mul_one := by
     rw [← cancel_epi (ρ_ X).inv]
     simp only [MonoidalCategory.whiskerLeft_comp, tensorHom_def', Category.assoc,
       whiskerLeft_hom_inv_assoc, Iso.inv_hom_id]
-    simp [← tensorHom_def'_assoc]
+    simp [← tensorHom_def'_assoc, rightUnitor_inv_comp_tensorHom_assoc]
   mul_assoc := by simpa [← id_tensorHom, ← tensorHom_id, ← tensor_comp_assoc,
       -associator_conjugation, associator_naturality_assoc] using
       congr(((e.inv ⊗ₘ e.inv) ⊗ₘ e.inv) ≫ $(Mon_Class.mul_assoc M) ≫ e.hom)
@@ -167,7 +167,7 @@ attribute [-simp] IsMon_Hom.one_hom_assoc in
 attribute [simp] tensorμ_comp_μ_tensorHom_μ_comp_μ_assoc Mon_Class.tensorObj.one_def
   Mon_Class.tensorObj.mul_def in
 instance [F.LaxBraided] (M N : C) [Mon_Class M] [Mon_Class N] : IsMon_Hom («μ» F M N) where
-  one_hom := by simp [← Functor.map_comp]
+  one_hom := by simp [← Functor.map_comp, leftUnitor_inv_comp_tensorHom_assoc]
 
 attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom in
 attribute [simp] ε_tensorHom_comp_μ_assoc tensorμ_comp_μ_tensorHom_μ_comp_μ_assoc

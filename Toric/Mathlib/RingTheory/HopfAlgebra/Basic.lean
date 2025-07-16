@@ -3,7 +3,6 @@ import Mathlib.RingTheory.HopfAlgebra.Basic
 /-!
 # TODO
 
-* Make `R` explicit in `antipode`.
 * Unsimp and delete `sum_mul_antipode_eq`
 -/
 

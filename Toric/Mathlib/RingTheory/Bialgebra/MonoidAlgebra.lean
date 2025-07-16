@@ -19,7 +19,7 @@ variable [Semiring A] [Bialgebra R A] [Monoid M] [Monoid N]
 values on the functions `single a 1`. -/
 lemma bialgHom_ext ⦃φ₁ φ₂ : MonoidAlgebra R M →ₐc[R] A⦄
     (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
-  BialgHom.toAlgHom_injective <| algHom_ext h
+  BialgHom.coe_algHom_injective <| algHom_ext h
 
 -- The priority must be `high`.
 /-- See note [partially-applied ext lemmas]. -/
@@ -97,7 +97,7 @@ variable [AddMonoid M] [AddMonoid N]
 /-- A `R`-algebra homomorphism from `R[M]` is uniquely defined by its values on the functions
 `single a 1`. -/
 lemma bialgHom_ext ⦃φ₁ φ₂ : R[M] →ₐc[R] A⦄ (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
-  BialgHom.toAlgHom_injective <| algHom_ext h
+  BialgHom.coe_algHom_injective <| algHom_ext h
 
 -- The priority must be `high`.
 /-- See note [partially-applied ext lemmas]. -/
