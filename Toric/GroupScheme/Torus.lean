@@ -86,7 +86,7 @@ class IsTorusOver : Prop where
 
 instance [G.IsSplitTorusOver Spec(k)] : G.IsTorusOver k := by
   refine ⟨k, ‹_›, inferInstance, inferInstance, ?_⟩
-  simp only [Algebra.id.map_eq_id, CommRingCat.ofHom_id]
+  simp only [Algebra.algebraMap_self, CommRingCat.ofHom_id]
   suffices (pullback (G ↘ Spec(k)) (𝟙 _)).IsSplitTorusOver Spec(k) by
     convert this <;> simp
   exact .of_isIso (pullback.fst (G ↘ Spec(k)) (𝟙 _))

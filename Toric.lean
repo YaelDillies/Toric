@@ -11,7 +11,6 @@ import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
 import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
-import Toric.Mathlib.Algebra.Algebra.Defs
 import Toric.Mathlib.Algebra.Algebra.Equiv
 import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.Category.CommBialgCat

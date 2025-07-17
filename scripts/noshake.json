@@ -3,8 +3,6 @@
   "Toric.ToricVariety.FromMonoid":
   ["Toric.Mathlib.Algebra.AffineMonoid.Embedding"],
   "Toric.ToricIdeal": ["Toric.Mathlib.AlgebraicGeometry.Scheme"],
-  "Toric.Mathlib.RingTheory.HopfAlgebra.Convolution":
-  ["Toric.Mathlib.Algebra.Algebra.Defs"],
   "Toric.Mathlib.RingTheory.Coalgebra.SimpAttr":
   ["Init",
    "Lean.LabelAttribute",
