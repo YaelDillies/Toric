@@ -29,13 +29,13 @@ variable {𝕜 : Type u} [Field 𝕜] {T X : Scheme.{u}}
 /-- A toric variety over a scheme `S` is a scheme `X` equipped with a torus `T`, a dense embedding
 `T → X` and an action `T × X → X` extending the standard action `T × T → T`. -/
 class ToricVariety (𝕜 : Type u) [Field 𝕜] (X : Scheme.{u}) extends X.Over Spec(𝕜) where
-  /-- The torus. -/
+  /-- The torus -/
   torus : Scheme.{u}
   [torusIsOver : torus.Over Spec(𝕜)]
   [grp_ClassTorus : Grp_Class (torus.asOver Spec(𝕜))]
   [mod_ClassTorus : Mod_Class (torus.asOver Spec(𝕜)) (X.asOver Spec(𝕜))]
   [torusIsTorusOver : torus.IsTorusOver 𝕜]
-  /-- The torus embedding. -/
+  /-- The torus embedding -/
   torusEmb (𝕜 X) : torus ⟶ X
   [isOver_torusEmb : torusEmb.IsOver Spec(𝕜)]
   /-- The torus embedding is an open immersion. -/
