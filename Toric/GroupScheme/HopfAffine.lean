@@ -8,7 +8,6 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
-import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_

@@ -23,7 +23,6 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
-import Toric.Mathlib.CategoryTheory.Comma.Over.Basic
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
