@@ -24,8 +24,7 @@
   "Toric.Mathlib.Algebra.Group.Equiv.Basic": ["Mathlib.Tactic.Spread"],
   "Toric.GroupScheme.Torus": ["Toric.Mathlib.CategoryTheory.Monoidal.Grp_"],
   "Toric.GroupScheme.MonoidAlgebra":
-  ["Toric.Mathlib.Algebra.Algebra.Hom",
-   "Toric.Mathlib.AlgebraicGeometry.Scheme"],
+  ["Toric.Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.GroupScheme.HopfAffine": ["Toric.Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.GroupScheme.Diagonalizable":
   ["Toric.Mathlib.Algebra.Group.TypeTags.Hom"]}}

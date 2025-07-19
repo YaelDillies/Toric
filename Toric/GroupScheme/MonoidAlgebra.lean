@@ -5,7 +5,6 @@ Authors: Andrew Yang
 -/
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GrpAlg
-import Toric.Mathlib.Algebra.Algebra.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.AlgebraicGeometry.Scheme
