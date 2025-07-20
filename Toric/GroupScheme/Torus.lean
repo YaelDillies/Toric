@@ -95,7 +95,7 @@ lemma IsTorusOver.of_iso (e : G ≅ H) [e.hom.IsOver Spec(k)] [IsMon_Hom (e.hom.
     [H.IsTorusOver k] : G.IsTorusOver k := by
   obtain ⟨L, _, _, _, hH⟩ := ‹H.IsTorusOver k›
   refine ⟨L, _, ‹_›, ‹_›, ?_⟩
-  let e'' := (Over.pullback <| Spec.map <| CommRingCat.ofHom <| algebraMap k L).mapGrp.mapIso <|
+  let e'' := (Over.pullback Spec(algebraMap k L)).mapGrp.mapIso <|
     Grp_.mkIso (M := .mk <| G.asOver Spec(k)) (N := .mk <| H.asOver Spec(k)) (Over.isoMk e)
       (IsMon_Hom.one_hom (e.hom.asOver Spec(k))) (IsMon_Hom.mul_hom (e.hom.asOver Spec(k)))
   let e' := (Grp_.forget _ ⋙ Over.forget _).mapIso e''

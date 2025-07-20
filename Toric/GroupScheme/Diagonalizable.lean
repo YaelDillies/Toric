@@ -51,9 +51,8 @@ instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Di
 variable (S) in
 /-- A monoid hom `M → N` induces a monoid morphism `Diag S N ⟶ Diag S M`. -/
 def Diag.map (f : M →+ N) : Diag S N ⟶ Diag S M :=
-  pullback.map _ _ _ _
-    (Spec.map <| CommRingCat.ofHom <| MonoidAlgebra.mapDomainRingHom _ f.toMultiplicative)
-    (𝟙 S) (𝟙 _) (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) (by simp)
+  pullback.map _ _ _ _ Spec(MonoidAlgebra.mapDomainRingHom _ f.toMultiplicative) (𝟙 S) (𝟙 _)
+    (by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]) (by simp)
 
 attribute [local simp] Diag.map Diag.canonicallyOver_over in
 instance Diag.isOver_map {f : M →+ N} : (Diag.map S f).IsOver S where
