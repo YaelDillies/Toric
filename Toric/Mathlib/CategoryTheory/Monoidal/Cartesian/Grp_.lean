@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 open scoped Hom

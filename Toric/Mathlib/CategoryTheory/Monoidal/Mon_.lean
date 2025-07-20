@@ -196,15 +196,6 @@ instance [F.Braided] : F.mapMon.Braided where
 
 end CategoryTheory.Functor
 
-namespace Mon_
-variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D]
-  [SymmetricCategory C] [SymmetricCategory D] {M N X : C} [Mon_Class M] [Mon_Class N] (F : C ⥤ D)
-
-@[simp] lemma braiding_hom_hom (M N : Mon_ C) : (β_ M N).hom.hom = (β_ M.X N.X).hom := rfl
-@[simp] lemma braiding_inv_hom (M N : Mon_ C) : (β_ M N).inv.hom = (β_ M.X N.X).inv := rfl
-
-end Mon_
-
 section
 variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M : C}
 
