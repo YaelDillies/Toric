@@ -22,7 +22,6 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.AlgebraicGeometry.Scheme
 import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Attr
@@ -53,7 +52,6 @@ import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 import Toric.Mathlib.RingTheory.FiniteType
-import Toric.Mathlib.RingTheory.Finiteness.Finsupp
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike

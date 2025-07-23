@@ -7,7 +7,6 @@ import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.GroupTheory.MonoidLocalization.DivPairs
 import Mathlib.GroupTheory.MonoidLocalization.GrothendieckGroup
-import Toric.Mathlib.AlgebraicGeometry.Scheme
 
 /-!
 # Toric ideals

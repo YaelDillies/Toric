@@ -5,7 +5,6 @@ Authors: Yaël Dillies
 -/
 import Toric.GroupScheme.Character
 import Toric.Mathlib.LinearAlgebra.Finsupp.VectorSpace
-import Toric.Mathlib.RingTheory.Finiteness.Finsupp
 
 /-!
 # Demo of the perfect pairing between characters and cocharacters of a torus

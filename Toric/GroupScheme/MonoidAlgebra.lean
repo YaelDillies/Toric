@@ -7,7 +7,6 @@ import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GrpAlg
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.AlgebraicGeometry.Scheme
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
 
