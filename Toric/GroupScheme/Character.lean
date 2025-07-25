@@ -103,7 +103,7 @@ lemma charDiag_diagHomGrp (f : _ →+ G) : charDiag R G (diagHomGrp _ f) = f (.o
   simp [charDiag_symm_apply]
   congr 1
   ext
-  simp only [FreeAbelianGroup.lift.of]
+  simp only [FreeAbelianGroup.lift_apply_of]
 
 variable (R G) in
 /-- Cocharacters of a diagonal group scheme over a domain are exactly the dual of the input group.
@@ -171,8 +171,8 @@ instance isPerfPair_charPairing [T.IsSplitTorusOver Spec(R)] [LocallyOfFiniteTyp
   dsimp [charDiag_symm_apply, charPairing, charTorusUnit, charTorus,
     cocharDiag_symm_apply, AddMonoidAlgebra]
   simp only [Char, cocharCongr_comp_charCongr, diagHomGrp_comp, charDiag_diagHomGrp, PUnit.zero_eq,
-    AddMonoidHom.coe_comp, AddMonoidHom.coe_coe, Function.comp_apply, FreeAbelianGroup.lift.of,
-    AddEquiv.symm_apply_apply, EmbeddingLike.apply_eq_iff_eq]
+    AddMonoidHom.coe_comp, AddMonoidHom.coe_coe, Function.comp_apply,
+    FreeAbelianGroup.lift_apply_of, AddEquiv.symm_apply_apply, EmbeddingLike.apply_eq_iff_eq]
   rfl
 
 end CommGrp_Class

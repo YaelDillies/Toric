@@ -1,5 +1,4 @@
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
-import Toric.Mathlib.LinearAlgebra.TensorProduct.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.Hom
 
