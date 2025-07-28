@@ -28,6 +28,10 @@ section IsSplitTorusOver
 variable {G H S : Scheme.{u}} [G.Over S] [H.Over S] [Grp_Class (asOver G S)]
   [Grp_Class (asOver H S)]
 
+-- TODO: Move me!
+instance {M N : Scheme.{u}} [M.Over S] [N.Over S] [Mon_Class (asOver M S)] [Mon_Class (asOver N S)]
+    (e : M ≅ N) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] : IsMon_Hom (e.asOver S).hom := ‹_›
+
 variable (G S) in
 @[mk_iff]
 class IsSplitTorusOver : Prop where
@@ -96,8 +100,7 @@ lemma IsTorusOver.of_iso (e : G ≅ H) [e.hom.IsOver Spec(k)] [IsMon_Hom (e.hom.
   obtain ⟨L, _, _, _, hH⟩ := ‹H.IsTorusOver k›
   refine ⟨L, _, ‹_›, ‹_›, ?_⟩
   let e'' := (Over.pullback <| Spec.map <| CommRingCat.ofHom <| algebraMap k L).mapGrp.mapIso <|
-    Grp_.mkIso (M := .mk <| G.asOver Spec(k)) (N := .mk <| H.asOver Spec(k)) (Over.isoMk e)
-      (IsMon_Hom.one_hom (e.hom.asOver Spec(k))) (IsMon_Hom.mul_hom (e.hom.asOver Spec(k)))
+    Grp_.mkIso' <| e.asOver Spec(k)
   let e' := (Grp_.forget _ ⋙ Over.forget _).mapIso e''
   dsimp at e'
   have : e'.hom.IsOver Spec(L) := by simp [e', e'']

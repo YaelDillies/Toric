@@ -142,6 +142,6 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [Mon_C
 /-- If `M` and `N` are isomorphic as monoid objects, then `X ⟶ M` and `X ⟶ N` are isomorphic
 monoids. -/
 def homMulEquivRight (e : M ≅ N) [IsMon_Hom e.hom] (X : C) : (X ⟶ M) ≃* (X ⟶ N) :=
-  ((yonedaMon.mapIso <| Mon_.mkIso'' e).app <| .op X).monCatIsoToMulEquiv
+  ((yonedaMon.mapIso <| Mon_.mkIso' e).app <| .op X).monCatIsoToMulEquiv
 
 end Mon_Class
