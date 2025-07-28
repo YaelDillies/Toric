@@ -204,18 +204,6 @@ variable {F F' : C ⥤ D} [F.Monoidal] [F'.Monoidal] {G : D ⥤ E} [G.Monoidal]
 
 open LaxMonoidal Monoidal
 
-protected instance Faithful.mapGrp [F.Faithful] : F.mapGrp.Faithful where
-  map_injective {_X _Y} _f _g hfg := F.mapMon.map_injective hfg
-
-protected instance Full.mapGrp [F.Full] [F.Faithful] : F.mapGrp.Full where
-  map_surjective := F.mapMon.map_surjective
-
-/-- If `F : C ⥤ D` is a fully faithful monoidal functor, then `Grp(F) : Grp C ⥤ Grp D` is fully
-faithful too. -/
-protected noncomputable def FullyFaithful.mapGrp (hF : F.FullyFaithful) :
-    F.mapGrp.FullyFaithful where
-  preimage {X Y} f := Grp_.homMk <| hF.preimage f.hom
-
 def _root_.Grp_Class.ofIso {X Y : C} (e : X ≅ Y) [Grp_Class X] : Grp_Class Y where
   __ := Mon_Class.ofIso e
   inv := e.inv ≫ ι[X] ≫ e.hom
