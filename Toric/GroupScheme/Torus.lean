@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Mathlib.FieldTheory.Separable
 import Toric.GroupScheme.Diagonalizable
-import Toric.Mathlib.CategoryTheory.Comma.Over.OverClass
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.MvLaurentPolynomial
 

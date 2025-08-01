@@ -46,7 +46,7 @@ lemma map_comul_right_comp_comul (f : A →ₗ[R] M) :
   congr; ext; rfl
 
 @[coassoc_simps]
-lemma map_comul_right_comp_comul_assoc (f : A →ₗ[R] M) (h : M ⊗[R] A ⊗[R] A →ₗ[R] P) :
+lemma map_comul_right_comp_comul_assoc (f : A →ₗ[R] M) (h : M ⊗[R] (A ⊗[R] A) →ₗ[R] P) :
     (h ∘ₗ map f δ) ∘ₗ δ = h ∘ₗ α M A A ∘ₗ (f ▷ A) ▷ A ∘ₗ δ ▷ A ∘ₗ δ := by
   simp [LinearMap.comp_assoc, map_comul_right_comp_comul]
 
@@ -78,7 +78,7 @@ lemma map_id_id : map (.id) (.id) = (.id : M ⊗[R] N →ₗ[R] _) := by ext; rf
 
 @[coassoc_simps]
 lemma map_map_comp_assoc_eq_assoc (f : M →ₗ[R] M') (g : N →ₗ[R] N') (h : P →ₗ[R] P')
-    (i : M' ⊗[R] N' ⊗[R] P' →ₗ[R] Q) :
+    (i : M' ⊗[R] (N' ⊗[R] P') →ₗ[R] Q) :
     (i ∘ₗ map f (map g h)) ∘ₗ α M N P = i ∘ₗ α M' N' P' ∘ₗ map (map f g) h := by ext; rfl
 
 @[coassoc_simps]

@@ -31,7 +31,7 @@ noncomputable def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
       simp
     _ = ε := by ext; simp
   map_comp_comul := by
-    let e : (C ⊗[R] C) ⊗[R] (C ⊗[R] C) ≃ₗ[R] C ⊗[R] (C ⊗[R] C) ⊗[R] C :=
+    let e : (C ⊗[R] C) ⊗[R] (C ⊗[R] C) ≃ₗ[R] C ⊗[R] ((C ⊗[R] C) ⊗[R] C) :=
       _root_.TensorProduct.assoc _ _ _ _ ≪≫ₗ
         TensorProduct.congr (.refl _ _) (_root_.TensorProduct.assoc _ _ _ _).symm
     rw [← e.comp_toLinearMap_eq_iff, TensorProduct.comul_def]
