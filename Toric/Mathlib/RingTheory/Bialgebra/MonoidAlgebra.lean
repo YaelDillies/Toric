@@ -42,7 +42,7 @@ noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : MonoidAlgebra R M 
     show (Algebra.ofId _ _).comp (Bialgebra.counitAlgHom R _) r = AlgHom.id R _ r
     congr 1
     ext g : 2
-    simp [Subsingleton.elim g 1, MonoidAlgebra.one_def]
+    simp [Subsingleton.elim g 1]
   right_inv := (Bialgebra.counitAlgHom R (MonoidAlgebra R M)).commutes
 
 end Semiring
@@ -120,7 +120,7 @@ noncomputable def bialgEquivOfSubsingleton [Subsingleton M] : R[M] ≃ₐc[R] R 
     show (Algebra.ofId _ _).comp (Bialgebra.counitAlgHom R _) r = AlgHom.id R _ r
     congr 1
     ext g : 3
-    simp [Subsingleton.elim g 0, AddMonoidAlgebra.one_def]
+    simp [Subsingleton.elim g 0]
   right_inv := (Bialgebra.counitAlgHom R R[M]).commutes
 
 end AddMonoid

@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Paul Lezeau, Patrick Luo, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.AlgebraicGeometry.Morphisms.UnderlyingMap
-import Mathlib.CategoryTheory.Monoidal.Grp_
 import Mathlib.CategoryTheory.Monoidal.Mod_
 import Toric.GroupScheme.Torus
 
