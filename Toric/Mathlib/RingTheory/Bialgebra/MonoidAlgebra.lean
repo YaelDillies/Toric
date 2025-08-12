@@ -1,6 +1,5 @@
 import Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
-import Toric.Mathlib.RingTheory.Bialgebra.Hom
 
 suppress_compilation
 
@@ -69,7 +68,8 @@ end Algebra
 @[simp]
 lemma convMul_bialgHom_single [Bialgebra R A] [CommMonoid M] (f g : MonoidAlgebra R M →ₐc[R] A)
     (x : M) : (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
-  simp [← BialgHom.toLinearMap_apply, -CoalgHom.toLinearMap_eq_coe, BialgHom.toLinearMap_mul]
+  simp [← BialgHom.toCoalgHom_apply, ← CoalgHom.coe_toLinearMap, ← CoalgHom.toLinearMap_eq_coe,
+    -LinearMap.coe_coe, BialgHom.toLinearMap_mul]
 
 end CommSemiring
 
@@ -137,7 +137,8 @@ lemma convMul_algHom_single [Algebra R A] [AddMonoid M] (f g : R[M] →ₐ[R] A)
 @[simp]
 lemma convMul_bialgHom_single [Bialgebra R A] [AddCommMonoid M] (f g : R[M] →ₐc[R] A) (x : M) :
     (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
-  simp [← BialgHom.toLinearMap_apply, -CoalgHom.toLinearMap_eq_coe, BialgHom.toLinearMap_mul]
+  simp [← BialgHom.toCoalgHom_apply, ← CoalgHom.coe_toLinearMap, ← CoalgHom.toLinearMap_eq_coe,
+    -LinearMap.coe_coe, BialgHom.toLinearMap_mul]
 
 end CommSemiring
 

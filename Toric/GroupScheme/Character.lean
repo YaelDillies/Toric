@@ -5,7 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.Algebra.FreeAbelianGroup.Finsupp
 import Toric.GroupScheme.Torus
-import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.LinearAlgebra.PerfectPairing.Basic
 
 /-!
@@ -110,7 +109,7 @@ variable (R G) in
 
 Note: This is true over a general base using Cartier duality, but we do not prove that. -/
 def cocharDiag : X*(Spec R, Diag (Spec R) G) ≃+ (G →+ ℤ) :=
-  diagHomEquiv.symm.trans <| AddMonoidHom.postcompAddEquiv <| FreeAbelianGroup.uniqueEquiv _
+  diagHomEquiv.symm.trans <| .addMonoidHomCongrRight <| FreeAbelianGroup.uniqueEquiv _
 
 lemma cocharDiag_symm_apply (g : G →+ ℤ) :
   (cocharDiag R G).symm g =

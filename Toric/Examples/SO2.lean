@@ -10,6 +10,7 @@ import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv
+import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 
 /-!

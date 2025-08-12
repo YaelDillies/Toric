@@ -14,7 +14,6 @@ import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
 import Toric.Mathlib.Algebra.Algebra.Equiv
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
-import Toric.Mathlib.Algebra.Group.Equiv.Basic
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
