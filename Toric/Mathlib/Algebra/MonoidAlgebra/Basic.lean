@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Algebra.Tower
 import Mathlib.Algebra.MonoidAlgebra.Basic
-import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
+import Toric.Mathlib.Algebra.MonoidAlgebra.Lift
 
 namespace MonoidAlgebra
 
@@ -36,7 +36,7 @@ lemma mapRangeRingHom_comp_algebraMap [CommSemiring S] (f : R →+* S) :
 noncomputable def mapRangeAlgHom {T : Type*} [Semiring S]
     [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) :
     MonoidAlgebra S M →ₐ[R] MonoidAlgebra T M :=
-  liftNCAlgHom (singleOneAlgHom.comp f) (of T M) (by intro x y; simp[commute_iff_eq])
+  liftNCAlgHom (singleOneAlgHom.comp f) (of T M) fun x y ↦ by simp [commute_iff_eq]
 
 @[simp]
 lemma mapRangeAlgHom_apply {T : Type*} [Semiring S] [Semiring T] [Algebra R S] [Algebra R T]

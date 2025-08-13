@@ -176,7 +176,7 @@ instance specOverSpec [Algebra R A] : (Spec A).Over (Spec R) where
 instance locallyOfFiniteType_specOverSpec [Algebra R A] [Algebra.FiniteType R A] :
     LocallyOfFiniteType (Spec A ↘ Spec R) := by
   rw [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
-  simpa [algebraMap_finiteType_iff_algebra_finiteType]
+  simpa [RingHom.finiteType_algebraMap]
 
 attribute [local simp] AlgHom.toUnder in
 @[simps! one]

@@ -127,7 +127,7 @@ lemma diagPullbackIso_inv_fst (f : T ⟶ S) :
 instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S M ↘ S) := by
   apply MorphismProperty.pullback_snd
   simp only [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType),
-    CommRingCat.hom_ofHom, algebraMap_finiteType_iff_algebra_finiteType]
+    CommRingCat.hom_ofHom, RingHom.finiteType_algebraMap]
   infer_instance
 
 @[simp] lemma locallyOfFiniteType_diag_iff [hS : Nonempty S] :
@@ -151,7 +151,7 @@ instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S
       erw [comp_over]
       assumption
     simpa [specOverSpec_over, HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType),
-      algebraMap_finiteType_iff_algebra_finiteType, AddMonoidAlgebra.finiteType_iff_fg] using h
+      RingHom.finiteType_algebraMap, AddMonoidAlgebra.finiteType_iff_fg] using h
 
 variable (S) in
 def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=

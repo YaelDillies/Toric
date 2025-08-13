@@ -1,5 +1,5 @@
 import Mathlib.Algebra.MonoidAlgebra.MapDomain
-import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
+import Toric.Mathlib.Algebra.MonoidAlgebra.Lift
 
 variable {M N O R S : Type*} [CommSemiring R] [CommSemiring S]
 

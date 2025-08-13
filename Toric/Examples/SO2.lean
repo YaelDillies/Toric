@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.Data.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.GroupScheme.Torus
-import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Equiv

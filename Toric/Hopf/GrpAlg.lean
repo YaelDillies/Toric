@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
-import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
+import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 
 /-!
 # The group algebra functor

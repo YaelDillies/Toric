@@ -7,7 +7,6 @@ import Toric.GroupScheme.MonoidAlgebra
 import Toric.GroupScheme.Torus
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
-import Toric.Hopf.MonoidAlgebra
 import Toric.Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
 import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
@@ -15,10 +14,10 @@ import Toric.Mathlib.Algebra.Algebra.Equiv
 import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
-import Toric.Mathlib.Algebra.Group.Units.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
-import Toric.Mathlib.Algebra.MonoidAlgebra.Defs
+import Toric.Mathlib.Algebra.MonoidAlgebra.Lift
 import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
+import Toric.Mathlib.Algebra.MonoidAlgebra.Module
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
@@ -46,7 +45,6 @@ import Toric.Mathlib.RingTheory.Coalgebra.GroupLike
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
-import Toric.Mathlib.RingTheory.FiniteType
 import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
