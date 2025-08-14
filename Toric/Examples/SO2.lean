@@ -25,7 +25,7 @@ noncomputable section
 local notation3:max R "[X][Y]" => Polynomial (Polynomial R)
 local notation3:max "Y" => Polynomial.C (Polynomial.X)
 
-open Coalgebra Polynomial TensorProduct
+open Coalgebra HopfAlgebra Polynomial TensorProduct
 open scoped AddMonoidAlgebra Mon_Class
 
 /-! ### `SO(2, R)` as a Hopf algebra -/

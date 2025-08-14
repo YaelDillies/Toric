@@ -45,10 +45,8 @@ import Toric.Mathlib.RingTheory.Coalgebra.GroupLike
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
 import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
-import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
-import Toric.Mathlib.RingTheory.HopfAlgebra.Hom
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 import Toric.Mathlib.RingTheory.TensorProduct.Basic

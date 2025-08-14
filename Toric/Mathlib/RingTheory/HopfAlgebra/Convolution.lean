@@ -3,8 +3,8 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Yunzhou Xie. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
+import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
-import Toric.Mathlib.RingTheory.HopfAlgebra.Basic
 
 /-!
 # Convolution product on Hopf algebra maps
@@ -22,14 +22,12 @@ f * g = f g
 
 suppress_compilation
 
-open Algebra Coalgebra Bialgebra TensorProduct
+open Algebra Coalgebra Bialgebra HopfAlgebra TensorProduct
 
 variable {R A C : Type*} [CommSemiring R]
 
 namespace HopfAlgebra
 variable [CommSemiring A] [HopfAlgebra R A]
-
-attribute [-simp] sum_antipode_mul_eq sum_mul_antipode_eq
 
 lemma antipode_mul_antidistrib (a b : A) :
     antipode R (a * b) = antipode R b * antipode R a := by
@@ -38,9 +36,10 @@ lemma antipode_mul_antidistrib (a b : A) :
   suffices α = β from congr($this (a ⊗ₜ b))
   apply left_inv_eq_right_inv (a := LinearMap.mul' R A) <;> ext a b
   · simp [α, ((ℛ R a).tmul (ℛ R b)).mul_apply, ← Bialgebra.counit_mul, mul_comm b a,
-      ← sum_antipode_mul_eq ((ℛ R a).mul (ℛ R b))]
+      ← sum_antipode_mul_eq_algebraMap_counit ((ℛ R a).mul (ℛ R b))]
   · simp [((ℛ R a).tmul (ℛ R b)).mul_apply, mul_comm, mul_mul_mul_comm, Finset.sum_mul_sum,
-      ← Finset.sum_product', β, ← sum_mul_antipode_eq (ℛ R a), ← sum_mul_antipode_eq (ℛ R b)]
+      ← Finset.sum_product', β, ← sum_mul_antipode_eq_algebraMap_counit (ℛ R a),
+      ← sum_mul_antipode_eq_algebraMap_counit (ℛ R b)]
 
 lemma antipode_mul_distrib (a b : A) :
     antipode R (a * b) = antipode R a * antipode R b := by
@@ -155,12 +154,23 @@ variable [CommSemiring A] [CommSemiring C]
 section HopfAlgebra
 variable [HopfAlgebra R A] [HopfAlgebra R C] [IsCocomm R C]
 
-instance : Inv (C →ₐc[R] A) where inv f := sorry
+/-- The antipode as a coalgebra hom. -/
+def antipodeBialgHom : C →ₐc[R] C where
+  __ := antipodeAlgHom R (A := C)
+  map_smul' := _
+  counit_comp := counit_comp_antipode
+  map_comp_comul := by
+    apply left_inv_eq_right_inv (a := comul)
+    · sorry
+    · sorry
 
--- lemma inv_def (f : C →ₐc[R] A) : f⁻¹ = sorry := rfl
+instance : Inv (C →ₐc[R] A) where inv := antipodeBialgHom.comp
 
--- @[simp]
--- lemma inv_apply (f : C →ₐc[R] A) (c : C) : f⁻¹ c = sorry := rfl
+set_option linter.unusedSectionVars false in
+lemma inv_def (f : C →ₐc[R] A) : f⁻¹ = antipodeBialgHom.comp f := rfl
+
+set_option linter.unusedSectionVars false in
+@[simp] lemma inv_apply (f : C →ₐc[R] A) (c : C) : f⁻¹ c = antipode R (f c) := rfl
 
 private lemma inv_convMul_cancel (f : C →ₐc[R] A) : f⁻¹ * f = 1 := sorry
 
