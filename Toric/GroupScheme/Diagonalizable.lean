@@ -221,12 +221,12 @@ def diagFunctorIso :
 lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
     ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
 
-instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Full :=
-  have : (hopfSpec (CommRingCat.of R)).Full := hopfSpec.instFull
+instance {R : Type*} [CommRing R] [Nontrivial R] : (diagFunctor Spec(R)).Faithful :=
+  have : (hopfSpec (CommRingCat.of R)).Faithful := hopfSpec.instFaithful
   .of_iso (diagFunctorIso (.of R)).symm
 
-instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Faithful :=
-  have : (hopfSpec (CommRingCat.of R)).Faithful := hopfSpec.instFaithful
+instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Full :=
+  have : (hopfSpec (CommRingCat.of R)).Full := hopfSpec.instFull
   .of_iso (diagFunctorIso (.of R)).symm
 
 section
