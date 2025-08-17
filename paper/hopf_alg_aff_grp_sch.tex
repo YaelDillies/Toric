@@ -99,8 +99,11 @@
 \newcommand{\mcV}{\mathcal V}
 \newcommand{\eps}{\varepsilon}
 \newcommand{\Eps}{\mathcal E}
+\newcommand{\Homgr}{\Hom_{\mathrm{gr}}}
+\newcommand{\Homcogr}{\Hom_{\mathrm{cogr}}}
 
 
+\DeclareMathOperator{\Hom}{Hom}
 \DeclareMathOperator{\Set}{Set}
 \DeclareMathOperator{\Ring}{Ring}
 \DeclareMathOperator{\Alg}{Alg}
@@ -171,7 +174,7 @@ The paper is structured as follows:
 These developments culminate in the definition of the perfect pairing between characters and cocharacters of an algebraic group, as described in \cref{sec:char-cochar}.
 
 
-\section{The character-cocharacter pairing}
+\section{The character-cocharacter pairing}\label{sec:char-cochar}
 
 
 TODO(Michał)
@@ -181,10 +184,70 @@ TODO(Michał)
 \section{The correspondence between affine group schemes and Hopf algebras}
 
 
-TODO(Yaël)
+In \cref{sec:char-cochar}, we reduced the existence of the character-cocharacter pairing
+to the computation of the group $\Homgr(\Spec R[H], \Spec R[G])$
+where $G$ and $H$ are commutative groups as the group $\Homgr(G, H)$.
+In this section, we compute this hom set in two main steps.
+
+First, we make every commutative group algebra $R[G]$
+into a cogroup object in the category of algebras.
+This involves finding a \emph{counit} $\eps : R[G] \to R$,
+a \emph{comultiplication} $\delta : R[G] \to R[G \times G]$
+and an \emph{antipode} $\iota : R[G] \to R[G]$
+respecting the axioms of a group object, but with all arrows reversed:
+
+TODO: Insert diagram
+
+As a result, we acquire a notion of "cogroup homomorphism":
+An algebra homomorphism $f : R[G] \to R[H]$ will be a \emph{cogroup homomorphism} iff
+it commutes with counit and comultiplication
+(at which point it automatically commutes with antipode too).
+Just as for regular groups, cogroup homomorphisms form a group under pointwise comultiplication.
+We call the product of two cogroup homomorphisms the \emph{convolution product}.
+By abstract nonsense, this means that $\Homgr(\Spec R[H], \Spec R[G])$ is isomorphic as a group to
+$R$-cogroup homomorphisms $\Homcogr(R[G], R[H])$ under the convolution product.
+
+Second, by algebra we prove that every said $R$-cogroup homomorphisms $R[G] \to R[H]$
+comes from a unique group homomorphism $G \to H$,
+in a way that sends the convolution product to the pointwise product of group homomorphisms.
+
+The first main step can in fact be carried out for more general objects than group algebras.
+The cogroup structure we endowed $R[G]$ with is exactly the data required
+to make $R[G]$ into a (cocommutative) \emph{$R$-Hopf algebra}.
+\footnote{We have no use of non-cocommutative Hopf algebras in this paper,
+therefore we always assume that $\beta \circ \delta = \delta$.}
+We will in fact execute the whole step
+relative to two $R$-Hopf algebras $A$ and $B$ in place of $R[G]$ and $R[H]$.
+In what follows, \emph{Hopf algebra homomorphisms} will replace what we called so far
+"cogroup homomorphisms".
+Simultaneously, one can attempt to remove the antipode from the definition of Hopf algebra.
+The resulting concept is called a \emph{bialgebra},
+bialgebra homomorphisms have the same definition as Hopf algebra homomorphisms,
+and as a result bialgebras are exactly the comonoid objects in the category of algebras.
+If one further removes the $R$-algebra structure from bialgebras,
+then one obtains \emph{coalgebras}.
+
+In the remainder of this section,
+we detail how we implemented the convolution product (\cref{sec:conv-prod}),
+how to deal with/automate routine computations in Hopf algebras (\cref{sec:coassoc-simps})
+and finally how to translate between the concrete description of a Hopf algebra in terms
+of linear maps and the categorical machinery of cogroup objects (\cref{sec:concrete-categories}).
+We relegate the abstract nonsense itself to \cref{sec:abstract-nonsense}.
 
 
 \subsection{Convolution product}\label{sec:conv-prod}
+
+
+
+\subsection{A tactic for Hopf algebra tautologies}
+
+
+
+\subsection{The role of concrete categories}\label{sec:concrete-categories}
+
+
+
+\section{Abstract nonsense}\section{sec:abstract-nonsense}
 
 
 TODO(Yaël)
@@ -404,149 +467,6 @@ Theref
 
 
 TODO(Michał)
-
-
-\section{The role of concrete categories}\label{sec:concrete-categories}
-
-
-To make the most of our categorical tools when constructing the equivalence, we need to turn the plain Hopf algebras described in \cref{sec:hopf} into a category.
-We want this category to be easily interfaced with both plain Hopf algebras {\bf and} categorical concepts.
-These two goals are in tension:
-Categorically, Hopf algebras are cogroup objects in the category of algebras, but this description is several layers of abstraction away from the usual definition in terms of counit, comultiplication and antipode. therefore a careful definition of this category is in order.
-
-Two more categories will be needed along the way: those of algebras and of bialgebras.
-
-Let us set some terminology straight.
-For $R$ a ring, we call $\CommAlg_R, \CommBialg_R, \CommHopfAlg_R$ the categories of $R$-algebras, $R$-bialgebras and $R$-Hopf algebras respectively.
-These three categories are all \emph{concrete categories}, meaning that their objects are sets with extra structure and their morphisms are structure-preserving maps.
-Formally, a concrete category is a category $\mcC$ equipped with a faithful functor $F : \mcC \to \Set$, called the \emph{forgetful functor}.
-To distinguish between a $R$-algebra and an object of $\CommAlg_R$, we call the former an \emph{unbundled algebra} and the latter a \emph{bundled algebra}, and similarly for bialgebras and Hopf algebras.
-\footnote{\emph{Bundling} is a more general notion in theorem proving. See TODO for more details.}
-
-The category of algebras poses a significant problem not found in the other two, so we discuss it first.
-
-
-\subsection{\texorpdfstring{$\CommAlg$}{CommAlg}}\label{sec:comm-alg}
-
-
-There are two approaches to building $\CommAlg_R$.
-
-The \emph{bundling approach} is to define the objects of $\CommAlg_R$ as $R$-algebras $A$ and morphisms from $R$-algebras $A$ and $B$ as $R$-algebra homomorphisms $f : A \to B$.
-
-\begin{leancode}
-
-\end{leancode}
-
-The \emph{categorical approach} is to define $\CommAlg_R$ as the under category $R / \CommRing$ of $R$ in $\CommRing$.
-\footnote{One cannot similarly construct $\Alg_R$, the category of not necessarily commutative $R$-algebras, as $R / \Ring$ even if $R$ is commutative.
-Indeed, the structure morphism $\varphi : R \to A$ of an $R$-algebra $A$ is by definition valued in the center of $A$, ie $\varphi(r) * a = a * \varphi(r)$ for all $r \in R, a \in A$.}
-
-The bundling approach is rather straightforward, but cannot a priori benefit from the many results on over and under categories that Mathlib provides.
-For example, for $X$ an object in a category $\mcC$, Mathlib knows that pushouts in $\mcC$ correspond coproducts in $X/𝒞$.
-\footnote{Not accessing the \emph{generic} pushout-coproduct correspondence turns out to be a good thing.
-See \cref{sec:grp} for more details.}
-
-In turn, the categorical approach is more abstract and less directly related to unbundled algebras, but it allows us to use the many results on over and under categories that Mathlib provides.
-
-For a long time, Mathlib resisted acquiring TODO Find refs to relevant Zulip conversations.
-
-The first way is to define
-
-
-
-The two  We can now describe the two approaches we have to
-
-
-
-These three categories can be obtained through purely categorical operations starting from $\CommRing$, the category of \emph{commutative} rings, tonce we have defined the
-
-There are several ways to build these three concrete categories.
-
-The first way would be to start from $\CommRing$, the category of \emph{commutative} rings, take the under category of $R \in \CommRing$ to get $\CommAlg_R$, the category of \emph{commutative} $R$-algebras,
-then take the categories of comonoid or cogroup objects in $\CommAlg_R$ to obtain $\CommBialg_R$ and $\CommHopfAlg_R$, the categories of commutative $R$-bialgebras and commutative $R$-Hopf algebras respectively.
-
-This approach has the advantage that we can reuse one needn't define any more categories than the following categories, which Mathlib already contains all the ingredients necessary to define the category of commutative $R$-Hopf algebras that Way:
-
-\begin{leancode}
-  /-- The category of commutative rings. -/
-  structure CommRingCat : Type (u + 1) := ...
-
-  /-- The category under `X`. -/
-  def Under {C : Type u} [Category.{v} C] (X : C) : Type (max u v) := ...
-
-  /-- A monoid object internal to a monoidal category. -/
-  structure Mon_ (C : Type u) [Category.{v} C] [MonoidalCategory C] : Type (max u v)
-
-  /-- A group object internal to a cartesian monoidal category. -/
-  structure Grp_ (C : Type u) [Category.{v} C] [CartesianMonoidalCategory C] : Type (max u v)
-
-  /-- The opposite of a category, where the objects are the same and the morphisms are
-  reversed, with notation `Cᵒᵖ`. -/
-  structure Opposite (C : Type u) : Type u
-\end{leancode}
-
-Note that Mathlib does not define comonoid and cogroup objects, as they can be obtained as the opposite category of monoid/group objects in the opposite category, ie \lean{(Mon_ Cᵒᵖ)ᵒᵖ}.
-\footnote{This is a simplication, as \lean{Comon_} does exist in Mathlib.
-The truth is that it is barely used and not developed enough to support our use case, especially in relation to the absence of \lean{Cogrp_}.}
-That first way to implement our concrete categories would therefore look like this:
-\begin{leancode}
-  /-- The category of commutative $R$-algebras. -/
-  abbrev CommAlg (R : CommRingCat.{u}) : Type (u + 1) := Under R
-
-  /-- The category of commutative $R$-bialgebras. -/
-  abbrev CommBialg (R : CommRingCat.{u}) : Type (u + 1) := (Mon_ (CommAlg R)ᵒᵖ)ᵒᵖ
-
-  /-- The category of commutative $R$-Hopf algebras. -/
-  abbrev CommHopfAlg (R : CommRingCat.{u}) : Type (u + 1) := (Grp_ (CommAlg R)ᵒᵖ)ᵒᵖ
-\end{leancode}
-
-This is a fine definition of the \emph{categories}, but it is difficult to work with their \emph{objects}. For example, something one obviously needs about the category of $R$-algebras is that its objects are $R$-algebras, and that its morphisms are $R$-algebra morphisms.
-
-Let's see how that looks for our way of defining $\CommAlg_R$:
-\begin{leancode}
-  /-- A commutative $R$-algebra gives an object of `CommAlg R`. -/
-  abbrev CommAlg.of (R A : Type u) [CommRing R] [CommRing A] [Algebra R A] : CommAlg R :=
-    .mk <| algebraMap R A
-
-  /-- An $R$-algebra homomorphism gives a morphism in `CommAlg R`. -/
-  abbrev CommAlg.homMk (R A B : Type u) [CommRing R] [CommRing A] [Algebra R A]
-      [CommRing B] [Algebra R B] (f : A →ₐ[R] B) : CommAlg.mk R A ⟶ CommAlg.mk R B :=
-    Under.homMk f
-\end{leancode}
-
-This doesn't
-
-\begin{leancode}
-  instance (R A : Type u) [CommRing R] [CommRing A] [Bialgebra R A] :
-      Mon_Class <| op <| CommAlg.of R A where
-    one := (CommAlg.homMk <| Bialgebra.counitAlgHom R A).op
-    mul := (CommAlg.homMk <| Bialgebra.comulAlgHom R A).op
-    one_mul' := Quiver.Hom.unop_inj Coalgebra.rTensor_counit_comp_comul
-    mul_one' := Quiver.Hom.unop_inj Coalgebra.lTensor_counit_comp_comul
-    mul_assoc' := Quiver.Hom.unop_inj Coalgebra.coassoc_symm_apply
-
-  /-- A commutative `R`-bialgebra gives an object of `CommBialg R`. -/
-  abbrev CommBialg.of (R A : Type u) [CommRing R] [CommRing A] [Bialgebra R A] : CommBialg R :=
-    .op <| .mk <| .of R A
-
-  instance isMon_Hom_commAlgHomMk (R A B : Type u) [CommRing R] [CommRing A] [Bialgebra R A]
-      [CommRing B] [Bialgebra R B] (f : A →ₐc[R] B) :
-      IsMon_Hom (CommAlg.homMk (f : A →ₐ[R] B)).op where
-    one_hom := Quiver.Hom.unop_inj <| by ext; simp [one]
-    mul_hom := Quiver.Hom.unop_inj <| by ext; simp [mul]
-
-  /-- An `R`-bialgebra homomorphism gives a morphism in `CommBialg R`. -/
-  abbrev CommBialg.homMk (R A B : Type u) [CommRing R] [CommRing A] [Bialgebra R A]
-      [CommRing B] [Bialgebra R B] (f : A →ₐc[R] B) : CommBialg.mk R A ⟶ CommBialg.mk R B :=
-    (Mon_.Hom.mk (CommAlg.homMk (f : A →ₐ[R] B)).op).op
-\end{leancode}
-
-
-\subsection{\texorpdfstring{$\CommBialg, \CommHopfAlg$}{CommBialg, CommHopfAlg}}\label{sec:comm-hopf-alg}
-
-
-
-
 \section{Group objects}\label{sec:grp}
 
 
