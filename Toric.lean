@@ -56,4 +56,3 @@ import Toric.SphericalVariety
 import Toric.ToricIdeal
 import Toric.ToricVariety.Defs
 import Toric.ToricVariety.FromMonoid
-import Toric.Util.TrackSorry
