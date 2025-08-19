@@ -89,11 +89,9 @@ variable {R A B : Type*} [CommSemiring R] [CommSemiring A] [CommSemiring B] [Bia
   [Bialgebra R B] {a a₁ a₂ : A} {b : B}
 
 /-- Representations of `a₁` and `a₂` yield a representation of `a₁ * a₂`. -/
-@[simps!]
-protected def _root_.Coalgebra.Repr.mul (ℛ₁ : Coalgebra.Repr R a₁) (ℛ₂ : Coalgebra.Repr R a₂) :
+@[simps!, simps! index] protected noncomputable
+def _root_.Coalgebra.Repr.mul (ℛ₁ : Coalgebra.Repr R a₁) (ℛ₂ : Coalgebra.Repr R a₂) :
     Coalgebra.Repr R (a₁ * a₂) := (ℛ₁.tmul ℛ₂).induced (R := R) (mulCoalgHom R A)
-
-attribute [simps! index] Coalgebra.Repr.mul
 
 end CommSemiring
 end Bialgebra
