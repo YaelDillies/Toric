@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: >
+  If you use this project in your work, please cite it using the metadata below.
+title: "Formalisation of Toric Varieties"
+version: 0.1.0
+date-released: Feb 17, 2023
+authors:
+  - family-names: Dillies
+    given-names: Yaël
+    orcid: https://orcid.org/0000-0002-5369-8671
+  - family-names: Herradón Cueto
+    given-names: Moisés
+  - family-names: Lezeau
+    given-names: Paul
+  - family-names: Luo
+    given-names: Patrick
+  - family-names: Merten
+    given-names: Christian
+  - family-names: Morel
+    given-names: Sophie
+  - family-names: Mrugała
+    given-names: Michał
+  - family-names: Reichert
+    given-names: Paul
+  - family-names: Springer
+    given-names: Justus
+  - family-names: Yang
+    given-names: Andrew
+repository-code: https://github.com/YaelDillies/Toric
+url: https://github.com/YaelDillies/Toric
+abstract: >
+  A collaborative project to formalise the basic theory of toric varieties,
+  using the Lean 4 theorem prover.
+
+  Organized by Yaël Dillies. Launched Feb 17, 2025.
+keywords:
+  - algebraic geometry
+  - category theory
+  - convex geometry
+  - formalization project
+  - toric varieties
