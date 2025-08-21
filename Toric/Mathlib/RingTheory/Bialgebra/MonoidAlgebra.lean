@@ -26,11 +26,18 @@ lemma bialgHom_ext' ⦃φ₁ φ₂ : MonoidAlgebra R M →ₐc[R] A⦄
     (h : (φ₁ : MonoidAlgebra R M →* A).comp (of R M) = .comp φ₂ (of R M)) : φ₁ = φ₂ :=
   bialgHom_ext fun x ↦ congr($h x)
 
+@[simp] lemma counit_domCongr (e : M ≃* N) (x : MonoidAlgebra A M) :
+    counit (R := R) (domCongr R A e x) = counit x := by
+  induction x using MonoidAlgebra.induction_linear <;> simp [*]
+
 variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
 @[simps!]
 def domCongrBialgHom (e : M ≃* N) : MonoidAlgebra A M ≃ₐc[R] MonoidAlgebra A N :=
-  .ofAlgEquiv (domCongr R A e) (by ext; simp) (by ext; simp [TensorProduct.map_map])
+  .ofAlgEquiv (domCongr R A e) (by ext; simp) <| by
+    apply AlgHom.toLinearMap_injective
+    ext
+    simp [TensorProduct.map_map, TensorProduct.AlgebraTensorModule.map_eq]
 
 variable (M) in
 /-- The trivial monoid algebra is isomorphic to the base ring. -/
@@ -105,11 +112,18 @@ lemma bialgHom_ext' ⦃φ₁ φ₂ : R[M] →ₐc[R] A⦄
     (h : (φ₁ : R[M] →* A).comp (of R M) = .comp φ₂ (of R M)) : φ₁ = φ₂ :=
   bialgHom_ext fun x ↦ congr($h x)
 
+@[simp] lemma counit_domCongr (e : M ≃+ N) (x : A[M]) :
+    counit (R := R) (domCongr R A e x) = counit x := by
+  induction x using MonoidAlgebra.induction_linear <;> simp [*]
+
 variable (R A) in
 /-- Isomorphic monoids have isomorphic monoid algebras. -/
 @[simps!]
 def domCongrBialgHom (e : M ≃+ N) : A[M] ≃ₐc[R] A[N] :=
-  .ofAlgEquiv (domCongr R A e) (by ext; simp) (by ext; simp [TensorProduct.map_map])
+  .ofAlgEquiv (domCongr R A e) (by ext; simp) <| by
+    apply AlgHom.toLinearMap_injective
+    ext
+    simp [TensorProduct.map_map, TensorProduct.AlgebraTensorModule.map_eq]
 
 variable (M) in
 /-- The trivial monoid algebra is isomorphic to the base ring. -/

@@ -8,8 +8,6 @@ import Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.RingTheory.AdjoinRoot
-import Toric.Mathlib.RingTheory.Bialgebra.Equiv
-import Toric.Mathlib.RingTheory.Bialgebra.Hom
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 
 /-!
@@ -149,7 +147,7 @@ private lemma complexEquivInv_single (a : Multiplicative ℤ) (b : ℂ) :
 set_option allowUnsafeReducibility true in
 attribute [local semireducible] MonoidAlgebra.single in
 private def complexEquivFun : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multiplicative ℤ) := by
-  refine .ofAlgHom'
+  refine .ofAlgHom
     (liftₐ
       ((1 / 2 : ℂ) • (.single (.ofAdd 1) 1 + .single (.ofAdd (-1)) 1))
       (- (.I / 2 : ℂ) • (.single (.ofAdd 1) 1 - .single (.ofAdd (-1)) 1)) ?_) ?_ ?_
@@ -238,9 +236,7 @@ lemma baseChangeAlgEquiv_Y : (baseChangeAlgEquiv R S) (1 ⊗ₜ «Y») = «Y» :
 variable (R S) in
 /-- `SO2Ring` is invariant under base change of bialgebras. -/
 def baseChangeBialgEquiv : S ⊗[R] SO2Ring R ≃ₐc[S] SO2Ring S :=
-  .ofAlgEquiv' (baseChangeAlgEquiv R S)
-  (by aesop)
-  (by aesop (add simp [tmul_add, tmul_sub]))
+  .ofAlgEquiv (baseChangeAlgEquiv R S) (by aesop) (by aesop (add simp [tmul_add, tmul_sub]))
 
 @[simp]
 lemma coe_baseChangeBialgEquiv : ⇑(baseChangeBialgEquiv R S) = baseChangeAlgEquiv R S := rfl

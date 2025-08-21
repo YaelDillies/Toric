@@ -45,12 +45,12 @@ variable [CommSemiring A] [CommSemiring B] [Bialgebra R A] [Bialgebra R B] {a b 
 variable (R A B) in
 /-- The tensor product of `R`-bialgebras is commutative, up to bialgebra isomorphism. -/
 def comm : A ⊗[R] B ≃ₐc[R] B ⊗[R] A :=
-  .ofAlgEquiv (Algebra.TensorProduct.comm R A B) (by ext; simp [mul_comm]) <| by
-    ext a b
-    dsimp
-    rw [← (ℛ R a).eq, ← (ℛ R b).eq]
-    simp [tmul_sum, sum_tmul]
-    rw [Finset.sum_comm]
+  .ofAlgEquiv (Algebra.TensorProduct.comm R A B) (by ext <;> simp) <| by
+    ext a <;>
+    · dsimp
+      rw [← (ℛ R a).eq]
+      simp [tmul_sum, sum_tmul]
+      rfl
 
 variable (R A) in
 /-- Multiplication on a commutative bialgebra as a bialgebra hom. -/
