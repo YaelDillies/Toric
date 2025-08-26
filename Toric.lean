@@ -15,8 +15,6 @@ import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
-import Toric.Mathlib.Algebra.MonoidAlgebra.Lift
-import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.Algebra.MonoidAlgebra.Module
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks

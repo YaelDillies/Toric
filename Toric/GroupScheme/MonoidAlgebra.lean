@@ -5,7 +5,6 @@ Authors: Andrew Yang
 -/
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GrpAlg
-import Toric.Mathlib.Algebra.MonoidAlgebra.MapDomain
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
@@ -112,9 +111,9 @@ def specCommMonAlgPullback :
     subst H
     letI := f.hom.toAlgebra
     letI H := (CommRingCat.isPushout_of_isPushout R S R[N.unop] S[N.unop]).op.map Scheme.Spec
-    have h₁ : (mapRangeRingHom f.hom).comp (mapDomainBialgHom R φ.unop.hom) =
+    have h₁ : (mapRangeRingHom M.unop f.hom).comp (mapDomainBialgHom R φ.unop.hom) =
         (RingHomClass.toRingHom (mapDomainBialgHom S φ.unop.hom)).comp
-          (mapRangeRingHom f.hom) := mapRangeRingHom_comp_mapDomainRingHom _ _
+          (mapRangeRingHom N.unop f.hom) := mapRangeRingHom_comp_mapDomainRingHom _ _
     have h₂ := (AlgHomClass.toAlgHom (mapDomainBialgHom S φ.unop.hom)).comp_algebraMap
     apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₁ h₂
     simp only [CommRingCat.ofHom_comp, Spec.map_comp] at h₁ h₂
@@ -127,7 +126,7 @@ def specCommMonAlgPullback :
 @[reassoc (attr := simp)]
 lemma specCommMonAlgPullback_inv_app_hom_left_fst (M) :
     ((specCommMonAlgPullback f Sf H).inv.app M).hom.left ≫ pullback.fst _ _ =
-      Spec.map (CommRingCat.ofHom (mapRangeRingHom f.hom)) :=
+      Spec.map (CommRingCat.ofHom (mapRangeRingHom M.unop f.hom)) :=
   letI := f.hom.toAlgebra
   let H' := (CommRingCat.isPushout_of_isPushout R S R[M.unop] S[M.unop]).op.map Scheme.Spec
   H ▸ H'.isoPullback_hom_fst

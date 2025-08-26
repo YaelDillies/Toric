@@ -1,16 +1,14 @@
 import Mathlib.Algebra.Algebra.Tower
 import Mathlib.Algebra.MonoidAlgebra.Basic
-import Toric.Mathlib.Algebra.MonoidAlgebra.Lift
 
 namespace MonoidAlgebra
 
-variable {k A B G : Type*} [CommSemiring k] [Semiring A] [Algebra k A] [Semiring B] [Algebra k B]
-    [Monoid G]
+variable {R A B M : Type*} [CommSemiring R] [Semiring A] [Algebra R A] [Semiring B] [Algebra R B]
+    [Monoid M]
 
 @[simp]
-theorem liftNCAlgHom_single (f : A →ₐ[k] B) (g : G →* B) (h_comm) (a : G) (b : A) :
-    liftNCAlgHom f g h_comm (single a b) = f b * g a :=
-  liftNC_single _ _ _ _
+lemma coe_liftNCAlgHom (f : A →ₐ[R] B) (g : M →* B) (h_comm) :
+    ⇑(liftNCAlgHom f g h_comm) = liftNC f g := rfl
 
 end MonoidAlgebra
 
@@ -75,13 +73,13 @@ Warning: This produces a diamond for
 global instance.
 -/
 noncomputable abbrev algebraMonoidAlgebra : Algebra (MonoidAlgebra R M) (MonoidAlgebra S M) :=
-  (mapRangeRingHom (algebraMap R S)).toAlgebra
+  (mapRangeRingHom M (algebraMap R S)).toAlgebra
 
 attribute [local instance] algebraMonoidAlgebra
 
 @[simp]
 lemma algebraMap_def :
-    algebraMap (MonoidAlgebra R M) (MonoidAlgebra S M) = mapRangeRingHom (algebraMap R S) :=
+    algebraMap (MonoidAlgebra R M) (MonoidAlgebra S M) = mapRangeRingHom M (algebraMap R S) :=
   rfl
 
 instance {T : Type*} [CommSemiring T] [Algebra R T] [Algebra S T] [IsScalarTower R S T] :

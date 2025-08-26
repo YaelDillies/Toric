@@ -22,8 +22,7 @@ variable [CommSemiring A] [Algebra R A] [CommSemiring B] [Algebra R B]
 variable (R A B) in
 /-- Tensoring `MonoidAlgebra R σ` on the left by an `R`-algebra `A` is algebraically
 equivalent to `MonoidAlgebra A σ`. -/
-noncomputable def tensorEquiv :
-    A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlgebra (A ⊗[R] B) σ := by
+noncomputable def tensorEquiv : A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlgebra (A ⊗[R] B) σ := by
   refine .ofAlgHom
     (Algebra.TensorProduct.lift
       ((IsScalarTower.toAlgHom A (A ⊗[R] B) _).comp Algebra.TensorProduct.includeLeft)
@@ -43,8 +42,7 @@ noncomputable def tensorEquiv :
 
 @[simp]
 lemma tensorEquiv_tmul (a : A) (p : MonoidAlgebra B σ) :
-    tensorEquiv R A B (a ⊗ₜ p) =
-      a • mapRangeAlgHom (Algebra.TensorProduct.includeRight) p := by
+    tensorEquiv R A B (a ⊗ₜ p) = a • mapRangeAlgHom Algebra.TensorProduct.includeRight p := by
   simp [tensorEquiv, Algebra.smul_def]
 
 @[simp]
@@ -53,10 +51,8 @@ lemma algebraTensorAlgEquiv_symm_single (m : σ) (a : A) (b : B) :
   simp [tensorEquiv]
 
 /-- The tensor product of the monoid algebra by an algebra `N`
-  is algebraically equivalent to a monoid algebra with
-  coefficients in `N`. -/
-noncomputable def scalarTensorEquiv :
-    A ⊗[R] MonoidAlgebra R σ ≃ₐ[A] MonoidAlgebra A σ :=
+is algebraically equivalent to a monoid algebra with coefficients in `N`. -/
+noncomputable def scalarTensorEquiv : A ⊗[R] MonoidAlgebra R σ ≃ₐ[A] MonoidAlgebra A σ :=
   (tensorEquiv ..).trans (mapRangeAlgEquiv (Algebra.TensorProduct.rid R A A))
 
 attribute [local instance] algebraMonoidAlgebra in

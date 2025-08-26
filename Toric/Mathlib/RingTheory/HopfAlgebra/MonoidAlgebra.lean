@@ -3,8 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-  import Mathlib.RingTheory.HopfAlgebra.Basic
-import Toric.Mathlib.Algebra.MonoidAlgebra.Lift
+import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Module
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
@@ -17,13 +16,13 @@ section
 variable [CommSemiring R] [CommSemiring S] (f : R →+* S) [CommMonoid M]
 
 lemma comulAlgHom_comp_mapRangeRingHom :
-    (comulAlgHom S (MonoidAlgebra S M)).toRingHom.comp (mapRangeRingHom f) =
-      .comp (Algebra.TensorProduct.mapRingHom f (mapRangeRingHom f) (mapRangeRingHom f)
+    (comulAlgHom S (MonoidAlgebra S M)).toRingHom.comp (mapRangeRingHom M f) =
+      .comp (Algebra.TensorProduct.mapRingHom f (mapRangeRingHom M f) (mapRangeRingHom M f)
         (by ext; simp) (by ext; simp))
         (comulAlgHom R (MonoidAlgebra R M)).toRingHom := by ext <;> simp
 
 lemma counitAlgHom_comp_mapRangeRingHom :
-    (counitAlgHom S (MonoidAlgebra S M)).toRingHom.comp (mapRangeRingHom f) =
+    (counitAlgHom S (MonoidAlgebra S M)).toRingHom.comp (mapRangeRingHom M f) =
       f.comp (counitAlgHom R (MonoidAlgebra R M)).toRingHom := by
   ext <;> simp
 
