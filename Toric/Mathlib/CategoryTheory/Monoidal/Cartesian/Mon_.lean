@@ -5,15 +5,9 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
-import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
 open scoped Hom Obj
-
-universe v₁ v₂ u₁ u₂
-
-attribute [simp] Mon_Class.one_comp Mon_Class.one_comp_assoc Mon_Class.comp_one
-  Mon_Class.comp_one_assoc
 
 namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
@@ -44,24 +38,8 @@ def FullyFaithful.homMulEquiv (hF : F.FullyFaithful) : (X ⟶ M) ≃* (F.obj X �
 end CategoryTheory.Functor
 
 namespace Mon_Class
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N O X Y : C} [Mon_Class M]
-  [Mon_Class N] [Mon_Class O]
-
-instance : IsMon_Hom (toUnit M) where
-instance : IsMon_Hom η[M] where
-  mul_hom := by simp [toUnit_unique (ρ_ (𝟙_ C)).hom (λ_ (𝟙_ C)).hom]
-
-variable [BraidedCategory C]
-
-attribute [local simp] tensorObj.one_def tensorObj.mul_def in
-attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
-  IsMon_Hom.mul_hom_assoc in
-instance : IsMon_Hom (fst M N) where
-
-attribute [local simp] tensorObj.one_def tensorObj.mul_def in
-attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
-  IsMon_Hom.mul_hom_assoc in
-instance : IsMon_Hom (snd M N) where
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
+  [Mon_Class N] [BraidedCategory C]
 
 lemma mul_tensorHom_mul (f f' : X ⟶ M) (g g' : Y ⟶ N) :
     (f * f') ⊗ₘ (g * g') = (f ⊗ₘ g) * (f' ⊗ₘ g') := by
@@ -73,39 +51,11 @@ lemma one_tensorHom_one : (1 : X ⟶ M) ⊗ₘ (1 : Y ⟶ N) = 1 := by
   rw [Iso.eq_comp_inv]
   exact toUnit_unique _ _
 
-attribute [local simp] tensorObj.one_def tensorObj.mul_def in
-attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc IsMon_Hom.mul_hom
-  IsMon_Hom.mul_hom_assoc in
-instance {f : M ⟶ N} {g : M ⟶ O} [IsMon_Hom f] [IsMon_Hom g] : IsMon_Hom (lift f g) where
-  one_hom := by ext <;> simp [IsMon_Hom.one_hom f, IsMon_Hom.one_hom g]
-  mul_hom := by ext <;> simp [← tensor_comp_assoc, IsMon_Hom.mul_hom f, IsMon_Hom.mul_hom g]
-
-attribute [-simp] IsMon_Hom.one_hom IsMon_Hom.one_hom_assoc in
-attribute [local simp] leftUnitor_inv_comp_tensorHom in
-instance [IsCommMon M] : IsMon_Hom μ[M] where
-
 end Mon_Class
-
-attribute [local simp] mul_eq_mul comp_mul mul_comp one_eq_one
 
 namespace Mon_
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
   {M N N₁ N₂ : Mon_ C}
-
-instance instCartesianMonoidalCategory : CartesianMonoidalCategory (Mon_ C) where
-  isTerminalTensorUnit :=
-    .ofUniqueHom (fun M ↦ .mk (toUnit _)) fun M f ↦ by ext; exact toUnit_unique ..
-  fst M N := .mk (fst M.X N.X)
-  snd M N := .mk (snd M.X N.X)
-  tensorProductIsBinaryProduct M N :=
-    BinaryFan.IsLimit.mk _ (fun {T} f g ↦ .mk (lift f.hom g.hom)) (by aesop_cat) (by aesop_cat)
-      (by aesop_cat)
-  fst_def M N := by ext; simp [fst_def]; congr
-  snd_def M N := by ext; simp [snd_def]; congr
-
-@[simp] lemma lift_hom (f : M ⟶ N₁) (g : M ⟶ N₂) : (lift f g).hom = lift f.hom g.hom := rfl
-@[simp] lemma fst_hom (M N : Mon_ C) : (fst M N).hom = fst M.X N.X := rfl
-@[simp] lemma snd_hom (M N : Mon_ C) : (snd M N).hom = snd M.X N.X := rfl
 
 /-- A commutative monoid object is a monoid object in the category of monoid objects. -/
 instance [IsCommMon M.X] : Mon_Class M where
@@ -113,7 +63,7 @@ instance [IsCommMon M.X] : Mon_Class M where
   mul := .mk μ[M.X]
   one_mul := by ext; simp [leftUnitor_hom]
   mul_one := by ext; simp [rightUnitor_hom]
-  mul_assoc := by ext; simp [_root_.mul_assoc]
+  mul_assoc := by ext; simp
 
 @[simp] lemma hom_η (M : Mon_ C) [IsCommMon M.X] : η[M].hom = η[M.X] := rfl
 @[simp] lemma hom_μ (M : Mon_ C) [IsCommMon M.X] : μ[M].hom = μ[M.X] := rfl
@@ -131,7 +81,7 @@ variable [IsCommMon N.X]
 end Hom
 
 /-- A commutative monoid object is a commutative monoid object in the category of monoid objects. -/
-instance [IsCommMon M.X] : IsCommMon M where mul_comm := by ext; simp [_root_.mul_comm]
+instance [IsCommMon M.X] : IsCommMon M where mul_comm := by ext; simp
 
 end Mon_
 

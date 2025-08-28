@@ -5,6 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 open scoped Hom
@@ -14,8 +15,6 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
   [CartesianMonoidalCategory D] {G : C} [Grp_Class G] (F : C ⥤ D) [F.Monoidal]
-
-scoped[Obj] attribute [instance] CategoryTheory.Functor.mon_ClassObj
 
 open scoped Obj
 
@@ -46,7 +45,6 @@ attribute [local simp] mul_eq_mul Grp_Class.inv_eq_inv comp_mul comp_mul_assoc
 @[reassoc (attr := simp)]
 lemma Grp_Class.one_inv [BraidedCategory C] {G : C} [Grp_Class G] : η[G] ≫ ι = η := by simp
 
-attribute [local simp] mul_comm mul_div_mul_comm
 
 namespace Grp_Class
 variable [BraidedCategory C]
@@ -74,7 +72,6 @@ end tensorObj
 end Grp_Class
 
 namespace Grp_
-
 variable [BraidedCategory C] {G H H₁ H₂ : Grp_ C}
 
 @[simps! tensorObj_X tensorHom_hom]
@@ -92,11 +89,9 @@ instance instMonoidalCategoryStruct : MonoidalCategoryStruct (Grp_ C) where
 @[simp] lemma tensorUnit_X : (𝟙_ (Grp_ C)).X = 𝟙_ C := rfl
 
 @[simp] lemma tensorUnit_one : η[(𝟙_ (Grp_ C)).X] = η[𝟙_ C] := rfl
-
 @[simp] lemma tensorUnit_mul : μ[(𝟙_ (Grp_ C)).X] = μ[𝟙_ C] := rfl
 
 @[simp] lemma tensorObj_one (G H : Grp_ C) : η[(G ⊗ H).X] = η[G.X ⊗ H.X] := rfl
-
 @[simp] lemma tensorObj_mul (G H : Grp_ C) : μ[(G ⊗ H).X] = μ[G.X ⊗ H.X] := rfl
 
 @[simp] lemma whiskerLeft_hom {G H : Grp_ C} (f : G ⟶ H) (I : Grp_ C) :
@@ -150,6 +145,7 @@ variable [IsCommMon H.X]
 -- TODO: Make `Grp_.toMon_` an abbrev in mathlib.
 set_option allowUnsafeReducibility true in
 attribute [reducible] Grp_.toMon_
+attribute [local simp] mul_comm mul_div_mul_comm
 
 namespace Hom
 
