@@ -3,71 +3,11 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.CategoryTheory.Monoidal.Category
 import Mathlib.CategoryTheory.Monoidal.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Attr
 
 open CategoryTheory MonoidalCategory
 
 assert_not_exists CartesianMonoidalCategory
-
-namespace Mon_Class
-variable {C : Type*} [Category C] [MonoidalCategory C] {X Y M : C} [Mon_Class M]
-
-@[reassoc (attr := simp, mon_tauto)]
-lemma associator_inv_comp_tensorHom_mul_comp_mul (f : X ⊗ Y ⟶ M) :
-    (α_ X Y (M ⊗ M)).inv ≫ (f ⊗ₘ μ) ≫ μ = X ◁ Y ◁ μ ≫ (α_ X Y M).inv ≫ f ▷ M ≫ μ := by
-  simp [tensorHom_def']
-
-@[reassoc (attr := simp, mon_tauto)]
-lemma associator_hom_comp_mul_tensorHom_comp_mul (f : X ⊗ Y ⟶ M) :
-    (α_ (M ⊗ M) X Y).hom ≫ (μ ⊗ₘ f) ≫ μ = μ ▷ X ▷ Y ≫ (α_ M X Y).hom ≫ M ◁ f ≫ μ := by
-  simp [tensorHom_def]
-
-end Mon_Class
-
-namespace Mathlib.Tactic.MonSimp
-variable {C : Type*} [Category C] [MonoidalCategory C] {M X X₁ X₂ X₃ Y Y₁ Y₂ Y₃ Z : C} [Mon_Class M]
-
-open scoped Mon_Class
-
-attribute [mon_tauto] Category.id_comp Category.comp_id Category.assoc tensorμ tensorδ
-  IsCommMon.mul_comm IsCommMon.mul_comm_assoc
-  Mon_Class.one_mul Mon_Class.one_mul_assoc Mon_Class.mul_one Mon_Class.mul_one_assoc
-
-@[mon_tauto] lemma whiskerLeft_def (X : C) (f : Y ⟶ Z) : X ◁ f = 𝟙 X ⊗ₘ f := by simp
-@[mon_tauto] lemma whiskerRight_def (f : X ⟶ Y) (Z : C) : f ▷ Z = f ⊗ₘ 𝟙 Z := by simp
-
-@[reassoc (attr := mon_tauto)]
-lemma mul_assoc_hom : (α_ M M M).hom ≫ (𝟙 M ⊗ₘ μ) ≫ μ = (μ ⊗ₘ 𝟙 M) ≫ μ := by simp
-@[reassoc (attr := mon_tauto)]
-lemma mul_assoc_inv : (α_ M M M).inv ≫ (μ ⊗ₘ 𝟙 M) ≫ μ = (𝟙 M ⊗ₘ μ) ≫ μ := by simp
-
-@[reassoc (attr := mon_tauto)]
-lemma mul_mul_assoc_hom : (α_ M M (M ⊗ M)).hom ≫ (𝟙 M ⊗ₘ (𝟙 M ⊗ₘ μ) ≫ μ) ≫ μ = (μ ⊗ₘ μ) ≫ μ := by
-  simp [← cancel_epi (α_ M M (M ⊗ M)).inv]
-
-@[reassoc (attr := mon_tauto)]
-lemma mul_mul_assoc_inv :
-    (α_ (M ⊗ M) M M).inv ≫ ((μ ⊗ₘ 𝟙 M) ≫ μ ⊗ₘ 𝟙 M) ≫ μ = (μ ⊗ₘ μ) ≫ μ := by
-  simp [← cancel_epi (α_ (M ⊗ M) M M).hom, ← Mon_Class.mul_assoc]
-
-@[reassoc (attr := mon_tauto)]
-lemma tensorHom_comp_tensorHom (f₁ : X₁ ⟶ X₂) (g₁ : Y₁ ⟶ Y₂) (f₂ : X₂ ⟶ X₃) (g₂ : Y₂ ⟶ Y₃) :
-    (f₁ ⊗ₘ g₁) ≫ (f₂ ⊗ₘ g₂) = (f₁ ≫ f₂) ⊗ₘ (g₁ ≫ g₂) := by simp
-
-end Mathlib.Tactic.MonSimp
-
-namespace Mon_Class
-variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M : C} [Mon_Class M]
-
-variable (M) in
-@[reassoc (attr := simp)]
-lemma mul_mul_mul_comm [IsCommMon M] : tensorμ M M M M ≫ (μ ⊗ₘ μ) ≫ μ = (μ ⊗ₘ μ) ≫ μ := by
-  simp only [mon_tauto]
-
-end Mon_Class
-
 namespace Mon_Class
 variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D]
   {M N X Y Z : C} [Mon_Class M] [Mon_Class N] (F : C ⥤ D)
@@ -119,13 +59,6 @@ variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M N 
 instance {f : M ⟶ N} [IsIso f] [IsMon_Hom f] : IsMon_Hom (asIso f).hom := ‹_›
 
 end
-
-namespace Mon_
-variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C]
-
-@[simp] lemma tensorObj_X (M N : Mon_ C) : (M ⊗ N).X = M.X ⊗ N.X := rfl
-
-end Mon_
 
 namespace CategoryTheory.Functor
 
@@ -195,10 +128,3 @@ instance [F.LaxBraided] : F.mapMon.LaxBraided where
 instance [F.Braided] : F.mapMon.Braided where
 
 end CategoryTheory.Functor
-
-section
-variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M : C}
-
-instance Mon_.mk'.X.instIsComm_Mon [Mon_Class M] [IsCommMon M] : IsCommMon (Mon_.mk M).X := ‹_›
-
-end

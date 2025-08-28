@@ -3,7 +3,7 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights rese
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
-import Mathlib.Data.Complex.FiniteDimensional
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
