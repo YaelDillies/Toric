@@ -18,7 +18,6 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.Basic
 import Toric.Mathlib.Algebra.MonoidAlgebra.Module
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.CategoryTheory.Limits.Preserves.Shapes.Over
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
@@ -30,6 +29,7 @@ import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.Geometry.Convex.Polytope
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
+import Toric.Mathlib.RingTheory.Bialgebra.Equiv
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
