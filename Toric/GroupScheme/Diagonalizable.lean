@@ -9,6 +9,7 @@ import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Pasting
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
+import Toric.Mathlib.CategoryTheory.Comma.Over.Pullback
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra Mon_Class
@@ -165,6 +166,12 @@ def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
 @[simp] lemma diagFunctor_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
     (diagFunctor S).map f = ⟨(Diag.map S f.unop.hom).asOver S⟩ := rfl
 
+instance : (diagFunctor S).Faithful := by
+  have : (hopfSpec (.of <| ULift.{u} ℤ)).Faithful := hopfSpec.instFaithful
+  have (Z) (g : Z ⟶ Spec(ULift.{u} ℤ)) : Epi (pullback.fst g (specULiftZIsTerminal.from S)) := sorry
+  unfold diagFunctor
+  infer_instance
+
 instance (M : AddCommMonCatᵒᵖ) : IsCommMon ((diagMonFunctor S).obj M).X :=
   inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
 
@@ -220,10 +227,6 @@ def diagFunctorIso :
 
 lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
     ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
-
-instance {R : Type*} [CommRing R] [Nontrivial R] : (diagFunctor Spec(R)).Faithful :=
-  have : (hopfSpec (CommRingCat.of R)).Faithful := hopfSpec.instFaithful
-  .of_iso (diagFunctorIso (.of R)).symm
 
 instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Full :=
   have : (hopfSpec (CommRingCat.of R)).Full := hopfSpec.instFull
