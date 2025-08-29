@@ -1,5 +1,4 @@
 import Mathlib.RingTheory.AdjoinRoot
-import Toric.Mathlib.Algebra.Algebra.Equiv
 
 open TensorProduct
 

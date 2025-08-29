@@ -12,6 +12,14 @@ open scoped Hom
 
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
+def Grp_Class.ofIso {C : Type*} [Category C] [CartesianMonoidalCategory C] {X Y : C} (e : X ≅ Y)
+    [Grp_Class X] : Grp_Class Y where
+  toMon_Class := .ofIso e
+  inv := e.inv ≫ ι[X] ≫ e.hom
+  left_inv := by simp only [Mon_Class.ofIso, lift_map_assoc, Category.assoc, Iso.hom_inv_id,
+    Category.comp_id, Category.id_comp, lift_comp_inv_left_assoc]
+  right_inv := by simp [Mon_Class.ofIso]
+
 namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
   [CartesianMonoidalCategory D] {G : C} [Grp_Class G] (F : C ⥤ D) [F.Monoidal]
@@ -47,12 +55,13 @@ lemma Grp_Class.one_inv [BraidedCategory C] {G : C} [Grp_Class G] : η[G] ≫ ι
 
 
 namespace Grp_Class
-variable [BraidedCategory C]
 
 instance : Grp_Class (𝟙_ C) where
   inv := 𝟙 _
   left_inv := toUnit_unique _ _
   right_inv := toUnit_unique _ _
+
+variable [BraidedCategory C]
 
 namespace tensorObj
 
@@ -163,10 +172,10 @@ instance : Mon_Class H where
 @[simp] lemma hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := by
   induction n <;> simp [pow_succ, *]
 
+instance {f : G ⟶ H} : IsMon_Hom f.hom⁻¹ where
+
 /-- A commutative group object is a group object in the category of group objects. -/
 instance : Grp_Class H where inv := .mk ι[H.X]
-
-instance {f : G ⟶ H} : IsMon_Hom f.hom⁻¹ where
 
 @[simp] lemma hom_inv (f : G ⟶ H) : f⁻¹.hom = f.hom⁻¹ := rfl
 @[simp] lemma hom_div (f g : G ⟶ H) : (f / g).hom = f.hom / g.hom := rfl
@@ -178,11 +187,6 @@ end Hom
 instance : IsCommMon H where
 
 end Grp_
-
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C] {G : C}
-
-instance mk.X.instIsComm_Mon [Grp_Class G] [IsCommMon G] : IsCommMon (Grp_.mk G).X := ‹_›
-
 end
 
 instance {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
@@ -199,12 +203,6 @@ namespace Functor
 variable {F F' : C ⥤ D} [F.Monoidal] [F'.Monoidal] {G : D ⥤ E} [G.Monoidal]
 
 open LaxMonoidal Monoidal
-
-def _root_.Grp_Class.ofIso {X Y : C} (e : X ≅ Y) [Grp_Class X] : Grp_Class Y where
-  __ := Mon_Class.ofIso e
-  inv := e.inv ≫ ι[X] ≫ e.hom
-  left_inv := by simp [Mon_Class.ofIso]
-  right_inv := by simp [Mon_Class.ofIso]
 
 def FullyFaithful.grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
   __ := hF.mon_Class X
