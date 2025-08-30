@@ -6,16 +6,19 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
+import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
 open CategoryTheory Limits Mon_Class MonoidalCategory CartesianMonoidalCategory Opposite
 open scoped Hom
 
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
-def Grp_Class.ofIso {C : Type*} [Category C] [CartesianMonoidalCategory C] {X Y : C} (e : X ≅ Y)
-    [Grp_Class X] : Grp_Class Y where
+/-! ### Transfer monoid/group objects along an iso -/
+
+def Grp_Class.ofIso {C : Type*} [Category C] [CartesianMonoidalCategory C] {G X : C} (e : G ≅ X)
+    [Grp_Class G] : Grp_Class X where
   toMon_Class := .ofIso e
-  inv := e.inv ≫ ι[X] ≫ e.hom
+  inv := e.inv ≫ ι[G] ≫ e.hom
   left_inv := by simp only [Mon_Class.ofIso, lift_map_assoc, Category.assoc, Iso.hom_inv_id,
     Category.comp_id, Category.id_comp, lift_comp_inv_left_assoc]
   right_inv := by simp [Mon_Class.ofIso]
@@ -52,33 +55,6 @@ attribute [local simp] mul_eq_mul Grp_Class.inv_eq_inv comp_mul comp_mul_assoc
 
 @[reassoc (attr := simp)]
 lemma Grp_Class.one_inv [BraidedCategory C] {G : C} [Grp_Class G] : η[G] ≫ ι = η := by simp
-
-
-namespace Grp_Class
-
-instance : Grp_Class (𝟙_ C) where
-  inv := 𝟙 _
-  left_inv := toUnit_unique _ _
-  right_inv := toUnit_unique _ _
-
-variable [BraidedCategory C]
-
-namespace tensorObj
-
-@[simps inv]
-instance {G H : C} [Grp_Class G] [Grp_Class H] : Grp_Class (G ⊗ H) where
-  inv := ι ⊗ₘ ι
-  left_inv := by
-    have H : ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) * 𝟙 (G ⊗ H) = 1 := by
-      simp only [← id_tensorHom_id, ← mul_tensorHom_mul, inv_mul_cancel, one_tensorHom_one]
-    simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
-  right_inv := by
-    have H : 𝟙 (G ⊗ H) * ((𝟙 G)⁻¹ ⊗ₘ (𝟙 H)⁻¹) = 1 := by
-      simp only [← id_tensorHom_id, ← mul_tensorHom_mul, mul_inv_cancel, one_tensorHom_one]
-    simpa [mul_tensorHom_mul, comp_mul, ← tensor_comp, one_eq_one, one_tensorHom_one]
-
-end tensorObj
-end Grp_Class
 
 namespace Grp_
 variable [BraidedCategory C] {G H H₁ H₂ : Grp_ C}
@@ -204,14 +180,6 @@ variable {F F' : C ⥤ D} [F.Monoidal] [F'.Monoidal] {G : D ⥤ E} [G.Monoidal]
 
 open LaxMonoidal Monoidal
 
-def FullyFaithful.grp_Class (hF : F.FullyFaithful) (X : C) [Grp_Class (F.obj X)] : Grp_Class X where
-  __ := hF.mon_Class X
-  inv := hF.preimage ι[F.obj X]
-  left_inv := hF.map_injective
-    (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
-  right_inv := hF.map_injective
-    (by simp [FullyFaithful.mon_Class, OplaxMonoidal.η_of_cartesianMonoidalCategory])
-
 open EssImageSubcategory Monoidal in
 /-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
 same on group objects as on objects. -/
@@ -226,6 +194,8 @@ same on group objects as on objects. -/
       simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class, FullyFaithful.grp_Class,
         h₁, h₂]
 
+/-! ### `mapGrp` is braided -/
+
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 
 noncomputable instance mapGrp.instMonoidal : F.mapGrp.Monoidal :=
@@ -238,5 +208,7 @@ noncomputable instance mapGrp.instMonoidal : F.mapGrp.Monoidal :=
     left_unitality X := by convert left_unitality F.mapMon X.toMon_ using 1
     right_unitality X := by convert right_unitality F.mapMon X.toMon_ using 1 }
 
-end Functor
-end CategoryTheory
+noncomputable instance mapGrp.instBraided : F.mapGrp.Braided where
+  braided X Y := by convert Braided.braided (F := F.mapMon) X.toMon_ Y.toMon_ using 1
+
+end CategoryTheory.Functor

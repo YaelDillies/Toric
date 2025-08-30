@@ -1,16 +1,13 @@
-/-
-Copyright (c) 2025 Yaël Dillies, Michał Mrugała, Andrew Yang. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
--/
 import Mathlib.CategoryTheory.Monoidal.Mon_
 
 open CategoryTheory MonoidalCategory
 
 assert_not_exists CartesianMonoidalCategory
+
+/-! ### Transfer monoid/group objects along an iso -/
+
 namespace Mon_Class
-variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D]
-  {M N X Y Z : C} [Mon_Class M] [Mon_Class N] (F : C ⥤ D)
+variable {C : Type*} [Category C] [MonoidalCategory C] {M N W X Y Z : C} [Mon_Class M] [Mon_Class N]
 
 def ofIso (e : M ≅ X) : Mon_Class X where
   one := η[M] ≫ e.hom
@@ -29,28 +26,24 @@ def ofIso (e : M ≅ X) : Mon_Class X where
       -associator_conjugation, associator_naturality_assoc] using
       congr(((e.inv ⊗ₘ e.inv) ⊗ₘ e.inv) ≫ $(Mon_Class.mul_assoc M) ≫ e.hom)
 
-variable [SymmetricCategory C] [SymmetricCategory D]
+end Mon_Class
 
-omit [SymmetricCategory C] in
-@[reassoc (attr := simp)]
-lemma whiskerLeft_whiskerRight_inv_hom_id {W X Y Z : C} (e : X ≅ Y) :
-    W ◁ e.inv ▷ Z ≫ W ◁ e.hom ▷ Z = 𝟙 _ := by
-  rw [← MonoidalCategory.whiskerLeft_comp, ← comp_whiskerRight, e.inv_hom_id]; simp
+/-! ### Tensor product of comm monoid/group objects -/
 
-omit [SymmetricCategory C] in
-@[reassoc (attr := simp)]
-lemma whiskerLeft_whiskerRight_hom_inv_id {W X Y Z : C} (e : X ≅ Y) :
-    W ◁ e.hom ▷ Z ≫ W ◁ e.inv ▷ Z = 𝟙 _ := by
-  rw [← MonoidalCategory.whiskerLeft_comp, ← comp_whiskerRight, e.hom_inv_id]; simp
+namespace Mon_Class
+variable {C : Type*} [Category C] [MonoidalCategory C] [SymmetricCategory C]
+  {M N : C} [Mon_Class M] [Mon_Class N]
 
 instance [IsCommMon M] [IsCommMon N] : IsCommMon (M ⊗ N) where
   mul_comm := by
     simp [← IsIso.inv_comp_eq, tensorμ, ← associator_inv_naturality_left_assoc,
       ← associator_naturality_right_assoc, SymmetricCategory.braiding_swap_eq_inv_braiding M N,
       ← tensorHom_def_assoc, -whiskerRight_tensor, -tensor_whiskerLeft, ← tensor_comp,
-      Mon_Class.tensorObj.mul_def]
+      Mon_Class.tensorObj.mul_def, ← whiskerLeft_comp_assoc, -whiskerLeft_comp]
 
 end Mon_Class
+
+/-! ### Stupid instance -/
 
 section
 variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M N : C} [Mon_Class M]
@@ -67,14 +60,7 @@ variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalC
 
 open LaxMonoidal OplaxMonoidal
 
-open scoped Mon_Class in
-def FullyFaithful.mon_Class [F.OplaxMonoidal] (hF : F.FullyFaithful) (X : C) [Mon_Class (F.obj X)] :
-    Mon_Class X where
-  one := hF.preimage <| OplaxMonoidal.η F ≫ η[F.obj X]
-  mul := hF.preimage <| OplaxMonoidal.δ F X X ≫ μ[F.obj X]
-  one_mul := hF.map_injective <| by simp [← δ_natural_left_assoc]
-  mul_one := hF.map_injective <| by simp [← δ_natural_right_assoc]
-  mul_assoc := hF.map_injective <| by simp [← δ_natural_left_assoc, ← δ_natural_right_assoc]
+/-! ### Essential image computation -/
 
 open Monoidal in
 /-- The essential image of a fully faithful functor between cartesian-monoidal categories is the
@@ -87,6 +73,8 @@ same on monoid objects as on objects. -/
     letI h₁ := Mon_Class.ofIso e.symm
     letI h₂ := FullyFaithful.mon_Class (.ofFullyFaithful F) (X := N)
     refine ⟨.mk N, ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;> simp [Mon_Class.ofIso, FullyFaithful.mon_Class, h₁, h₂]
+
+/-! ### `mapMon` is braided -/
 
 open scoped Obj
 

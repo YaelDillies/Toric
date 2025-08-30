@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
 open scoped Hom Obj
+
+/-! ### `Functor.map` of a fully faithful monoidal functor as a `MulEquiv` -/
 
 namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
@@ -37,21 +38,7 @@ def FullyFaithful.homMulEquiv (hF : F.FullyFaithful) : (X ⟶ M) ≃* (F.obj X �
 
 end CategoryTheory.Functor
 
-namespace Mon_Class
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N X Y : C} [Mon_Class M]
-  [Mon_Class N] [BraidedCategory C]
-
-lemma mul_tensorHom_mul (f f' : X ⟶ M) (g g' : Y ⟶ N) :
-    (f * f') ⊗ₘ (g * g') = (f ⊗ₘ g) * (f' ⊗ₘ g') := by
-  simp [Hom.mul_def, tensorObj.mul_def]
-
-lemma one_tensorHom_one : (1 : X ⟶ M) ⊗ₘ (1 : Y ⟶ N) = 1 := by
-  simp only [Hom.one_def, tensor_comp, tensorObj.one_def, ← Category.assoc]
-  congr 1
-  rw [Iso.eq_comp_inv]
-  exact toUnit_unique _ _
-
-end Mon_Class
+/-! ### Comm monoid objects are internal monoid objects -/
 
 namespace Mon_
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
@@ -61,9 +48,6 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory
 instance [IsCommMon M.X] : Mon_Class M where
   one := .mk η[M.X]
   mul := .mk μ[M.X]
-  one_mul := by ext; simp [leftUnitor_hom]
-  mul_one := by ext; simp [rightUnitor_hom]
-  mul_assoc := by ext; simp
 
 @[simp] lemma hom_η (M : Mon_ C) [IsCommMon M.X] : η[M].hom = η[M.X] := rfl
 @[simp] lemma hom_μ (M : Mon_ C) [IsCommMon M.X] : μ[M].hom = μ[M.X] := rfl
@@ -81,7 +65,7 @@ variable [IsCommMon N.X]
 end Hom
 
 /-- A commutative monoid object is a commutative monoid object in the category of monoid objects. -/
-instance [IsCommMon M.X] : IsCommMon M where mul_comm := by ext; simp
+instance [IsCommMon M.X] : IsCommMon M where
 
 end Mon_
 
