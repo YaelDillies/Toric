@@ -5,14 +5,14 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 
-open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
+open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
 open scoped Hom Obj
 
 /-! ### `Functor.map` of a fully faithful monoidal functor as a `MulEquiv` -/
 
 namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
-  [CartesianMonoidalCategory D] {M X : C} [Mon_Class M] (F : C ⥤ D) [F.Monoidal]
+  [CartesianMonoidalCategory D] {M X : C} [MonObj M] (F : C ⥤ D) [F.Monoidal]
 
 lemma map_mul (f g : X ⟶ M) : F.map (f * g) = F.map f * F.map g := by
   simp only [Hom.mul_def, map_comp, obj.μ_def, ← Category.assoc]
@@ -45,15 +45,15 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory
   {M N N₁ N₂ : Mon_ C}
 
 /-- A commutative monoid object is a monoid object in the category of monoid objects. -/
-instance [IsCommMon M.X] : Mon_Class M where
+instance [IsCommMonObj M.X] : MonObj M where
   one := .mk η[M.X]
   mul := .mk μ[M.X]
 
-@[simp] lemma hom_η (M : Mon_ C) [IsCommMon M.X] : η[M].hom = η[M.X] := rfl
-@[simp] lemma hom_μ (M : Mon_ C) [IsCommMon M.X] : μ[M].hom = μ[M.X] := rfl
+@[simp] lemma hom_η (M : Mon_ C) [IsCommMonObj M.X] : η[M].hom = η[M.X] := rfl
+@[simp] lemma hom_μ (M : Mon_ C) [IsCommMonObj M.X] : μ[M].hom = μ[M.X] := rfl
 
 namespace Hom
-variable [IsCommMon N.X]
+variable [IsCommMonObj N.X]
 
 @[simp] lemma hom_one : (1 : M ⟶ N).hom = 1 := rfl
 
@@ -65,17 +65,17 @@ variable [IsCommMon N.X]
 end Hom
 
 /-- A commutative monoid object is a commutative monoid object in the category of monoid objects. -/
-instance [IsCommMon M.X] : IsCommMon M where
+instance [IsCommMonObj M.X] : IsCommMonObj M where
 
 end Mon_
 
-namespace Mon_Class
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [Mon_Class M]
-  [Mon_Class N]
+namespace MonObj
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonObj M]
+  [MonObj N]
 
 /-- If `M` and `N` are isomorphic as monoid objects, then `X ⟶ M` and `X ⟶ N` are isomorphic
 monoids. -/
 def homMulEquivRight (e : M ≅ N) [IsMon_Hom e.hom] (X : C) : (X ⟶ M) ≃* (X ⟶ N) :=
   ((yonedaMon.mapIso <| Mon_.mkIso' e).app <| .op X).monCatIsoToMulEquiv
 
-end Mon_Class
+end MonObj

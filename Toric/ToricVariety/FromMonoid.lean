@@ -22,7 +22,7 @@ namespace AffineToricVarietyFromMonoid
 
 noncomputable instance instToricVariety : ToricVariety 𝕜 (Diag Spec(𝕜) M) where
   torus := Diag Spec(𝕜) (GrothendieckAddGroup M)
-  mod_ClassTorus := sorry
+  modObjTorus := sorry
   torusEmb := sorry
   isOver_torusEmb := sorry
   isOpenImmersion_torusEmb := by

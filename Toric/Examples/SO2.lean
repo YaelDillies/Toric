@@ -24,7 +24,7 @@ local notation3:max R "[X][Y]" => Polynomial (Polynomial R)
 local notation3:max "Y" => Polynomial.C (Polynomial.X)
 
 open Coalgebra HopfAlgebra Polynomial TensorProduct
-open scoped AddMonoidAlgebra Mon_Class
+open scoped AddMonoidAlgebra MonObj
 
 /-! ### `SO(2, R)` as a Hopf algebra -/
 
@@ -367,7 +367,7 @@ theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(�
     Spec(ℝ)
   haveI : (e ≪≫ diagSpecIso _ ℤ[σ]).hom.IsOver Spec(ℝ) := by dsimp; infer_instance
   haveI : IsMon_Hom ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ)).hom := by dsimp; infer_instance
-  have e₁ := Mon_Class.homMulEquivRight ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ))
+  have e₁ := MonObj.homMulEquivRight ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ))
     (Spec(ℝ).asOver Spec(ℝ))
   have e₂ : (ℤ[σ] →+ Additive ℝˣ) ≃+ (σ → Additive ℝˣ) := Finsupp.liftAddHom.symm.trans <|
     .piCongrRight («η» := σ) fun _ ↦ (zmultiplesAddHom <| Additive ℝˣ).symm

@@ -7,13 +7,13 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
-open CategoryTheory Mon_Class MonoidalCategory CartesianMonoidalCategory
+open CategoryTheory MonObj MonoidalCategory CartesianMonoidalCategory
 
 /-! ### Internal groups -/
 
 namespace Grp_
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C] {G H : Grp_ C}
-  [IsCommMon H.X]
+  [IsCommMonObj H.X]
 
 -- TODO: Make `Grp_.toMon_` an abbrev in mathlib.
 set_option allowUnsafeReducibility true in
@@ -22,12 +22,12 @@ attribute [local simp] mul_comm mul_div_mul_comm
 
 namespace Hom
 
-instance : Mon_Class H where
+instance : MonObj H where
   one := η[H.toMon_]
   mul := μ[H.toMon_]
-  one_mul := Mon_Class.one_mul H.toMon_
-  mul_one := Mon_Class.mul_one H.toMon_
-  mul_assoc := Mon_Class.mul_assoc H.toMon_
+  one_mul := MonObj.one_mul H.toMon_
+  mul_one := MonObj.mul_one H.toMon_
+  mul_assoc := MonObj.mul_assoc H.toMon_
 
 @[simp] lemma hom_one : (1 : G ⟶ H).hom = 1 := rfl
 
@@ -38,9 +38,9 @@ instance : Mon_Class H where
 
 instance {f : G ⟶ H} : IsMon_Hom f.hom⁻¹ where
 
-attribute [local simp] mul_eq_mul Grp_Class.inv_eq_inv comp_mul in
+attribute [local simp] mul_eq_mul GrpObj.inv_eq_inv comp_mul in
 /-- A commutative group object is a group object in the category of group objects. -/
-instance : Grp_Class H where inv := .mk ι[H.X]
+instance : GrpObj H where inv := .mk ι[H.X]
 
 @[simp] lemma hom_inv (f : G ⟶ H) : f⁻¹.hom = f.hom⁻¹ := rfl
 @[simp] lemma hom_div (f g : G ⟶ H) : (f / g).hom = f.hom / g.hom := rfl
@@ -50,29 +50,29 @@ end Hom
 
 attribute [local simp] mul_eq_mul comp_mul in
 /-- A commutative group object is a commutative group object in the category of group objects. -/
-instance : IsCommMon H where
+instance : IsCommMonObj H where
 
 instance {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
-    {G H : Grp_ C} [IsCommMon G.X] [IsCommMon H.X] (f : G ⟶ H) : IsMon_Hom f where
-  one_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
-  mul_hom := by ext; simp [Grp_.Hom.instMon_Class_toric]
+    {G H : Grp_ C} [IsCommMonObj G.X] [IsCommMonObj H.X] (f : G ⟶ H) : IsMon_Hom f where
+  one_hom := by ext; simp [Grp_.Hom.instMonObj_toric]
+  mul_hom := by ext; simp [Grp_.Hom.instMonObj_toric]
 
 end Grp_
 
 /-! ### Random lemmas -/
 
 section
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G X : C} [Grp_Class G]
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {G X : C} [GrpObj G]
 
 @[simp]
 lemma Grp_.homMk_hom' {G H : Grp_ C} (f : G ⟶ H) : homMk (G := G.X) (H := H.X) f.hom = f := rfl
 
-lemma Grp_Class.inv_eq_comp_inv (f : X ⟶ G) : f ≫ ι = f⁻¹ := rfl
+lemma GrpObj.inv_eq_comp_inv (f : X ⟶ G) : f ≫ ι = f⁻¹ := rfl
 
-lemma Grp_Class.mul_eq_comp_mul (f g : X ⟶ G) : f * g = lift f g ≫ μ := rfl
+lemma GrpObj.mul_eq_comp_mul (f g : X ⟶ G) : f * g = lift f g ≫ μ := rfl
 
-attribute [local simp] mul_eq_mul Grp_Class.inv_eq_inv Grp_Class.comp_inv one_eq_one in
+attribute [local simp] mul_eq_mul GrpObj.inv_eq_inv GrpObj.comp_inv one_eq_one in
 @[reassoc (attr := simp)]
-lemma Grp_Class.one_inv : η[G] ≫ ι = η := by simp
+lemma GrpObj.one_inv : η[G] ≫ ι = η := by simp
 
 end

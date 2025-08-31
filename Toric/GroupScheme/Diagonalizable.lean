@@ -11,7 +11,7 @@ import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
-open scoped AddMonoidAlgebra Mon_Class
+open scoped AddMonoidAlgebra MonObj
 
 noncomputable section
 
@@ -38,10 +38,10 @@ def Diag : Scheme.{u} :=
 @[simps! -isSimp]
 instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; infer_instance
 @[simps! -isSimp one_left mul_left]
-instance Diag.mon_ClassAsOver : Mon_Class (asOver (Diag S M) S) := by unfold Diag; infer_instance
+instance Diag.monObjAsOver : MonObj (asOver (Diag S M) S) := by unfold Diag; infer_instance
 @[simps! -isSimp inv_left]
-instance Diag.grp_ClassAsOver : Grp_Class (asOver (Diag S G) S) := by unfold Diag; infer_instance
-instance Diag.isCommMon_asOver : IsCommMon (asOver (Diag S M) S) := by unfold Diag; infer_instance
+instance Diag.grpObjAsOver : GrpObj (asOver (Diag S G) S) := by unfold Diag; infer_instance
+instance Diag.isCommMonObj_asOver : IsCommMonObj (asOver (Diag S M) S) := by unfold Diag; infer_instance
 
 @[simp] lemma diagMonFunctor_obj (M : AddCommMonCatᵒᵖ) :
     (diagMonFunctor S).obj M = .mk ((Diag S M.unop).asOver S) := rfl
@@ -165,11 +165,11 @@ def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
 @[simp] lemma diagFunctor_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
     (diagFunctor S).map f = ⟨(Diag.map S f.unop.hom).asOver S⟩ := rfl
 
-instance (M : AddCommMonCatᵒᵖ) : IsCommMon ((diagMonFunctor S).obj M).X :=
-  inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
+instance (M : AddCommMonCatᵒᵖ) : IsCommMonObj ((diagMonFunctor S).obj M).X :=
+  inferInstanceAs (IsCommMonObj (asOver (Diag S M.unop) S))
 
-instance (M : AddCommGrpᵒᵖ) : IsCommMon ((diagFunctor S).obj M).X :=
-  inferInstanceAs (IsCommMon (asOver (Diag S M.unop) S))
+instance (M : AddCommGrpᵒᵖ) : IsCommMonObj ((diagFunctor S).obj M).X :=
+  inferInstanceAs (IsCommMonObj (asOver (Diag S M.unop) S))
 
 @[simp]
 lemma commHopfAlgCatEquivCogrpCommAlgCat_functor_map_ofHom_mul
@@ -232,13 +232,13 @@ instance {R : Type*} [CommRing R] [IsDomain R] : (diagFunctor Spec(R)).Full :=
 section
 
 variable {G G' G'' H H' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S] [H.Over S] [H'.Over S]
-  [Grp_Class (G.asOver S)] [Grp_Class (G'.asOver S)] [Grp_Class (G''.asOver S)]
-  [Grp_Class (H.asOver S)] [Grp_Class (H'.asOver S)]
+  [GrpObj (G.asOver S)] [GrpObj (G'.asOver S)] [GrpObj (G''.asOver S)]
+  [GrpObj (H.asOver S)] [GrpObj (H'.asOver S)]
 
 variable (G G' S) in
 def HomGrp : Type u := Additive (Grp_.mk (G.asOver S) ⟶ .mk (G'.asOver S))
 
-instance [IsCommMon (G'.asOver S)] : AddCommGroup (HomGrp G G' S) := by
+instance [IsCommMonObj (G'.asOver S)] : AddCommGroup (HomGrp G G' S) := by
   delta HomGrp; infer_instance
 
 def HomGrp.ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] : HomGrp G G' S :=
@@ -261,37 +261,37 @@ def HomGrp.comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) : HomGrp G G'' S :=
 lemma HomGrp.hom_comp (f : HomGrp G G' S) (g : HomGrp G' G'' S) :
     (f.comp g).hom = f.hom ≫ g.hom := rfl
 
-lemma HomGrp.comp_add [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)]
+lemma HomGrp.comp_add [IsCommMonObj (G'.asOver S)] [IsCommMonObj (G''.asOver S)]
     (f f' : HomGrp G G' S) (g : HomGrp G' G'' S) :
     (f + f').comp g = f.comp g + f'.comp g := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
-  exact Mon_Class.mul_comp f.toMul f'.toMul g.toMul
+  exact MonObj.mul_comp f.toMul f'.toMul g.toMul
 
 @[simp]
-lemma HomGrp.comp_zero [IsCommMon (G''.asOver S)] (f : HomGrp G G' S) :
+lemma HomGrp.comp_zero [IsCommMonObj (G''.asOver S)] (f : HomGrp G G' S) :
     f.comp (0 : HomGrp G' G'' S) = 0 := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
-  exact Mon_Class.comp_one _
+  exact MonObj.comp_one _
 
 @[simp]
-lemma HomGrp.zero_comp [IsCommMon (G'.asOver S)] [IsCommMon (G''.asOver S)] (f : HomGrp G' G'' S) :
+lemma HomGrp.zero_comp [IsCommMonObj (G'.asOver S)] [IsCommMonObj (G''.asOver S)] (f : HomGrp G' G'' S) :
     (0 : HomGrp G G' S).comp f = 0 := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
-  exact Mon_Class.one_comp f.toMul
+  exact MonObj.one_comp f.toMul
 
-lemma HomGrp.add_comp [IsCommMon (G''.asOver S)] (f : HomGrp G G' S) (g g' : HomGrp G' G'' S) :
+lemma HomGrp.add_comp [IsCommMonObj (G''.asOver S)] (f : HomGrp G G' S) (g g' : HomGrp G' G'' S) :
     f.comp (g + g') = f.comp g + f.comp g' := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
-  exact Mon_Class.comp_mul _ _ _
+  exact MonObj.comp_mul _ _ _
 
 instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] : e.inv.IsOver S where
   comp_over := by rw [Iso.inv_comp_eq, comp_over]
 
-instance {X Y S : Scheme} [X.Over S] [Y.Over S] [Mon_Class (X.asOver S)] [Mon_Class (Y.asOver S)]
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] [MonObj (X.asOver S)] [MonObj (Y.asOver S)]
     (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] : IsMon_Hom (e.inv.asOver S) := by
   let e' : X.asOver S ≅ Y.asOver S := Over.isoMk e (by simp)
   have : IsMon_Hom e'.hom := ‹_›
@@ -300,16 +300,16 @@ instance {X Y S : Scheme} [X.Over S] [Y.Over S] [Mon_Class (X.asOver S)] [Mon_Cl
 instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] :
     e.symm.hom.IsOver S where
 
-instance {X Y S : Scheme} [X.Over S] [Y.Over S] [Mon_Class (X.asOver S)] [Mon_Class (Y.asOver S)]
+instance {X Y S : Scheme} [X.Over S] [Y.Over S] [MonObj (X.asOver S)] [MonObj (Y.asOver S)]
     (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] :
   IsMon_Hom (e.symm.hom.asOver S) where
 
 instance {X S : Scheme.{u}} [X.Over S] : (Iso.refl X).hom.IsOver S where
 
-instance {X S : Scheme.{u}} [X.Over S] [Mon_Class (X.asOver S)] :
+instance {X S : Scheme.{u}} [X.Over S] [MonObj (X.asOver S)] :
     IsMon_Hom ((Iso.refl X).hom.asOver S) where
 
-def HomGrp.congr (e₁ : G ≅ G') (e₂ : H ≅ H') [IsCommMon (H.asOver S)] [IsCommMon (H'.asOver S)]
+def HomGrp.congr (e₁ : G ≅ G') (e₂ : H ≅ H') [IsCommMonObj (H.asOver S)] [IsCommMonObj (H'.asOver S)]
     [e₁.hom.IsOver S] [IsMon_Hom (e₁.hom.asOver S)]
     [e₂.hom.IsOver S] [IsMon_Hom (e₂.hom.asOver S)] :
     HomGrp G H S ≃+ HomGrp G' H' S where
@@ -355,8 +355,8 @@ lemma diagHomEquiv_apply {R M N : Type u}
 end Diag
 
 section Scheme
-variable {S G H : Scheme.{u}} [G.Over S] [H.Over S] [Grp_Class (asOver G S)]
-  [Grp_Class (asOver H S)]
+variable {S G H : Scheme.{u}} [G.Over S] [H.Over S] [GrpObj (asOver G S)]
+  [GrpObj (asOver H S)]
 
 variable (S G) in
 @[mk_iff]
@@ -381,7 +381,7 @@ lemma IsDiagonalisable.of_isIso [IsDiagonalisable S H]
 end Scheme
 
 section CommRing
-variable {R : CommRingCat.{u}} {G : Scheme.{u}} [G.Over (Spec R)] [Grp_Class (asOver G (Spec R))]
+variable {R : CommRingCat.{u}} {G : Scheme.{u}} [G.Over (Spec R)] [GrpObj (asOver G (Spec R))]
   {A : Type u} [AddCommGroup A]
 
 instance : IsDiagonalisable (Spec R) Spec(R[A]) := .of_isIso (diagSpecIso R A).inv

@@ -22,8 +22,8 @@ universe u
 section general_base
 variable {σ : Type u} {S G H : Scheme.{u}} [G.Over S] [H.Over S]
 
-section Grp_Class
-variable [Grp_Class (G.asOver S)] [Grp_Class (H.asOver S)]
+section GrpObj
+variable [GrpObj (G.asOver S)] [GrpObj (H.asOver S)]
 
 variable (S G) in
 /-- The characters of the group scheme `G` over `S` are the group morphisms `G ⟶/S 𝔾ₘ[S]`. -/
@@ -47,26 +47,26 @@ lemma charCongr_symm (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S
 
 variable (S) in
 /-- Cocharacters of isomorphic commutative group schemes are isomorphic. -/
-def cocharCongr [IsCommMon <| G.asOver S] [IsCommMon <| H.asOver S]
+def cocharCongr [IsCommMonObj <| G.asOver S] [IsCommMonObj <| H.asOver S]
     (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : X*(S, G) ≃+ X*(S, H) :=
   HomGrp.congr (.refl _) e
 
 @[simp]
-lemma cocharCongr_symm (e : G ≅ H) [IsCommMon <| G.asOver S] [IsCommMon <| H.asOver S]
+lemma cocharCongr_symm (e : G ≅ H) [IsCommMonObj <| G.asOver S] [IsCommMonObj <| H.asOver S]
     [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] :
   (cocharCongr S e).symm = cocharCongr S e.symm := rfl
 
 @[simp]
-lemma cocharCongr_comp_charCongr [IsCommMon <| G.asOver S] [IsCommMon <| H.asOver S]
+lemma cocharCongr_comp_charCongr [IsCommMonObj <| G.asOver S] [IsCommMonObj <| H.asOver S]
     (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] (a b) :
     (cocharCongr S e a).comp (charCongr S e b) = a.comp b := by
   ext
   simp [charCongr, cocharCongr, HomGrp.congr]
 
-end Grp_Class
+end GrpObj
 
-section CommGrp_Class
-variable [CommGrp_Class (G.asOver S)]
+section CommGrpObj
+variable [CommGrpObj (G.asOver S)]
 
 /-- The perfect pairing between characters and cocharacters, valued in the characters of the
 algebraic torus. -/
@@ -77,7 +77,7 @@ noncomputable def charPairingAux : X*(S, G) →+ X(S, G) →+ X(S, 𝔾ₘ[S]) w
   map_zero' := by ext f; simp
   map_add' χ χ' := by ext; simp [HomGrp.comp_add]
 
-end CommGrp_Class
+end CommGrpObj
 end general_base
 
 section IsDomain
@@ -135,8 +135,8 @@ def charTorusUnit : X(Spec R, 𝔾ₘ[Spec R]) ≃+ ℤ :=
 -- def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) :=
 --   (cocharDiag R _).trans ⟨FreeAbelianGroup.lift.symm, fun _ _ ↦ rfl⟩
 
-section CommGrp_Class
-variable [CommGrp_Class (G.asOver (Spec R))] [CommGrp_Class (T.asOver (Spec R))]
+section CommGrpObj
+variable [CommGrpObj (G.asOver (Spec R))] [CommGrpObj (T.asOver (Spec R))]
 
 variable (R G) in
 attribute [local instance 1000000] AddEquivClass.instAddHomClass AddMonoidHomClass.toAddHomClass
@@ -174,6 +174,6 @@ instance isPerfPair_charPairing [T.IsSplitTorusOver Spec(R)] [LocallyOfFiniteTyp
     FreeAbelianGroup.lift_apply_of, AddEquiv.symm_apply_apply, EmbeddingLike.apply_eq_iff_eq]
   rfl
 
-end CommGrp_Class
+end CommGrpObj
 end IsDomain
 end AlgebraicGeometry.Scheme

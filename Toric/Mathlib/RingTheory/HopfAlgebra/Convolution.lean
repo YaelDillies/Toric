@@ -23,6 +23,7 @@ f * g = f g
 suppress_compilation
 
 open Algebra Coalgebra Bialgebra HopfAlgebra TensorProduct
+open scoped ConvolutionProduct RingTheory.LinearMap
 
 variable {R A C : Type*} [CommSemiring R]
 
@@ -35,9 +36,9 @@ lemma antipode_mul_antidistrib (a b : A) :
   let β : A ⊗[R] A →ₗ[R] A := .mul' R A ∘ₗ map (antipode R) (antipode R) ∘ₗ TensorProduct.comm R A A
   suffices α = β from congr($this (a ⊗ₜ b))
   apply left_inv_eq_right_inv (a := LinearMap.mul' R A) <;> ext a b
-  · simp [α, ((ℛ R a).tmul (ℛ R b)).mul_apply, ← Bialgebra.counit_mul, mul_comm b a,
+  · simp [α, ((ℛ R a).tmul (ℛ R b)).convMul_apply, ← Bialgebra.counit_mul, mul_comm b a,
       ← sum_antipode_mul_eq_algebraMap_counit ((ℛ R a).mul (ℛ R b))]
-  · simp [((ℛ R a).tmul (ℛ R b)).mul_apply, mul_comm, mul_mul_mul_comm, Finset.sum_mul_sum,
+  · simp [((ℛ R a).tmul (ℛ R b)).convMul_apply, mul_comm, mul_mul_mul_comm, Finset.sum_mul_sum,
       ← Finset.sum_product', β, ← sum_mul_antipode_eq_algebraMap_counit (ℛ R a),
       ← sum_mul_antipode_eq_algebraMap_counit (ℛ R b)]
 
@@ -67,16 +68,16 @@ local infix:70 " ⊗ₘ " => TensorProduct.map
 variable [Semiring C] [HopfAlgebra R C]
 
 @[simp] lemma antipode_mul_id : antipode R (A := C) * id = 1 := by
-  ext; simp [mul_def, ← LinearMap.rTensor_def]
+  ext; simp [convMul_def, ← LinearMap.rTensor_def]
 
 @[simp] lemma id_mul_antipode : id * antipode R (A := C) = 1 := by
-  ext; simp [mul_def, ← LinearMap.lTensor_def]
+  ext; simp [convMul_def, ← LinearMap.lTensor_def]
 
 @[simp] lemma counit_comp_antipode : ε ∘ₗ antipode R (A := C) = ε := calc
   _ = 1 * (ε ∘ₗ antipode R (A := C)) := (one_mul _).symm
   _ = (ε ∘ₗ id) * (ε ∘ₗ antipode R (A := C)) := rfl
   _ = (counitAlgHom R C).toLinearMap ∘ₗ (id * antipode R (A := C)) := by
-    simp only [comp_id, comp_mul_distrib]
+    simp only [comp_id, algHom_comp_convMul_distrib]
     simp
   _ = ε ∘ₗ 1 := by simp
   _ = ε := by ext; simp
@@ -98,7 +99,6 @@ local notation "η₁" => Algebra.linearMap R C
 local notation "η₂" => Algebra.linearMap R (C ⊗[R] C)
 local infix:90 " ◁ " => LinearMap.lTensor
 local notation:90 f:90 " ▷ " X:90 => LinearMap.rTensor X f
-local infix:70 " ⊗ₘ " => TensorProduct.map
 local notation "α" => TensorProduct.assoc R
 local notation "β" => TensorProduct.comm R
 local notation "𝑺" => antipode R (A := C)
@@ -114,7 +114,7 @@ lemma comul_right_inv : δ₁ * 𝑭 = 1 := calc
       have : μ₂ ∘ₗ (δ₁ ⊗ₘ δ₁) = δ₁ ∘ₗ μ₁ := by ext; simp
       simp [this, ← comp_assoc]
   _ = δ₁ ∘ₗ (id * 𝑺) := rfl
-  _ = δ₁ ∘ₗ η₁ ∘ₗ ε₁ := by simp [one_def]
+  _ = δ₁ ∘ₗ η₁ ∘ₗ ε₁ := by simp [convOne_def]
   _ = η₂ ∘ₗ ε₁ := by
       have : δ₁ ∘ₗ η₁ = η₂ := by ext; simp; rfl
       simp [this, ← comp_assoc]

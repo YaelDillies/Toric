@@ -1,6 +1,8 @@
 import Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.Convolution
 
+open scoped ConvolutionProduct
+
 namespace MonoidAlgebra
 variable {R A M : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
 

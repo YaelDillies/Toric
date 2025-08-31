@@ -2,67 +2,6 @@ import Mathlib.Algebra.Algebra.Tower
 import Mathlib.Algebra.MonoidAlgebra.Basic
 
 namespace MonoidAlgebra
-
-variable {R A B M : Type*} [CommSemiring R] [Semiring A] [Algebra R A] [Semiring B] [Algebra R B]
-    [Monoid M]
-
-@[simp]
-lemma coe_liftNCAlgHom (f : A →ₐ[R] B) (g : M →* B) (h_comm) :
-    ⇑(liftNCAlgHom f g h_comm) = liftNC f g := rfl
-
-end MonoidAlgebra
-
-namespace MonoidAlgebra
-
-section mapRange
-
-variable {R S T A M N : Type*} [CommSemiring R] [Semiring A] [Algebra R A] [Monoid M] [Monoid N]
-
-@[simp]
-lemma mapDomainRingHom_comp_algebraMap (f : M →* N) :
-    (mapDomainRingHom A f).comp (algebraMap R <| MonoidAlgebra A M) =
-      algebraMap R (MonoidAlgebra A N) := by
-  ext; simp
-
-@[simp]
-lemma mapRangeRingHom_comp_algebraMap [CommSemiring S] (f : R →+* S) :
-    (mapRangeRingHom (M := M) f).comp (algebraMap _ _) = (algebraMap _ _).comp f := by
-  ext
-  simp
-
-/-- The algebra homomorphism of monoid algebras induced by a homomorphism of the base algebras. -/
-noncomputable def mapRangeAlgHom {T : Type*} [Semiring S]
-    [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) :
-    MonoidAlgebra S M →ₐ[R] MonoidAlgebra T M :=
-  liftNCAlgHom (singleOneAlgHom.comp f) (of T M) fun x y ↦ by simp [commute_iff_eq]
-
-@[simp]
-lemma mapRangeAlgHom_apply {T : Type*} [Semiring S] [Semiring T] [Algebra R S] [Algebra R T]
-    (f : S →ₐ[R] T) (x : MonoidAlgebra S M) (m : M) :
-    mapRangeAlgHom f x m = f (x m) := mapRangeRingHom_apply f.toRingHom x m
-
-@[simp]
-lemma mapRangeAlgHom_single {T : Type*} [Semiring S]
-    [Semiring T] [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) (a : M) (b : S) :
-    mapRangeAlgHom f (single a b) = single a (f b) := by
-  classical
-  ext
-  simp [single_apply, apply_ite f]
-
-/-- The algebra isomorphism of monoid algebras induced by an isomorphism of the base algebras. -/
-@[simps apply]
-noncomputable def mapRangeAlgEquiv {T : Type*} [Semiring S] [Semiring T]
-    [Algebra R S] [Algebra R T] (f : S ≃ₐ[R] T) :
-    MonoidAlgebra S M ≃ₐ[R] MonoidAlgebra T M where
-  __ := mapRangeAlgHom f
-  invFun := mapRangeAlgHom (f.symm : T →ₐ[R] S)
-  left_inv _ := by aesop
-  right_inv _ := by aesop
-
-end mapRange
-
-section
-
 variable {R S M : Type*} [CommMonoid M] [CommSemiring R] [CommSemiring S] [Algebra R S]
 
 /--
@@ -84,17 +23,6 @@ lemma algebraMap_def :
 
 instance {T : Type*} [CommSemiring T] [Algebra R T] [Algebra S T] [IsScalarTower R S T] :
     IsScalarTower R (MonoidAlgebra S M) (MonoidAlgebra T M) :=
-  .of_algebraMap_eq' (mapRangeAlgHom (IsScalarTower.toAlgHom R S T)).comp_algebraMap.symm
-
-end
+  .of_algebraMap_eq' (mapRangeAlgHom _ (IsScalarTower.toAlgHom R S T)).comp_algebraMap.symm
 
 end MonoidAlgebra
-
-namespace AddMonoidAlgebra
-variable {R A M N : Type*} [CommSemiring R] [Semiring A] [Algebra R A] [AddMonoid M] [AddMonoid N]
-
-@[simp]
-lemma mapDomainRingHom_comp_algebraMap (f : M →+ N) :
-    (mapDomainRingHom A f).comp (algebraMap R A[M]) = algebraMap R A[N] := by ext; simp
-
-end AddMonoidAlgebra

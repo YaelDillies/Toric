@@ -23,11 +23,11 @@ universe u
 
 namespace AlgebraicGeometry.Scheme
 section IsSplitTorusOver
-variable {G H S : Scheme.{u}} [G.Over S] [H.Over S] [Grp_Class (asOver G S)]
-  [Grp_Class (asOver H S)]
+variable {G H S : Scheme.{u}} [G.Over S] [H.Over S] [GrpObj (asOver G S)]
+  [GrpObj (asOver H S)]
 
 -- TODO: Move me!
-instance {M N : Scheme.{u}} [M.Over S] [N.Over S] [Mon_Class (asOver M S)] [Mon_Class (asOver N S)]
+instance {M N : Scheme.{u}} [M.Over S] [N.Over S] [MonObj (asOver M S)] [MonObj (asOver N S)]
     (e : M ≅ N) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] : IsMon_Hom (e.asOver S).hom := ‹_›
 
 variable (G S) in
@@ -76,7 +76,7 @@ end IsSplitTorusOver
 
 section IsTorusOver
 variable {k : Type u} [Field k] {G H : Scheme.{u}} [G.Over Spec(k)] [H.Over Spec(k)]
-  [Grp_Class (G.asOver Spec(k))] [Grp_Class (H.asOver Spec(k))]
+  [GrpObj (G.asOver Spec(k))] [GrpObj (H.asOver Spec(k))]
 
 variable (k G) in
 @[mk_iff]
@@ -145,7 +145,7 @@ notation3 "𝔾ₘ["S"]" => 𝔾ₘ[S, PUnit]
 --   · dsimp [SplitTorus, Diag]
 --     congr 1
 
-variable (G S : Scheme.{u}) [G.Over S] [Grp_Class (G.asOver S)] in
+variable (G S : Scheme.{u}) [G.Over S] [GrpObj (G.asOver S)] in
 /-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
 lemma exists_iso_splitTorus_of_isSplitTorusOver [G.IsSplitTorusOver S] :
     ∃ (σ : Type u) (e : G ≅ SplitTorus S σ) (_ : e.hom.IsOver S),

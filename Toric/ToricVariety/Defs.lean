@@ -16,9 +16,9 @@ dominant open embedding `T → X` over `S` and an action `T × X → X` extendin
 `T`.
 -/
 
-attribute [instance] Mod_Class.regular
+attribute [instance] ModObj.regular
 
-open CategoryTheory Mon_Class MonoidalCategory CartesianMonoidalCategory Limits
+open CategoryTheory MonObj MonoidalCategory CartesianMonoidalCategory Limits
   AlgebraicGeometry.Scheme
 
 namespace AlgebraicGeometry
@@ -31,8 +31,8 @@ class ToricVariety (𝕜 : Type u) [Field 𝕜] (X : Scheme.{u}) extends X.Over 
   /-- The torus -/
   torus : Scheme.{u}
   [torusIsOver : torus.Over Spec(𝕜)]
-  [grp_ClassTorus : Grp_Class (torus.asOver Spec(𝕜))]
-  [mod_ClassTorus : Mod_Class (torus.asOver Spec(𝕜)) (X.asOver Spec(𝕜))]
+  [grpObjTorus : GrpObj (torus.asOver Spec(𝕜))]
+  [modObjTorus : ModObj (torus.asOver Spec(𝕜)) (X.asOver Spec(𝕜))]
   [torusIsTorusOver : torus.IsTorusOver 𝕜]
   /-- The torus embedding -/
   torusEmb (𝕜 X) : torus ⟶ X
@@ -47,7 +47,7 @@ class ToricVariety (𝕜 : Type u) [Field 𝕜] (X : Scheme.{u}) extends X.Over 
       γ[torus.asOver Spec(𝕜), X.asOver Spec(𝕜)] = μ ≫ torusEmb.asOver Spec(𝕜) := by aesop_cat
 
 namespace ToricVariety
-variable [T.Over Spec(𝕜)] [Grp_Class (T.asOver Spec(𝕜))] [T.IsTorusOver 𝕜]
+variable [T.Over Spec(𝕜)] [GrpObj (T.asOver Spec(𝕜))] [T.IsTorusOver 𝕜]
 
 /-- A torus `T` is a toric variety over itself. -/
 noncomputable instance : ToricVariety 𝕜 T where
