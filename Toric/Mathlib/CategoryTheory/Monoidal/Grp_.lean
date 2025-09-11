@@ -93,9 +93,7 @@ instance instBraidedCategory : BraidedCategory (Grp_ C) :=
 
 end Grp_
 
--- TODO: Make `Grp_.toMon_` an abbrev in mathlib.
-set_option allowUnsafeReducibility true in
-attribute [reducible] Grp_.toMon_
+/-! ### `mapGrp` is braided -/
 
 namespace CategoryTheory.Functor
 universe v₁ v₂ u₁ u₂
@@ -104,23 +102,6 @@ variable {C : Type u₁} [Category.{v₁} C] [CartesianMonoidalCategory C]
   {F : C ⥤ D} [F.Monoidal]
 
 open LaxMonoidal Monoidal
-
-/-! ### Essential image computation -/
-
-/-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
-same on group objects as on objects. -/
-@[simp] lemma essImage_mapGrp [F.Full] [F.Faithful] {G : Grp_ D} :
-    F.mapGrp.essImage G ↔ F.essImage G.X where
-  mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
-  mpr := by
-    rintro ⟨H, ⟨e⟩⟩
-    letI h₁ := Grp_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.grp_Class (.ofFullyFaithful F) H
-    refine ⟨⟨H⟩, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
-      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class, FullyFaithful.grp_Class,
-        h₁, h₂]
-
-/-! ### `mapGrp` is braided -/
 
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 

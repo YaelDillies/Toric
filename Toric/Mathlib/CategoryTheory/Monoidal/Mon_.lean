@@ -4,28 +4,14 @@ open CategoryTheory MonoidalCategory
 
 assert_not_exists CartesianMonoidalCategory
 
+/-! ### `mapMon` is braided -/
+
 namespace CategoryTheory.Functor
 
 variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D] {M X : C}
   [Mon_Class M] {F : C ⥤ D}
 
 open LaxMonoidal OplaxMonoidal
-
-/-! ### Essential image computation -/
-
-open Monoidal in
-/-- The essential image of a fully faithful functor between cartesian-monoidal categories is the
-same on monoid objects as on objects. -/
-@[simp] lemma essImage_mapMon [F.Monoidal] [F.Full] [F.Faithful] {M : Mon_ D} :
-    F.mapMon.essImage M ↔ F.essImage M.X where
-  mp := by rintro ⟨N, ⟨e⟩⟩; exact ⟨N.X, ⟨(Mon_.forget _).mapIso e⟩⟩
-  mpr := by
-    rintro ⟨N, ⟨e⟩⟩
-    letI h₁ := Mon_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.mon_Class (.ofFullyFaithful F) (X := N)
-    refine ⟨.mk N, ⟨Mon_.mkIso e ?_ ?_⟩⟩ <;> simp [Mon_Class.ofIso, FullyFaithful.mon_Class, h₁, h₂]
-
-/-! ### `mapMon` is braided -/
 
 open scoped Obj
 

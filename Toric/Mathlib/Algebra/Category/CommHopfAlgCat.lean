@@ -5,8 +5,8 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.Algebra.Category.CommBialgCat
 import Mathlib.CategoryTheory.Monoidal.Grp_
+import Mathlib.RingTheory.HopfAlgebra.TensorProduct
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
-import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 
 /-!
 # The category of commutative Hopf algebras over a commutative ring
