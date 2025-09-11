@@ -26,7 +26,7 @@ noncomputable def tensorEquiv : A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlge
   refine .ofAlgHom
     (Algebra.TensorProduct.lift
       ((IsScalarTower.toAlgHom A (A ⊗[R] B) _).comp Algebra.TensorProduct.includeLeft)
-      (mapRangeAlgHom Algebra.TensorProduct.includeRight)
+      (mapRangeAlgHom _ Algebra.TensorProduct.includeRight)
       (fun p n => .all _ _))
     (MonoidAlgebra.liftNCAlgHom (Algebra.TensorProduct.map (.id _ _) singleOneAlgHom)
         ((Algebra.TensorProduct.includeRight.toMonoidHom.comp (of B σ))) (fun _ _ ↦ .all _ _)) ?_ ?_
@@ -42,7 +42,7 @@ noncomputable def tensorEquiv : A ⊗[R] MonoidAlgebra B σ ≃ₐ[A] MonoidAlge
 
 @[simp]
 lemma tensorEquiv_tmul (a : A) (p : MonoidAlgebra B σ) :
-    tensorEquiv R A B (a ⊗ₜ p) = a • mapRangeAlgHom Algebra.TensorProduct.includeRight p := by
+    tensorEquiv R A B (a ⊗ₜ p) = a • mapRangeAlgHom σ Algebra.TensorProduct.includeRight p := by
   simp [tensorEquiv, Algebra.smul_def]
 
 @[simp]
@@ -53,19 +53,18 @@ lemma algebraTensorAlgEquiv_symm_single (m : σ) (a : A) (b : B) :
 /-- The tensor product of the monoid algebra by an algebra `N`
 is algebraically equivalent to a monoid algebra with coefficients in `N`. -/
 noncomputable def scalarTensorEquiv : A ⊗[R] MonoidAlgebra R σ ≃ₐ[A] MonoidAlgebra A σ :=
-  (tensorEquiv ..).trans (mapRangeAlgEquiv (Algebra.TensorProduct.rid R A A))
+  (tensorEquiv ..).trans (mapRangeAlgEquiv σ (Algebra.TensorProduct.rid R A A))
 
 attribute [local instance] algebraMonoidAlgebra in
 instance [Algebra S B] [Algebra A B] [Algebra R B] [IsScalarTower R A B] [IsScalarTower R S B]
     [Algebra.IsPushout R S A B] :
     Algebra.IsPushout R S (MonoidAlgebra A σ) (MonoidAlgebra B σ) where
   out := .of_equiv ((tensorEquiv (σ := σ) R S A).trans
-      (mapRangeAlgEquiv (Algebra.IsPushout.equiv R S A B))).toLinearEquiv fun x ↦ by
+      (mapRangeAlgEquiv σ (Algebra.IsPushout.equiv R S A B))).toLinearEquiv fun x ↦ by
     induction x using Finsupp.induction_linear
     · simp
     · simp_all
-    · simp [mapRangeAlgHom, mapRangeRingHom, liftNCAlgHom, liftNCRingHom,
-        Algebra.IsPushout.equiv_tmul]
+    · simp [mapRangeAlgHom, mapRangeRingHom, liftNCRingHom, Algebra.IsPushout.equiv_tmul]
 
 attribute [local instance] algebraMonoidAlgebra in
 instance [Algebra S B] [Algebra A B] [Algebra R B] [IsScalarTower R A B] [IsScalarTower R S B]

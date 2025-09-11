@@ -111,8 +111,8 @@ variable [IsStrictOrderedRing 𝕜] {C : PointedCone 𝕜 M}
 private lemma auxGenSet_subset_span : auxGenSet s w ⊆ span 𝕜 s := by
   simp only [Set.union_subset_iff, Set.image2_subset_iff, Set.mem_setOf_eq, and_imp]
   refine ⟨subset_trans (fun x hx ↦ hx.1) subset_span, fun x hxS hxw y hyS hyw ↦ ?_⟩
-  simpa [sub_eq_add_neg] using add_mem (smul_mem (span 𝕜 s) ⟨x w, hxw⟩ (subset_span hyS))
-    (smul_mem _ ⟨-y w, neg_nonneg.mpr hyw.le⟩ (subset_span hxS))
+  simpa [sub_eq_add_neg] using add_mem (smul_mem (span 𝕜 s) hxw (subset_span hyS))
+    (smul_mem _ (neg_nonneg.mpr hyw.le) (subset_span hxS))
 
 private lemma span_singleton_le_dual_auxGenSet : span 𝕜 {w} ≤ dual .id (auxGenSet s w) := by
   simp only [span_singleton_le_iff_mem, mem_dual, Set.mem_union, Set.mem_setOf_eq, Set.mem_image2]
