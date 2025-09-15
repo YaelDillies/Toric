@@ -10,6 +10,11 @@ import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Pasting
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 
+-- TODO: Fix in mathlib
+attribute [-simp]
+  MonObj.ofIso_one MonObj.ofIso_mul
+  GrpObj.ofIso_one GrpObj.ofIso_mul GrpObj.ofIso_inv
+
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra MonObj
 
@@ -41,7 +46,8 @@ instance Diag.canonicallyOver : (Diag S M).CanonicallyOver S := by unfold Diag; 
 instance Diag.monObjAsOver : MonObj (asOver (Diag S M) S) := by unfold Diag; infer_instance
 @[simps! -isSimp inv_left]
 instance Diag.grpObjAsOver : GrpObj (asOver (Diag S G) S) := by unfold Diag; infer_instance
-instance Diag.isCommMonObj_asOver : IsCommMonObj (asOver (Diag S M) S) := by unfold Diag; infer_instance
+instance Diag.isCommMonObj_asOver : IsCommMonObj (asOver (Diag S M) S) := by
+  unfold Diag; infer_instance
 
 @[simp] lemma diagMonFunctor_obj (M : AddCommMonCatᵒᵖ) :
     (diagMonFunctor S).obj M = .mk ((Diag S M.unop).asOver S) := rfl
@@ -276,8 +282,8 @@ lemma HomGrp.comp_zero [IsCommMonObj (G''.asOver S)] (f : HomGrp G G' S) :
   exact MonObj.comp_one _
 
 @[simp]
-lemma HomGrp.zero_comp [IsCommMonObj (G'.asOver S)] [IsCommMonObj (G''.asOver S)] (f : HomGrp G' G'' S) :
-    (0 : HomGrp G G' S).comp f = 0 := by
+lemma HomGrp.zero_comp [IsCommMonObj (G'.asOver S)] [IsCommMonObj (G''.asOver S)]
+    (f : HomGrp G' G'' S) : (0 : HomGrp G G' S).comp f = 0 := by
   apply Additive.toMul.injective
   dsimp [HomGrp.comp, HomGrp]
   exact MonObj.one_comp f.toMul
@@ -309,7 +315,8 @@ instance {X S : Scheme.{u}} [X.Over S] : (Iso.refl X).hom.IsOver S where
 instance {X S : Scheme.{u}} [X.Over S] [MonObj (X.asOver S)] :
     IsMon_Hom ((Iso.refl X).hom.asOver S) where
 
-def HomGrp.congr (e₁ : G ≅ G') (e₂ : H ≅ H') [IsCommMonObj (H.asOver S)] [IsCommMonObj (H'.asOver S)]
+def HomGrp.congr (e₁ : G ≅ G') (e₂ : H ≅ H')
+    [IsCommMonObj (H.asOver S)] [IsCommMonObj (H'.asOver S)]
     [e₁.hom.IsOver S] [IsMon_Hom (e₁.hom.asOver S)]
     [e₂.hom.IsOver S] [IsMon_Hom (e₂.hom.asOver S)] :
     HomGrp G H S ≃+ HomGrp G' H' S where
