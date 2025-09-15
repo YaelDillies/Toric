@@ -1,41 +1,25 @@
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
-/-! ### Transfer monoid/group objects along an iso -/
-
-section
-open CategoryTheory CartesianMonoidalCategory
-open scoped Mon_Class
-
-def Grp_Class.ofIso {C : Type*} [Category C] [CartesianMonoidalCategory C] {G X : C} (e : G ≅ X)
-    [Grp_Class G] : Grp_Class X where
-  toMon_Class := .ofIso e
-  inv := e.inv ≫ ι[G] ≫ e.hom
-  left_inv := by simp only [Mon_Class.ofIso, lift_map_assoc, Category.assoc, Iso.hom_inv_id,
-    Category.comp_id, Category.id_comp, lift_comp_inv_left_assoc]
-  right_inv := by simp [Mon_Class.ofIso]
-
-end
-
 /-! ### Pushforward of a group object -/
 
 namespace CategoryTheory.Functor
 variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
-  [CartesianMonoidalCategory D] {G : C} [Grp_Class G] (F : C ⥤ D) [F.Monoidal]
+  [CartesianMonoidalCategory D] {G : C} [GrpObj G] (F : C ⥤ D) [F.Monoidal]
 
 open scoped Obj
 
 /-- The image of a group object under a monoidal functor is a group object. -/
-noncomputable abbrev grp_ClassObj : Grp_Class (F.obj G) := (F.mapGrp.obj ⟨G⟩).grp
+noncomputable abbrev grpObjObj : GrpObj (F.obj G) := (F.mapGrp.obj ⟨G⟩).grp
 
-scoped[Obj] attribute [instance] CategoryTheory.Functor.grp_ClassObj
+scoped[Obj] attribute [instance] CategoryTheory.Functor.grpObjObj
 
 end CategoryTheory.Functor
 
 /-! ### `Grp_ C` is cartesian-monoidal -/
 
 namespace Grp_
-open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory Mon_Class
+open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
 
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
   {G H H₁ H₂ : Grp_ C}
@@ -100,7 +84,7 @@ instance : (forget₂Mon_ C).Monoidal where
   «η» := 𝟙 _
   δ G H := 𝟙 _
 
-attribute [local simp] one_eq_one mul_eq_mul comp_mul in
+attribute [local simp] MonObj.tensorObj.mul_def mul_eq_mul comp_mul in
 instance instBraidedCategory : BraidedCategory (Grp_ C) :=
   .ofFaithful (forget₂Mon_ C) fun G H ↦ Grp_.mkIso (β_ G.X H.X)
 
@@ -109,9 +93,7 @@ instance instBraidedCategory : BraidedCategory (Grp_ C) :=
 
 end Grp_
 
--- TODO: Make `Grp_.toMon_` an abbrev in mathlib.
-set_option allowUnsafeReducibility true in
-attribute [reducible] Grp_.toMon_
+/-! ### `mapGrp` is braided -/
 
 namespace CategoryTheory.Functor
 universe v₁ v₂ u₁ u₂
@@ -120,23 +102,6 @@ variable {C : Type u₁} [Category.{v₁} C] [CartesianMonoidalCategory C]
   {F : C ⥤ D} [F.Monoidal]
 
 open LaxMonoidal Monoidal
-
-/-! ### Essential image computation -/
-
-/-- The essential image of a full and faithful functor between cartesian-monoidal categories is the
-same on group objects as on objects. -/
-@[simp] lemma essImage_mapGrp [F.Full] [F.Faithful] {G : Grp_ D} :
-    F.mapGrp.essImage G ↔ F.essImage G.X where
-  mp := by rintro ⟨H, ⟨e⟩⟩; exact ⟨H.X, ⟨(Grp_.forget _).mapIso e⟩⟩
-  mpr := by
-    rintro ⟨H, ⟨e⟩⟩
-    letI h₁ := Grp_Class.ofIso e.symm
-    letI h₂ := FullyFaithful.grp_Class (.ofFullyFaithful F) H
-    refine ⟨⟨H⟩, ⟨Grp_.mkIso e ?_ ?_⟩⟩ <;>
-      simp [Grp_Class.ofIso, Mon_Class.ofIso, FullyFaithful.mon_Class, FullyFaithful.grp_Class,
-        h₁, h₂]
-
-/-! ### `mapGrp` is braided -/
 
 variable [BraidedCategory C] [BraidedCategory D] (F : C ⥤ D) [F.Braided]
 

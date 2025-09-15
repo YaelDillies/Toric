@@ -25,8 +25,8 @@ Let `S` be a scheme and `G` be a group scheme over `S`.
 We denote the characters of `G` by `X(S, G)` and the cocharacters by `X*(S, G)`.
 -/
 
-example {S G : Scheme} [G.Over S] [Grp_Class (G.asOver S)] : Type := X(S, G)
-example {S G : Scheme} [G.Over S] [Grp_Class (G.asOver S)] : Type := X*(S, G)
+example {S G : Scheme} [G.Over S] [GrpObj (G.asOver S)] : Type := X(S, G)
+example {S G : Scheme} [G.Over S] [GrpObj (G.asOver S)] : Type := X*(S, G)
 
 /-!
 Let `R` be a domain and `G` be a split torus over `R`.
@@ -38,7 +38,7 @@ then this pairing is perfect.
 -/
 
 example {R : CommRingCat.{0}} [IsDomain R] {G : Scheme} [G.Over (Spec R)]
-    [CommGrp_Class (G.asOver (Spec R))] :
+    [CommGrpObj (G.asOver (Spec R))] :
     X*(Spec R, G) →ₗ[ℤ] X(Spec R, G) →ₗ[ℤ] ℤ := charPairing R G
 
 example {R : CommRingCat} [IsDomain R] {σ : Type} [Finite σ] :

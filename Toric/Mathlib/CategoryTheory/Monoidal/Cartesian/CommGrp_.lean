@@ -2,8 +2,8 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
-open CategoryTheory Grp_Class Opposite
-open scoped Mon_Class
+open CategoryTheory GrpObj Opposite
+open scoped MonObj
 
 universe v u
 

@@ -40,8 +40,13 @@ where the top `≌` comes from the essentially surjective functor `Cogrp Mod_R �
 so that in particular we do not easily know that its inverse is given by `Γ`.
 -/
 
+-- TODO: Fix in mathlib
+attribute [-simp]
+  MonObj.ofIso_one MonObj.ofIso_mul
+  GrpObj.ofIso_one GrpObj.ofIso_mul GrpObj.ofIso_inv
+
 open AlgebraicGeometry Coalgebra Scheme CategoryTheory MonoidalCategory Functor Monoidal Opposite
-  Limits TensorProduct Mon_Class Grp_Class
+  Limits TensorProduct MonObj GrpObj
 
 universe w v u
 variable {R : CommRingCat.{u}}
@@ -179,7 +184,7 @@ instance locallyOfFiniteType_specOverSpec [Algebra R A] [Algebra.FiniteType R A]
 
 attribute [local simp] AlgHom.toUnder in
 @[simps! one]
-instance asOver.instMon_Class [Bialgebra R A] : Mon_Class ((Spec A).asOver (Spec R)) :=
+instance asOver.instMonObj [Bialgebra R A] : MonObj ((Spec A).asOver (Spec R)) :=
   ((bialgSpec R).obj <| .op <| .of R A).mon
 
 lemma specOverSpec_one [Bialgebra R A] :
@@ -207,8 +212,8 @@ lemma mul_left [Bialgebra R A] :
       (pullbackSpecIso R A A).hom ≫ Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R A)) := by
   rw [← μ_algSpec_left]; rfl
 
-instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
-    IsCommMon ((Spec A).asOver (Spec R)) where
+instance asOver.instIsCommMonObj [Bialgebra R A] [IsCocomm R A] :
+    IsCommMonObj ((Spec A).asOver (Spec R)) where
   mul_comm := by
     ext
     have := LaxMonoidal.μ (algSpec R) (.op <| .of R A) (.op <| .of R A)
@@ -230,11 +235,11 @@ instance asOver.instIsCommMon [Bialgebra R A] [IsCocomm R A] :
       · simp [AlgHom.toUnder, specOverSpec, over, OverClass.hom, h₂]; rfl
     · exact mul_left ..
 
-instance asOver.instGrp_Class [HopfAlgebra R A] : Grp_Class ((Spec A).asOver (Spec R)) :=
+instance asOver.instGrpObj [HopfAlgebra R A] : GrpObj ((Spec A).asOver (Spec R)) :=
   ((hopfSpec R).obj <| .op <| .of R A).grp
 
-instance asOver.instCommGrp_Class [HopfAlgebra R A] [IsCocomm R A] :
-   CommGrp_Class ((Spec A).asOver (Spec R)) where
+instance asOver.instCommGrpObj [HopfAlgebra R A] [IsCocomm R A] :
+    CommGrpObj ((Spec A).asOver (Spec R)) where
 
 instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
     (f : S →ₐ[R] T) : (Spec.map (CommRingCat.ofHom f.toRingHom)).IsOver Spec(R) where
@@ -289,20 +294,20 @@ attribute [local simp] specOverSpec_over algebraMap_Γ in
 instance [X.Over (Spec R)] [IsAffine X] : X.isoSpec.inv.IsOver (Spec R) where
 
 /-- The global sections of an affine monoid scheme over `Spec R` are a `R`-bialgebra. -/
-noncomputable instance [M.Over (Spec R)] [Mon_Class (M.asOver (Spec R))] [IsAffine M] :
+noncomputable instance [M.Over (Spec R)] [MonObj (M.asOver (Spec R))] [IsAffine M] :
     Bialgebra R Γ(M, ⊤) := by
-  have : Mon_Class ((algSpec R).obj <| .op <| CommAlgCat.of R Γ(M, ⊤)) :=
+  have : MonObj ((algSpec R).obj <| .op <| CommAlgCat.of R Γ(M, ⊤)) :=
     .ofIso <| M.isoSpec.asOver (Spec R)
-  have : Mon_Class (op <| CommAlgCat.of R Γ(M, ⊤)) := algSpec.fullyFaithful.mon_Class _
+  have : MonObj (op <| CommAlgCat.of R Γ(M, ⊤)) := algSpec.fullyFaithful.monObj _
   exact ((commBialgCatEquivComonCommAlgCat R).inverse.obj <|
     .op <| .mk <| .op <| .of R Γ(M, ⊤)).bialgebra
 
 /-- The global sections of an affine group scheme over `Spec R` are a `R`-Hopf algebra. -/
-noncomputable instance [G.Over (Spec R)] [Grp_Class (G.asOver (Spec R))] [IsAffine G] :
+noncomputable instance [G.Over (Spec R)] [GrpObj (G.asOver (Spec R))] [IsAffine G] :
     HopfAlgebra R Γ(G, ⊤) := by
-  have : Grp_Class ((algSpec R).obj <| .op <| CommAlgCat.of R Γ(G, ⊤)) :=
+  have : GrpObj ((algSpec R).obj <| .op <| CommAlgCat.of R Γ(G, ⊤)) :=
     .ofIso <| G.isoSpec.asOver (Spec R)
-  have : Grp_Class (op <| CommAlgCat.of R Γ(G, ⊤)) := algSpec.fullyFaithful.grp_Class _
+  have : GrpObj (op <| CommAlgCat.of R Γ(G, ⊤)) := algSpec.fullyFaithful.grpObj _
   exact ((commHopfAlgCatEquivCogrpCommAlgCat R).inverse.obj <|
     .op <| .mk <| .op <| .of R Γ(G, ⊤)).hopfAlgebra
 
@@ -372,10 +377,10 @@ instance [Bialgebra R T] :
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
-    · simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
       pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
       ← Algebra.TensorProduct.algebraMap_def]
-    · simp [mon_ClassAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
         pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
         ← AlgHom.coe_restrictScalars R (Bialgebra.counitAlgHom S _), - AlgHom.coe_restrictScalars,
         ← AlgHom.comp_toRingHom, Bialgebra.counitAlgHom_comp_includeRight]
@@ -384,13 +389,13 @@ instance [Bialgebra R T] :
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
-    · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
+    · simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
         ← CommRingCat.ofHom_comp, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
         ← Algebra.TensorProduct.algebraMap_def, Hom.asOver, OverClass.asOverHom, pullback.condition]
       rfl
     · convert congr($(μ_pullback_left_fst R S T) ≫ (pullbackSpecIso R T T).hom ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
-      · simp [mon_ClassAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
+      · simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
           Hom.asOver, OverClass.asOverHom, mul_left]
       · simp [pullbackSpecIso', specOverSpec_over, OverClass.asOver, Hom.asOver, ← Spec.map_comp,
           OverClass.asOverHom, mul_left, ← CommRingCat.ofHom_comp, ← Bialgebra.comul_includeRight]

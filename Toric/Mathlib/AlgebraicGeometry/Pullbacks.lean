@@ -18,16 +18,15 @@ instance canonicallyOverPullback : (pullback (M ↘ S) f).CanonicallyOver T wher
   hom := pullback.snd (M ↘ S) f
 
 @[simps! -isSimp mul one]
-instance mon_ClassAsOverPullback [Mon_Class (asOver M S)] :
-    Mon_Class (asOver (pullback (M ↘ S) f) T) :=
+instance monObjAsOverPullback [MonObj (asOver M S)] : MonObj (asOver (pullback (M ↘ S) f) T) :=
   ((Over.pullback f).mapMon.obj <| .mk <| asOver M S).mon
 
-instance isCommMon_asOver_pullback [Mon_Class (asOver M S)] [IsCommMon (asOver M S)] :
-    IsCommMon (asOver (pullback (M ↘ S) f) T) :=
+instance isCommMonObj_asOver_pullback [MonObj (asOver M S)] [IsCommMonObj (asOver M S)] :
+    IsCommMonObj (asOver (pullback (M ↘ S) f) T) :=
   ((Over.pullback f).mapCommMon.obj <| .mk <| asOver M S).comm
 
-instance Grp_ClassAsOverPullback [Grp_Class (asOver M S)] :
-    Grp_Class (asOver (pullback (M ↘ S) f) T) :=
+instance GrpObjAsOverPullback [GrpObj (asOver M S)] :
+    GrpObj (asOver (pullback (M ↘ S) f) T) :=
   ((Over.pullback f).mapGrp.obj <| .mk <| asOver M S).grp
 
 instance : (pullback.fst (M ↘ S) (𝟙 S)).IsOver S := ⟨(pullback.condition).trans (by simp)⟩
@@ -89,15 +88,13 @@ lemma μ_pullback_left_snd' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S) :
         pullback.snd _ _ ≫ pullback.snd _ _ :=
   μ_pullback_left_snd ..
 
-attribute [local simp] mon_ClassAsOverPullback_one in
-instance isMon_hom_fst_id_right [Mon_Class (asOver M S)] :
+attribute [local simp] monObjAsOverPullback_one in
+instance isMon_hom_fst_id_right [MonObj (asOver M S)] :
     IsMon_Hom ((pullback.fst (M ↘ S) (𝟙 S)).asOver S) where
-  one_hom := by
-    ext
-    simp [mon_ClassAsOverPullback_one]
+  one_hom := by ext; simp [monObjAsOverPullback_one]
   mul_hom := by
     ext
-    dsimp [mon_ClassAsOverPullback_mul]
+    dsimp [monObjAsOverPullback_mul]
     simp only [Category.assoc, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app]
     simp only [← Category.assoc]
     congr 1

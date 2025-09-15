@@ -5,8 +5,8 @@ Authors: Yaël Dillies, Michał Mrugała
 -/
 import Mathlib.Algebra.Category.CommBialgCat
 import Mathlib.CategoryTheory.Monoidal.Grp_
+import Mathlib.RingTheory.HopfAlgebra.TensorProduct
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
-import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 
 /-!
 # The category of commutative Hopf algebras over a commutative ring
@@ -171,8 +171,8 @@ end CommHopfAlgCat
 
 attribute [local ext] Quiver.Hom.unop_inj
 
-instance CommAlgCat.grp_ClassOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
-    Grp_Class (Opposite.op <| CommAlgCat.of R A) where
+instance CommAlgCat.grpObjOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
+    GrpObj (Opposite.op <| CommAlgCat.of R A) where
   inv := (CommAlgCat.ofHom <| antipodeAlgHom R A).op
   left_inv := by
     ext x
@@ -183,16 +183,16 @@ instance CommAlgCat.grp_ClassOpOf {A : Type u} [CommRing A] [HopfAlgebra R A] :
     simpa [← Algebra.TensorProduct.lmul'_comp_map, -mul_antipode_lTensor_comul_apply] using
       mul_antipode_lTensor_comul_apply (R := R) x
 
-open Opposite Mon_Class
+open Opposite MonObj
 
 @[simp]
 lemma CommAlgCat.inv_op_of_unop_hom {A : Type u} [CommRing A] [HopfAlgebra R A] :
     ι[op <| CommAlgCat.of R A].unop.hom = antipodeAlgHom R A := rfl
 
-instance (A : (CommAlgCat R)ᵒᵖ) [Grp_Class A] : HopfAlgebra R A.unop :=
+instance (A : (CommAlgCat R)ᵒᵖ) [GrpObj A] : HopfAlgebra R A.unop :=
   .ofAlgHom ι[A].unop.hom
-    congr($(Grp_Class.left_inv (X := A)).unop.hom)
-    congr($(Grp_Class.right_inv (X := A)).unop.hom)
+    congr($(GrpObj.left_inv (X := A)).unop.hom)
+    congr($(GrpObj.right_inv (X := A)).unop.hom)
 
 variable (R) in
 /-- Commutative Hopf algebras over a commutative ring `R` are the same thing as cogroup
@@ -212,5 +212,5 @@ def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat 
   counitIso.inv := 𝟙 _
 
 instance {A : CommHopfAlgCat.{u} R} [IsCocomm R A] :
-    IsCommMon ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X := by
+    IsCommMonObj ((commHopfAlgCatEquivCogrpCommAlgCat R).functor.obj A).unop.X := by
   dsimp; infer_instance

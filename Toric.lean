@@ -38,7 +38,6 @@ import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
-import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 import Toric.Mathlib.RingTheory.TensorProduct.Basic
 import Toric.MonoidAlgebra.TensorProduct
 import Toric.MvLaurentPolynomial
