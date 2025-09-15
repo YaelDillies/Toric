@@ -9,11 +9,7 @@ import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Pasting
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
-
--- TODO: Fix in mathlib
-attribute [-simp]
-  MonObj.ofIso_one MonObj.ofIso_mul
-  GrpObj.ofIso_one GrpObj.ofIso_mul GrpObj.ofIso_inv
+import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra MonObj

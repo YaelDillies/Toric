@@ -40,11 +40,6 @@ where the top `≌` comes from the essentially surjective functor `Cogrp Mod_R �
 so that in particular we do not easily know that its inverse is given by `Γ`.
 -/
 
--- TODO: Fix in mathlib
-attribute [-simp]
-  MonObj.ofIso_one MonObj.ofIso_mul
-  GrpObj.ofIso_one GrpObj.ofIso_mul GrpObj.ofIso_inv
-
 open AlgebraicGeometry Coalgebra Scheme CategoryTheory MonoidalCategory Functor Monoidal Opposite
   Limits TensorProduct MonObj GrpObj
 

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
+import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
 open CategoryTheory MonObj MonoidalCategory CartesianMonoidalCategory
 

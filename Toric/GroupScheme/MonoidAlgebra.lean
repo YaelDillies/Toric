@@ -9,11 +9,6 @@ import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
 
--- TODO: Fix in mathlib
-attribute [-simp]
-  MonObj.ofIso_one MonObj.ofIso_mul
-  GrpObj.ofIso_one GrpObj.ofIso_mul GrpObj.ofIso_inv
-
 noncomputable section
 
 open CategoryTheory Limits Opposite MonoidalCategory MonoidAlgebra MonObj
