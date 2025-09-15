@@ -28,31 +28,6 @@ def ofIso (e : M ≅ X) : Mon_Class X where
 
 end Mon_Class
 
-/-! ### Tensor product of comm monoid/group objects -/
-
-namespace Mon_Class
-variable {C : Type*} [Category C] [MonoidalCategory C] [SymmetricCategory C]
-  {M N : C} [Mon_Class M] [Mon_Class N]
-
-instance [IsCommMon M] [IsCommMon N] : IsCommMon (M ⊗ N) where
-  mul_comm := by
-    simp [← IsIso.inv_comp_eq, tensorμ, ← associator_inv_naturality_left_assoc,
-      ← associator_naturality_right_assoc, SymmetricCategory.braiding_swap_eq_inv_braiding M N,
-      ← tensorHom_def_assoc, -whiskerRight_tensor, -tensor_whiskerLeft, ← tensor_comp,
-      Mon_Class.tensorObj.mul_def, ← whiskerLeft_comp_assoc, -whiskerLeft_comp]
-
-end Mon_Class
-
-/-! ### Stupid instance -/
-
-section
-variable {C : Type*} [Category C] [MonoidalCategory C] [BraidedCategory C] {M N : C} [Mon_Class M]
-  [Mon_Class N]
-
-instance {f : M ⟶ N} [IsIso f] [IsMon_Hom f] : IsMon_Hom (asIso f).hom := ‹_›
-
-end
-
 namespace CategoryTheory.Functor
 
 variable {C D : Type*} [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D] {M X : C}

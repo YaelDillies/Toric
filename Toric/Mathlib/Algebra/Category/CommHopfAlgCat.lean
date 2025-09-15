@@ -3,10 +3,8 @@ Copyright (c) 2025 Yaël Dillies, Michał Mrugała. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała
 -/
-import Mathlib.Algebra.Category.AlgCat.Basic
-import Mathlib.Algebra.Category.Ring.Under.Basic
+import Mathlib.Algebra.Category.CommBialgCat
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.Algebra.Category.CommBialgCat
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.TensorProduct
 

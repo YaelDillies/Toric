@@ -2,10 +2,10 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Mathlib.CategoryTheory.Monoidal.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
-open CategoryTheory CartesianMonoidalCategory MonoidalCategory Grp_Class Opposite
+open CategoryTheory Grp_Class Opposite
 open scoped Mon_Class
 
-universe w v u
+universe v u
 
 variable {C : Type u} [Category.{v} C] [CartesianMonoidalCategory C] [BraidedCategory C]
 
@@ -14,10 +14,6 @@ namespace CommGrp_
 -- TODO: Make `CommGrp_.toGrp_` an abbrev in mathlib.
 set_option allowUnsafeReducibility true in
 attribute [reducible] CommGrp_.toGrp_
-
-instance (G : CommGrp_ C) : CommGrp_Class G.X where mul_comm := G.comm.mul_comm
-
-section GrpGrp
 
 /-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
 @[simps]
@@ -43,5 +39,4 @@ def yonedaCommGrpGrp : CommGrp_ C ⥤ (Grp_ C)ᵒᵖ ⥤ CommGrp where
     naturality {Y₁ Y₂} φ := by ext; simp
   }
 
-end GrpGrp
 end CommGrp_
