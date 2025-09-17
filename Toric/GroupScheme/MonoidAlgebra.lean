@@ -104,7 +104,7 @@ lemma specCommMonAlgPullbackObjXIso_mul :
 def specCommMonAlgPullback :
     (commMonAlg R).op ⋙ bialgSpec R ⋙ (Over.pullback Sf).mapMon ≅
       (commMonAlg S).op ⋙ bialgSpec S :=
-  NatIso.ofComponents (fun M ↦ Mon_.mkIso (specCommMonAlgPullbackObjXIso M.unop f Sf H)
+  NatIso.ofComponents (fun M ↦ Mon.mkIso (specCommMonAlgPullbackObjXIso M.unop f Sf H)
     (specCommMonAlgPullbackObjXIso_one M.unop f Sf H)
     (specCommMonAlgPullbackObjXIso_mul M.unop f Sf H))
   fun {M N} φ ↦ by
@@ -143,7 +143,7 @@ lemma specCommMonAlgPullback_inv_app_hom_left_snd (M) :
 def specCommGrpAlgPullback :
     (commGrpAlg R).op ⋙ hopfSpec R ⋙ (Over.pullback Sf).mapGrp ≅
       (commGrpAlg S).op ⋙ hopfSpec S :=
-  ((Grp_.fullyFaithfulForget₂Mon_ _).whiskeringRight _).preimageIso <|
+  ((Grp_.fullyFaithfulForget₂Mon _).whiskeringRight _).preimageIso <|
     (forget₂ CommGrp CommMonCat).op.isoWhiskerLeft (specCommMonAlgPullback f _ H)
 
 end AlgebraicGeometry.Scheme

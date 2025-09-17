@@ -21,7 +21,7 @@ def yonedaCommGrpGrpObj (G : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrp where
   obj H := .of (unop H ⟶ G.toGrp_)
   map {H I} f := CommGrp.ofHom {
     toFun := (f.unop ≫ ·)
-    map_one' := by ext; simp [Mon_.Hom.hom_one]
+    map_one' := by ext; simp [Mon.Hom.hom_one]
     map_mul' g h := by ext; simpa using ((yonedaGrpObj G.X).map f.unop.1.op).hom.map_mul g.hom h.hom
   }
 

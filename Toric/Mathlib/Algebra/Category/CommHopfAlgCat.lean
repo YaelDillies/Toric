@@ -204,8 +204,8 @@ def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat 
   functor.map {A B} f := .op <| .mk' <| .op <| CommAlgCat.ofHom f.hom
   inverse.obj A := .of R A.unop.X.unop
   inverse.map {A B} f := CommHopfAlgCat.ofHom <| .ofAlgHom f.unop.hom.unop.hom
-    congr(($(IsMon_Hom.one_hom (f := f.unop.hom))).unop.hom)
-    congr(($((IsMon_Hom.mul_hom (f := f.unop.hom)).symm)).unop.hom)
+    congr(($(IsMonHom.one_hom (f := f.unop.hom))).unop.hom)
+    congr(($((IsMonHom.mul_hom (f := f.unop.hom)).symm)).unop.hom)
   unitIso.hom := 𝟙 _
   unitIso.inv := 𝟙 _
   counitIso.hom := 𝟙 _

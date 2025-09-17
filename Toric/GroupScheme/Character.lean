@@ -38,27 +38,27 @@ abbrev Cochar := HomGrp 𝔾ₘ[S] G S
 
 variable (S) in
 /-- Characters of isomorphic group schemes are isomorphic. -/
-def charCongr (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : X(S, G) ≃+ X(S, H) :=
+def charCongr (e : G ≅ H) [e.hom.IsOver S] [IsMonHom <| e.hom.asOver S] : X(S, G) ≃+ X(S, H) :=
   HomGrp.congr e (.refl _)
 
 @[simp]
-lemma charCongr_symm (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] :
+lemma charCongr_symm (e : G ≅ H) [e.hom.IsOver S] [IsMonHom <| e.hom.asOver S] :
   (charCongr S e).symm = charCongr S e.symm := rfl
 
 variable (S) in
 /-- Cocharacters of isomorphic commutative group schemes are isomorphic. -/
 def cocharCongr [IsCommMonObj <| G.asOver S] [IsCommMonObj <| H.asOver S]
-    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : X*(S, G) ≃+ X*(S, H) :=
+    (e : G ≅ H) [e.hom.IsOver S] [IsMonHom <| e.hom.asOver S] : X*(S, G) ≃+ X*(S, H) :=
   HomGrp.congr (.refl _) e
 
 @[simp]
 lemma cocharCongr_symm (e : G ≅ H) [IsCommMonObj <| G.asOver S] [IsCommMonObj <| H.asOver S]
-    [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] :
+    [e.hom.IsOver S] [IsMonHom <| e.hom.asOver S] :
   (cocharCongr S e).symm = cocharCongr S e.symm := rfl
 
 @[simp]
 lemma cocharCongr_comp_charCongr [IsCommMonObj <| G.asOver S] [IsCommMonObj <| H.asOver S]
-    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] (a b) :
+    (e : G ≅ H) [e.hom.IsOver S] [IsMonHom <| e.hom.asOver S] (a b) :
     (cocharCongr S e a).comp (charCongr S e b) = a.comp b := by
   ext
   simp [charCongr, cocharCongr, HomGrp.congr]

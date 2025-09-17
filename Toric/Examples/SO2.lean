@@ -284,7 +284,7 @@ lemma so₂ComplexIso_hom_asOver :
       ((bialgSpec <| .of ℂ).map <| .op <| CommBialgCat.ofHom complexEquiv.symm.toBialgHom).hom ≫
         (diagSpecIso (.of ℂ) ℤ).inv.asOver Spec(ℂ) := rfl
 
-instance : IsMon_Hom <| so₂ComplexIso.hom.asOver Spec(ℂ) := by
+instance : IsMonHom <| so₂ComplexIso.hom.asOver Spec(ℂ) := by
   rw [so₂ComplexIso_hom_asOver]; infer_instance
 
 instance : SO₂(ℂ).IsSplitTorusOver Spec(ℂ) := .of_iso so₂ComplexIso
@@ -310,7 +310,7 @@ lemma pullbackSO₂RealComplex_hom_asOver :
         ((bialgSpec <| .of ℂ).map <| .op <|
           CommBialgCat.ofHom (baseChangeBialgEquiv ℝ ℂ).symm.toBialgHom).hom := rfl
 
-instance : IsMon_Hom <| pullbackSO₂RealComplex.hom.asOver Spec(ℂ) := by
+instance : IsMonHom <| pullbackSO₂RealComplex.hom.asOver Spec(ℂ) := by
   rw [pullbackSO₂RealComplex_hom_asOver]; infer_instance
 
 instance pullback_SO₂_real_isSplitTorusOver_complex :
@@ -366,7 +366,7 @@ theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(�
   obtain ⟨σ, _, e, _, _⟩ := exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType SO₂(ℝ)
     Spec(ℝ)
   haveI : (e ≪≫ diagSpecIso _ ℤ[σ]).hom.IsOver Spec(ℝ) := by dsimp; infer_instance
-  haveI : IsMon_Hom ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ)).hom := by dsimp; infer_instance
+  haveI : IsMonHom ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ)).hom := by dsimp; infer_instance
   have e₁ := MonObj.homMulEquivRight ((e ≪≫ diagSpecIso _ ℤ[σ]).asOver Spec(ℝ))
     (Spec(ℝ).asOver Spec(ℝ))
   have e₂ : (ℤ[σ] →+ Additive ℝˣ) ≃+ (σ → Additive ℝˣ) := Finsupp.liftAddHom.symm.trans <|

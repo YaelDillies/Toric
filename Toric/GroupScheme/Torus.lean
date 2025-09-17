@@ -28,40 +28,40 @@ variable {G H S : Scheme.{u}} [G.Over S] [H.Over S] [GrpObj (asOver G S)]
 
 -- TODO: Move me!
 instance {M N : Scheme.{u}} [M.Over S] [N.Over S] [MonObj (asOver M S)] [MonObj (asOver N S)]
-    (e : M ≅ N) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] : IsMon_Hom (e.asOver S).hom := ‹_›
+    (e : M ≅ N) [e.hom.IsOver S] [IsMonHom (e.hom.asOver S)] : IsMonHom (e.asOver S).hom := ‹_›
 
 variable (G S) in
 @[mk_iff]
 class IsSplitTorusOver : Prop where
   existsIso :
     ∃ (A : Type u) (_ : AddCommGroup A) (_ : Module.Free ℤ A) (e : G ≅ Diag S A)
-      (_ : e.hom.IsOver S), IsMon_Hom (e.hom.asOver S)
+      (_ : e.hom.IsOver S), IsMonHom (e.hom.asOver S)
 
 instance diag_isSplitTorusOver {A : Type u} [AddCommGroup A] [Module.Free ℤ A] :
     (Diag S A).IsSplitTorusOver S :=
   ⟨A, ‹_›, ‹_›, by exact .refl (S.Diag A), by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsSplitTorusOver.of_isIso [H.IsSplitTorusOver S] (f : G ⟶ H) [IsIso f] [f.IsOver S]
-    [IsMon_Hom (f.asOver S)] : G.IsSplitTorusOver S :=
-  have : IsMon_Hom ((asIso f).hom.asOver S) := ‹_›
+    [IsMonHom (f.asOver S)] : G.IsSplitTorusOver S :=
+  have : IsMonHom ((asIso f).hom.asOver S) := ‹_›
   let ⟨A, _, _, e, _, _⟩ := ‹H.IsSplitTorusOver S›
   ⟨A, _, ‹_›, (asIso f).trans e, by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsSplitTorusOver.of_isIso' [G.IsSplitTorusOver S]
-    (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : H.IsSplitTorusOver S :=
-  have : IsMon_Hom ((inv f).asOver S) := by
-    simpa using inferInstanceAs <| IsMon_Hom (asIso <| f.asOver S).inv
+    (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMonHom (f.asOver S)] : H.IsSplitTorusOver S :=
+  have : IsMonHom ((inv f).asOver S) := by
+    simpa using inferInstanceAs <| IsMonHom (asIso <| f.asOver S).inv
   .of_isIso (inv f)
 
 lemma IsSplitTorusOver.of_iso [H.IsSplitTorusOver S] (e : G ≅ H) [e.hom.IsOver S]
-    [IsMon_Hom (e.hom.asOver S)] : G.IsSplitTorusOver S := of_isIso e.hom
+    [IsMonHom (e.hom.asOver S)] : G.IsSplitTorusOver S := of_isIso e.hom
 
 variable (G S) in
 /-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
 lemma exists_iso_diag_finite_of_isSplitTorusOver_locallyOfFiniteType [G.IsSplitTorusOver S]
     [hG : LocallyOfFiniteType (G ↘ S)] [Nonempty S] :
     ∃ (ι : Type u) (_ : Finite ι) (e : G ≅ Diag S ℤ[ι]) (_ : e.hom.IsOver S),
-      IsMon_Hom (e.hom.asOver S) := by
+      IsMonHom (e.hom.asOver S) := by
   obtain ⟨A, _, _, e, _, _⟩ := ‹G.IsSplitTorusOver S›
   replace hG : LocallyOfFiniteType (Diag S A ↘ S) := by
     rw [← MorphismProperty.cancel_left_of_respectsIso @LocallyOfFiniteType e.hom]
@@ -93,7 +93,7 @@ instance [G.IsSplitTorusOver Spec(k)] : G.IsTorusOver k := by
     convert this <;> simp
   exact .of_isIso (pullback.fst (G ↘ Spec(k)) (𝟙 _))
 
-lemma IsTorusOver.of_iso (e : G ≅ H) [e.hom.IsOver Spec(k)] [IsMon_Hom (e.hom.asOver Spec(k))]
+lemma IsTorusOver.of_iso (e : G ≅ H) [e.hom.IsOver Spec(k)] [IsMonHom (e.hom.asOver Spec(k))]
     [H.IsTorusOver k] : G.IsTorusOver k := by
   obtain ⟨L, _, _, _, hH⟩ := ‹H.IsTorusOver k›
   refine ⟨L, _, ‹_›, ‹_›, ?_⟩
@@ -102,13 +102,13 @@ lemma IsTorusOver.of_iso (e : G ≅ H) [e.hom.IsOver Spec(k)] [IsMon_Hom (e.hom.
   let e' := (Grp_.forget _ ⋙ Over.forget _).mapIso e''
   dsimp at e'
   have : e'.hom.IsOver Spec(L) := by simp [e', e'']
-  have : IsMon_Hom <| e'.hom.asOver Spec(L) := Mon_.instIsMon_HomHom e''.hom
+  have : IsMonHom <| e'.hom.asOver Spec(L) := Mon.instIsMonHomHom e''.hom
   exact .of_iso e'
 
 lemma IsTorusOver.of_isIso [H.IsTorusOver k]
-    (f : G ⟶ H) [IsIso f] [f.IsOver Spec(k)] [IsMon_Hom (f.asOver Spec(k))] :
+    (f : G ⟶ H) [IsIso f] [f.IsOver Spec(k)] [IsMonHom (f.asOver Spec(k))] :
     G.IsTorusOver k :=
-  have : IsMon_Hom (Hom.asOver (asIso f).hom Spec(k)) := ‹_›
+  have : IsMonHom (Hom.asOver (asIso f).hom Spec(k)) := ‹_›
   .of_iso (asIso f)
 
 end IsTorusOver
@@ -149,7 +149,7 @@ variable (G S : Scheme.{u}) [G.Over S] [GrpObj (G.asOver S)] in
 /-- Every split torus that's locally of finite type is isomorphic to `𝔾ₘⁿ` for some `n`. -/
 lemma exists_iso_splitTorus_of_isSplitTorusOver [G.IsSplitTorusOver S] :
     ∃ (σ : Type u) (e : G ≅ SplitTorus S σ) (_ : e.hom.IsOver S),
-      IsMon_Hom (e.hom.asOver S) := by
+      IsMonHom (e.hom.asOver S) := by
   obtain ⟨A, _, _, e, _, _⟩ := ‹G.IsSplitTorusOver S›
   exact ⟨Module.Free.ChooseBasisIndex ℤ A,
     e.trans <| Diag.mapIso S ((Module.Free.chooseBasis ℤ A).repr.toAddEquiv.trans

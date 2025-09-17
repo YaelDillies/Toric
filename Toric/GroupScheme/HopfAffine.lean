@@ -144,7 +144,7 @@ noncomputable def algSpec.fullyFaithful : (algSpec R).FullyFaithful :=
 
 variable (R) in
 /-- `Spec` as a functor from `R`-bialgebras to monoid schemes over `Spec R`. -/
-noncomputable abbrev bialgSpec : (CommBialgCat R)ᵒᵖ ⥤ Mon_ (Over <| Spec R) :=
+noncomputable abbrev bialgSpec : (CommBialgCat R)ᵒᵖ ⥤ Mon (Over <| Spec R) :=
   (commBialgCatEquivComonCommAlgCat R).functor.leftOp ⋙ (algSpec R).mapMon
 
 variable (R) in
@@ -367,7 +367,7 @@ lemma μ_pullback_left_fst [Algebra R T] :
     rfl
 
 instance [Bialgebra R T] :
-    IsMon_Hom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
+    IsMonHom <| (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.asOver Spec(S) where
   one_hom := by
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]

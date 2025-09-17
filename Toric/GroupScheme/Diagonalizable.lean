@@ -24,7 +24,7 @@ variable {S T : Scheme.{u}} {R : CommRingCat.{u}} {M N O G : Type u} [AddCommMon
   [AddCommMonoid N] [AddCommMonoid O] [AddCommGroup G]
 
 variable (S) in
-def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon_ (Over S) :=
+def diagMonFunctor : AddCommMonCatᵒᵖ ⥤ Mon (Over S) :=
   AddCommMonCat.equivalence.functor.op ⋙
     (commMonAlg (ULift.{u} ℤ)).op ⋙ bialgSpec (.of <| ULift.{u} ℤ) ⋙
       (Over.pullback (specULiftZIsTerminal.from S)).mapMon
@@ -58,8 +58,8 @@ def Diag.map (f : M →+ N) : Diag S N ⟶ Diag S M :=
 attribute [local simp] Diag.map Diag.canonicallyOver_over in
 instance Diag.isOver_map {f : M →+ N} : (Diag.map S f).IsOver S where
 
-instance Diag.isMon_Hom_map {f : M →+ N} : IsMon_Hom <| (Diag.map S f).asOver S :=
-  inferInstanceAs <| IsMon_Hom <| ((diagMonFunctor S).map <| .op <| AddCommMonCat.ofHom f).hom
+instance Diag.isMonHom_map {f : M →+ N} : IsMonHom <| (Diag.map S f).asOver S :=
+  inferInstanceAs <| IsMonHom <| ((diagMonFunctor S).map <| .op <| AddCommMonCat.ofHom f).hom
 
 @[simp] lemma diagMonFunctor_map {M N : AddCommMonCatᵒᵖ} (f : M ⟶ N) :
     (diagMonFunctor S).map f = .mk ((Diag.map S f.unop.hom).asOver S) := rfl
@@ -86,7 +86,7 @@ variable (R M) in
 def diagSpecIso : Diag (Spec R) M ≅ Spec(MonoidAlgebra R <| Multiplicative M) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
   (Functor.isoWhiskerRight (specCommMonAlgPullback (CommRingCat.ofHom f) _
-    (specULiftZIsTerminal.hom_ext _ _)) (Mon_.forget _ ⋙ Over.forget _)).app <|
+    (specULiftZIsTerminal.hom_ext _ _)) (Mon.forget _ ⋙ Over.forget _)).app <|
       .op <| .of <| Multiplicative M
 
 instance isOver_diagSpecIso_hom : (diagSpecIso R M).hom.IsOver (Spec R) where
@@ -99,15 +99,15 @@ instance isOver_diagSpecIso_inv : (diagSpecIso R M).inv.IsOver (Spec R) where
   comp_over := specCommMonAlgPullback_inv_app_hom_left_snd _ _
       (specULiftZIsTerminal.hom_ext _ _) <| .op <| .of <| Multiplicative M
 
-instance : IsMon_Hom ((diagSpecIso R M).hom.asOver (Spec R)) :=
+instance : IsMonHom ((diagSpecIso R M).hom.asOver (Spec R)) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  Mon_.instIsMon_HomHom
+  Mon.instIsMonHomHom
   ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
     (specULiftZIsTerminal.hom_ext _ _)).app <| .op <| .of <| Multiplicative M).hom
 
-instance : IsMon_Hom ((diagSpecIso R M).inv.asOver (Spec R)) :=
+instance : IsMonHom ((diagSpecIso R M).inv.asOver (Spec R)) :=
   letI f := (algebraMap ℤ R).comp (ULift.ringEquiv.{0, u} (R := ℤ)).toRingHom
-  Mon_.instIsMon_HomHom
+  Mon.instIsMonHomHom
   ((specCommMonAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
     (specULiftZIsTerminal.hom_ext _ _)).app _).inv
 
@@ -243,13 +243,13 @@ def HomGrp : Type u := Additive (Grp_.mk (G.asOver S) ⟶ .mk (G'.asOver S))
 instance [IsCommMonObj (G'.asOver S)] : AddCommGroup (HomGrp G G' S) := by
   delta HomGrp; infer_instance
 
-def HomGrp.ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] : HomGrp G G' S :=
+def HomGrp.ofHom (f : G ⟶ G') [f.IsOver S] [IsMonHom (f.asOver S)] : HomGrp G G' S :=
   Additive.ofMul (Grp_.homMk (f.asOver S))
 
 def HomGrp.hom (f : HomGrp G G' S) : G ⟶ G' := f.toMul.hom.left
 
 @[simp]
-lemma HomGrp.hom_ofHom (f : G ⟶ G') [f.IsOver S] [IsMon_Hom (f.asOver S)] :
+lemma HomGrp.hom_ofHom (f : G ⟶ G') [f.IsOver S] [IsMonHom (f.asOver S)] :
   hom (ofHom (S := S) f) = f := rfl
 
 @[ext]
@@ -294,27 +294,27 @@ instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] :
   comp_over := by rw [Iso.inv_comp_eq, comp_over]
 
 instance {X Y S : Scheme} [X.Over S] [Y.Over S] [MonObj (X.asOver S)] [MonObj (Y.asOver S)]
-    (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] : IsMon_Hom (e.inv.asOver S) := by
+    (e : X ≅ Y) [e.hom.IsOver S] [IsMonHom (e.hom.asOver S)] : IsMonHom (e.inv.asOver S) := by
   let e' : X.asOver S ≅ Y.asOver S := Over.isoMk e (by simp)
-  have : IsMon_Hom e'.hom := ‹_›
-  exact inferInstanceAs (IsMon_Hom e'.inv)
+  have : IsMonHom e'.hom := ‹_›
+  exact inferInstanceAs (IsMonHom e'.inv)
 
 instance {X Y S : Scheme} [X.Over S] [Y.Over S] (e : X ≅ Y) [e.hom.IsOver S] :
     e.symm.hom.IsOver S where
 
 instance {X Y S : Scheme} [X.Over S] [Y.Over S] [MonObj (X.asOver S)] [MonObj (Y.asOver S)]
-    (e : X ≅ Y) [e.hom.IsOver S] [IsMon_Hom (e.hom.asOver S)] :
-  IsMon_Hom (e.symm.hom.asOver S) where
+    (e : X ≅ Y) [e.hom.IsOver S] [IsMonHom (e.hom.asOver S)] :
+  IsMonHom (e.symm.hom.asOver S) where
 
 instance {X S : Scheme.{u}} [X.Over S] : (Iso.refl X).hom.IsOver S where
 
 instance {X S : Scheme.{u}} [X.Over S] [MonObj (X.asOver S)] :
-    IsMon_Hom ((Iso.refl X).hom.asOver S) where
+    IsMonHom ((Iso.refl X).hom.asOver S) where
 
 def HomGrp.congr (e₁ : G ≅ G') (e₂ : H ≅ H')
     [IsCommMonObj (H.asOver S)] [IsCommMonObj (H'.asOver S)]
-    [e₁.hom.IsOver S] [IsMon_Hom (e₁.hom.asOver S)]
-    [e₂.hom.IsOver S] [IsMon_Hom (e₂.hom.asOver S)] :
+    [e₁.hom.IsOver S] [IsMonHom (e₁.hom.asOver S)]
+    [e₂.hom.IsOver S] [IsMonHom (e₂.hom.asOver S)] :
     HomGrp G H S ≃+ HomGrp G' H' S where
   toFun f := .comp (.comp (.ofHom e₁.inv) f) (.ofHom e₂.hom)
   invFun f := .comp (.comp (.ofHom e₁.hom) f) (.ofHom e₂.inv)
@@ -366,19 +366,19 @@ variable (S G) in
 class IsDiagonalisable : Prop where
   existsIso :
     ∃ (A : Type u) (_ : AddCommGroup A) (e : G ≅ Diag S A) (_ : e.hom.IsOver S),
-      IsMon_Hom <| e.hom.asOver S
+      IsMonHom <| e.hom.asOver S
 
 instance {A : Type u} [AddCommGroup A] : IsDiagonalisable S (Diag S A) :=
   ⟨A, ‹_›, by exact .refl _, by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsDiagonalisable.of_iso [IsDiagonalisable S H]
-    (e : G ≅ H) [e.hom.IsOver S] [IsMon_Hom <| e.hom.asOver S] : IsDiagonalisable S G :=
+    (e : G ≅ H) [e.hom.IsOver S] [IsMonHom <| e.hom.asOver S] : IsDiagonalisable S G :=
   let ⟨A, _, e', _, _⟩ := ‹IsDiagonalisable S H›
   ⟨A, _, e.trans e', by dsimp; infer_instance, by dsimp; infer_instance⟩
 
 lemma IsDiagonalisable.of_isIso [IsDiagonalisable S H]
-    (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMon_Hom (f.asOver S)] : IsDiagonalisable S G :=
-  have : IsMon_Hom (Hom.asOver (asIso f).hom S) := ‹_›
+    (f : G ⟶ H) [IsIso f] [f.IsOver S] [IsMonHom (f.asOver S)] : IsDiagonalisable S G :=
+  have : IsMonHom (Hom.asOver (asIso f).hom S) := ‹_›
   .of_iso (asIso f)
 
 end Scheme

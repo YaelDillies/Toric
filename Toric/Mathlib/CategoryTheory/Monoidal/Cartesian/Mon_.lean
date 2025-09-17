@@ -40,17 +40,17 @@ end CategoryTheory.Functor
 
 /-! ### Comm monoid objects are internal monoid objects -/
 
-namespace Mon_
+namespace Mon
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
-  {M N N₁ N₂ : Mon_ C}
+  {M N N₁ N₂ : Mon C}
 
 /-- A commutative monoid object is a monoid object in the category of monoid objects. -/
 instance [IsCommMonObj M.X] : MonObj M where
   one := .mk η[M.X]
   mul := .mk μ[M.X]
 
-@[simp] lemma hom_η (M : Mon_ C) [IsCommMonObj M.X] : η[M].hom = η[M.X] := rfl
-@[simp] lemma hom_μ (M : Mon_ C) [IsCommMonObj M.X] : μ[M].hom = μ[M.X] := rfl
+@[simp] lemma hom_η (M : Mon C) [IsCommMonObj M.X] : η[M].hom = η[M.X] := rfl
+@[simp] lemma hom_μ (M : Mon C) [IsCommMonObj M.X] : μ[M].hom = μ[M.X] := rfl
 
 namespace Hom
 variable [IsCommMonObj N.X]
@@ -67,7 +67,7 @@ end Hom
 /-- A commutative monoid object is a commutative monoid object in the category of monoid objects. -/
 instance [IsCommMonObj M.X] : IsCommMonObj M where
 
-end Mon_
+end Mon
 
 namespace MonObj
 variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonObj M]
@@ -75,7 +75,7 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonOb
 
 /-- If `M` and `N` are isomorphic as monoid objects, then `X ⟶ M` and `X ⟶ N` are isomorphic
 monoids. -/
-def homMulEquivRight (e : M ≅ N) [IsMon_Hom e.hom] (X : C) : (X ⟶ M) ≃* (X ⟶ N) :=
-  ((yonedaMon.mapIso <| Mon_.mkIso' e).app <| .op X).monCatIsoToMulEquiv
+def homMulEquivRight (e : M ≅ N) [IsMonHom e.hom] (X : C) : (X ⟶ M) ≃* (X ⟶ N) :=
+  ((yonedaMon.mapIso <| Mon.mkIso' e).app <| .op X).monCatIsoToMulEquiv
 
 end MonObj

@@ -89,8 +89,8 @@ lemma μ_pullback_left_snd' {X Y : Scheme} (g₁ : X ⟶ S) (g₂ : Y ⟶ S) :
   μ_pullback_left_snd ..
 
 attribute [local simp] monObjAsOverPullback_one in
-instance isMon_hom_fst_id_right [MonObj (asOver M S)] :
-    IsMon_Hom ((pullback.fst (M ↘ S) (𝟙 S)).asOver S) where
+instance isMonHom_fst_id_right [MonObj (asOver M S)] :
+    IsMonHom ((pullback.fst (M ↘ S) (𝟙 S)).asOver S) where
   one_hom := by ext; simp [monObjAsOverPullback_one]
   mul_hom := by
     ext
