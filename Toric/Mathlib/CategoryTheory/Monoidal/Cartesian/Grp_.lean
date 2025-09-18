@@ -17,9 +17,6 @@ variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory
 -- TODO: Make `Grp_.toMon` an abbrev in mathlib.
 set_option allowUnsafeReducibility true in
 attribute [reducible] Grp_.toMon
-attribute [local simp] mul_comm mul_div_mul_comm
-
-namespace Hom
 
 instance : MonObj H where
   one := η[H.toMon]
@@ -28,18 +25,19 @@ instance : MonObj H where
   mul_one := MonObj.mul_one H.toMon
   mul_assoc := MonObj.mul_assoc H.toMon
 
+namespace Hom
+
 @[simp] lemma hom_one : (1 : G ⟶ H).hom = 1 := rfl
-
 @[simp] lemma hom_mul (f g : G ⟶ H) : (f * g).hom = f.hom * g.hom := rfl
+@[simp] lemma hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := Mon.Hom.hom_pow ..
 
-@[simp] lemma hom_pow (f : G ⟶ H) (n : ℕ) : (f ^ n).hom = f.hom ^ n := by
-  induction n <;> simp [pow_succ, *]
-
-instance {f : G ⟶ H} : IsMonHom f.hom⁻¹ where
+end Hom
 
 attribute [local simp] mul_eq_mul GrpObj.inv_eq_inv comp_mul in
 /-- A commutative group object is a group object in the category of group objects. -/
 instance : GrpObj H where inv := .mk ι[H.X]
+
+namespace Hom
 
 @[simp] lemma hom_inv (f : G ⟶ H) : f⁻¹.hom = f.hom⁻¹ := rfl
 @[simp] lemma hom_div (f g : G ⟶ H) : (f / g).hom = f.hom / g.hom := rfl
@@ -47,13 +45,12 @@ instance : GrpObj H where inv := .mk ι[H.X]
 
 end Hom
 
-attribute [local simp] mul_eq_mul comp_mul in
+attribute [local simp] mul_eq_mul comp_mul mul_comm mul_div_mul_comm in
 /-- A commutative group object is a commutative group object in the category of group objects. -/
 instance : IsCommMonObj H where
 
-instance {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C]
-    {G H : Grp_ C} [IsCommMonObj G.X] [IsCommMonObj H.X] (f : G ⟶ H) : IsMonHom f where
-  one_hom := by ext; simp [Grp_.Hom.instMonObj_toric]
-  mul_hom := by ext; simp [Grp_.Hom.instMonObj_toric]
+instance [IsCommMonObj G.X] (f : G ⟶ H) : IsMonHom f where
+  one_hom := by ext; simp [Grp_.instMonObj_toric]
+  mul_hom := by ext; simp [Grp_.instMonObj_toric]
 
 end Grp_

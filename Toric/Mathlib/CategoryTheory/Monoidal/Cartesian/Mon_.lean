@@ -70,8 +70,7 @@ instance [IsCommMonObj M.X] : IsCommMonObj M where
 end Mon
 
 namespace MonObj
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonObj M]
-  [MonObj N]
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonObj M] [MonObj N]
 
 /-- If `M` and `N` are isomorphic as monoid objects, then `X ⟶ M` and `X ⟶ N` are isomorphic
 monoids. -/

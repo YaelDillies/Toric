@@ -1,21 +1,6 @@
 import Mathlib.CategoryTheory.Monoidal.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Mon_
 
-/-! ### Pushforward of a group object -/
-
-namespace CategoryTheory.Functor
-variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
-  [CartesianMonoidalCategory D] {G : C} [GrpObj G] (F : C ⥤ D) [F.Monoidal]
-
-open scoped Obj
-
-/-- The image of a group object under a monoidal functor is a group object. -/
-noncomputable abbrev grpObjObj : GrpObj (F.obj G) := (F.mapGrp.obj ⟨G⟩).grp
-
-scoped[Obj] attribute [instance] CategoryTheory.Functor.grpObjObj
-
-end CategoryTheory.Functor
-
 /-! ### `mapGrp` is braided -/
 
 namespace CategoryTheory.Functor

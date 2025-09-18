@@ -5,8 +5,6 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel, Andrew Yang
 -/
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
-import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Pasting
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_

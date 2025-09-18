@@ -36,7 +36,6 @@ def yonedaCommGrpGrp : CommGrp_ C ⥤ (Grp_ C)ᵒᵖ ⥤ CommGrp where
       map_mul' f g := by
         ext; simpa using ((yonedaGrp.map ψ).app (op (unop Y).X)).hom.map_mul f.hom g.hom
     }
-    naturality {Y₁ Y₂} φ := by ext; simp
   }
 
 end CommGrp_
