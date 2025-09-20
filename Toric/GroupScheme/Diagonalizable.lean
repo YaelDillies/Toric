@@ -137,11 +137,11 @@ instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S
     wlog hS : ∃ R, S = Spec R
     · obtain ⟨x⟩ := ‹Nonempty S›
       obtain ⟨i, x, rfl⟩ := S.affineCover.exists_eq x
-      have that : Nonempty (S.affineCover.obj i) := ⟨x⟩
-      refine this (S := S.affineCover.obj i) ?_ ⟨_, rfl⟩
-      have : LocallyOfFiniteType (pullback.fst (S.affineCover.map i) (S.Diag M ↘ S)) :=
+      have that : Nonempty (S.affineCover.X i) := ⟨x⟩
+      refine this (S := S.affineCover.X i) ?_ ⟨_, rfl⟩
+      have : LocallyOfFiniteType (pullback.fst (S.affineCover.f i) (S.Diag M ↘ S)) :=
         MorphismProperty.pullback_fst _ _ ‹_›
-      rw [← diagPullbackIso_inv_fst (S.affineCover.map i)]
+      rw [← diagPullbackIso_inv_fst (S.affineCover.f i)]
       infer_instance
     obtain ⟨R, rfl⟩ := hS
     rw [Spec_carrier, PrimeSpectrum.nonempty_iff_nontrivial] at hS

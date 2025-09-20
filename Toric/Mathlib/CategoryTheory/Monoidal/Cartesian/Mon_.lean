@@ -5,38 +5,19 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 
-open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj
-open scoped Hom Obj
+open CategoryTheory MonObj
 
-/-! ### `Functor.map` of a fully faithful monoidal functor as a `MulEquiv` -/
+/-! ### Isomorphic monoid objects have isomorphic hom monoids -/
 
-namespace CategoryTheory.Functor
-variable {C D : Type*} [Category C] [Category D] [CartesianMonoidalCategory C]
-  [CartesianMonoidalCategory D] {M X : C} [MonObj M] (F : C ⥤ D) [F.Monoidal]
+namespace Hom
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonObj M] [MonObj N]
 
-lemma map_mul (f g : X ⟶ M) : F.map (f * g) = F.map f * F.map g := by
-  simp only [Hom.mul_def, map_comp, obj.μ_def, ← Category.assoc]
-  congr 1
-  rw [← IsIso.comp_inv_eq]
-  ext <;> simp
+/-- If `M` and `N` are isomorphic as monoid objects, then `X ⟶ M` and `X ⟶ N` are isomorphic
+monoids. -/
+def mulEquivCongrRight (e : M ≅ N) [IsMonHom e.hom] (X : C) : (X ⟶ M) ≃* (X ⟶ N) :=
+  ((yonedaMon.mapIso <| Mon.mkIso' e).app <| .op X).monCatIsoToMulEquiv
 
-@[simp]
-lemma map_one : F.map (1 : X ⟶ M) = 1 := by simp [Hom.one_def]
-
-/-- `Functor.map` of a monoidal functor as a `MonoidHom`. -/
-@[simps]
-def homMonoidHom : (X ⟶ M) →* (F.obj X ⟶ F.obj M) where
-  toFun := F.map
-  map_one' := map_one F
-  map_mul' := map_mul F
-
-/-- `Functor.map` of a fully faithful monoidal functor as a `MulEquiv`. -/
-@[simps!]
-def FullyFaithful.homMulEquiv (hF : F.FullyFaithful) : (X ⟶ M) ≃* (F.obj X ⟶ F.obj M) where
-  __ := hF.homEquiv
-  __ := F.homMonoidHom
-
-end CategoryTheory.Functor
+end Hom
 
 /-! ### Comm monoid objects are internal monoid objects -/
 
@@ -68,13 +49,3 @@ end Hom
 instance [IsCommMonObj M.X] : IsCommMonObj M where
 
 end Mon
-
-namespace MonObj
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonObj M] [MonObj N]
-
-/-- If `M` and `N` are isomorphic as monoid objects, then `X ⟶ M` and `X ⟶ N` are isomorphic
-monoids. -/
-def homMulEquivRight (e : M ≅ N) [IsMonHom e.hom] (X : C) : (X ⟶ M) ≃* (X ⟶ N) :=
-  ((yonedaMon.mapIso <| Mon.mkIso' e).app <| .op X).monCatIsoToMulEquiv
-
-end MonObj
