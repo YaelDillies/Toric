@@ -22,6 +22,7 @@ section BraidedCategory
 variable [BraidedCategory C] [BraidedCategory D] (F)
 
 attribute [-simp] IsMonHom.one_hom_assoc in
+attribute [local simp ←] tensorHom_comp_tensorHom tensorHom_comp_tensorHom_assoc in
 attribute [local simp] tensorμ_comp_μ_tensorHom_μ_comp_μ_assoc MonObj.tensorObj.one_def
   MonObj.tensorObj.mul_def in
 instance [F.LaxBraided] (M N : C) [MonObj M] [MonObj N] : IsMonHom («μ» F M N) where
@@ -35,6 +36,7 @@ instance [F.LaxBraided] : F.mapMon.LaxMonoidal where
   μ M N := .mk («μ» F M.X N.X)
 
 attribute [-simp] IsMonHom.one_hom IsMonHom.one_hom_assoc IsMonHom.mul_hom in
+attribute [local simp ←] tensorHom_comp_tensorHom tensorHom_comp_tensorHom_assoc in
 attribute [local simp] ε_tensorHom_comp_μ_assoc tensorμ_comp_μ_tensorHom_μ_comp_μ_assoc
   MonObj.tensorObj.one_def MonObj.tensorObj.mul_def in
 instance [F.Braided] : F.mapMon.Monoidal :=
