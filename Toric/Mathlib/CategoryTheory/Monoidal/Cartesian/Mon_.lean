@@ -7,18 +7,6 @@ import Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
 
 open CategoryTheory MonObj
 
-/-! ### Isomorphic monoid objects have isomorphic hom monoids -/
-
-namespace Hom
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] {M N : C} [MonObj M] [MonObj N]
-
-/-- If `M` and `N` are isomorphic as monoid objects, then `X ⟶ M` and `X ⟶ N` are isomorphic
-monoids. -/
-def mulEquivCongrRight (e : M ≅ N) [IsMonHom e.hom] (X : C) : (X ⟶ M) ≃* (X ⟶ N) :=
-  ((yonedaMon.mapIso <| Mon.mkIso' e).app <| .op X).monCatIsoToMulEquiv
-
-end Hom
-
 /-! ### Comm monoid objects are internal monoid objects -/
 
 namespace Mon
