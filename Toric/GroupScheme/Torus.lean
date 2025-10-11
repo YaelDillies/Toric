@@ -17,7 +17,7 @@ This file defines the standard algebraic torus over `Spec R` as `Spec (R ⊗ ℤ
 noncomputable section
 
 open CategoryTheory Opposite Limits
-open scoped AddMonoidAlgebra
+open scoped AddMonoidAlgebra SpecOfNotation
 
 universe u
 

@@ -20,6 +20,7 @@ attribute [instance] ModObj.regular
 
 open CategoryTheory MonObj MonoidalCategory CartesianMonoidalCategory Limits
   AlgebraicGeometry.Scheme
+open scoped SpecOfNotation
 
 namespace AlgebraicGeometry
 universe u

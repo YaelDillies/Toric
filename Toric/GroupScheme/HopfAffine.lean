@@ -42,6 +42,7 @@ so that in particular we do not easily know that its inverse is given by `Γ`.
 
 open AlgebraicGeometry Coalgebra Scheme CategoryTheory MonoidalCategory Functor Monoidal Opposite
   Limits TensorProduct MonObj GrpObj
+open scoped SpecOfNotation
 
 universe w v u
 variable {R : CommRingCat.{u}}

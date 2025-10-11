@@ -22,8 +22,8 @@ lemma AddMonoidHom.toMultiplicative_add (f g : M →+ N) :
 
 end AddCommMonoid
 
-/-- `MonoidHom.toAdditive''` as a `MulEquiv`. -/
-def MonoidHom.toAdditive''MulEquiv {M N : Type*} [AddMonoid M] [CommMonoid N] :
+/-- `MonoidHom.toAdditiveRight` as a `MulEquiv`. -/
+def MonoidHom.toAdditiveRightMulEquiv {M N : Type*} [AddMonoid M] [CommMonoid N] :
     (Multiplicative M →* N) ≃* Multiplicative (M →+ Additive N) where
-  toEquiv := MonoidHom.toAdditive''.trans Multiplicative.ofAdd
+  toEquiv := MonoidHom.toAdditiveRight.trans Multiplicative.ofAdd
   map_mul' _ _ := rfl

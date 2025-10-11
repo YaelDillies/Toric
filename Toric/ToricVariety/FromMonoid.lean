@@ -14,6 +14,7 @@ suppress_compilation
 
 open Algebra AlgebraicGeometry Scheme CategoryTheory Limits AddMonoidAlgebra AddLocalization
   AffineAddMonoid
+open scoped SpecOfNotation
 
 universe u
 variable {𝕜 M : Type u} [Field 𝕜] [AddCancelCommMonoid M] [AddMonoid.FG M] [IsAddTorsionFree M]

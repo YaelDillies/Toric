@@ -24,7 +24,7 @@ local notation3:max R "[X][Y]" => Polynomial (Polynomial R)
 local notation3:max "Y" => Polynomial.C (Polynomial.X)
 
 open Coalgebra HopfAlgebra Polynomial TensorProduct
-open scoped AddMonoidAlgebra MonObj
+open scoped AddMonoidAlgebra MonObj SpecOfNotation
 
 /-! ### `SO(2, R)` as a Hopf algebra -/
 
@@ -135,10 +135,9 @@ def T : GroupLike ℂ (SO2Ring ℂ) where
   isGroupLikeElem_val.comul_eq_tmul_self := by
     simp [tmul_add, add_tmul, ← smul_tmul', smul_smul]; ring_nf
 
-private def complexEquivInv : MonoidAlgebra ℂ (Multiplicative ℤ) →ₐc[ℂ] SO2Ring ℂ := by
-  refine (MonoidAlgebra.liftGroupLikeBialgHom _ _).comp <|
-    MonoidAlgebra.mapDomainBialgHom ℂ (M := Multiplicative ℤ) <| AddMonoidHom.toMultiplicative''  <|
-     zmultiplesHom _ <| .ofMul T
+private def complexEquivInv : MonoidAlgebra ℂ (Multiplicative ℤ) →ₐc[ℂ] SO2Ring ℂ :=
+  (MonoidAlgebra.liftGroupLikeBialgHom _ _).comp <| MonoidAlgebra.mapDomainBialgHom ℂ <|
+    AddMonoidHom.toMultiplicativeLeft <| zmultiplesHom _ <| .ofMul T
 
 private lemma complexEquivInv_single (a : Multiplicative ℤ) (b : ℂ) :
     complexEquivInv (.single a b) = b • (T ^ a.toAdd).1 := by
@@ -373,6 +372,6 @@ theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(�
     .piCongrRight («η» := σ) fun _ ↦ (zmultiplesAddHom <| Additive ℝˣ).symm
   exact (aux3 σ).1 <| (pointsMulEquiv ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
     (MonoidAlgebra.liftMulEquiv ..).symm.trans <| MonoidHom.toHomUnitsMulEquiv.trans <|
-      MonoidHom.toAdditive''MulEquiv.trans <| e₂.toMultiplicative.trans <| .refl _
+      MonoidHom.toAdditiveRightMulEquiv.trans <| e₂.toMultiplicative.trans <| .refl _
 
 end AlgebraicGeometry.SO₂

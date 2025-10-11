@@ -3,10 +3,10 @@ Copyright (c) 2025 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 -/
+import Mathlib.Geometry.Convex.Cone.Dual
 import Mathlib.LinearAlgebra.Dual.Defs
 import Mathlib.LinearAlgebra.PerfectPairing.Basic
 import Mathlib.RingTheory.Finiteness.Basic
-import Toric.Mathlib.Geometry.Convex.Cone.Dual
 
 /-!
 # Polyhedral cones
@@ -89,7 +89,7 @@ variable [CommRing R] [LinearOrder R] [IsOrderedRing R] [AddCommGroup M] [Module
 lemma IsPolyhedral.bot [Module.Finite R M] : IsPolyhedral (⊥ : PointedCone R M) := by
   obtain ⟨s, hS : span R _ = ⊤⟩ := Module.Finite.fg_top (R := R≥0) (M := Module.Dual R M)
   refine ⟨s, s.finite_toSet, ?_⟩
-  rw [← dual_span', hS, Submodule.top_coe, dual_univ, Submodule.zero_eq_bot]
+  rw [← dual_span, hS, Submodule.top_coe, dual_univ, Submodule.zero_eq_bot]
   -- TODO: Rename to `Module.Dual.eval_injective`
   exact Module.eval_apply_injective _
 
@@ -204,7 +204,7 @@ lemma fg_of_isPolyhedral (hC : IsPolyhedral C) : C.FG := by
   obtain ⟨s, S_fin, rfl⟩ := hC
   obtain ⟨T, T_fin, hT⟩ :=
     (IsPolyhedral.of_fg 𝕜 <| fg_span S_fin).exists_finite_dual_eq (Module.Dual.eval 𝕜 M)
-  rw [← dual_span', span, ← hT, Module.Dual.eval, dual_dual_eq_span T_fin]
+  rw [← dual_span, span, ← hT, Module.Dual.eval, dual_dual_eq_span T_fin]
   exact Submodule.fg_span T_fin
 
 alias IsPolyhedral.fg := fg_of_isPolyhedral

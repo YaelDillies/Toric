@@ -10,7 +10,7 @@ import Toric.Mathlib.Algebra.Group.TypeTags.Hom
 import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
-open scoped AddMonoidAlgebra MonObj
+open scoped AddMonoidAlgebra MonObj SpecOfNotation
 
 noncomputable section
 

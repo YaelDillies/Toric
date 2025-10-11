@@ -14,7 +14,7 @@ import Toric.GroupScheme.Torus
 noncomputable section
 
 open AddMonoidAlgebra CategoryTheory
-open scoped Hom
+open scoped Hom SpecOfNotation
 
 namespace AlgebraicGeometry.Scheme
 universe u
