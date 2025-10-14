@@ -141,7 +141,7 @@ private def complexEquivInv : MonoidAlgebra ℂ (Multiplicative ℤ) →ₐc[ℂ
 
 private lemma complexEquivInv_single (a : Multiplicative ℤ) (b : ℂ) :
     complexEquivInv (.single a b) = b • (T ^ a.toAdd).1 := by
-  simp [complexEquivInv, Algebra.ofId_apply, Algebra.smul_def]
+  simp [complexEquivInv, Algebra.smul_def]
 
 set_option allowUnsafeReducibility true in
 attribute [local semireducible] MonoidAlgebra.single in

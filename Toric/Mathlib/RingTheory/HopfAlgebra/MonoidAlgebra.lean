@@ -85,9 +85,9 @@ See `MonoidAlgebra.mapDomainBialgHom` for the forward map. -/
 noncomputable def mapDomainOfBialgHom (f : MonoidAlgebra R G →ₐc[R] MonoidAlgebra R H) :
     G →* H where
   toFun := mapDomainOfBialgHomFun f
-  map_one' := of_injective (k := R) <| by simp [← one_def]
+  map_one' := of_injective (R := R) <| by simp [← one_def]
   map_mul' g₁ g₂ := by
-    refine of_injective (k := R) ?_
+    refine of_injective (R := R) ?_
     simp only [of_apply, single_mapDomainOfBialgHomFun_one]
     rw [← mul_one (1 : R), ← single_mul_single, ← single_mul_single, map_mul]
     simp
@@ -105,7 +105,7 @@ lemma mapDomainBialgHom_mapDomainOfBialgHom (f : MonoidAlgebra R G →ₐc[R] Mo
 
 @[simp] lemma mapDomainOfBialgHom_mapDomainBialgHom (f : G →* H) :
     mapDomainOfBialgHom (mapDomainBialgHom (R := R) f) = f := by
-  ext g; refine of_injective (k := R) ?_; simp [MonoidAlgebra.single_mapDomainOfBialgHom]
+  ext g; refine of_injective (R := R) ?_; simp [MonoidAlgebra.single_mapDomainOfBialgHom]
 
 /-- The equivalence between group homs `G → H` and bialgebra homs `R[G] → R[H]` of group algebras
 over a domain. -/
@@ -173,9 +173,9 @@ group hom `G → H`.
 See `AddMonoidAlgebra.mapDomainBialgHom` for the forward map. -/
 noncomputable def mapDomainOfBialgHom (f : R[G] →ₐc[R] R[H]) : G →+ H where
   toFun := mapDomainOfBialgHomFun f
-  map_zero' := Multiplicative.ofAdd.injective <| of_injective (k := R) <| by simp [← one_def]
+  map_zero' := Multiplicative.ofAdd.injective <| of_injective (R := R) <| by simp [← one_def]
   map_add' g₁ g₂ := by
-    refine Multiplicative.ofAdd.injective <| of_injective (k := R) ?_
+    refine Multiplicative.ofAdd.injective <| of_injective (R := R) ?_
     simp only [of_apply, single_mapDomainOfBialgHomFun_one, toAdd_ofAdd, ofAdd_add, toAdd_mul,
       single_mapDomainOfBialgHomFun_one]
     rw [← mul_one (1 : R), ← single_mul_single, ← single_mul_single, map_mul]
@@ -195,7 +195,7 @@ lemma mapDomainBialgHom_mapDomainOfBialgHom (f : R[G] →ₐc[R] R[H]) :
 @[simp] lemma mapDomainOfBialgHom_mapDomainBialgHom (f : G →+ H) :
     mapDomainOfBialgHom (mapDomainBialgHom R f) = f := by
   ext g
-  refine Multiplicative.ofAdd.injective <| of_injective (k := R) ?_
+  refine Multiplicative.ofAdd.injective <| of_injective (R := R) ?_
   simp [AddMonoidAlgebra.single_mapDomainOfBialgHom]
 
 @[simp] lemma mapDomainOfBialgHom_id : mapDomainOfBialgHom (.id R R[G]) = .id _ := by

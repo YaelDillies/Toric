@@ -154,21 +154,21 @@ instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S
       RingHom.finiteType_algebraMap, AddMonoidAlgebra.finiteType_iff_fg] using h
 
 variable (S) in
-def diagFunctor : AddCommGrpᵒᵖ ⥤ Grp_ (Over S) :=
+def diagFunctor : AddCommGrpCatᵒᵖ ⥤ Grp_ (Over S) :=
   commGroupAddCommGroupEquivalence.inverse.op ⋙
     (commGrpAlg (ULift.{u} ℤ)).op ⋙ hopfSpec (.of <| ULift.{u} ℤ) ⋙
       (Over.pullback (specULiftZIsTerminal.from S)).mapGrp
 
-@[simp] lemma diagFunctor_obj (M : AddCommGrpᵒᵖ) :
+@[simp] lemma diagFunctor_obj (M : AddCommGrpCatᵒᵖ) :
     (diagFunctor S).obj M = ⟨(Diag S M.unop).asOver S⟩ := rfl
 
-@[simp] lemma diagFunctor_map {M N : AddCommGrpᵒᵖ} (f : M ⟶ N) :
+@[simp] lemma diagFunctor_map {M N : AddCommGrpCatᵒᵖ} (f : M ⟶ N) :
     (diagFunctor S).map f = ⟨(Diag.map S f.unop.hom).asOver S⟩ := rfl
 
 instance (M : AddCommMonCatᵒᵖ) : IsCommMonObj ((diagMonFunctor S).obj M).X :=
   inferInstanceAs (IsCommMonObj (asOver (Diag S M.unop) S))
 
-instance (M : AddCommGrpᵒᵖ) : IsCommMonObj ((diagFunctor S).obj M).X :=
+instance (M : AddCommGrpCatᵒᵖ) : IsCommMonObj ((diagFunctor S).obj M).X :=
   inferInstanceAs (IsCommMonObj (asOver (Diag S M.unop) S))
 
 @[simp]
@@ -192,9 +192,9 @@ lemma commHopfAlgCatEquivCogrpCommAlgCat_functor_map_ofHom_mul
 
 lemma diagFunctor_map_add {M N : Type u} [AddCommGroup M] [AddCommGroup N]
     (f g : M →+ N) :
-    (diagFunctor S).map (AddCommGrp.ofHom (f + g)).op =
-      (diagFunctor S).map (AddCommGrp.ofHom f).op *
-        (diagFunctor S).map (AddCommGrp.ofHom g).op := by
+    (diagFunctor S).map (AddCommGrpCat.ofHom (f + g)).op =
+      (diagFunctor S).map (AddCommGrpCat.ofHom f).op *
+        (diagFunctor S).map (AddCommGrpCat.ofHom g).op := by
   simp [diagFunctor, Functor.map_mul]
 
 variable (R) in
@@ -218,7 +218,7 @@ def diagFunctorIso :
     specCommGrpAlgPullback (CommRingCat.ofHom f) (specULiftZIsTerminal.from _)
       (specULiftZIsTerminal.hom_ext _ _)
 
-lemma diagFunctorIso_app (M : AddCommGrpᵒᵖ) :
+lemma diagFunctorIso_app (M : AddCommGrpCatᵒᵖ) :
     ((diagFunctorIso R).app M).hom.hom.left = (diagSpecIso R M.unop).hom := rfl
 
 instance {R : Type*} [CommRing R] [Nontrivial R] : (diagFunctor Spec(R)).Faithful :=
@@ -325,7 +325,7 @@ end
 variable (S) in
 def diagHomGrp {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f : M →+ N) :
     HomGrp (Diag S N) (Diag S M) S := .ofMul <| by
-  have := (diagFunctor S).map (AddCommGrp.ofHom f).op
+  have := (diagFunctor S).map (AddCommGrpCat.ofHom f).op
   dsimp at this
   exact this
 
@@ -333,7 +333,7 @@ lemma diagHomGrp_comp {M N O : Type u} [AddCommGroup M] [AddCommGroup N] [AddCom
     (f : M →+ N) (g : N →+ O) :
     (diagHomGrp S g).comp (diagHomGrp S f) = diagHomGrp S (g.comp f) := by
   simpa [HomGrp, diagHomGrp, HomGrp.comp]
-    using (S.diagFunctor.map_comp (AddCommGrp.ofHom g).op (AddCommGrp.ofHom f).op).symm
+    using (S.diagFunctor.map_comp (AddCommGrpCat.ofHom g).op (AddCommGrpCat.ofHom f).op).symm
 
 lemma diagHomGrp_add {M N : Type u} [AddCommGroup M] [AddCommGroup N] (f g : M →+ N) :
     diagHomGrp S (f + g) = diagHomGrp S f + diagHomGrp S g := by
@@ -343,7 +343,7 @@ def diagHomEquiv {R M N : Type u} [CommRing R] [IsDomain R] [AddCommGroup M] [Ad
     (N →+ M) ≃+ HomGrp (Diag Spec(R) M) (Diag Spec(R) N) Spec(R) :=
   letI e := Functor.FullyFaithful.homEquiv (.ofFullyFaithful (diagFunctor Spec(R)))
     (X := .op (.of M)) (Y := .op (.of N))
-  { toFun f := Additive.ofMul <| by have := e (AddCommGrp.ofHom f).op; dsimp at this; exact this
+  { toFun f := Additive.ofMul <| by have := e (AddCommGrpCat.ofHom f).op; dsimp at this; exact this
     invFun f := (e.symm <| by dsimp; exact f.toMul).unop.hom
     left_inv _ := by dsimp at *; erw [e.symm_apply_apply]; rfl
     right_inv _ := by dsimp at *; erw [e.apply_symm_apply]; rfl

@@ -17,9 +17,9 @@ attribute [reducible] CommGrp_.toGrp_
 
 /-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
 @[simps]
-def yonedaCommGrpGrpObj (G : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrp where
+def yonedaCommGrpGrpObj (G : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrpCat where
   obj H := .of (unop H ⟶ G.toGrp_)
-  map {H I} f := CommGrp.ofHom {
+  map {H I} f := CommGrpCat.ofHom {
     toFun := (f.unop ≫ ·)
     map_one' := by ext; simp [Mon.Hom.hom_one]
     map_mul' g h := by ext; simpa using ((yonedaGrpObj G.X).map f.unop.1.op).hom.map_mul g.hom h.hom
@@ -27,10 +27,10 @@ def yonedaCommGrpGrpObj (G : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrp where
 
 /-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
 @[simps]
-def yonedaCommGrpGrp : CommGrp_ C ⥤ (Grp_ C)ᵒᵖ ⥤ CommGrp where
+def yonedaCommGrpGrp : CommGrp_ C ⥤ (Grp_ C)ᵒᵖ ⥤ CommGrpCat where
   obj := yonedaCommGrpGrpObj
   map {X₁ X₂} ψ := {
-    app Y := CommGrp.ofHom {
+    app Y := CommGrpCat.ofHom {
       toFun := (· ≫ ψ)
       map_one' := by ext; simp
       map_mul' f g := by

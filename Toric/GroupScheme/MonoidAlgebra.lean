@@ -144,6 +144,6 @@ def specCommGrpAlgPullback :
     (commGrpAlg R).op ⋙ hopfSpec R ⋙ (Over.pullback Sf).mapGrp ≅
       (commGrpAlg S).op ⋙ hopfSpec S :=
   ((Grp_.fullyFaithfulForget₂Mon _).whiskeringRight _).preimageIso <|
-    (forget₂ CommGrp CommMonCat).op.isoWhiskerLeft (specCommMonAlgPullback f _ H)
+    (forget₂ CommGrpCat CommMonCat).op.isoWhiskerLeft (specCommMonAlgPullback f _ H)
 
 end AlgebraicGeometry.Scheme

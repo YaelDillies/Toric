@@ -29,7 +29,7 @@ noncomputable def commMonAlg : CommMonCat ⥤ CommBialgCat R where
 variable (R) in
 /-- The functor of commutative group algebras. -/
 @[simps obj map]
-noncomputable def commGrpAlg : CommGrp ⥤ CommHopfAlgCat R where
+noncomputable def commGrpAlg : CommGrpCat ⥤ CommHopfAlgCat R where
   obj G := .of R <| MonoidAlgebra R G
   map f := CommHopfAlgCat.ofHom <| MonoidAlgebra.mapDomainBialgHom R f.hom
 
@@ -45,6 +45,6 @@ variable [IsDomain R]
 
 /-- The group algebra functor over a domain is fully faithful. -/
 noncomputable def commGrpAlg.fullyFaithful : (commGrpAlg R).FullyFaithful where
-  preimage {X Y} f := CommGrp.ofHom <| MonoidAlgebra.mapDomainOfBialgHom f.hom
+  preimage {X Y} f := CommGrpCat.ofHom <| MonoidAlgebra.mapDomainOfBialgHom f.hom
 
 instance commGrpAlg.instFull : (commGrpAlg R).Full := fullyFaithful.full
