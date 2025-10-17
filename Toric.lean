@@ -19,7 +19,6 @@ import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Mon_
-import Toric.Mathlib.Geometry.Convex.Cone.Polyhedral
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
