@@ -7,7 +7,6 @@ import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.MonoidAlgebra
 import Toric.Mathlib.Algebra.Group.TypeTags.Hom
-import Toric.Mathlib.CategoryTheory.Monoidal.Grp_
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra MonObj SpecOfNotation
@@ -154,7 +153,7 @@ instance locallyOfFiniteType_diag [AddMonoid.FG M] : LocallyOfFiniteType (Diag S
       RingHom.finiteType_algebraMap, AddMonoidAlgebra.finiteType_iff_fg] using h
 
 variable (S) in
-def diagFunctor : AddCommGrpCatᵒᵖ ⥤ Grp_ (Over S) :=
+def diagFunctor : AddCommGrpCatᵒᵖ ⥤ Grp (Over S) :=
   commGroupAddCommGroupEquivalence.inverse.op ⋙
     (commGrpAlg (ULift.{u} ℤ)).op ⋙ hopfSpec (.of <| ULift.{u} ℤ) ⋙
       (Over.pullback (specULiftZIsTerminal.from S)).mapGrp
@@ -236,13 +235,13 @@ variable {G G' G'' H H' S : Scheme.{u}} [G.Over S] [G'.Over S] [G''.Over S] [H.O
   [GrpObj (H.asOver S)] [GrpObj (H'.asOver S)]
 
 variable (G G' S) in
-def HomGrp : Type u := Additive (Grp_.mk (G.asOver S) ⟶ .mk (G'.asOver S))
+def HomGrp : Type u := Additive (Grp.mk (G.asOver S) ⟶ .mk (G'.asOver S))
 
 instance [IsCommMonObj (G'.asOver S)] : AddCommGroup (HomGrp G G' S) := by
   delta HomGrp; infer_instance
 
 def HomGrp.ofHom (f : G ⟶ G') [f.IsOver S] [IsMonHom (f.asOver S)] : HomGrp G G' S :=
-  Additive.ofMul (Grp_.homMk (f.asOver S))
+  Additive.ofMul (Grp.homMk (f.asOver S))
 
 def HomGrp.hom (f : HomGrp G G' S) : G ⟶ G' := f.toMul.hom.left
 

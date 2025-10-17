@@ -9,16 +9,16 @@ universe v u
 
 variable {C : Type u} [Category.{v} C] [CartesianMonoidalCategory C] [BraidedCategory C]
 
-namespace CommGrp_
+namespace CommGrp
 
--- TODO: Make `CommGrp_.toGrp_` an abbrev in mathlib.
+-- TODO: Make `CommGrp.toGrp` an abbrev in mathlib.
 set_option allowUnsafeReducibility true in
-attribute [reducible] CommGrp_.toGrp_
+attribute [reducible] CommGrp.toGrp
 
 /-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
 @[simps]
-def yonedaCommGrpGrpObj (G : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrpCat where
-  obj H := .of (unop H ⟶ G.toGrp_)
+def yonedaCommGrpGrpObj (G : CommGrp C) : (Grp C)ᵒᵖ ⥤ CommGrpCat where
+  obj H := .of (unop H ⟶ G.toGrp)
   map {H I} f := CommGrpCat.ofHom {
     toFun := (f.unop ≫ ·)
     map_one' := by ext; simp [Mon.Hom.hom_one]
@@ -27,7 +27,7 @@ def yonedaCommGrpGrpObj (G : CommGrp_ C) : (Grp_ C)ᵒᵖ ⥤ CommGrpCat where
 
 /-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
 @[simps]
-def yonedaCommGrpGrp : CommGrp_ C ⥤ (Grp_ C)ᵒᵖ ⥤ CommGrpCat where
+def yonedaCommGrpGrp : CommGrp C ⥤ (Grp C)ᵒᵖ ⥤ CommGrpCat where
   obj := yonedaCommGrpGrpObj
   map {X₁ X₂} ψ := {
     app Y := CommGrpCat.ofHom {
@@ -38,4 +38,4 @@ def yonedaCommGrpGrp : CommGrp_ C ⥤ (Grp_ C)ᵒᵖ ⥤ CommGrpCat where
     }
   }
 
-end CommGrp_
+end CommGrp

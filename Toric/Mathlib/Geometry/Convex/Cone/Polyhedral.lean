@@ -151,8 +151,8 @@ private lemma dual_auxGenSet (hs : s.Finite) :
     · exact hv1 ⟨hx, hxw⟩
     · exact hSv x hx (lt_of_not_ge hxw)
   lift s to Finset (Dual 𝕜 M) using hs
-  let u : 𝕜 := ({y ∈ s | y w < 0}.image (fun y => y v * (y w)⁻¹)).max' <| by
-    simpa [Finset.Nonempty, Set.Nonempty] using hSw.image _
+  let u : 𝕜 := ({y ∈ s | y w < 0}.image fun y => y v * (y w)⁻¹).max' <| by
+    simpa [Finset.Nonempty, Set.Nonempty] using hSw
   have hu : 0 ≤ u := by
     refine le_trans (mul_nonneg_of_nonpos_of_nonpos hy.2.2.le (inv_nonpos.mpr hy.2.1.le))
       (Finset.le_max' _ (y v * (y w)⁻¹) ?_)
@@ -168,8 +168,8 @@ private lemma dual_auxGenSet (hs : s.Finite) :
     exact Finset.le_max' _ (z v * (z w)⁻¹) <|
       Finset.mem_image.mpr ⟨z, Finset.mem_filter.mpr ⟨hzS, hzw⟩, rfl⟩
   obtain ⟨y, hy, t_eq : _ = u⟩ := Finset.mem_image.mp <|
-    ({y ∈ s | y w < 0}.image (fun y => y v * (y w)⁻¹)).max'_mem <| by
-      simpa [Finset.Nonempty, Set.Nonempty] using hSw.image _
+    ({y ∈ s | y w < 0}.image fun y => y v * (y w)⁻¹).max'_mem <| by
+      simpa [Finset.Nonempty, Set.Nonempty] using hSw
   rw [Finset.mem_filter] at hy
   rw [← t_eq, ← _root_.mul_le_mul_left_of_neg hy.2, ← mul_assoc]
   nth_rw 4 [mul_comm]

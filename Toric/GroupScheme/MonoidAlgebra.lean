@@ -143,7 +143,7 @@ lemma specCommMonAlgPullback_inv_app_hom_left_snd (M) :
 def specCommGrpAlgPullback :
     (commGrpAlg R).op ⋙ hopfSpec R ⋙ (Over.pullback Sf).mapGrp ≅
       (commGrpAlg S).op ⋙ hopfSpec S :=
-  ((Grp_.fullyFaithfulForget₂Mon _).whiskeringRight _).preimageIso <|
+  ((Grp.fullyFaithfulForget₂Mon _).whiskeringRight _).preimageIso <|
     (forget₂ CommGrpCat CommMonCat).op.isoWhiskerLeft (specCommMonAlgPullback f _ H)
 
 end AlgebraicGeometry.Scheme

@@ -150,7 +150,7 @@ noncomputable abbrev bialgSpec : (CommBialgCat R)ᵒᵖ ⥤ Mon (Over <| Spec R)
 
 variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/
-noncomputable abbrev hopfSpec : (CommHopfAlgCat R)ᵒᵖ ⥤ Grp_ (Over <| Spec R) :=
+noncomputable abbrev hopfSpec : (CommHopfAlgCat R)ᵒᵖ ⥤ Grp (Over <| Spec R) :=
   (commHopfAlgCatEquivCogrpCommAlgCat R).functor.leftOp ⋙ (algSpec R).mapGrp
 
 /-- `Spec` is full on `R`-Hopf algebras. -/
@@ -419,7 +419,7 @@ lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffin
 /-- The essential image of `R`-Hopf algebras under `Spec` is precisely affine group schemes over
 `Spec R`. -/
 @[simp]
-lemma essImage_hopfSpec {G : Grp_ (Over <| Spec R)} :
+lemma essImage_hopfSpec {G : Grp (Over <| Spec R)} :
     (hopfSpec R).essImage G ↔ IsAffine G.X.left := by simp
 
 end rightEdge

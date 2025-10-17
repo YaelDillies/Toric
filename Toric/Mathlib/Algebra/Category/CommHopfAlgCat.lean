@@ -199,7 +199,7 @@ variable (R) in
 `R`-algebras. -/
 @[simps! functor_obj_unop_X inverse_obj unitIso_hom_app
   unitIso_inv_app counitIso_hom_app counitIso_inv_app]
-def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp_ (CommAlgCat R)ᵒᵖ)ᵒᵖ where
+def commHopfAlgCatEquivCogrpCommAlgCat : CommHopfAlgCat R ≌ (Grp (CommAlgCat R)ᵒᵖ)ᵒᵖ where
   functor.obj A := .op <| .mk <| .op <| .of R A
   functor.map {A B} f := .op <| .mk' <| .op <| CommAlgCat.ofHom f.hom
   inverse.obj A := .of R A.unop.X.unop

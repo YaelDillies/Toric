@@ -10,13 +10,13 @@ open CategoryTheory MonObj MonoidalCategory CartesianMonoidalCategory
 
 /-! ### Internal groups -/
 
-namespace Grp_
-variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C] {G H : Grp_ C}
+namespace Grp
+variable {C : Type*} [Category C] [CartesianMonoidalCategory C] [BraidedCategory C] {G H : Grp C}
   [IsCommMonObj H.X]
 
--- TODO: Make `Grp_.toMon` an abbrev in mathlib.
+-- TODO: Make `Grp.toMon` an abbrev in mathlib.
 set_option allowUnsafeReducibility true in
-attribute [reducible] Grp_.toMon
+attribute [reducible] Grp.toMon
 
 instance : MonObj H where
   one := η[H.toMon]
@@ -50,7 +50,7 @@ attribute [local simp] mul_eq_mul comp_mul mul_comm mul_div_mul_comm in
 instance : IsCommMonObj H where
 
 instance [IsCommMonObj G.X] (f : G ⟶ H) : IsMonHom f where
-  one_hom := by ext; simp [Grp_.instMonObj_toric]
-  mul_hom := by ext; simp [Grp_.instMonObj_toric]
+  one_hom := by ext; simp [Grp.instMonObj_toric]
+  mul_hom := by ext; simp [Grp.instMonObj_toric]
 
-end Grp_
+end Grp

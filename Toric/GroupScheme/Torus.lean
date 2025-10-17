@@ -98,8 +98,8 @@ lemma IsTorusOver.of_iso (e : G ≅ H) [e.hom.IsOver Spec(k)] [IsMonHom (e.hom.a
   obtain ⟨L, _, _, _, hH⟩ := ‹H.IsTorusOver k›
   refine ⟨L, _, ‹_›, ‹_›, ?_⟩
   let e'' := (Over.pullback <| Spec.map <| CommRingCat.ofHom <| algebraMap k L).mapGrp.mapIso <|
-    Grp_.mkIso' <| e.asOver Spec(k)
-  let e' := (Grp_.forget _ ⋙ Over.forget _).mapIso e''
+    Grp.mkIso' <| e.asOver Spec(k)
+  let e' := (Grp.forget _ ⋙ Over.forget _).mapIso e''
   dsimp at e'
   have : e'.hom.IsOver Spec(L) := by simp [e', e'']
   have : IsMonHom <| e'.hom.asOver Spec(L) := Mon.instIsMonHomHom e''.hom
