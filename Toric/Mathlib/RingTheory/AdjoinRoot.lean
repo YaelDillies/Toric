@@ -14,48 +14,6 @@ instance [Algebra.FiniteType R S] : Algebra.FiniteType R (AdjoinRoot p) := by
 section
 variable {q : Polynomial T} {u : Polynomial U}
 
-variable (R p) in
-/-- Embedding of the original ring `R` into `AdjoinRoot f`. -/
-def ofAlgHom : S →ₐ[R] AdjoinRoot p where
-  __ := of p
-  commutes' r := by simp [AdjoinRoot.algebraMap_eq']
-
-@[simp]
-lemma toRingHom_ofAlgHom : ofAlgHom R p = of p := rfl
-
-@[simp]
-lemma ofAlgHom_apply (s : S) : ofAlgHom R p s = of p s := rfl
-
-@[ext]
-lemma algHom_ext' {f g : AdjoinRoot p →ₐ[R] T} (hAlg :
-    f.comp (ofAlgHom R p) = g.comp (ofAlgHom R p))
-    (hRoot : f (root p) = g (root p)) : f = g := by
-  apply Ideal.Quotient.algHom_ext
-  ext x
-  · show f (AdjoinRoot.mk _ _) = g (AdjoinRoot.mk _ _)
-    simp
-    exact congr($(hAlg) x)
-  show f (AdjoinRoot.mk _ _) = g (AdjoinRoot.mk _ _)
-  simpa
-
--- TODO: replace `liftHom` by this
-def liftAlgHom (i : S →ₐ[R] T) (x : T) (h : p.eval₂ i x = 0) : AdjoinRoot p →ₐ[R] T where
-  __ := lift i.toRingHom _ h
-  commutes' r := by
-    simp [lift_of h, AdjoinRoot.algebraMap_eq']
-
-@[simp]
-lemma coe_liftAlgHom (i : S →ₐ[R] T) (x : T) (h) :
-    (liftAlgHom i x h : AdjoinRoot p →+* T) = lift i.toRingHom _ h := rfl
-
-@[simp]
-lemma liftAlgHom_of (i : S →ₐ[R] T) (x : T) (h) (s : S) : liftAlgHom i x h (of p s) = i s := by
-  simp [liftAlgHom]
-
-@[simp]
-lemma liftAlgHom_root (i : S →ₐ[R] T) (x : T) (h) : liftAlgHom i x h (root p) = x := by
-  simp [liftAlgHom]
-
 variable (p q) in
 def map (f : S →+* T) (h : p.map f = q) : AdjoinRoot p →+* AdjoinRoot q :=
   lift ((algebraMap T _).comp f) (root q) (by
@@ -104,8 +62,8 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
     (h : p.map includeRight.toRingHom = q) :
     T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot q := by
   refine .ofAlgHom (Algebra.TensorProduct.lift (algHom T T _) (mapAlgHom _ _ includeRight h) ?_)
-      (liftAlgHom (Algebra.TensorProduct.map (AlgHom.id T T)
-      (((Algebra.ofId S (AdjoinRoot p))).restrictScalars R)) (1 ⊗ₜ (root _)) ?_) ?_ ?_
+      (liftAlgHom _ (Algebra.TensorProduct.map (AlgHom.id T T)
+      (((Algebra.ofId S (AdjoinRoot p))).restrictScalars R)) (1 ⊗ₜ root _) ?_) ?_ ?_
   · exact fun _ _ ↦ .all ..
   · simp [← h]
     rw [Polynomial.eval₂_map]
