@@ -1,6 +1,6 @@
 import Mathlib.RingTheory.Bialgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
-import Toric.Mathlib.RingTheory.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.TensorProduct.Maps
 
 suppress_compilation
 

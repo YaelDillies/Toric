@@ -8,7 +8,7 @@ import Toric.GroupScheme.Character
 /-!
 # Demo of the perfect pairing between characters and cocharacters of a torus
 
-In this file, we present the pairing between characters and cocharacters and .
+In this file, we present the pairing between characters and cocharacters.
 
 ## TODO
 
@@ -17,7 +17,7 @@ Actually compute the pairing on an explicit torus to be the usual inner product 
 
 noncomputable section
 
-open AlgebraicGeometry Scheme
+open AlgebraicGeometry Scheme CategoryTheory
 
 /-!
 Let `S` be a scheme and `G` be a group scheme over `S`.

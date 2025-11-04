@@ -16,11 +16,11 @@ dominant open embedding `T → X` over `S` and an action `T × X → X` extendin
 `T`.
 -/
 
-attribute [instance] ModObj.regular
-
 open CategoryTheory MonObj MonoidalCategory CartesianMonoidalCategory Limits
   AlgebraicGeometry.Scheme
 open scoped SpecOfNotation
+
+attribute [instance] ModObj.regular
 
 namespace AlgebraicGeometry
 universe u

@@ -18,8 +18,8 @@ instance [IsCommMonObj M.X] : MonObj M where
   one := .mk η[M.X]
   mul := .mk μ[M.X]
 
-@[simp] lemma hom_η (M : Mon C) [IsCommMonObj M.X] : η[M].hom = η[M.X] := rfl
-@[simp] lemma hom_μ (M : Mon C) [IsCommMonObj M.X] : μ[M].hom = μ[M.X] := rfl
+@[simp] lemma hom_one (M : Mon C) [IsCommMonObj M.X] : η[M].hom = η[M.X] := rfl
+@[simp] lemma hom_mul (M : Mon C) [IsCommMonObj M.X] : μ[M].hom = μ[M.X] := rfl
 
 namespace Hom
 variable [IsCommMonObj N.X]

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
 import Mathlib.RingTheory.Bialgebra.TensorProduct
+import Mathlib.RingTheory.Coalgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
-import Toric.Mathlib.RingTheory.Coalgebra.Convolution
 
 /-!
 # Convolution product on bialgebra homs

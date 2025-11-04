@@ -25,15 +25,13 @@ import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Bialgebra.TensorProduct
 import Toric.Mathlib.RingTheory.Coalgebra.CoassocSimps
-import Toric.Mathlib.RingTheory.Coalgebra.Convolution
 import Toric.Mathlib.RingTheory.Coalgebra.GroupLike
 import Toric.Mathlib.RingTheory.Coalgebra.Hom
-import Toric.Mathlib.RingTheory.Coalgebra.MonoidAlgebra
 import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 import Toric.Mathlib.RingTheory.HopfAlgebra.Convolution
 import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
-import Toric.Mathlib.RingTheory.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.TensorProduct.Maps
 import Toric.MonoidAlgebra.TensorProduct
 import Toric.MvLaurentPolynomial
 import Toric.SphericalVariety

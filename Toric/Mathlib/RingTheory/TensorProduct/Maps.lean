@@ -1,4 +1,4 @@
-import Mathlib.RingTheory.TensorProduct.Basic
+import Mathlib.RingTheory.TensorProduct.Maps
 
 open TensorProduct
 

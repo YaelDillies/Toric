@@ -15,7 +15,7 @@ namespace CommGrp
 set_option allowUnsafeReducibility true in
 attribute [reducible] CommGrp.toGrp
 
-/-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
+/-- The yoneda embedding of `CommGrp C` into presheaves of groups. -/
 @[simps]
 def yonedaCommGrpGrpObj (G : CommGrp C) : (Grp C)ᵒᵖ ⥤ CommGrpCat where
   obj H := .of (unop H ⟶ G.toGrp)
@@ -25,7 +25,7 @@ def yonedaCommGrpGrpObj (G : CommGrp C) : (Grp C)ᵒᵖ ⥤ CommGrpCat where
     map_mul' g h := by ext; simpa using ((yonedaGrpObj G.X).map f.unop.1.op).hom.map_mul g.hom h.hom
   }
 
-/-- The yoneda embedding of `CommGrp_C` into presheaves of groups. -/
+/-- The yoneda embedding of `CommGrp C` into presheaves of groups. -/
 @[simps]
 def yonedaCommGrpGrp : CommGrp C ⥤ (Grp C)ᵒᵖ ⥤ CommGrpCat where
   obj := yonedaCommGrpGrpObj

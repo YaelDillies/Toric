@@ -1,7 +1,7 @@
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.CommMon_
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.RingTheory.TensorProduct.Basic
+import Toric.Mathlib.RingTheory.TensorProduct.Maps
 
 noncomputable section
 
