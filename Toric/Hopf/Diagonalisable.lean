@@ -65,7 +65,7 @@ lemma span_isGroupLikeElem_eq_top_of_isDiagonalisable :
   rintro ⟨⟨G, _, ⟨e⟩⟩⟩
   rw [← Submodule.comap_top (e : A ≃ₗ[R] MonoidAlgebra R G).toLinearMap,
     ← span_isGroupLikeElem (R := R), Submodule.comap_equiv_eq_map_symm, Submodule.map_span]
-  simp [LinearEquiv.image_eq_preimage]
+  simp [LinearEquiv.image_symm_eq_preimage]
 
 end CommRing
 
