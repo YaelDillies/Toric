@@ -1,6 +1,6 @@
 # Toric varieties in Lean
 
-[![.github/workflows/push_master.yml](https://github.com/YaelDillies/Toric/actions/workflows/push_master.yml/badge.svg)](https://github.com/YaelDillies/Toric/actions/workflows/push_master.yml)
+[![.github/workflows/push.yml](https://github.com/YaelDillies/Toric/actions/workflows/push.yml/badge.svg)](https://github.com/YaelDillies/Toric/actions/workflows/push.yml)
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/YaelDillies/Toric)
 
 This repository aims at formalising the theory of toric varieties.
