@@ -6,7 +6,6 @@ Authors: Yaël Dillies, Michał Mrugała, Sophie Morel, Andrew Yang
 import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
 import Mathlib.AlgebraicGeometry.Limits
 import Toric.GroupScheme.MonoidAlgebra
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Grp_
 
 open AlgebraicGeometry CategoryTheory Bialgebra Opposite Limits
 open scoped AddMonoidAlgebra MonObj SpecOfNotation

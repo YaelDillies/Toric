@@ -12,8 +12,6 @@
   ["Toric.Mathlib.RingTheory.Coalgebra.SimpAttr"],
   "Toric.Mathlib.RingTheory.Bialgebra.TensorProduct":
   ["Mathlib.RingTheory.Bialgebra.TensorProduct"],
-  "Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_":
-  ["Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_"],
   "Toric.Mathlib.AlgebraicGeometry.Scheme":
   ["Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.Mathlib.Algebra.Polynomial.Bivariate":
