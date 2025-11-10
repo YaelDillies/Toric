@@ -7,26 +7,16 @@ variable {R S A B C D : Type*} [CommSemiring R] [CommSemiring S] [Algebra R S] [
   [Algebra R A] [Algebra S A] [IsScalarTower R S A] [Semiring B] [Algebra R B] [Semiring C]
   [Algebra R C] [Algebra S C] [IsScalarTower R S C] [Semiring D] [Algebra R D]
 
-lemma algebraMap_def {R S T : Type*}
-    [CommSemiring R] [CommSemiring S] [CommSemiring T] [Algebra R S] [Algebra R T] :
-  algebraMap S (TensorProduct R S T) = Algebra.TensorProduct.includeLeftRingHom := rfl
+@[simp] lemma map_comp_includeLeftRingHom (f : A →ₐ[S] C) (g : B →ₐ[R] D) :
+    (map f g : A ⊗[R] B →+* C ⊗[R] D).comp includeLeftRingHom =
+      includeLeftRingHom.comp (f : A →+* C) := by ext; simp
 
-@[simp] lemma toLinearMap_map (f : A →ₐ[S] C) (g : B →ₐ[R] D) :
-    (map f g).toLinearMap = TensorProduct.AlgebraTensorModule.map f.toLinearMap g.toLinearMap := rfl
-
-variable (A) in
-/-- `lTensor A f : A ⊗ B →ₐ A ⊗ C` is the natural algebra morphism induced by `f : B →ₐc C`. -/
-noncomputable abbrev lTensor (f : B →ₐ[R] C) : (A ⊗[R] B) →ₐ[R] (A ⊗[R] C) :=
-  Algebra.TensorProduct.map (.id R A) f
-
-variable (A) in
-/-- `rTensor A f : B ⊗ A →ₐc C ⊗ A` is the natural algebra morphism induced by `f : B →ₐc C`. -/
-noncomputable abbrev rTensor (f : B →ₐ[R] C) : B ⊗[R] A →ₐ[R] C ⊗[R] A :=
-  Algebra.TensorProduct.map f (.id R A)
+@[simp] lemma rid_comp_includeLeftRingHom :
+    (Algebra.TensorProduct.rid R S A : A ⊗[R] R →+* A).comp includeLeftRingHom = .id A := by
+  ext; simp
 
 end Algebra.TensorProduct
 
-section hetero
 variable {R S T R' S' T' : Type*}
   [CommSemiring R] [CommSemiring S] [CommSemiring T] [Algebra R S] [Algebra R T]
   [CommSemiring R'] [CommSemiring S'] [CommSemiring T'] [Algebra R' S'] [Algebra R' T']
@@ -67,15 +57,3 @@ lemma Algebra.TensorProduct.mapRingHom_comp_includeRight :
     (mapRingHom fR fS fT HS HT).comp (RingHomClass.toRingHom includeRight) =
       (RingHomClass.toRingHom includeRight).comp fT := by
   ext; simp
-
-end hetero
-
-namespace Algebra.TensorProduct
-
-variable {R A B : Type*} [CommSemiring R] [Semiring A] [CommSemiring B] [Algebra R A] [Algebra R B]
-
-lemma algebraMap_eq_includeRight :
-  letI := rightAlgebra (R := R) (A := A) (B := B)
-  algebraMap B (TensorProduct R A B) = includeRight (R := R) (A := A) (B := B) := rfl
-
-end Algebra.TensorProduct

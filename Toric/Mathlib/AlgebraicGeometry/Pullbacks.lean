@@ -1,7 +1,6 @@
 import Mathlib.AlgebraicGeometry.Pullbacks
 import Mathlib.CategoryTheory.Monoidal.CommMon_
 import Mathlib.CategoryTheory.Monoidal.Grp_
-import Toric.Mathlib.RingTheory.TensorProduct.Maps
 
 noncomputable section
 
@@ -153,15 +152,14 @@ lemma pullbackSpecIso_hom_base (R S T : Type u) [CommRing R] [CommRing S] [CommR
     [Algebra R T] :
     (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap R _)) =
       pullback.fst _ _ ≫ Spec.map (CommRingCat.ofHom (algebraMap _ _)) := by
-  simp [← Iso.eq_inv_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-    ← Algebra.TensorProduct.algebraMap_def, ← IsScalarTower.algebraMap_eq]
+  simp [Algebra.TensorProduct.algebraMap_def]
 
 @[reassoc (attr := simp)]
 lemma pullbackSpecIso_hom_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]
     [Algebra R T] :
     (pullbackSpecIso R S T).hom ≫ Spec.map (CommRingCat.ofHom (algebraMap S _)) =
       pullback.fst _ _ := by
-  simp [← Iso.eq_inv_comp, pullbackSpecIso_inv_fst, ← Algebra.TensorProduct.algebraMap_def]
+  simp [Algebra.TensorProduct.algebraMap_def]
 
 @[reassoc]
 lemma pullbackSpecIso_inv_fst' (R S T : Type u) [CommRing R] [CommRing S] [CommRing T] [Algebra R S]

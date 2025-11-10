@@ -6,7 +6,23 @@ suppress_compilation
 
 open Algebra Coalgebra TensorProduct
 
-namespace Bialgebra
+namespace Bialgebra.TensorProduct
+variable (R S A B : Type*) [CommSemiring R] [CommSemiring S] [Semiring A] [Semiring B]
+  [Bialgebra S A] [Bialgebra R B] [Algebra R A] [Algebra R S] [IsScalarTower R S A]
+
+lemma counitAlgHom_def :
+    counitAlgHom (R := S) (A := A ⊗[R] B) =
+      (Algebra.TensorProduct.rid _ _ _).toAlgHom.comp (Algebra.TensorProduct.map
+      (Bialgebra.counitAlgHom S A) (Bialgebra.counitAlgHom R B)) := rfl
+
+lemma comulAlgHom_def :
+    comulAlgHom (R := S) (A := A ⊗[R] B) =
+      (Algebra.TensorProduct.tensorTensorTensorComm R S R S A A B B).toAlgHom.comp
+        (Algebra.TensorProduct.map (Bialgebra.comulAlgHom S A)
+        (Bialgebra.comulAlgHom R B)) := rfl
+
+end TensorProduct
+
 variable {R A B : Type*} [CommSemiring R]
 
 @[simp]

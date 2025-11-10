@@ -87,9 +87,8 @@ lemma specCommMonAlgPullbackObjXIso_mul :
   letI := f.hom.toAlgebra
   have h₃ := comulAlgHom_comp_mapRangeRingHom f.hom (M := M)
   have h₄ := (Bialgebra.comulAlgHom S S[M]).comp_algebraMap
-  have h₅ := IsScalarTower.algebraMap_eq S S[M] (TensorProduct S S[M] S[M])
-  apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₃ h₄ h₅
-  simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₃ h₄ h₅
+  apply_fun (Spec.map <| CommRingCat.ofHom ·) at h₃ h₄
+  simp only [AlgHom.toRingHom_eq_coe, CommRingCat.ofHom_comp, Spec.map_comp] at h₃ h₄
   ext
   apply ((CommRingCat.isPushout_of_isPushout R S R[M] S[M]).op.map Scheme.Spec).hom_ext
   · simpa [Functor.Monoidal.μ_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
@@ -97,7 +96,7 @@ lemma specCommMonAlgPullbackObjXIso_mul :
         specCommMonAlgPullbackObjIso_mul_aux_assoc M f _ rfl
           (Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R R[M]).toRingHom))
   · simp [Functor.Monoidal.μ_of_cartesianMonoidalCategory, RingHom.algebraMap_toAlgebra,
-      AlgHom.toUnder, h₄, h₅, Algebra.TensorProduct.algebraMap_def, pullback.condition]
+      AlgHom.toUnder, h₄, Algebra.TensorProduct.algebraMap_def, pullback.condition]
 
 -- should we make something like `BialgHom.toRingHom`?
 /-- The spectrum of a commutative algebra functor commutes with base change. -/

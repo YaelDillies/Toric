@@ -16,6 +16,7 @@ import Toric.Mathlib.Algebra.MonoidAlgebra.Module
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
 import Toric.Mathlib.RingTheory.AdjoinRoot
+import Toric.Mathlib.RingTheory.Bialgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
 import Toric.Mathlib.RingTheory.Bialgebra.GroupLike
 import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra

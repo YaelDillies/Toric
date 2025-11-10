@@ -7,6 +7,7 @@ import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
+import Toric.Mathlib.RingTheory.Bialgebra.Basic
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -372,9 +373,9 @@ instance [Bialgebra R T] :
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
-    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
-      pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
-      ← Algebra.TensorProduct.algebraMap_def]
+    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _), pullbackSpecIso',
+        specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+        Bialgebra.TensorProduct.counitAlgHom_def, AlgHom.comp_toRingHom, RingHom.comp_assoc]
     · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
         pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
         ← AlgHom.coe_restrictScalars R (Bialgebra.counitAlgHom S _), - AlgHom.coe_restrictScalars,
@@ -384,9 +385,10 @@ instance [Bialgebra R T] :
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
-    · simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
+    · have : includeLeftRingHom = algebraMap S (S ⊗[R] T) := rfl
+      simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
         ← CommRingCat.ofHom_comp, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
-        ← Algebra.TensorProduct.algebraMap_def, Hom.asOver, OverClass.asOverHom, pullback.condition]
+        this, Hom.asOver, OverClass.asOverHom, pullback.condition]
       rfl
     · convert congr($(μ_pullback_left_fst R S T) ≫ (pullbackSpecIso R T T).hom ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
