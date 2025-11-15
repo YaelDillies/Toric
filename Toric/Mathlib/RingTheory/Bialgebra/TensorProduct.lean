@@ -6,23 +6,7 @@ suppress_compilation
 
 open Algebra Coalgebra TensorProduct
 
-namespace Bialgebra.TensorProduct
-variable (R S A B : Type*) [CommSemiring R] [CommSemiring S] [Semiring A] [Semiring B]
-  [Bialgebra S A] [Bialgebra R B] [Algebra R A] [Algebra R S] [IsScalarTower R S A]
-
-lemma counitAlgHom_def :
-    counitAlgHom (R := S) (A := A ⊗[R] B) =
-      (Algebra.TensorProduct.rid _ _ _).toAlgHom.comp (Algebra.TensorProduct.map
-      (Bialgebra.counitAlgHom S A) (Bialgebra.counitAlgHom R B)) := rfl
-
-lemma comulAlgHom_def :
-    comulAlgHom (R := S) (A := A ⊗[R] B) =
-      (Algebra.TensorProduct.tensorTensorTensorComm R S R S A A B B).toAlgHom.comp
-        (Algebra.TensorProduct.map (Bialgebra.comulAlgHom S A)
-        (Bialgebra.comulAlgHom R B)) := rfl
-
-end TensorProduct
-
+namespace Bialgebra
 variable {R A B : Type*} [CommSemiring R]
 
 @[simp]
@@ -66,7 +50,7 @@ variable [CommSemiring A] [CommSemiring B] [Bialgebra R A] [Bialgebra R B] {a b 
 
 variable (R A B) in
 /-- The tensor product of `R`-bialgebras is commutative, up to bialgebra isomorphism. -/
-def comm : A ⊗[R] B ≃ₐc[R] B ⊗[R] A :=
+def TensorProduct.comm : A ⊗[R] B ≃ₐc[R] B ⊗[R] A :=
   .ofAlgEquiv (Algebra.TensorProduct.comm R A B) (by ext <;> simp) <| by
     ext a <;>
     · dsimp
@@ -89,7 +73,7 @@ def comulBialgHom [IsCocomm R A] : A →ₐc[R] A ⊗[R] A where
 
 variable (R A) in
 lemma comm_comp_comulBialgHom [IsCocomm R A] :
-    (comm R A A).toBialgHom.comp (comulBialgHom R A) = comulBialgHom R A := by
+    (TensorProduct.comm R A A).toBialgHom.comp (comulBialgHom R A) = comulBialgHom R A := by
   ext; exact comm_comul _ _
 
 /-- Representations of `a` and `b` yield a representation of `a ⊗ b`. -/

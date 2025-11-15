@@ -7,7 +7,6 @@ import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.RingTheory.Bialgebra.Basic
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -217,10 +216,10 @@ instance asOver.instIsCommMonObj [Bialgebra R A] [IsCocomm R A] :
       $(Bialgebra.comm_comp_comulBialgHom R A)).hom.left)
     dsimp [commBialgCatEquivComonCommAlgCat] at this ⊢
     have h₁ : (Algebra.TensorProduct.includeRight : A →ₐ[R] A ⊗[R] A) =
-      (RingHomClass.toRingHom (Bialgebra.comm R A A)).comp
+      (RingHomClass.toRingHom (Bialgebra.TensorProduct.comm R A A)).comp
         Algebra.TensorProduct.includeLeftRingHom := by ext; rfl
     have h₂ : (Algebra.TensorProduct.includeLeftRingHom) =
-      (RingHomClass.toRingHom (Bialgebra.comm R A A)).comp
+      (RingHomClass.toRingHom (Bialgebra.TensorProduct.comm R A A)).comp
        (Algebra.TensorProduct.includeRight : A →ₐ[R] A ⊗[R] A) := by ext; rfl
     convert this using 1
     · simp only [Spec.map_comp, ← Category.assoc, mul_left]

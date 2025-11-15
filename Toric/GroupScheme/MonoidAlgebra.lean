@@ -6,7 +6,7 @@ Authors: Andrew Yang
 import Toric.GroupScheme.HopfAffine
 import Toric.Hopf.GrpAlg
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 import Toric.MonoidAlgebra.TensorProduct
 
 noncomputable section

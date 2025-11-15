@@ -3,8 +3,8 @@ Copyright (c) 2025 Sophie Morel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sophie Morel
 -/
-import Toric.Mathlib.RingTheory.HopfAlgebra.MonoidAlgebra
-import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
+import Mathlib.RingTheory.HopfAlgebra.GroupLike
+import Toric.Mathlib.RingTheory.Bialgebra.MonoidAlgebra
 
 /-!
 # Diagonalizable bialgebras

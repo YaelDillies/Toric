@@ -5,10 +5,10 @@ Authors: Yaël Dillies, Michał Mrugała, Andrew Yang
 -/
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.UnitaryGroup
+import Mathlib.RingTheory.HopfAlgebra.GroupLike
 import Toric.GroupScheme.Torus
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.RingTheory.AdjoinRoot
-import Toric.Mathlib.RingTheory.HopfAlgebra.GroupLike
 
 /-!
 # Demo of `SO(2, ℝ)` as a non-split torus
