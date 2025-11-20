@@ -1,4 +1,4 @@
-\section{Appendix: The \texorpfdstring{Y_\MCA}{YA} construction}
+\section{The \texorpdfstring{Y_\MCA}{YA} construction}
 
 
 The $Y_\MCA$ construction is an alternative construction to the one
@@ -132,7 +132,7 @@ $Y_\MCA$ is still useful to study toric ideals, but we do not need it in Toric.
 
 
 \begin{proposition}
-  \label{1-1-14-spec-aff-mon-alg-eq-ya}
+  \label{1-1-14-spec-aff-mon-alg}
   \uses{0-aff-mon, 1-1-3-aff-tor-var, 1-1-7-ya}
   % \lean{}
   % \leanok
@@ -148,7 +148,7 @@ $Y_\MCA$ is still useful to study toric ideals, but we do not need it in Toric.
 
 
 \begin{proposition}
-  \label{1-1-10-tor-ideal}
+  \label{1-1-10-tor-ideal-ya}
   \uses{1-1-7-ya, 1-1-9-ideal-ya}
   % \lean{}
   % \leanok
@@ -160,4 +160,23 @@ $Y_\MCA$ is still useful to study toric ideals, but we do not need it in Toric.
   % \leanok
 
   Immediate consequence of Proposition \ref{1-1-9-ideal-ya}.
+\end{proof}
+
+
+\begin{theorem}[Affine toric varieties come from affine monoids]
+  \label{5-1-aff-tor-var-iso-diag-aff-mon}
+  \uses{0-aff-mon, 5-1-tor-var, 5-1-tor-hom, 1-1-7-ya, 1-1-10-lat-ideal}
+  % \lean{}
+  % \leanok
+
+  Let $k$ be a field.
+  Let $T$ be a torus over $k$.
+  Let $V$ be a toric variety with torus $k$.
+  Then there exists a torus isomorphism $V \cong D_k(X(V))$.
+\end{theorem}
+\begin{proof}
+  \uses{1-1-tor-act-alg, 1-1-8-aff-tor-var-ya, 1-1-9-ideal-ya, 1-1-14-spec-aff-mon-alg, 1-1-16-total-red, 5-2-char-tor-var-aff-mon}
+  % \leanok
+
+  TODO
 \end{proof}
