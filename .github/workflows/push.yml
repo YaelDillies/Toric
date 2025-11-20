@@ -48,20 +48,20 @@ jobs:
         id: build-lean
         uses: leanprover/lean-action@f807b338d95de7813c5c50d018f1c23c9b93b4ec # v1.2.0
 
-      - if: github.ref == 'refs/heads/main'
+      - if: github.ref == 'refs/heads/master'
         name: Upstreaming dashboard
         run: |
           mkdir -p website/_includes
           python3 scripts/upstreaming_dashboard.py
 
-      - if: github.ref == 'refs/heads/main'
+      - if: github.ref == 'refs/heads/master'
         name: File dependencies
         run: |
           sudo apt-get update
           sudo apt install graphviz -y
           ~/.elan/bin/lake exe graph website/file_deps.pdf
 
-      - if: github.ref == 'refs/heads/main'
+      - if: github.ref == 'refs/heads/master'
         name: Build project documentation
         id: build-docgen
         uses: leanprover-community/docgen-action@main
