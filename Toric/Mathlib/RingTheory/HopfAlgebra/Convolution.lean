@@ -167,10 +167,12 @@ def antipodeBialgHom : C →ₐc[R] C where
 instance : Inv (C →ₐc[R] A) where inv := antipodeBialgHom.comp
 
 set_option linter.unusedSectionVars false in
+@[nolint unusedArguments]
 lemma inv_def (f : C →ₐc[R] A) : f⁻¹ = antipodeBialgHom.comp f := rfl
 
 set_option linter.unusedSectionVars false in
-@[simp] lemma inv_apply (f : C →ₐc[R] A) (c : C) : f⁻¹ c = antipode R (f c) := rfl
+@[nolint unusedArguments, simp]
+lemma inv_apply (f : C →ₐc[R] A) (c : C) : f⁻¹ c = antipode R (f c) := rfl
 
 private lemma inv_convMul_cancel (f : C →ₐc[R] A) : f⁻¹ * f = 1 := sorry
 
