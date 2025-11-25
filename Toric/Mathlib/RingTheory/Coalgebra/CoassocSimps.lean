@@ -33,10 +33,18 @@ local notation3 "δ" => comul (R := R)
 attribute [coassoc_simps] LinearMap.comp_id LinearMap.id_comp TensorProduct.map_id
   LinearMap.lTensor_def LinearMap.rTensor_def LinearMap.comp_assoc
   LinearEquiv.coe_trans LinearEquiv.refl_toLinearMap TensorProduct.toLinearMap_congr
-  IsCocomm.comm_comp_comul
+  IsCocomm.comm_comp_comul TensorProduct.AlgebraTensorModule.map_eq
+  TensorProduct.AlgebraTensorModule.assoc_eq TensorProduct.AlgebraTensorModule.rightComm_eq
 attribute [coassoc_simps← ] TensorProduct.map_comp TensorProduct.map_map_comp_assoc_eq
   TensorProduct.map_map_comp_assoc_symm_eq
 -- (λ_ (X ⊗ Y)).hom = (α_ (𝟙_ C) X Y).inv ≫ (λ_ X).hom ▷ Y
+
+@[coassoc_simps]
+lemma TensorProduct.AlgebraTensorModule.congr_eq {R M N P Q : Type*}
+    [CommSemiring R] [AddCommMonoid M] [Module R M]
+    [AddCommMonoid N] [Module R N] [AddCommMonoid P] [Module R P]
+    [AddCommMonoid Q] [Module R Q] (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) :
+    AlgebraTensorModule.congr f g = congr f g := rfl
 
 @[coassoc_simps]
 lemma TensorProduct.map_comp_assoc {R₀ R R₂ R₃ : Type*} [CommSemiring R₀] [CommSemiring R]
@@ -141,7 +149,19 @@ lemma foo₄_assoc [Coalgebra R M] (f : M →ₗ[R] M') (g : N →ₗ[R] M) :
   sorry
 
 @[coassoc_simps]
-lemma foo₅_assoc [Coalgebra R M] [IsCocomm R M] (f : N →ₗ[R] M) :
+lemma foo₅ [Coalgebra R M] (f : M →ₗ[R] M') :
+    (α _ _ _).symm.toLinearMap ∘ₗ (f ⊗ₘ comul) ∘ₗ comul =
+      ((f ⊗ₘ .id) ⊗ₘ .id) ∘ₗ (comul ⊗ₘ .id) ∘ₗ comul := by
+  sorry
+
+@[coassoc_simps]
+lemma foo₅_assoc [Coalgebra R M] (f : M →ₗ[R] M') (g : N →ₗ[R] M) :
+    (α _ _ _).symm.toLinearMap ∘ₗ (f ⊗ₘ comul) ∘ₗ comul ∘ₗ g =
+      ((f ⊗ₘ .id) ⊗ₘ .id) ∘ₗ (comul ⊗ₘ .id) ∘ₗ comul ∘ₗ g := by
+  sorry
+
+@[coassoc_simps]
+lemma foo₆_assoc [Coalgebra R M] [IsCocomm R M] (f : N →ₗ[R] M) :
     (TensorProduct.comm R M M).toLinearMap ∘ₗ comul ∘ₗ f = comul ∘ₗ f := by
   rw [← LinearMap.comp_assoc, IsCocomm.comm_comp_comul]
 
