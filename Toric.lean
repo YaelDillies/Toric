@@ -7,6 +7,7 @@ import Toric.GroupScheme.MonoidAlgebra
 import Toric.GroupScheme.Torus
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
+import Toric.Imports
 import Toric.Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
 import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
