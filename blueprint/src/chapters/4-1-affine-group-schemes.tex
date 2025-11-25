@@ -31,7 +31,7 @@ so we leave this as future work.
 \begin{proposition}[Spec as a functor on algebras is fully faithful]
   \label{0-full-faithful-spec-alg}
   \uses{0-spec-alg}
-  \lean{preservesLimits_algSpec, algSpec.instFull, algSpec.instFaithful, algSpec.fullyFaithful}
+  \lean{preservesLimitsOfSize_algSpec, algSpec.instFull, algSpec.instFaithful, algSpec.fullyFaithful}
   \leanok
 
   Spec is a fully faithful contravariant functor from the category of $R$-algebras
@@ -84,7 +84,7 @@ so we leave this as future work.
 \begin{proposition}[Spec sends cocommutative bialgebras to commutative monoid schemes]
   \label{0-spec-cocomm-bialg}
   \uses{0-spec-hopf}
-  \lean{AlgebraicGeometry.Scheme.asOver.instIsComm_Mon, AlgebraicGeometry.Scheme.asOver.instCommGrpObj}
+  \lean{AlgebraicGeometry.Scheme.asOver.instIsCommMonObj, AlgebraicGeometry.Scheme.asOver.instCommGrpObj}
   \leanok
 
   If $A$ is a cocommutative bialgebra over $R$, then $\Spec A$ is a commutative monoid scheme.

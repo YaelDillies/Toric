@@ -147,6 +147,17 @@ variable (R) in
 noncomputable abbrev bialgSpec : (CommBialgCat R)ᵒᵖ ⥤ Mon (Over <| Spec R) :=
   (commBialgCatEquivComonCommAlgCat R).functor.leftOp ⋙ (algSpec R).mapMon
 
+/-- `Spec` is full on `R`-bialgebras. -/
+instance bialgSpec.instFull : (bialgSpec R).Full := inferInstance
+
+/-- `Spec` is faithful on `R`-bialgebras. -/
+instance bialgSpec.instFaithful : (bialgSpec R).Faithful := inferInstance
+
+/-- `Spec` is fully faithful on `R`-bialgebras, with inverse `Gamma`. -/
+noncomputable def bialgSpec.fullyFaithful : (bialgSpec R).FullyFaithful :=
+  (commBialgCatEquivComonCommAlgCat R).fullyFaithfulFunctor.leftOp.comp
+    algSpec.fullyFaithful.mapMon
+
 variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/
 noncomputable abbrev hopfSpec : (CommHopfAlgCat R)ᵒᵖ ⥤ Grp (Over <| Spec R) :=
@@ -416,10 +427,16 @@ lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffin
   rw [Functor.essImage_overPost] -- not sure why `simp` doesn't use this already
   simp
 
+/-- The essential image of `R`-bialgebras under `Spec` is precisely affine monoid schemes over
+`Spec R`. -/
+@[simp]
+lemma essImage_bialgSpec {G : Mon <| Over <| Spec R} :
+    (bialgSpec R).essImage G ↔ IsAffine G.X.left := by simp
+
 /-- The essential image of `R`-Hopf algebras under `Spec` is precisely affine group schemes over
 `Spec R`. -/
 @[simp]
-lemma essImage_hopfSpec {G : Grp (Over <| Spec R)} :
+lemma essImage_hopfSpec {G : Grp <| Over <| Spec R} :
     (hopfSpec R).essImage G ↔ IsAffine G.X.left := by simp
 
 end rightEdge

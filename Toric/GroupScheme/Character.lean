@@ -128,12 +128,12 @@ variable (R) in
 def charTorusUnit : X(Spec R, 𝔾ₘ[Spec R]) ≃+ ℤ :=
   (charDiag R _).trans (FreeAbelianGroup.uniqueEquiv _)
 
--- variable (R σ) in
--- /-- Cocharacters of the algebraic torus with dimensions `σ`over a domain `R` are exactly `ℤ^σ`.
+variable (R σ) in
+/-- Cocharacters of the algebraic torus with dimensions `σ`over a domain `R` are exactly `ℤ^σ`.
 
--- Note: This is true over a general base using Cartier duality, but we do not prove that. -/
--- def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) :=
---   (cocharDiag R _).trans ⟨FreeAbelianGroup.lift.symm, fun _ _ ↦ rfl⟩
+Note: This is true over a general base using Cartier duality, but we do not prove that. -/
+def cocharTorus : X*(Spec R, 𝔾ₘ[Spec R, σ]) ≃+ (σ → ℤ) :=
+  (cocharDiag R _).trans ⟨FreeAbelianGroup.lift.symm, fun _ _ ↦ rfl⟩
 
 section CommGrpObj
 variable [CommGrpObj (G.asOver (Spec R))] [CommGrpObj (T.asOver (Spec R))]
