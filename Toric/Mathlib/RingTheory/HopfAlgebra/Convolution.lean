@@ -5,6 +5,7 @@ Authors: Yaël Dillies, Michał Mrugała, Yunzhou Xie
 -/
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution
+import Toric.Mathlib.LinearAlgebra.TensorProduct.Associator
 
 /-!
 # Convolution product on Hopf algebra maps
@@ -154,14 +155,19 @@ variable [CommSemiring A] [CommSemiring C]
 section HopfAlgebra
 variable [HopfAlgebra R A] [HopfAlgebra R C] [IsCocomm R C]
 
-/-- The antipode as a coalgebra hom. -/
+/-- The antipode as a bialgebra hom. -/
 def antipodeBialgHom : C →ₐc[R] C where
   __ := antipodeAlgHom R (A := C)
   map_smul' := _
   counit_comp := counit_comp_antipode
   map_comp_comul := by
     apply left_inv_eq_right_inv (a := comul)
-    · sorry
+    · dsimp
+      simp [coassoc_simps, LinearMap.convMul_def, LinearMap.convOne_def, LinearMap.mul'_tensor,
+        TensorProduct.tensorTensorTensorComm, LinearEquiv.coe_trans]
+      norm_cast
+      simp [LinearMap.comp_assoc]
+      simp [coassoc_simps]
     · sorry
 
 instance : Inv (C →ₐc[R] A) where inv := antipodeBialgHom.comp

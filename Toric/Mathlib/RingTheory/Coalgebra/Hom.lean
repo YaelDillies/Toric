@@ -36,6 +36,7 @@ noncomputable def comulCoalgHom : C →ₗc[R] C ⊗[R] C where
         TensorProduct.congr (.refl _ _) (_root_.TensorProduct.assoc _ _ _ _).symm
     rw [← e.comp_toLinearMap_eq_iff, TensorProduct.comul_def]
     trans (((TensorProduct.comm _ _ _).toLinearMap ∘ₗ δ).rTensor _ ∘ₗ δ).lTensor _ ∘ₗ δ
+    stop
     · rw [Coalgebra.comm_comp_comul]
       coassoc_simps
     · coassoc_simps
