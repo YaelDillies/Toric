@@ -8,9 +8,6 @@ namespace AdjoinRoot
 variable {R S T U : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
   [CommRing U] [Algebra R U] {p : Polynomial S}
 
-instance [Algebra.FiniteType R S] : Algebra.FiniteType R (AdjoinRoot p) := by
-  unfold AdjoinRoot; infer_instance
-
 section
 variable {q : Polynomial T} {u : Polynomial U}
 
@@ -58,8 +55,7 @@ open Algebra TensorProduct
 
 -- TODO: get rid of rfl
 variable (p) in
-def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
-    (h : p.map includeRight.toRingHom = q) :
+def tensorAlgEquiv (q : Polynomial (T ⊗[R] S)) (h : p.map includeRight.toRingHom = q) :
     T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot q := by
   refine .ofAlgHom (Algebra.TensorProduct.lift (algHom T T _) (mapAlgHom _ _ includeRight h) ?_)
       (liftAlgHom _ (Algebra.TensorProduct.map (AlgHom.id T T)
@@ -84,8 +80,7 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
 
 variable (p) in
 @[simp]
-lemma tensorAlgEquiv_root {q : Polynomial (T ⊗[R] S)}
-    {h : p.map includeRight.toRingHom = q} :
+lemma tensorAlgEquiv_root {q : Polynomial (T ⊗[R] S)} {h : p.map includeRight.toRingHom = q} :
     tensorAlgEquiv p q h (1 ⊗ₜ root p) = root q := by simp [tensorAlgEquiv]
 
 variable (p) in

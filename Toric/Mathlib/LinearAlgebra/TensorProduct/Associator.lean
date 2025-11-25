@@ -11,4 +11,10 @@ attribute [local ext] TensorProduct.ext
     (rightComm R M' N' P').toLinearMap ∘ₗ map (map f g) h
       = map (map f h) g ∘ₗ (rightComm R M N P).toLinearMap := by ext; simp
 
+lemma rightComm_def :
+    rightComm R M N P =
+      TensorProduct.assoc _ _ _ _ ≪≫ₗ
+        congr (.refl _ _) (TensorProduct.comm _ _ _) ≪≫ₗ
+        (TensorProduct.assoc _ _ _ _).symm := by apply LinearEquiv.toLinearMap_injective; ext; simp
+
 end TensorProduct
