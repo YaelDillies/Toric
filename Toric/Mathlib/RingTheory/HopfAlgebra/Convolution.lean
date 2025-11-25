@@ -154,6 +154,21 @@ variable [CommSemiring A] [CommSemiring C]
 section HopfAlgebra
 variable [HopfAlgebra R A] [HopfAlgebra R C] [IsCocomm R C]
 
+@[coassoc_simps] --todo : add the assoc version
+lemma HopfAlgebra.mul_antipode_rTensor_comul'.{u, v} {R : Type u} {A : Type v}
+    {_ : CommSemiring R} {_ : Semiring A} [self : HopfAlgebra R A] :
+    LinearMap.mul' R A ∘ₗ TensorProduct.map (HopfAlgebraStruct.antipode R) .id ∘ₗ
+      CoalgebraStruct.comul = Algebra.linearMap R A ∘ₗ CoalgebraStruct.counit :=
+  HopfAlgebra.mul_antipode_rTensor_comul ..
+
+@[coassoc_simps] --todo : add the assoc version
+lemma HopfAlgebra.mul_antipode_lTensor_comul'.{u, v} {R : Type u} {A : Type v}
+    {_ : CommSemiring R} {_ : Semiring A} [self : HopfAlgebra R A] :
+    LinearMap.mul' R A ∘ₗ TensorProduct.map .id (HopfAlgebraStruct.antipode R) ∘ₗ
+      CoalgebraStruct.comul = Algebra.linearMap R A ∘ₗ CoalgebraStruct.counit :=
+  HopfAlgebra.mul_antipode_lTensor_comul ..
+
+
 /-- The antipode as a coalgebra hom. -/
 def antipodeBialgHom : C →ₐc[R] C where
   __ := antipodeAlgHom R (A := C)

@@ -35,6 +35,7 @@ attribute [coassoc_simps] LinearMap.comp_id LinearMap.id_comp TensorProduct.map_
   LinearEquiv.coe_trans LinearEquiv.refl_toLinearMap TensorProduct.toLinearMap_congr
   IsCocomm.comm_comp_comul TensorProduct.AlgebraTensorModule.map_eq
   TensorProduct.AlgebraTensorModule.assoc_eq TensorProduct.AlgebraTensorModule.rightComm_eq
+  TensorProduct.tensorTensorTensorComm TensorProduct.AlgebraTensorModule.tensorTensorTensorComm
 attribute [coassoc_simps← ] TensorProduct.map_comp TensorProduct.map_map_comp_assoc_eq
   TensorProduct.map_map_comp_assoc_symm_eq
 -- (λ_ (X ⊗ Y)).hom = (α_ (𝟙_ C) X Y).inv ≫ (λ_ X).hom ▷ Y
@@ -161,9 +162,16 @@ lemma foo₅_assoc [Coalgebra R M] (f : M →ₗ[R] M') (g : N →ₗ[R] M) :
   sorry
 
 @[coassoc_simps]
-lemma foo₆_assoc [Coalgebra R M] [IsCocomm R M] (f : N →ₗ[R] M) :
-    (TensorProduct.comm R M M).toLinearMap ∘ₗ comul ∘ₗ f = comul ∘ₗ f := by
-  rw [← LinearMap.comp_assoc, IsCocomm.comm_comp_comul]
+lemma foo₆ (f : M →ₗ[R] M') (g : N →ₗ[R] N') :
+    (TensorProduct.comm R M' N').toLinearMap ∘ₗ (f ⊗ₘ g) =
+      (g ⊗ₘ f) ∘ₗ (TensorProduct.comm R M N).toLinearMap := by sorry
+
+@[coassoc_simps]
+lemma foo₆_assoc [Coalgebra R M] [IsCocomm R M] (f : M →ₗ[R] M') (g : N →ₗ[R] N')
+    (h : P →ₗ[R] M ⊗[R] N) :
+    (TensorProduct.comm R M' N').toLinearMap ∘ₗ (f ⊗ₘ g) ∘ₗ h =
+      (g ⊗ₘ f) ∘ₗ (TensorProduct.comm R M N).toLinearMap ∘ₗ h := by
+  simp only [← LinearMap.comp_assoc, foo₆]
 
 lemma comp_assoc_symm (f₁ : M →ₗ[R] N) (f₂ : N →ₗ[R] P) (f₃ : P →ₗ[R] Q) :
     f₃ ∘ₗ (f₂ ∘ₗ f₁) = (f₃ ∘ₗ f₂) ∘ₗ f₁ := by simp only [coassoc_simps]
