@@ -100,7 +100,6 @@ noncomputable instance braided_algSpec : (algSpec R).Braided := .ofChosenFiniteP
   simp [-Over.comp_left]
   rfl
 
-@[simp]
 lemma prodComparisonIso_algSpec_hom_left (A B : (CommAlgCat R)ᵒᵖ) :
     (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).hom.left =
       (pullbackSpecIso R A.unop B.unop).inv := rfl
@@ -122,7 +121,6 @@ lemma preservesTerminalIso_algSpec_inv_left :
   (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).inv.left = 𝟙 (Spec R) := by
   simp [preservesTerminalIso_algSpec]
 
-@[simp]
 lemma preservesTerminalIso_algSpec_hom_left :
   (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).hom.left = 𝟙 (Spec R) := by
   simp [preservesTerminalIso_algSpec]

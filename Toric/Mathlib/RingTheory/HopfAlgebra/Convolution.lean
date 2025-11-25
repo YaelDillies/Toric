@@ -73,7 +73,7 @@ variable [Semiring C] [HopfAlgebra R C]
 @[simp] lemma id_mul_antipode : id * antipode R (A := C) = 1 := by
   ext; simp [convMul_def, ← LinearMap.lTensor_def]
 
-@[simp] lemma counit_comp_antipode : ε ∘ₗ antipode R (A := C) = ε := calc
+lemma counit_comp_antipode : ε ∘ₗ antipode R (A := C) = ε := calc
   _ = 1 * (ε ∘ₗ antipode R (A := C)) := (one_mul _).symm
   _ = (ε ∘ₗ id) * (ε ∘ₗ antipode R (A := C)) := rfl
   _ = (counitAlgHom R C).toLinearMap ∘ₗ (id * antipode R (A := C)) := by
@@ -82,7 +82,7 @@ variable [Semiring C] [HopfAlgebra R C]
   _ = ε ∘ₗ 1 := by simp
   _ = ε := by ext; simp
 
-@[simp] lemma counit_antipode (a : C) : ε (antipode R a) = ε a := congr($counit_comp_antipode a)
+lemma counit_antipode (a : C) : ε (antipode R a) = ε a := congr($counit_comp_antipode a)
 
 end LinearMap
 

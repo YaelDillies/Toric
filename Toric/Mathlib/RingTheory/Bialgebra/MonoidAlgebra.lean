@@ -94,7 +94,6 @@ def liftMulEquiv : (M →* A) ≃* (MonoidAlgebra R M →ₐ[R] A) where
   __ := lift R M A
   map_mul' f g := by ext; simp
 
-@[simp]
 lemma convMul_algHom_single (f g : MonoidAlgebra R M →ₐ[R] A) (x : M) :
     (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
   simp [-AlgHom.coe_toLinearMap, ← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_mul]
@@ -294,7 +293,6 @@ end Semiring
 section CommSemiring
 variable [CommSemiring A]
 
-@[simp]
 lemma convMul_algHom_single [Algebra R A] [AddMonoid M] (f g : R[M] →ₐ[R] A) (x : M) :
     (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
   simp [-AlgHom.coe_toLinearMap, ← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_mul]

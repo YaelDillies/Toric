@@ -122,7 +122,7 @@ def specCommMonAlgPullback :
     · simp [RingHom.algebraMap_toAlgebra, AlgHom.toUnder, ← h₂]
 
 -- TODO: Make `CommRingCat.mkUnder` abbrev or add dsimp lemmas etc.
-@[reassoc (attr := simp)]
+@[reassoc]
 lemma specCommMonAlgPullback_inv_app_hom_left_fst (M) :
     ((specCommMonAlgPullback f Sf H).inv.app M).hom.left ≫ pullback.fst _ _ =
       Spec.map (CommRingCat.ofHom (mapRangeRingHom M.unop f.hom)) :=
@@ -130,7 +130,7 @@ lemma specCommMonAlgPullback_inv_app_hom_left_fst (M) :
   let H' := (CommRingCat.isPushout_of_isPushout R S R[M.unop] S[M.unop]).op.map Scheme.Spec
   H ▸ H'.isoPullback_hom_fst
 
-@[reassoc (attr := simp)]
+@[reassoc]
 lemma specCommMonAlgPullback_inv_app_hom_left_snd (M) :
     ((specCommMonAlgPullback f Sf H).inv.app M).hom.left ≫ pullback.snd _ _ =
       Spec.map (CommRingCat.ofHom (algebraMap _ _)) :=
