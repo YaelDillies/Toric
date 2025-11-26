@@ -207,10 +207,10 @@ def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* specialOrthogonalGroup (Fin 2)
   map_mul' f g := by
     ext i j
     fin_cases i, j
-    · simp [sub_eq_add_neg]
-    · simp [sub_eq_add_neg]
-    · simp [sub_eq_add_neg]
-    · simp [sub_eq_neg_add]
+    · simp [sub_eq_add_neg, AlgHom.convMul_apply]
+    · simp [sub_eq_add_neg, AlgHom.convMul_apply]
+    · simp [sub_eq_add_neg, AlgHom.convMul_apply]
+    · simp [sub_eq_neg_add, AlgHom.convMul_apply]
 
 /-! #### Base change -/
 
@@ -329,7 +329,7 @@ variable (R) in
 /-- The `R`-points of `SO₂(R)` as a group `R`-scheme are isomorphic to the group `SO(2, R)`. -/
 def pointsMulEquiv :
     (Spec(R).asOver Spec(R) ⟶ SO₂(R).asOver Spec(R)) ≃* specialOrthogonalGroup (Fin 2) R :=
-  Spec.mulEquiv.symm.trans algHomMulEquiv
+  Spec.mapMulEquiv.symm.trans algHomMulEquiv
 
 /-- A 4-torsion element of `SO(2, ℝ)`. -/
 def I : specialOrthogonalGroup (Fin 2) ℝ :=
@@ -370,7 +370,7 @@ theorem not_isSplitTorusOver_SO₂_real : ¬ SO₂(ℝ).IsSplitTorusOver Spec(�
     (Spec(ℝ).asOver Spec(ℝ))
   have e₂ : (ℤ[σ] →+ Additive ℝˣ) ≃+ (σ → Additive ℝˣ) := Finsupp.liftAddHom.symm.trans <|
     .piCongrRight («η» := σ) fun _ ↦ (zmultiplesAddHom <| Additive ℝˣ).symm
-  exact (aux3 σ).1 <| (pointsMulEquiv ℝ).symm.trans <| e₁.trans <| Spec.mulEquiv.symm.trans <|
+  exact (aux3 σ).1 <| (pointsMulEquiv ℝ).symm.trans <| e₁.trans <| Spec.mapMulEquiv.symm.trans <|
     (MonoidAlgebra.liftMulEquiv ..).symm.trans <| MonoidHom.toHomUnitsMulEquiv.trans <|
       MonoidHom.toAdditiveRightMulEquiv.trans <| e₂.toMultiplicative.trans <| .refl _
 

@@ -183,7 +183,7 @@ lemma commHopfAlgCatEquivCogrpCommAlgCat_functor_map_ofHom_mul
   convert_to f * g =
     (Algebra.TensorProduct.lift (AlgHomClass.toAlgHom f) (AlgHomClass.toAlgHom g)
       (fun _ _ ↦ .all _ _)).comp (Bialgebra.comulAlgHom _ _)
-  dsimp [AlgHom.mul_def]
+  dsimp [AlgHom.convMul_def]
   rw [← AlgHom.comp_assoc]
   congr 1
   ext <;> simp

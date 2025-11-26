@@ -67,6 +67,7 @@ noncomputable abbrev algSpec : (CommAlgCat R)ᵒᵖ ⥤ Over (Spec R) :=
   (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 variable (R) in
+/-- The Gamma functor as a functor from schemes over `Spec R` to `R`-algebras. -/
 noncomputable abbrev algΓ : Over (Spec R) ⥤ (CommAlgCat R)ᵒᵖ :=
   Over.post Γ.rightOp ⋙ Over.map (ΓSpecIso R).inv.op ⋙
     (Over.opEquivOpUnder R).functor ⋙ (commAlgCatEquivUnder R).inverse.op
@@ -102,30 +103,25 @@ noncomputable instance braided_algSpec : (algSpec R).Braided := .ofChosenFiniteP
   rfl
 
 @[simp]
-lemma prodComparisonIso_algSpec_hom_left (A B : (CommAlgCat R)ᵒᵖ) :
-    (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).hom.left =
+lemma prodComparison_algSpec_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (CartesianMonoidalCategory.prodComparison (algSpec R) A B).left =
       (pullbackSpecIso R A.unop B.unop).inv := rfl
 
 @[simp]
 lemma prodComparisonIso_algSpec_inv_left (A B : (CommAlgCat R)ᵒᵖ) :
     (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).inv.left =
       (pullbackSpecIso R A.unop B.unop).hom := by
-  rw [← Iso.comp_inv_eq_id, ← prodComparisonIso_algSpec_hom_left, ← Over.comp_left,
-    Iso.inv_hom_id, Over.id_left]
+  rw [← Iso.comp_inv_eq_id, ← prodComparison_algSpec_left, ← Over.comp_left,
+    ← CartesianMonoidalCategory.prodComparisonIso_hom, Iso.inv_hom_id, Over.id_left]
 
 lemma preservesTerminalIso_algSpec :
-  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)) =
-    Over.isoMk (Iso.refl (Spec R)) (by dsimp; simp [MonoidalCategoryStruct.tensorUnit]) := by
+    (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)) =
+      Over.isoMk (Iso.refl (Spec R)) (by dsimp; simp [MonoidalCategoryStruct.tensorUnit]) := by
   ext1; exact CartesianMonoidalCategory.toUnit_unique _ _
 
 @[simp]
 lemma preservesTerminalIso_algSpec_inv_left :
-  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).inv.left = 𝟙 (Spec R) := by
-  simp [preservesTerminalIso_algSpec]
-
-@[simp]
-lemma preservesTerminalIso_algSpec_hom_left :
-  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).hom.left = 𝟙 (Spec R) := by
+    (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).inv.left = 𝟙 (Spec R) := by
   simp [preservesTerminalIso_algSpec]
 
 /-- `Spec` is full on `R`-algebras. -/
@@ -252,7 +248,8 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     (f : S →ₐ[R] T) : (Spec.map (CommRingCat.ofHom f.toRingHom)).IsOver Spec(R) where
   comp_over := by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
 
-def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialgebra R S]
+/-- `Spec.map` as a `MulEquiv` on hom-sets. -/
+def Spec.mapMulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialgebra R S]
     [Algebra R T] :
     (S →ₐ[R] T) ≃* (Spec(T).asOver Spec(R) ⟶ Spec(S).asOver Spec(R)) where
   toFun f := (Spec.map (CommRingCat.ofHom f.toRingHom)).asOver _
@@ -267,7 +264,7 @@ def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialg
   right_inv f := by ext1; simp
   map_mul' f g := by
     ext1
-    dsimp [AlgHom.mul_def, AlgHom.comp_toRingHom, Hom.mul_def]
+    dsimp [AlgHom.convMul_def, AlgHom.comp_toRingHom, Hom.mul_def]
     simp only [← Category.assoc, Spec.map_comp, AlgebraicGeometry.Scheme.mul_left]
     congr 1
     rw [← Iso.comp_inv_eq]
