@@ -8,9 +8,6 @@ import Toric.GroupScheme.Torus
 import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
 import Toric.Imports
-import Toric.Mathlib.Algebra.AffineMonoid.Embedding
-import Toric.Mathlib.Algebra.AffineMonoid.Irreducible
-import Toric.Mathlib.Algebra.AffineMonoid.UniqueSums
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
