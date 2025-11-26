@@ -7,6 +7,7 @@ import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -345,7 +346,7 @@ lemma pullbackSpecIso'_symmetry [Algebra R T] :
 instance [Algebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.IsOver Spec(S) where
   comp_over := by
     rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv,
-      canonicallyOverPullback_over]
+      Over.canonicallyOverPullback_over]
     simp [specOverSpec_over, pullbackSpecIso']
 
 variable (R S T) in
@@ -383,10 +384,10 @@ instance [Bialgebra R T] :
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
-    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _), pullbackSpecIso',
+    · simp [Over.monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _), pullbackSpecIso',
         specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
         Bialgebra.TensorProduct.counitAlgHom_def, AlgHom.comp_toRingHom, RingHom.comp_assoc]
-    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+    · simp [Over.monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
         pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
         ← AlgHom.coe_restrictScalars R (Bialgebra.counitAlgHom S _), - AlgHom.coe_restrictScalars,
         ← AlgHom.comp_toRingHom, Bialgebra.counitAlgHom_comp_includeRight]
@@ -396,13 +397,13 @@ instance [Bialgebra R T] :
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
     · have : includeLeftRingHom = algebraMap S (S ⊗[R] T) := rfl
-      simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
+      simp [Over.monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
         ← CommRingCat.ofHom_comp, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
         this, Hom.asOver, OverClass.asOverHom, pullback.condition]
       rfl
     · convert congr($(μ_pullback_left_fst R S T) ≫ (pullbackSpecIso R T T).hom ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
-      · simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
+      · simp [Over.monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
           Hom.asOver, OverClass.asOverHom, mul_left]
       · simp [pullbackSpecIso', specOverSpec_over, OverClass.asOver, Hom.asOver, ← Spec.map_comp,
           OverClass.asOverHom, mul_left, ← CommRingCat.ofHom_comp, ← Bialgebra.comul_includeRight]
