@@ -40,16 +40,13 @@ theorem LinearMap.lTensor_mul'_comp_assoc_comp_rTensor_comul_of
     (h : (id ⊗ₘ μ) ∘ₗ α ∘ₗ (δ ⊗ₘ id) = (μ ⊗ₘ id) ∘ₗ α⁻¹ ∘ₗ (id ⊗ₘ δ)) :
     (id ⊗ₘ μ) ∘ₗ α ∘ₗ (δ ⊗ₘ id) = δ ∘ₗ μ := calc
     _ = (μ ⊗ₘ id) ∘ₗ α⁻¹ ∘ₗ ((τ ∘ₗ (ε ⊗ₘ id) ∘ₗ δ) ⊗ₘ δ) := by
-      simp [h, map_counit_comp_comul_left, coassoc_simps]
-    _ = τ ∘ₗ (ε ⊗ₘ id) ∘ₗ α ∘ₗ ((id ⊗ₘ μ) ∘ₗ α ∘ₗ (δ ⊗ₘ id) ⊗ₘ id) ∘ₗ α⁻¹ ∘ₗ (id ⊗ₘ δ) := by
-      simp only [TensorProduct.lid_tensor, coassoc_simps,
-        asssoc_symm_comp_map δ, LinearMap.mul'_comp_map_lid_comp]
-    _ = τ ∘ₗ ((ε ∘ₗ μ) ⊗ₘ id) ∘ₗ (α⁻¹ ∘ₗ (id ⊗ₘ (id ⊗ₘ δ))) ∘ₗ (id ⊗ₘ δ) := by
-      rw [h]
-      simp only [assoc_tensor'', coassoc_simps]
+      simp only [h, map_counit_comp_comul_left, coassoc_simps]
+    _ = τ ∘ₗ (ε ⊗ₘ id) ∘ₗ α ∘ₗ ((μ ⊗ₘ id) ∘ₗ α⁻¹ ∘ₗ (id ⊗ₘ δ) ⊗ₘ id) ∘ₗ α⁻¹ ∘ₗ (id ⊗ₘ δ) := by
+      rw [← h]
+      simp only [lid_tensor, coassoc_simps, asssoc_symm_comp_map δ, mul'_comp_map_lid_comp]
     _ = τ ∘ₗ (ε ⊗ₘ δ) ∘ₗ ((id ⊗ₘ μ) ∘ₗ α ∘ₗ (δ ⊗ₘ id)) := by
-      simp only [h, coassoc_simps]
-    _ = τ ∘ₗ (id ⊗ₘ (δ ∘ₗ μ)) ∘ₗ α ∘ₗ ((ε ⊗ₘ id) ⊗ₘ id) ∘ₗ (δ ⊗ₘ id) := by
+      simp only [assoc_tensor, h, coassoc_simps]
+    _ = τ ∘ₗ (id ⊗ₘ (δ ∘ₗ μ)) ∘ₗ α ∘ₗ (((ε ⊗ₘ id) ∘ₗ δ) ⊗ₘ id) := by
       simp only [coassoc_simps]
     _ = τ ∘ₗ (id ⊗ₘ (δ ∘ₗ μ)) ∘ₗ α ∘ₗ (τ⁻¹ ⊗ₘ id) := by
       simp only [coassoc_simps, map_counit_comp_comul_left]
