@@ -269,6 +269,30 @@ lemma assoc_comp_map_rid_symm_assoc (f : N →ₗ[R] N') (g : P →ₗ[R] M ⊗[
       .id ⊗ₘ ((.id ⊗ₘ f) ∘ₗ (TensorProduct.lid R _).symm.toLinearMap) ∘ₗ g := by
   simp_rw [← LinearMap.comp_assoc, ← assoc_comp_map_rid_symm]
 
+-- loops
+lemma lid_comp_map (f : M →ₗ[R] R) (g : N →ₗ[R] M') :
+    (TensorProduct.lid R M').toLinearMap ∘ₗ (f ⊗ₘ g) =
+      g ∘ₗ (TensorProduct.lid R _).toLinearMap ∘ₗ (f ⊗ₘ .id) := by
+  ext; simp
+
+-- loops
+lemma lid_comp_map_assoc (f : M →ₗ[R] R) (g : N →ₗ[R] M') (h : P →ₗ[R] M ⊗[R] N) :
+    (TensorProduct.lid R M').toLinearMap ∘ₗ (f ⊗ₘ g) ∘ₗ h =
+      g ∘ₗ (TensorProduct.lid R _).toLinearMap ∘ₗ (f ⊗ₘ .id) ∘ₗ h := by
+  simp only [← LinearMap.comp_assoc, lid_comp_map _ g]
+
+@[coassoc_simps] --TODO: comp version (or simproc) & rid version
+lemma lid_comp_map_id (g : N →ₗ[R] M') :
+    (TensorProduct.lid R M').toLinearMap ∘ₗ (.id ⊗ₘ g) =
+      g ∘ₗ (TensorProduct.lid R _).toLinearMap := by
+  ext; simp
+
+@[coassoc_simps] --TODO: comp version (or simproc) & rid version
+lemma lid_comp_map_id_assoc (g : N →ₗ[R] M') (h : P →ₗ[R] R ⊗[R] N) :
+    (TensorProduct.lid R M').toLinearMap ∘ₗ (.id ⊗ₘ g) ∘ₗ h =
+      g ∘ₗ (TensorProduct.lid R _).toLinearMap ∘ₗ h := by
+  simp only [← LinearMap.comp_assoc, lid_comp_map_id]
+
 @[coassoc_simps]
 lemma lid_symm_comp (f : M →ₗ[R] M') :
     (TensorProduct.lid R M').symm.toLinearMap ∘ₗ f =
