@@ -28,8 +28,8 @@ open Coalgebra TensorProduct LinearMap
 local notation3 "δ" => comul (R := R) (A := A)
 local notation3 "ε" => counit (R := R) (A := A)
 local notation3 "μ" => LinearMap.mul' R A
-local notation3 "λ" => (_root_.TensorProduct.lid R _).toLinearMap
-local notation3 "λ⁻¹" => (_root_.TensorProduct.lid R _).symm.toLinearMap
+local notation3 "λ" => (TensorProduct.lid R _).toLinearMap
+local notation3 "λ⁻¹" => (TensorProduct.lid R _).symm.toLinearMap
 local infixl:85 " ⊗ₘ " => TensorProduct.map
 local notation3 "α" => (TensorProduct.assoc R _ _ _).toLinearMap
 local notation3 "α⁻¹" => (TensorProduct.assoc R _ _ _).symm.toLinearMap
@@ -39,7 +39,7 @@ then `(id ⊗ mul) ∘ assoc ∘ (comul ⊗ id) = comul ∘ mul`. -/
 theorem LinearMap.lTensor_mul'_comp_assoc_comp_rTensor_comul_of
     (h : (id ⊗ₘ μ) ∘ₗ α ∘ₗ (δ ⊗ₘ id) = (μ ⊗ₘ id) ∘ₗ α⁻¹ ∘ₗ (id ⊗ₘ δ)) :
     id ⊗ₘ μ ∘ₗ α ∘ₗ δ ⊗ₘ id = δ ∘ₗ μ := calc
-    _ = μ ⊗ₘ id ∘ₗ α⁻¹ ∘ₗ ((λ ∘ₗ ε ⊗ₘ id ∘ₗ δ) ⊗ₘ δ) := by
+    _ = μ ⊗ₘ id ∘ₗ α⁻¹ ∘ₗ (λ ∘ₗ ε ⊗ₘ id ∘ₗ δ) ⊗ₘ δ := by
       simp only [h, map_counit_comp_comul_left, coassoc_simps]
     _ = λ ∘ₗ ε ⊗ₘ id ∘ₗ α ∘ₗ (μ ⊗ₘ id ∘ₗ α⁻¹ ∘ₗ id ⊗ₘ δ) ⊗ₘ id ∘ₗ α⁻¹ ∘ₗ id ⊗ₘ δ := by
       rw [← h]
