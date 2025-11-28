@@ -33,7 +33,11 @@ local notation3 "δ" => comul (R := R)
 
 attribute [coassoc_simps] LinearMap.comp_id LinearMap.id_comp TensorProduct.map_id
   LinearMap.lTensor_def LinearMap.rTensor_def LinearMap.comp_assoc
-  LinearEquiv.coe_trans LinearEquiv.refl_toLinearMap TensorProduct.toLinearMap_congr
+  LinearEquiv.coe_trans LinearEquiv.trans_symm
+  LinearEquiv.refl_toLinearMap TensorProduct.toLinearMap_congr
+  LinearEquiv.comp_symm LinearEquiv.symm_comp LinearEquiv.symm_symm
+  LinearEquiv.coe_lTensor LinearEquiv.coe_lTensor_symm
+  LinearEquiv.coe_rTensor LinearEquiv.coe_rTensor_symm
   IsCocomm.comm_comp_comul TensorProduct.AlgebraTensorModule.map_eq
   TensorProduct.AlgebraTensorModule.assoc_eq TensorProduct.AlgebraTensorModule.rightComm_eq
   TensorProduct.tensorTensorTensorComm TensorProduct.AlgebraTensorModule.tensorTensorTensorComm
@@ -128,6 +132,32 @@ lemma asssoc_comp_map_map_comp_assoc
   simp only [← LinearMap.comp_assoc, asssoc_comp_map_map_comp]
 
 @[coassoc_simps]
+lemma asssoc_comp_map_comp (f₃' : N →ₗ[R] M₃) (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) :
+    α ∘ₗ (f₁₂ ⊗ₘ (f₃ ∘ₗ f₃')) = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ f₃') := by
+  rw [← LinearMap.comp_assoc, map_map_comp_assoc_eq]
+  simp only [coassoc_simps]
+
+@[coassoc_simps]
+lemma asssoc_comp_map_comp_assoc (f₃' : N →ₗ[R] M₃) (f₃ : M₃ →ₗ[R] N₃)
+    (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) (f : P →ₗ[R] M ⊗[R] N) :
+    α ∘ₗ (f₁₂ ⊗ₘ (f₃ ∘ₗ f₃')) ∘ₗ f = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ f₃') ∘ₗ f := by
+  rw [← LinearMap.comp_assoc, asssoc_comp_map_comp]
+  simp only [coassoc_simps]
+
+-- loops
+lemma asssoc_comp_map (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) :
+    α ∘ₗ (f₁₂ ⊗ₘ f₃) = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ .id) := by
+  rw [← LinearMap.comp_assoc, map_map_comp_assoc_eq]
+  simp only [coassoc_simps]
+
+-- loops
+lemma asssoc_comp_map_assoc (f₃ : M₃ →ₗ[R] N₃)
+    (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) (f : P →ₗ[R] M ⊗[R] M₃) :
+    α ∘ₗ (f₁₂ ⊗ₘ f₃) ∘ₗ f = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ .id) ∘ₗ f := by
+  rw [← LinearMap.comp_assoc, asssoc_comp_map]
+  simp only [coassoc_simps]
+
+@[coassoc_simps]
 lemma asssoc_symm_comp_map_map_comp
     (f₁ : M₁ →ₗ[R] N₁) (f₂ : M₂ →ₗ[R] N₂) (f₃ : M₃ →ₗ[R] N₃) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
     α⁻¹ ∘ₗ (f₁ ⊗ₘ (f₂ ⊗ₘ f₃ ∘ₗ f₂₃)) = ((f₁ ⊗ₘ f₂) ⊗ₘ f₃) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) := by
@@ -141,6 +171,34 @@ lemma asssoc_symm_comp_map_map_comp_assoc
     (f : N →ₗ[R] M₁ ⊗[R] M) :
     α⁻¹ ∘ₗ (f₁ ⊗ₘ (f₂ ⊗ₘ f₃ ∘ₗ f₂₃)) ∘ₗ f = ((f₁ ⊗ₘ f₂) ⊗ₘ f₃) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) ∘ₗ f := by
   simp only [← LinearMap.comp_assoc, asssoc_symm_comp_map_map_comp]
+
+@[coassoc_simps]
+lemma asssoc_symm_comp_map_comp
+    (f₁ : M₁ →ₗ[R] N₁) (f₁' : N →ₗ[R] M₁) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
+    α⁻¹ ∘ₗ ((f₁ ∘ₗ f₁') ⊗ₘ f₂₃) = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (f₁' ⊗ₘ f₂₃) := by
+  rw [← LinearMap.comp_assoc, map_map_comp_assoc_symm_eq]
+  simp only [coassoc_simps]
+
+@[coassoc_simps]
+lemma asssoc_symm_comp_map_comp_assoc (f₁ : M₁ →ₗ[R] N₁) (f₁' : N →ₗ[R] M₁)
+    (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) (f : P →ₗ[R] N ⊗[R] M) :
+    α⁻¹ ∘ₗ ((f₁ ∘ₗ f₁') ⊗ₘ f₂₃) ∘ₗ f = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (f₁' ⊗ₘ f₂₃) ∘ₗ f := by
+  rw [← LinearMap.comp_assoc, asssoc_symm_comp_map_comp]
+  simp only [coassoc_simps]
+
+-- loops
+lemma asssoc_symm_comp_map
+    (f₁ : M₁ →ₗ[R] N₁) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
+    α⁻¹ ∘ₗ (f₁ ⊗ₘ f₂₃) = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) := by
+  rw [← LinearMap.comp_assoc, map_map_comp_assoc_symm_eq]
+  simp only [coassoc_simps]
+
+-- loops
+lemma asssoc_symm_comp_map_assoc (f₁ : M₁ →ₗ[R] N₁)
+    (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) (f : P →ₗ[R] M₁ ⊗[R] M) :
+    α⁻¹ ∘ₗ (f₁ ⊗ₘ f₂₃) ∘ₗ f = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) ∘ₗ f := by
+  rw [← LinearMap.comp_assoc, asssoc_symm_comp_map]
+  simp only [coassoc_simps]
 
 @[coassoc_simps]
 lemma assoc_symm_comp_lid_symm :
