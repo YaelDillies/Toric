@@ -33,9 +33,6 @@ section Semiring
 
 variable [Semiring A] [HopfAlgebra R A]
 
-lemma _root_.Commute.mul_left_comm {M : Type*} [Monoid M] {a b c : M} (H : Commute a b) :
-    a * (b * c) = b * (a * c) := by rw [← mul_assoc, ← mul_assoc, H]
-
 lemma antipode_comp_mul_comp_comm :
     antipode R ∘ₗ .mul' R A ∘ₗ (TensorProduct.comm R A A).toLinearMap =
       .mul' R A ∘ₗ map (antipode R) (antipode R) := by
@@ -47,7 +44,7 @@ lemma antipode_comp_mul_comp_comm :
       ← Finset.map_swap_product (ℛ R a).index (ℛ R b).index,
       Finset.sum_product (ℛ R b).index, ← Finset.mul_sum, mul_assoc ((ℛ R b).left _),
       ← mul_assoc ((ℛ R a).left _), ← Finset.sum_mul, sum_mul_antipode_eq_algebraMap_counit,
-      ← (Algebra.commute_algebraMap_left (ε a) (_ : A)).mul_left_comm,
+      ← (Algebra.commute_algebraMap_left (ε a) (_ : A)).left_comm,
       ← (Algebra.commute_algebraMap_left (ε a) (_ : A)).eq]
 
 lemma antipode_mul_antidistrib (a b : A) : antipode R (a * b) = antipode R b * antipode R a := by
