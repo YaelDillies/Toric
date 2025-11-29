@@ -11,6 +11,47 @@ import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 # Tactic to reassociate comultiplication in a coalgebra
 -/
 
+section
+
+variable {R : Type*} [Ring R]
+
+def andrewFunc {R : Type*} [Ring R] (x y z : R) : R := sorry
+lemma andrewFunc_spec (x y z : R) : andrewFunc x y z = x * andrewFunc 1 y z := sorry
+
+open Qq in
+simproc_decl andrewFunc_one (andrewFunc _ _ _) := .ofQ fun u t e => do
+  match u, t, e with
+  | .succ u, ~q($a), ~q(@andrewFunc «$a» $inst $x $y $z) => do
+    match ← isDefEqQ x q(1) with
+    | .defEq _ => return .continue
+    | .notDefEq => do
+      return .visit (.mk (q($x * andrewFunc 1 $y $z)) (some q(andrewFunc_spec $x $y $z)))
+  | _, _, _ => return .continue
+
+example : andrewFunc (2 : R) 2 3 = 2 * andrewFunc 1 2 3 := by
+  simp [andrewFunc_one]
+
+/-- error: `simp` made no progress -/
+#guard_msgs in
+example : andrewFunc (1 : R) 2 3 = sorry := by
+  simp
+
+/--
+warning: Possibly looping simp theorem: `andrewFunc_spec`
+
+Hint: You can disable a simp theorem from the default simp set by passing `- theoremName` to `simp`.
+---
+error: Tactic `simp` failed with a nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+-/
+#guard_msgs in
+example : andrewFunc (2 : R) 2 3 = 2 * andrewFunc 1 2 3 := by
+  simp [andrewFunc_spec]
+
+end
+
 open TensorProduct
 
 namespace Coalgebra
@@ -192,6 +233,44 @@ lemma asssoc_symm_comp_map
     α⁻¹ ∘ₗ (f₁ ⊗ₘ f₂₃) = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) := by
   rw [← LinearMap.comp_assoc, map_map_comp_assoc_symm_eq]
   simp only [coassoc_simps]
+
+open Qq LinearMap in
+simproc_decl asssoc_symm_comp_map_simproc
+    ((TensorProduct.assoc _ _ _ _).symm.toLinearMap ∘ₗ (_ ⊗ₘ _)) := .ofQ fun u t e => do
+  trace[debug] m!"hello\n{u}\n{t}\n{e}"
+  match u, t with
+  | .succ (.max (.max u₁ u₂) (.max (.max u₃ u₄) u₅)),
+      ~q(@LinearMap $R $R $a $a
+          (@RingHom.id $R (@Semiring.toNonAssocSemiring $R $a))
+        (@TensorProduct.{_, u₁, u₂} $R $instR $M₁ $M $instM₁ $instM $instRM₁ $instRM)
+        (@TensorProduct.{_, _, u₅} $R $instR
+          (@TensorProduct.{_, u₃, u₄} $R $instR $N₁ $M₂ $instN₁ $instM₂ $instRN₁ $instRM₂)
+            $M₃ $c $instM₃ $d $instRM₃) _ _ $g $h) => do
+    trace[debug] "hello again"
+    assumeInstancesCommute
+    match e with
+    | ~q((TensorProduct.assoc «$R» «$N₁» «$M₂» «$M₃»).symm.toLinearMap ∘ₗ ($f₁ ⊗ₘ $f₂₃)) => do
+      have ret : Lean.Meta.Simp.StepQ e :=
+        .visit (.mk q((($f₁ ⊗ₘ id) ⊗ₘ id) ∘ₗ
+            (TensorProduct.assoc _ _ _ _).symm.toLinearMap ∘ₗ (id ⊗ₘ $f₂₃))
+          (some q(asssoc_symm_comp_map ..)))
+      if ← Lean.Meta.isLevelDefEq u₁ u₃ then
+        have : QuotedLevelDefEq u₁ u₃ := ⟨⟩
+        match ← isDefEqQ (u := u₁) M₁ N₁ with
+        | .defEq _ =>
+          match ← isDefEqQ («α» := q($M₁ →ₗ[$R] $M₁)) f₁ q(@id $R $M₁ _ _ _) with
+          | .defEq _ => return .continue
+          | .notDefEq => return ret
+        | .notDefEq => return ret
+      else return ret
+    | _ => return .continue
+  | _, _ => return .continue
+
+set_option trace.debug true in
+lemma asssoc_symm_comp_map'
+    (f₁ : M₁ →ₗ[R] N₁) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
+    α⁻¹ ∘ₗ (f₁ ⊗ₘ f₂₃) = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) := by
+  simp only [asssoc_symm_comp_map_simproc]
 
 -- loops
 lemma asssoc_symm_comp_map_assoc (f₁ : M₁ →ₗ[R] N₁)
@@ -452,13 +531,38 @@ lemma map_counit_comp_comul_right_assoc [Coalgebra R M] (f : M →ₗ[R] M') (g 
 --   congr 1
 --   simp_rw [LinearMap.comp_assoc, foo₈]
 
+-- @[coassoc_simps]
+-- lemma foo₉ [Coalgebra R M] (f : M →ₗ[R] N) (g : M →ₗ[R] P) :
+--     (g ⊗ₘ (TensorProduct.comm R M N).toLinearMap) ∘ₗ
+--       α ∘ₗ (((TensorProduct.comm R M M).toLinearMap ∘ₗ δ) ⊗ₘ f) ∘ₗ δ =
+--     (g ⊗ₘ (f ⊗ₘ .id)) ∘ₗ α ∘ₗ δ ⊗ₘ LinearMap.id ∘ₗ
+--       (TensorProduct.comm R M M).toLinearMap ∘ₗ δ := by
+--   rw [← symm_comp_map_assoc, ← LinearMap.lTensor_def, ← Coalgebra.coassoc, ← f.comp_id,
+--     TensorProduct.map_comp, ← LinearMap.rTensor_def]
+--   simp only [← LinearMap.comp_assoc]
+--   congr 2
+--   ext
+--   rfl
+
+-- @[coassoc_simps]
+-- lemma foo₉_assoc [Coalgebra R M] (f : M →ₗ[R] N) (g : M →ₗ[R] P) (h : Q →ₗ[R] M) :
+--     (g ⊗ₘ (TensorProduct.comm R M N).toLinearMap) ∘ₗ
+--       (TensorProduct.assoc R _ _ _).toLinearMap ∘ₗ
+--         (((TensorProduct.comm R M M).toLinearMap ∘ₗ δ) ⊗ₘ f) ∘ₗ δ ∘ₗ h =
+--     (g ⊗ₘ (f ⊗ₘ .id)) ∘ₗ α ∘ₗ δ ⊗ₘ LinearMap.id ∘ₗ
+--       (TensorProduct.comm R M M).toLinearMap ∘ₗ δ ∘ₗ h := by
+--   simp_rw [← LinearMap.comp_assoc]
+--   congr 1
+--   simp only [LinearMap.comp_assoc, foo₉]
+
+-- Should this be tagged? This pushes `α` inwards with a cost of a `comm` at somewhere even deeper
 @[coassoc_simps]
-lemma foo₉ [Coalgebra R M] (f : M →ₗ[R] N) (g : M →ₗ[R] P) :
-    (g ⊗ₘ (TensorProduct.comm R M N).toLinearMap) ∘ₗ
+lemma assoc_comp_map_comm_comp_comul_comp_comul [Coalgebra R M] (f : M →ₗ[R] N) :
       α ∘ₗ (((TensorProduct.comm R M M).toLinearMap ∘ₗ δ) ⊗ₘ f) ∘ₗ δ =
-    (g ⊗ₘ (f ⊗ₘ .id)) ∘ₗ α ∘ₗ δ ⊗ₘ LinearMap.id ∘ₗ
+      (.id ⊗ₘ ((.id ⊗ₘ f) ∘ₗ (TensorProduct.comm R _ _).toLinearMap)) ∘ₗ α ∘ₗ δ ⊗ₘ LinearMap.id ∘ₗ
       (TensorProduct.comm R M M).toLinearMap ∘ₗ δ := by
-  rw [← symm_comp_map_assoc, ← LinearMap.lTensor_def, ← Coalgebra.coassoc, ← f.comp_id,
+  rw [← symm_comp_map_assoc, ← LinearMap.lTensor_def, ← LinearMap.lTensor_def,
+    ← LinearMap.lTensor_def, ← Coalgebra.coassoc, ← f.comp_id,
     TensorProduct.map_comp, ← LinearMap.rTensor_def]
   simp only [← LinearMap.comp_assoc]
   congr 2
@@ -466,94 +570,13 @@ lemma foo₉ [Coalgebra R M] (f : M →ₗ[R] N) (g : M →ₗ[R] P) :
   rfl
 
 @[coassoc_simps]
-lemma foo₉_assoc [Coalgebra R M] (f : M →ₗ[R] N) (g : M →ₗ[R] P) (h : Q →ₗ[R] M) :
-    (g ⊗ₘ (TensorProduct.comm R M N).toLinearMap) ∘ₗ
-      (TensorProduct.assoc R _ _ _).toLinearMap ∘ₗ
-        (((TensorProduct.comm R M M).toLinearMap ∘ₗ δ) ⊗ₘ f) ∘ₗ δ ∘ₗ h =
-    (g ⊗ₘ (f ⊗ₘ .id)) ∘ₗ α ∘ₗ δ ⊗ₘ LinearMap.id ∘ₗ
+lemma assoc_comp_map_comm_comp_comul_comp_comul_assoc
+    [Coalgebra R M] (f : M →ₗ[R] N) (h : Q →ₗ[R] M) :
+    α ∘ₗ (((TensorProduct.comm R M M).toLinearMap ∘ₗ δ) ⊗ₘ f) ∘ₗ δ ∘ₗ h =
+    (.id ⊗ₘ ((.id ⊗ₘ f) ∘ₗ (TensorProduct.comm R _ _).toLinearMap)) ∘ₗ α ∘ₗ δ ⊗ₘ LinearMap.id ∘ₗ
       (TensorProduct.comm R M M).toLinearMap ∘ₗ δ ∘ₗ h := by
   simp_rw [← LinearMap.comp_assoc]
   congr 1
-  simp only [LinearMap.comp_assoc, foo₉]
-
-lemma comp_assoc_symm (f₁ : M →ₗ[R] N) (f₂ : N →ₗ[R] P) (f₃ : P →ₗ[R] Q) :
-    f₃ ∘ₗ (f₂ ∘ₗ f₁) = (f₃ ∘ₗ f₂) ∘ₗ f₁ := by simp only [coassoc_simps]
-
-lemma map_comp_left (f₁ : M →ₗ[R] N) (f₂ : N →ₗ[R] P) (g : M' →ₗ[R] N') :
-    map (f₂ ∘ₗ f₁) g = map f₂ .id ∘ₗ map f₁ g := by simp only [coassoc_simps]
-
-lemma map_comp_right (f₁ : M →ₗ[R] N) (f₂ : N →ₗ[R] P) (g : M' →ₗ[R] N') :
-    map g (f₂ ∘ₗ f₁) = map .id f₂ ∘ₗ map g f₁ := by simp only [coassoc_simps]
-
-lemma map_comul_right_comp_comul (f : A →ₗ[R] M) :
-    map f δ ∘ₗ δ = α ∘ₗ (f ▷ A) ▷ A ∘ₗ δ ▷ A ∘ₗ δ := by
-  simp only [coassoc_simps]
-
-lemma map_comul_right_comp_comul_assoc (f : A →ₗ[R] M) (h : M ⊗[R] (A ⊗[R] A) →ₗ[R] P) :
-    (h ∘ₗ map f δ) ∘ₗ δ = h ∘ₗ α ∘ₗ (f ▷ A) ▷ A ∘ₗ δ ▷ A ∘ₗ δ := by
-  simp only [coassoc_simps]
-
-lemma map_comp_comul_right_comp_comul (f : A →ₗ[R] M) (g : A ⊗[R] A →ₗ[R] N) :
-    map f (g ∘ₗ δ) ∘ₗ δ = M ◁ g ∘ₗ α ∘ₗ (f ▷ A) ▷ A ∘ₗ δ ▷ A ∘ₗ δ := by
-  simp only [coassoc_simps]
-
-lemma map_comp_comul_right_comp_comul_assoc
-    (f : A →ₗ[R] M) (g : A ⊗[R] A →ₗ[R] N) (h : M ⊗[R] N →ₗ[R] P) :
-    (h ∘ₗ map f (g ∘ₗ δ)) ∘ₗ δ = h ∘ₗ M ◁ g ∘ₗ α ∘ₗ (f ▷ A) ▷ A ∘ₗ δ ▷ A ∘ₗ δ := by
-  simp only [coassoc_simps]
-
-lemma map_map (f₁ : M →ₗ[R] N) (f₂ : N →ₗ[R] P) (g₁ : M' →ₗ[R] N') (g₂ : N' →ₗ[R] P') :
-    map f₂ g₂ ∘ₗ map f₁ g₁ = map (f₂ ∘ₗ f₁) (g₂ ∘ₗ g₁) := by
-  simp only [coassoc_simps]
-
-lemma map_map_assoc (f₁ : M →ₗ[R] N) (f₂ : N →ₗ[R] P) (g₁ : M' →ₗ[R] N') (g₂ : N' →ₗ[R] P')
-    (h : P ⊗[R] P' →ₗ[R] Q) :
-    (h ∘ₗ map f₂ g₂) ∘ₗ map f₁ g₁ = h ∘ₗ map (f₂ ∘ₗ f₁) (g₂ ∘ₗ g₁) := by
-  simp only [coassoc_simps]
-
-lemma map_id_id : map (.id) (.id) = (.id : M ⊗[R] N →ₗ[R] _) := by
-  simp only [coassoc_simps]
-
-lemma map_map_comp_assoc_eq_assoc (f : M →ₗ[R] M') (g : N →ₗ[R] N') (h : P →ₗ[R] P')
-    (i : M' ⊗[R] (N' ⊗[R] P') →ₗ[R] Q) :
-    (i ∘ₗ map f (map g h)) ∘ₗ α = i ∘ₗ α ∘ₗ map (map f g) h := by
-  simp only [coassoc_simps]
-
-lemma map_map_comp_assoc_eq_assoc' (f : M →ₗ[R] M') (g : N →ₗ[R] N') (h : P →ₗ[R] P')
-    (i₁ : M' ⊗[R] Q' →ₗ[R] Q) (i₂ : N' ⊗[R] P' →ₗ[R] Q') :
-    (i₁ ∘ₗ map f (i₂ ∘ₗ map g h)) ∘ₗ α = i₁ ∘ₗ M' ◁ i₂ ∘ₗ α ∘ₗ map (map f g) h := by
-  simp only [coassoc_simps]
-
-lemma map_map_comp_assoc_eq_assoc'' (f : M →ₗ[R] M') (g : N →ₗ[R] N') (h : P →ₗ[R] P')
-    (i₂ : N' ⊗[R] P' →ₗ[R] Q') :
-    map f (i₂ ∘ₗ map g h) ∘ₗ α = M' ◁ i₂ ∘ₗ α ∘ₗ map (map f g) h := by
-  simp only [coassoc_simps]
-
-lemma map_map_comp_assoc_symm_eq_assoc (f : M →ₗ[R] M') (g : N →ₗ[R] N') (h : P →ₗ[R] P')
-    (i : (M' ⊗[R] N') ⊗[R] P' →ₗ[R] Q) :
-    (i ∘ₗ map (map f g) h) ∘ₗ α⁻¹ = i ∘ₗ α⁻¹ ∘ₗ map f (map g h) := by
-  simp only [coassoc_simps]
-
-lemma map_map_comp_assoc_symm_eq_assoc' (f : M →ₗ[R] M') (g : N →ₗ[R] N') (h : P →ₗ[R] P')
-    (i₁ : Q' ⊗[R] P' →ₗ[R] Q) (i₂ : M' ⊗[R] N' →ₗ[R] Q') :
-    (i₁ ∘ₗ map (i₂ ∘ₗ map f g) h) ∘ₗ α⁻¹ =
-      i₁ ∘ₗ i₂ ▷ P' ∘ₗ α⁻¹ ∘ₗ map f (map g h) := by
-  simp only [coassoc_simps]
-
-lemma map_map_comp_assoc_symm_eq_assoc'' (f : M →ₗ[R] M') (g : N →ₗ[R] N') (h : P →ₗ[R] P')
-    (i₂ : M' ⊗[R] N' →ₗ[R] Q') :
-    map (i₂ ∘ₗ map f g) h ∘ₗ α⁻¹ = i₂ ▷ P' ∘ₗ α⁻¹ ∘ₗ map f (map g h) := by
-  simp only [coassoc_simps]
-
-open Lean.Parser.Tactic in
-/-- `coassoc_simps` reassociates attempts to replace `x` by
-`x₁ ⊗ₜ x₂` via linearity. This is an implementation detail that is used to set up tensor products
-of coalgebras, bialgebras, and hopf algebras, and shouldn't be relied on downstream. -/
-scoped macro "coassoc_simps" : tactic =>
-  `(tactic|
-    ( simp only [coassoc_simps]
-      simp only [coassoc_cleanup_simps]
-      repeat congr 1; guard_goal_nums 1
-      ext; rfl))
+  simp only [LinearMap.comp_assoc, assoc_comp_map_comm_comp_comul_comp_comul]
 
 end Coalgebra
