@@ -3,7 +3,7 @@ Copyright (c) 2025 Patrick Luo. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Luo
 -/
-import Toric.Mathlib.Algebra.AffineMonoid.Embedding
+import Mathlib.Algebra.AffineMonoid.Embedding
 import Toric.ToricVariety.Defs
 
 /-!

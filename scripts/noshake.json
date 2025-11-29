@@ -1,7 +1,7 @@
 {"ignore":
  {"Toric.Util.TrackSorry": ["Init", "Mathlib.Init"],
   "Toric.ToricVariety.FromMonoid":
-  ["Toric.Mathlib.Algebra.AffineMonoid.Embedding"],
+  ["Mathlib.Algebra.AffineMonoid.Embedding"],
   "Toric.ToricIdeal": ["Toric.Mathlib.AlgebraicGeometry.Scheme"],
   "Toric.Mathlib.RingTheory.Coalgebra.SimpAttr":
   ["Init",

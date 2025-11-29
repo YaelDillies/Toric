@@ -92,22 +92,21 @@ variable (R M A) in
 /-- `MonoidAlgebra.lift` as a `MulEquiv`. -/
 def liftMulEquiv : (M →* A) ≃* (MonoidAlgebra R M →ₐ[R] A) where
   __ := lift R M A
-  map_mul' f g := by ext; simp
+  map_mul' f g := by ext; simp [AlgHom.convMul_apply]
 
 @[simp]
 lemma convMul_algHom_single (f g : MonoidAlgebra R M →ₐ[R] A) (x : M) :
-    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
-  simp [-AlgHom.coe_toLinearMap, ← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_mul]
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by simp [AlgHom.convMul_apply]
 
 end Algebra
 
 variable [Bialgebra R A]
 
 @[simp]
-lemma convMul_bialgHom_single [CommMonoid M] (f g : MonoidAlgebra R M →ₐc[R] A)
-    (x : M) : (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
+lemma convMul_bialgHom_single [CommMonoid M] (f g : MonoidAlgebra R M →ₐc[R] A) (x : M) :
+    (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
   simp [← BialgHom.toCoalgHom_apply, ← CoalgHom.coe_toLinearMap, ← CoalgHom.toLinearMap_eq_coe,
-    -LinearMap.coe_coe, BialgHom.toLinearMap_mul]
+    -LinearMap.coe_coe, BialgHom.toLinearMap_convMul]
 
 end CommSemiring
 
@@ -297,13 +296,13 @@ variable [CommSemiring A]
 @[simp]
 lemma convMul_algHom_single [Algebra R A] [AddMonoid M] (f g : R[M] →ₐ[R] A) (x : M) :
     (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
-  simp [-AlgHom.coe_toLinearMap, ← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_mul]
+  simp [-AlgHom.coe_toLinearMap, ← AlgHom.toLinearMap_apply, AlgHom.toLinearMap_convMul]
 
 @[simp]
 lemma convMul_bialgHom_single [Bialgebra R A] [AddCommMonoid M] (f g : R[M] →ₐc[R] A) (x : M) :
     (f * g) (single x 1) = f (single x 1) * g (single x 1) := by
   simp [← BialgHom.toCoalgHom_apply, ← CoalgHom.coe_toLinearMap, ← CoalgHom.toLinearMap_eq_coe,
-    -LinearMap.coe_coe, BialgHom.toLinearMap_mul]
+    -LinearMap.coe_coe, BialgHom.toLinearMap_convMul]
 
 end CommSemiring
 

@@ -7,6 +7,7 @@ import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
 import Toric.Mathlib.AlgebraicGeometry.Pullbacks
+import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes
@@ -66,6 +67,7 @@ noncomputable abbrev algSpec : (CommAlgCat R)ᵒᵖ ⥤ Over (Spec R) :=
   (commAlgCatEquivUnder R).op.functor ⋙ (Over.opEquivOpUnder R).inverse ⋙ Over.post Scheme.Spec
 
 variable (R) in
+/-- The Gamma functor as a functor from schemes over `Spec R` to `R`-algebras. -/
 noncomputable abbrev algΓ : Over (Spec R) ⥤ (CommAlgCat R)ᵒᵖ :=
   Over.post Γ.rightOp ⋙ Over.map (ΓSpecIso R).inv.op ⋙
     (Over.opEquivOpUnder R).functor ⋙ (commAlgCatEquivUnder R).inverse.op
@@ -101,30 +103,25 @@ noncomputable instance braided_algSpec : (algSpec R).Braided := .ofChosenFiniteP
   rfl
 
 @[simp]
-lemma prodComparisonIso_algSpec_hom_left (A B : (CommAlgCat R)ᵒᵖ) :
-    (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).hom.left =
+lemma prodComparison_algSpec_left (A B : (CommAlgCat R)ᵒᵖ) :
+    (CartesianMonoidalCategory.prodComparison (algSpec R) A B).left =
       (pullbackSpecIso R A.unop B.unop).inv := rfl
 
 @[simp]
 lemma prodComparisonIso_algSpec_inv_left (A B : (CommAlgCat R)ᵒᵖ) :
     (CartesianMonoidalCategory.prodComparisonIso (algSpec R) A B).inv.left =
       (pullbackSpecIso R A.unop B.unop).hom := by
-  rw [← Iso.comp_inv_eq_id, ← prodComparisonIso_algSpec_hom_left, ← Over.comp_left,
-    Iso.inv_hom_id, Over.id_left]
+  rw [← Iso.comp_inv_eq_id, ← prodComparison_algSpec_left, ← Over.comp_left,
+    ← CartesianMonoidalCategory.prodComparisonIso_hom, Iso.inv_hom_id, Over.id_left]
 
 lemma preservesTerminalIso_algSpec :
-  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)) =
-    Over.isoMk (Iso.refl (Spec R)) (by dsimp; simp [MonoidalCategoryStruct.tensorUnit]) := by
+    (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)) =
+      Over.isoMk (Iso.refl (Spec R)) (by dsimp; simp [MonoidalCategoryStruct.tensorUnit]) := by
   ext1; exact CartesianMonoidalCategory.toUnit_unique _ _
 
 @[simp]
 lemma preservesTerminalIso_algSpec_inv_left :
-  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).inv.left = 𝟙 (Spec R) := by
-  simp [preservesTerminalIso_algSpec]
-
-@[simp]
-lemma preservesTerminalIso_algSpec_hom_left :
-  (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).hom.left = 𝟙 (Spec R) := by
+    (CartesianMonoidalCategory.preservesTerminalIso (algSpec R)).inv.left = 𝟙 (Spec R) := by
   simp [preservesTerminalIso_algSpec]
 
 /-- `Spec` is full on `R`-algebras. -/
@@ -146,6 +143,17 @@ variable (R) in
 /-- `Spec` as a functor from `R`-bialgebras to monoid schemes over `Spec R`. -/
 noncomputable abbrev bialgSpec : (CommBialgCat R)ᵒᵖ ⥤ Mon (Over <| Spec R) :=
   (commBialgCatEquivComonCommAlgCat R).functor.leftOp ⋙ (algSpec R).mapMon
+
+/-- `Spec` is full on `R`-bialgebras. -/
+instance bialgSpec.instFull : (bialgSpec R).Full := inferInstance
+
+/-- `Spec` is faithful on `R`-bialgebras. -/
+instance bialgSpec.instFaithful : (bialgSpec R).Faithful := inferInstance
+
+/-- `Spec` is fully faithful on `R`-bialgebras, with inverse `Gamma`. -/
+noncomputable def bialgSpec.fullyFaithful : (bialgSpec R).FullyFaithful :=
+  (commBialgCatEquivComonCommAlgCat R).fullyFaithfulFunctor.leftOp.comp
+    algSpec.fullyFaithful.mapMon
 
 variable (R) in
 /-- `Spec` as a functor from `R`-Hopf algebras to group schemes over `Spec R`. -/
@@ -240,7 +248,8 @@ instance {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [
     (f : S →ₐ[R] T) : (Spec.map (CommRingCat.ofHom f.toRingHom)).IsOver Spec(R) where
   comp_over := by simp [specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
 
-def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialgebra R S]
+/-- `Spec.map` as a `MulEquiv` on hom-sets. -/
+def Spec.mapMulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialgebra R S]
     [Algebra R T] :
     (S →ₐ[R] T) ≃* (Spec(T).asOver Spec(R) ⟶ Spec(S).asOver Spec(R)) where
   toFun f := (Spec.map (CommRingCat.ofHom f.toRingHom)).asOver _
@@ -255,7 +264,7 @@ def Spec.mulEquiv {R S T : Type u} [CommRing R] [CommRing S] [CommRing T] [Bialg
   right_inv f := by ext1; simp
   map_mul' f g := by
     ext1
-    dsimp [AlgHom.mul_def, AlgHom.comp_toRingHom, Hom.mul_def]
+    dsimp [AlgHom.convMul_def, AlgHom.comp_toRingHom, Hom.mul_def]
     simp only [← Category.assoc, Spec.map_comp, AlgebraicGeometry.Scheme.mul_left]
     congr 1
     rw [← Iso.comp_inv_eq]
@@ -334,7 +343,7 @@ lemma pullbackSpecIso'_symmetry [Algebra R T] :
 instance [Algebra R T] : (pullbackSymmetry .. ≪≫ pullbackSpecIso' R S T).hom.IsOver Spec(S) where
   comp_over := by
     rw [← cancel_epi (pullbackSymmetry .. ≪≫ pullbackSpecIso' ..).inv,
-      canonicallyOverPullback_over]
+      Scheme.canonicallyOverPullback_over]
     simp [specOverSpec_over, pullbackSpecIso']
 
 variable (R S T) in
@@ -372,10 +381,10 @@ instance [Bialgebra R T] :
     ext
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
-    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _), pullbackSpecIso',
-        specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
+    · simp [Scheme.monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+        pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
         Bialgebra.TensorProduct.counitAlgHom_def, AlgHom.comp_toRingHom, RingHom.comp_assoc]
-    · simp [monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
+    · simp [Scheme.monObjAsOverPullback_one, algSpec_ε_left (R := CommRingCat.of _),
         pullbackSpecIso', specOverSpec_over, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
         ← AlgHom.coe_restrictScalars R (Bialgebra.counitAlgHom S _), - AlgHom.coe_restrictScalars,
         ← AlgHom.comp_toRingHom, Bialgebra.counitAlgHom_comp_includeRight]
@@ -385,14 +394,14 @@ instance [Bialgebra R T] :
     rw [← cancel_mono (pullbackSpecIso' ..).inv]
     ext
     · have : includeLeftRingHom = algebraMap S (S ⊗[R] T) := rfl
-      simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
+      simp [Scheme.monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, ← Spec.map_comp,
         ← CommRingCat.ofHom_comp, OverClass.asOver, AlgebraicGeometry.Scheme.mul_left,
         this, Hom.asOver, OverClass.asOverHom, pullback.condition]
       rfl
     · convert congr($(μ_pullback_left_fst R S T) ≫ (pullbackSpecIso R T T).hom ≫
         Spec.map (CommRingCat.ofHom (Bialgebra.comulAlgHom R T).toRingHom)) using 1
-      · simp [monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over, OverClass.asOver,
-          Hom.asOver, OverClass.asOverHom, mul_left]
+      · simp [Scheme.monObjAsOverPullback_mul, pullbackSpecIso', specOverSpec_over,
+          OverClass.asOver, Hom.asOver, OverClass.asOverHom, mul_left]
       · simp [pullbackSpecIso', specOverSpec_over, OverClass.asOver, Hom.asOver, ← Spec.map_comp,
           OverClass.asOverHom, mul_left, ← CommRingCat.ofHom_comp, ← Bialgebra.comul_includeRight]
 
@@ -416,10 +425,16 @@ lemma essImage_algSpec {G : Over <| Spec R} : (algSpec R).essImage G ↔ IsAffin
   rw [Functor.essImage_overPost] -- not sure why `simp` doesn't use this already
   simp
 
+/-- The essential image of `R`-bialgebras under `Spec` is precisely affine monoid schemes over
+`Spec R`. -/
+@[simp]
+lemma essImage_bialgSpec {G : Mon <| Over <| Spec R} :
+    (bialgSpec R).essImage G ↔ IsAffine G.X.left := by simp
+
 /-- The essential image of `R`-Hopf algebras under `Spec` is precisely affine group schemes over
 `Spec R`. -/
 @[simp]
-lemma essImage_hopfSpec {G : Grp (Over <| Spec R)} :
+lemma essImage_hopfSpec {G : Grp <| Over <| Spec R} :
     (hopfSpec R).essImage G ↔ IsAffine G.X.left := by simp
 
 end rightEdge

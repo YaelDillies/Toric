@@ -4,7 +4,7 @@
 \begin{lemma}[Multivariate Laurent polynomials are an integral domain]
   \label{0-mv-laurent-poly-domain}
   \uses{}
-  \lean{AddMonoidAlgebra.instIsDomain}
+  \lean{AddMonoidAlgebra.instIsDomainOfIsCancelAddOfUniqueSums}
   \leanok
 
   Multivariate Laurent polynomials over an integral domain are an integral domain.
@@ -19,7 +19,7 @@
 
 \begin{definition}[Affine monoid]
   \label{0-aff-mon}
-  \lean{AddCancelCommMonoid, AddMonoid.FG, AddMonoid.IsTorsionFree}
+  \lean{AddCancelCommMonoid, AddMonoid.FG, IsAddTorsionFree}
   \leanok
 
   An \emph{affine monoid} is a finitely generated commutative monoid which is:
@@ -33,7 +33,7 @@
 \begin{proposition}[Embedding an affine monoid inside a lattice]
   \label{0-embed-aff-mon}
   \uses{0-aff-mon}
-  \lean{AffineMonoid.embedding, AffineMonoid.embedding_injective}
+  \lean{AffineAddMonoid.embedding, AffineAddMonoid.embedding_injective}
   \leanok
 
   If $M$ is an affine monoid, then $M$ can be embedded inside $\Z^n$ for some $n$.
