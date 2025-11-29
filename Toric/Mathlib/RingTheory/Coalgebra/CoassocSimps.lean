@@ -11,47 +11,6 @@ import Toric.Mathlib.RingTheory.Coalgebra.SimpAttr
 # Tactic to reassociate comultiplication in a coalgebra
 -/
 
-section
-
-variable {R : Type*} [Ring R]
-
-def andrewFunc {R : Type*} [Ring R] (x y z : R) : R := sorry
-lemma andrewFunc_spec (x y z : R) : andrewFunc x y z = x * andrewFunc 1 y z := sorry
-
-open Qq in
-simproc_decl andrewFunc_one (andrewFunc _ _ _) := .ofQ fun u t e => do
-  match u, t, e with
-  | .succ u, ~q($a), ~q(@andrewFunc «$a» $inst $x $y $z) => do
-    match ← isDefEqQ x q(1) with
-    | .defEq _ => return .continue
-    | .notDefEq => do
-      return .visit (.mk (q($x * andrewFunc 1 $y $z)) (some q(andrewFunc_spec $x $y $z)))
-  | _, _, _ => return .continue
-
-example : andrewFunc (2 : R) 2 3 = 2 * andrewFunc 1 2 3 := by
-  simp [andrewFunc_one]
-
-/-- error: `simp` made no progress -/
-#guard_msgs in
-example : andrewFunc (1 : R) 2 3 = sorry := by
-  simp
-
-/--
-warning: Possibly looping simp theorem: `andrewFunc_spec`
-
-Hint: You can disable a simp theorem from the default simp set by passing `- theoremName` to `simp`.
----
-error: Tactic `simp` failed with a nested error:
-maximum recursion depth has been reached
-use `set_option maxRecDepth <num>` to increase limit
-use `set_option diagnostics true` to get diagnostic information
--/
-#guard_msgs in
-example : andrewFunc (2 : R) 2 3 = 2 * andrewFunc 1 2 3 := by
-  simp [andrewFunc_spec]
-
-end
-
 open TensorProduct
 
 namespace Coalgebra
