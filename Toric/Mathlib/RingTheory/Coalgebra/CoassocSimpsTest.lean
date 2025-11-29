@@ -43,7 +43,7 @@ theorem LinearMap.lTensor_mul'_comp_assoc_comp_rTensor_comul_of
       simp only [h, map_counit_comp_comul_left, coassoc_simps]
     _ = λ ∘ₗ ε ⊗ₘ id ∘ₗ α ∘ₗ (μ ⊗ₘ id ∘ₗ α⁻¹ ∘ₗ id ⊗ₘ δ) ⊗ₘ id ∘ₗ α⁻¹ ∘ₗ id ⊗ₘ δ := by
       rw [← h]
-      simp only [lid_tensor, coassoc_simps, asssoc_symm_comp_map δ, mul'_comp_map_lid_comp]
+      simp only [lid_tensor, coassoc_simps, assoc_symm_comp_map δ, mul'_comp_map_lid_comp]
     _ = λ ∘ₗ ε ⊗ₘ δ ∘ₗ (id ⊗ₘ μ ∘ₗ α ∘ₗ δ ⊗ₘ id) := by
       simp only [assoc_tensor, h, coassoc_simps]
     _ = λ ∘ₗ id ⊗ₘ (δ ∘ₗ μ) ∘ₗ α ∘ₗ (ε ⊗ₘ id ∘ₗ δ) ⊗ₘ id := by

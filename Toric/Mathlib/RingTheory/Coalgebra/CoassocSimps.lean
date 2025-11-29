@@ -157,7 +157,7 @@ lemma TensorProduct.map_map_comp_assoc_symm_eq_assoc
   rw [← LinearMap.comp_assoc, ← LinearMap.comp_assoc, TensorProduct.map_map_comp_assoc_symm_eq]
 
 @[coassoc_simps]
-lemma asssoc_comp_map_map_comp
+lemma assoc_comp_map_map_comp
     (f₁ : M₁ →ₗ[R] N₁) (f₂ : M₂ →ₗ[R] N₂) (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) :
     α ∘ₗ (((f₁ ⊗ₘ f₂) ∘ₗ f₁₂) ⊗ₘ f₃) = (f₁ ⊗ₘ (f₂ ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ .id) := by
   rw [← LinearMap.comp_assoc, map_map_comp_assoc_eq]
@@ -165,41 +165,41 @@ lemma asssoc_comp_map_map_comp
   rfl
 
 @[coassoc_simps]
-lemma asssoc_comp_map_map_comp_assoc
+lemma assoc_comp_map_map_comp_assoc
     (f₁ : M₁ →ₗ[R] N₁) (f₂ : M₂ →ₗ[R] N₂) (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂)
     (f : M →ₗ[R] M ⊗[R] M₃) :
     α ∘ₗ (((f₁ ⊗ₘ f₂) ∘ₗ f₁₂) ⊗ₘ f₃) ∘ₗ f =
       (f₁ ⊗ₘ (f₂ ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ .id) ∘ₗ f := by
-  simp only [← LinearMap.comp_assoc, asssoc_comp_map_map_comp]
+  simp only [← LinearMap.comp_assoc, assoc_comp_map_map_comp]
 
 @[coassoc_simps]
-lemma asssoc_comp_map_comp (f₃' : N →ₗ[R] M₃) (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) :
+lemma assoc_comp_map_comp (f₃' : N →ₗ[R] M₃) (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) :
     α ∘ₗ (f₁₂ ⊗ₘ (f₃ ∘ₗ f₃')) = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ f₃') := by
   rw [← LinearMap.comp_assoc, map_map_comp_assoc_eq]
   simp only [coassoc_simps]
 
 @[coassoc_simps]
-lemma asssoc_comp_map_comp_assoc (f₃' : N →ₗ[R] M₃) (f₃ : M₃ →ₗ[R] N₃)
+lemma assoc_comp_map_comp_assoc (f₃' : N →ₗ[R] M₃) (f₃ : M₃ →ₗ[R] N₃)
     (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) (f : P →ₗ[R] M ⊗[R] N) :
     α ∘ₗ (f₁₂ ⊗ₘ (f₃ ∘ₗ f₃')) ∘ₗ f = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ f₃') ∘ₗ f := by
-  rw [← LinearMap.comp_assoc, asssoc_comp_map_comp]
+  rw [← LinearMap.comp_assoc, assoc_comp_map_comp]
   simp only [coassoc_simps]
 
 -- loops
-lemma asssoc_comp_map (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) :
+lemma assoc_comp_map (f₃ : M₃ →ₗ[R] N₃) (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) :
     α ∘ₗ (f₁₂ ⊗ₘ f₃) = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ .id) := by
   rw [← LinearMap.comp_assoc, map_map_comp_assoc_eq]
   simp only [coassoc_simps]
 
 -- loops
-lemma asssoc_comp_map_assoc (f₃ : M₃ →ₗ[R] N₃)
+lemma assoc_comp_map_assoc (f₃ : M₃ →ₗ[R] N₃)
     (f₁₂ : M →ₗ[R] M₁ ⊗[R] M₂) (f : P →ₗ[R] M ⊗[R] M₃) :
     α ∘ₗ (f₁₂ ⊗ₘ f₃) ∘ₗ f = (.id ⊗ₘ (.id ⊗ₘ f₃)) ∘ₗ α ∘ₗ (f₁₂ ⊗ₘ .id) ∘ₗ f := by
-  rw [← LinearMap.comp_assoc, asssoc_comp_map]
+  rw [← LinearMap.comp_assoc, assoc_comp_map]
   simp only [coassoc_simps]
 
 @[coassoc_simps]
-lemma asssoc_symm_comp_map_map_comp
+lemma assoc_symm_comp_map_map_comp
     (f₁ : M₁ →ₗ[R] N₁) (f₂ : M₂ →ₗ[R] N₂) (f₃ : M₃ →ₗ[R] N₃) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
     α⁻¹ ∘ₗ (f₁ ⊗ₘ (f₂ ⊗ₘ f₃ ∘ₗ f₂₃)) = ((f₁ ⊗ₘ f₂) ⊗ₘ f₃) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) := by
   rw [← LinearMap.comp_assoc, map_map_comp_assoc_symm_eq]
@@ -207,35 +207,35 @@ lemma asssoc_symm_comp_map_map_comp
   rfl
 
 @[coassoc_simps]
-lemma asssoc_symm_comp_map_map_comp_assoc
+lemma assoc_symm_comp_map_map_comp_assoc
     (f₁ : M₁ →ₗ[R] N₁) (f₂ : M₂ →ₗ[R] N₂) (f₃ : M₃ →ₗ[R] N₃) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃)
     (f : N →ₗ[R] M₁ ⊗[R] M) :
     α⁻¹ ∘ₗ (f₁ ⊗ₘ (f₂ ⊗ₘ f₃ ∘ₗ f₂₃)) ∘ₗ f = ((f₁ ⊗ₘ f₂) ⊗ₘ f₃) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) ∘ₗ f := by
-  simp only [← LinearMap.comp_assoc, asssoc_symm_comp_map_map_comp]
+  simp only [← LinearMap.comp_assoc, assoc_symm_comp_map_map_comp]
 
 @[coassoc_simps]
-lemma asssoc_symm_comp_map_comp
+lemma assoc_symm_comp_map_comp
     (f₁ : M₁ →ₗ[R] N₁) (f₁' : N →ₗ[R] M₁) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
     α⁻¹ ∘ₗ ((f₁ ∘ₗ f₁') ⊗ₘ f₂₃) = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (f₁' ⊗ₘ f₂₃) := by
   rw [← LinearMap.comp_assoc, map_map_comp_assoc_symm_eq]
   simp only [coassoc_simps]
 
 @[coassoc_simps]
-lemma asssoc_symm_comp_map_comp_assoc (f₁ : M₁ →ₗ[R] N₁) (f₁' : N →ₗ[R] M₁)
+lemma assoc_symm_comp_map_comp_assoc (f₁ : M₁ →ₗ[R] N₁) (f₁' : N →ₗ[R] M₁)
     (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) (f : P →ₗ[R] N ⊗[R] M) :
     α⁻¹ ∘ₗ ((f₁ ∘ₗ f₁') ⊗ₘ f₂₃) ∘ₗ f = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (f₁' ⊗ₘ f₂₃) ∘ₗ f := by
-  rw [← LinearMap.comp_assoc, asssoc_symm_comp_map_comp]
+  rw [← LinearMap.comp_assoc, assoc_symm_comp_map_comp]
   simp only [coassoc_simps]
 
 -- loops
-lemma asssoc_symm_comp_map
+lemma assoc_symm_comp_map
     (f₁ : M₁ →ₗ[R] N₁) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
     α⁻¹ ∘ₗ (f₁ ⊗ₘ f₂₃) = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) := by
   rw [← LinearMap.comp_assoc, map_map_comp_assoc_symm_eq]
   simp only [coassoc_simps]
 
 open Qq LinearMap in
-simproc_decl asssoc_symm_comp_map_simproc
+simproc_decl assoc_symm_comp_map_simproc
     ((TensorProduct.assoc _ _ _ _).symm.toLinearMap ∘ₗ (_ ⊗ₘ _)) := .ofQ fun u t e => do
   trace[debug] m!"hello\n{u}\n{t}\n{e}"
   match u, t with
@@ -253,7 +253,7 @@ simproc_decl asssoc_symm_comp_map_simproc
       have ret : Lean.Meta.Simp.StepQ e :=
         .visit (.mk q((($f₁ ⊗ₘ id) ⊗ₘ id) ∘ₗ
             (TensorProduct.assoc _ _ _ _).symm.toLinearMap ∘ₗ (id ⊗ₘ $f₂₃))
-          (some q(asssoc_symm_comp_map ..)))
+          (some q(assoc_symm_comp_map ..)))
       if ← Lean.Meta.isLevelDefEq u₁ u₃ then
         have : QuotedLevelDefEq u₁ u₃ := ⟨⟩
         match ← isDefEqQ (u := u₁) M₁ N₁ with
@@ -267,16 +267,16 @@ simproc_decl asssoc_symm_comp_map_simproc
   | _, _ => return .continue
 
 set_option trace.debug true in
-lemma asssoc_symm_comp_map'
+lemma assoc_symm_comp_map'
     (f₁ : M₁ →ₗ[R] N₁) (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) :
     α⁻¹ ∘ₗ (f₁ ⊗ₘ f₂₃) = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) := by
-  simp only [asssoc_symm_comp_map_simproc]
+  simp only [assoc_symm_comp_map_simproc]
 
 -- loops
-lemma asssoc_symm_comp_map_assoc (f₁ : M₁ →ₗ[R] N₁)
+lemma assoc_symm_comp_map_assoc (f₁ : M₁ →ₗ[R] N₁)
     (f₂₃ : M →ₗ[R] M₂ ⊗[R] M₃) (f : P →ₗ[R] M₁ ⊗[R] M) :
     α⁻¹ ∘ₗ (f₁ ⊗ₘ f₂₃) ∘ₗ f = ((f₁ ⊗ₘ .id) ⊗ₘ .id) ∘ₗ α⁻¹ ∘ₗ (.id ⊗ₘ f₂₃) ∘ₗ f := by
-  rw [← LinearMap.comp_assoc, asssoc_symm_comp_map]
+  rw [← LinearMap.comp_assoc, assoc_symm_comp_map]
   simp only [coassoc_simps]
 
 @[coassoc_simps]
