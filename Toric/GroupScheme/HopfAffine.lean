@@ -6,8 +6,6 @@ Authors: Yaël Dillies, Christian Merten, Michał Mrugała, Andrew Yang
 import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 import Mathlib.CategoryTheory.Monoidal.Cartesian.CommGrp_
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
-import Toric.Mathlib.AlgebraicGeometry.Pullbacks
-import Toric.Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 
 /-!
 # The equivalence between Hopf algebras and affine group schemes

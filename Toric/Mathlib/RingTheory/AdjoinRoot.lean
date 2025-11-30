@@ -1,6 +1,7 @@
 import Mathlib.RingTheory.AdjoinRoot
 
-open TensorProduct
+open Algebra TensorProduct
+open scoped Polynomial
 
 noncomputable section
 
@@ -8,64 +9,16 @@ namespace AdjoinRoot
 variable {R S T U : Type*} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
   [CommRing U] [Algebra R U] {p : Polynomial S}
 
-instance [Algebra.FiniteType R S] : Algebra.FiniteType R (AdjoinRoot p) := by
-  unfold AdjoinRoot; infer_instance
-
-section
-variable {q : Polynomial T} {u : Polynomial U}
-
-variable (p q) in
-def map (f : S →+* T) (h : p.map f = q) : AdjoinRoot p →+* AdjoinRoot q :=
-  lift ((algebraMap T _).comp f) (root q) (by
-    rw [← Polynomial.eval₂_map, ← Polynomial.aeval_def, aeval_eq, h, mk_self])
-
-@[simp] lemma map_of (f : S →+* T) (h) (s : S) : map p q f h ((of p) s) = f s := by simp [map]
-
-@[simp] lemma map_root (f : S →+* T) (h) : map p q f h (root p) = root q := by simp [map]
-
-variable (p q) in
-/-- `AdjoinRoot.map` as an `AlgHom`. -/
-def mapAlgHom (f : S →ₐ[R] T) (h : p.map f = q) : AdjoinRoot p →ₐ[R] AdjoinRoot q where
-  __ := map p q f h
-  commutes' r := by simp [map, AdjoinRoot.algebraMap_eq']
-
-variable (p q) in
-@[simp]
-lemma coe_mapAlgHom (f : S →ₐ[R] T) (h : p.map f = q) : ⇑(mapAlgHom p q f h) = map p q f h := rfl
-
-lemma mapAlgHom_comp_mapAlghom (f : S →ₐ[R] T) (g : T →ₐ[R] U) (hf hg) :
-    (mapAlgHom q u g hg).comp (mapAlgHom p q f hf) =
-    mapAlgHom p u (g.comp f) (by simp [AlgHom.comp_toRingHom, ← Polynomial.map_map, hf, hg]) := by
-  aesop
-
-variable (p q) in
-/-- `AdjoinRoot.map` as an `AlgEquiv`. -/
-def mapAlgEquiv (f : S ≃ₐ[R] T) (h : p.map f = q) : AdjoinRoot p ≃ₐ[R] AdjoinRoot q :=
-  .ofAlgHom
-    (mapAlgHom p q f h)
-    (mapAlgHom q p f.symm (by simp [← h, Polynomial.map_map, ← AlgEquiv.toRingHom_trans]))
-    (by ext <;> simp)
-    (by ext <;> simp)
-
-variable (p q) in
-@[simp]
-lemma coe_mapAlgEquiv (f : S ≃ₐ[R] T) (h : p.map f = q) : ⇑(mapAlgEquiv p q f h) = map p q f h :=
-  rfl
-
-end
-
-open Algebra TensorProduct
-
 -- TODO: get rid of rfl
 variable (p) in
-def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
-    (h : p.map includeRight.toRingHom = q) :
+def tensorAlgEquiv (p : S[X]) (q : (T ⊗[R] S)[X]) (h : p.map includeRight.toRingHom = q) :
     T ⊗[R] AdjoinRoot p ≃ₐ[T] AdjoinRoot q := by
-  refine .ofAlgHom (Algebra.TensorProduct.lift (algHom T T _) (mapAlgHom _ _ includeRight h) ?_)
-      (liftAlgHom _ (Algebra.TensorProduct.map (AlgHom.id T T)
+  refine .ofAlgHom
+    (Algebra.TensorProduct.lift (algHom T T _)
+      (mapAlgHom includeRight p q <| by exact h.symm.dvd) fun _ _ ↦ .all ..)
+    (liftAlgHom _ (Algebra.TensorProduct.map (AlgHom.id T T)
       (((Algebra.ofId S (AdjoinRoot p))).restrictScalars R)) (1 ⊗ₜ root _) ?_) ?_ ?_
-  · exact fun _ _ ↦ .all ..
-  · simp [← h]
+  · simp only [← h, AlgHom.toRingHom_eq_coe]
     rw [Polynomial.eval₂_map]
     change Polynomial.eval₂ ((Algebra.TensorProduct.map (AlgHom.id R T) _).comp _).toRingHom _ _ = _
     simp only [map_comp_includeRight, AlgHom.toRingHom_eq_coe, AlgHom.comp_toRingHom,
@@ -82,15 +35,10 @@ def tensorAlgEquiv (q : Polynomial (T ⊗[R] S))
     ext : 2 <;> simp [← AlgHom.toRingHom_eq_coe]
     rfl
 
-variable (p) in
-@[simp]
-lemma tensorAlgEquiv_root {q : Polynomial (T ⊗[R] S)}
-    {h : p.map includeRight.toRingHom = q} :
+@[simp] lemma tensorAlgEquiv_root (p : S[X]) (q : Polynomial (T ⊗[R] S)) (h) :
     tensorAlgEquiv p q h (1 ⊗ₜ root p) = root q := by simp [tensorAlgEquiv]
 
-variable (p) in
-@[simp]
-lemma tensorAlgEquiv_of (q : Polynomial (T ⊗[R] S)) (h : p.map includeRight.toRingHom = q) {x : S} :
+@[simp] lemma tensorAlgEquiv_of (p : S[X]) (q : Polynomial (T ⊗[R] S)) (h) {x : S} :
     tensorAlgEquiv p q h (1 ⊗ₜ of p x) = of q (1 ⊗ₜ x):= by simp [tensorAlgEquiv]
 
 end AdjoinRoot

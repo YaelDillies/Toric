@@ -7,6 +7,7 @@ import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.RingTheory.HopfAlgebra.GroupLike
 import Toric.GroupScheme.Torus
+import Toric.Mathlib.Algebra.GroupWithZero.Associated
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.RingTheory.AdjoinRoot
 
@@ -102,9 +103,10 @@ def counitAlgHom : SO2Ring R →ₐ[R] R := liftₐ 1 0 (by simp)
 @[simp] lemma counitAlgHom.apply_X : counitAlgHom (R := R) .X = 1 := by simp [counitAlgHom]
 @[simp] lemma counitAlgHom.apply_Y : counitAlgHom (R := R) .Y = 0 := by simp [counitAlgHom]
 
+attribute [-ext] AdjoinRoot.algHom_ext' in
 instance : Bialgebra R (SO2Ring R) := by
-  refine .ofAlgHom comulAlgHom counitAlgHom ?_ ?_ ?_ <;>
-    ext <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul] <;> ring
+  refine .ofAlgHom comulAlgHom counitAlgHom ?_ ?_ ?_ <;> ext
+    <;> simp [sub_tmul, tmul_sub, tmul_add, add_tmul] <;> ring
 
 @[simp] lemma comul_def : comul (R := R) (A := SO2Ring R) = comulAlgHom (R := R) := rfl
 @[simp] lemma counit_def : counit (R := R) (A := SO2Ring R) = counitAlgHom (R := R) := rfl
@@ -115,6 +117,7 @@ def antipodeAlgHom : SO2Ring R →ₐ[R] SO2Ring R := liftₐ .X (-.Y) (by simp)
 @[simp] lemma antipodeAlgHom_X : antipodeAlgHom (R := R) .X = X := by simp [antipodeAlgHom]
 @[simp] lemma antipodeAlgHom_Y : antipodeAlgHom (R := R) .Y = -.Y := by simp [antipodeAlgHom]
 
+attribute [-ext] AdjoinRoot.algHom_ext' in
 instance : HopfAlgebra R (SO2Ring R) := by
   refine .ofAlgHom antipodeAlgHom ?_ <| by ext <;> simp; ring_nf
   ext
@@ -144,6 +147,7 @@ private lemma complexEquivInv_single (a : Multiplicative ℤ) (b : ℂ) :
   simp [complexEquivInv, Algebra.smul_def]
 
 set_option allowUnsafeReducibility true in
+attribute [-ext] AdjoinRoot.algHom_ext' in
 attribute [local semireducible] MonoidAlgebra.single in
 private def complexEquivFun : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multiplicative ℤ) := by
   refine .ofAlgHom
@@ -163,6 +167,7 @@ private def complexEquivFun : SO2Ring ℂ →ₐc[ℂ] MonoidAlgebra ℂ (Multip
         smul_smul]
       module
 
+attribute [-ext] AdjoinRoot.algHom_ext' in
 /-- `SO2Ring ℂ` is isomorphic to Laurent series `ℂ[ℤ]`. -/
 def complexEquiv : SO2Ring ℂ ≃ₐc[ℂ] ℂ[ℤ] where
   __ := complexEquivFun
@@ -193,6 +198,7 @@ def complexEquiv : SO2Ring ℂ ≃ₐc[ℂ] ℂ[ℤ] where
 
 open Matrix
 
+attribute [-ext] AdjoinRoot.algHom_ext' in
 /-- The isomorphism between the `R-algebra` homomorphisms from `SO2Ring(R)` to `S` and the group
   `SO(2,S)`. -/
 def algHomMulEquiv : (SO2Ring R →ₐ[R] S) ≃* specialOrthogonalGroup (Fin 2) S where
@@ -220,7 +226,7 @@ variable (R S) in
 /-- `SO2Ring` is invariant under base change of algebras. -/
 def baseChangeAlgEquiv : S ⊗[R] SO2Ring R ≃ₐ[S] SO2Ring S :=
   (AdjoinRoot.tensorAlgEquiv _ _ rfl).trans <|
-    AdjoinRoot.mapAlgEquiv _ _ (polyEquivTensor' _ _).symm (by simp)
+    AdjoinRoot.mapAlgEquiv (polyEquivTensor' _ _).symm _ _ (by simp)
 
 @[simp]
 lemma baseChangeAlgEquiv_X : (baseChangeAlgEquiv R S) (1 ⊗ₜ X) = X := by
@@ -232,6 +238,7 @@ lemma baseChangeAlgEquiv_Y : (baseChangeAlgEquiv R S) (1 ⊗ₜ «Y») = «Y» :
   change (baseChangeAlgEquiv R S) (1 ⊗ₜ (AdjoinRoot.of _ _)) = AdjoinRoot.of _ _
   simp [baseChangeAlgEquiv]
 
+attribute [-ext] AdjoinRoot.algHom_ext' in
 variable (R S) in
 /-- `SO2Ring` is invariant under base change of bialgebras. -/
 def baseChangeBialgEquiv : S ⊗[R] SO2Ring R ≃ₐc[S] SO2Ring S :=
