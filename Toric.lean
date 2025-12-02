@@ -9,7 +9,6 @@ import Toric.Hopf.Diagonalisable
 import Toric.Hopf.GrpAlg
 import Toric.Imports
 import Toric.Mathlib.Algebra.Category.CommHopfAlgCat
-import Toric.Mathlib.Algebra.GroupWithZero.Associated
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.RingTheory.AdjoinRoot
 import Toric.Mathlib.RingTheory.Bialgebra.Convolution

@@ -7,7 +7,6 @@ import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.LinearAlgebra.UnitaryGroup
 import Mathlib.RingTheory.HopfAlgebra.GroupLike
 import Toric.GroupScheme.Torus
-import Toric.Mathlib.Algebra.GroupWithZero.Associated
 import Toric.Mathlib.Algebra.Polynomial.Bivariate
 import Toric.Mathlib.RingTheory.AdjoinRoot
 
