@@ -28,18 +28,26 @@ open scoped ConvolutionProduct RingTheory.LinearMap
 variable {R A C : Type*} [CommSemiring R]
 
 namespace HopfAlgebra
-variable [CommSemiring A] [HopfAlgebra R A]
+
+section noncommutative
+variable [Semiring A] [HopfAlgebra R A]
 
 lemma antipode_mul_antidistrib (a b : A) : antipode R (a * b) = antipode R b * antipode R a := by
   let α := antipode R ∘ₗ .mul' R A
   let β : A ⊗[R] A →ₗ[R] A := .mul' R A ∘ₗ map (antipode R) (antipode R) ∘ₗ TensorProduct.comm R A A
   suffices α = β from congr($this (a ⊗ₜ b))
   apply left_inv_eq_right_inv (a := LinearMap.mul' R A) <;> ext a b
-  · simp [α, ((ℛ R a).tmul (ℛ R b)).convMul_apply, ← Bialgebra.counit_mul, mul_comm b a,
+  · simp [α, ((ℛ R a).tmul (ℛ R b)).convMul_apply, ← Bialgebra.counit_mul, mul_comm,
       ← sum_antipode_mul_eq_algebraMap_counit ((ℛ R a).mul (ℛ R b))]
-  · simp [((ℛ R a).tmul (ℛ R b)).convMul_apply, mul_comm, mul_mul_mul_comm, Finset.sum_mul_sum,
-      ← Finset.sum_product', β, ← sum_mul_antipode_eq_algebraMap_counit (ℛ R a),
-      ← sum_mul_antipode_eq_algebraMap_counit (ℛ R b)]
+  · simp [β, ((ℛ R a).tmul (ℛ R b)).convMul_apply, ← sum_mul_antipode_eq_algebraMap_counit (ℛ R a),
+      Finset.mul_sum, ← mul_assoc, commutes]
+    simp [← sum_mul_antipode_eq_algebraMap_counit (ℛ R b), Finset.mul_sum, Finset.sum_mul,
+      ← Finset.sum_product', mul_assoc]
+
+end noncommutative
+
+section commutative
+variable [CommSemiring A] [HopfAlgebra R A]
 
 lemma antipode_mul_distrib (a b : A) : antipode R (a * b) = antipode R a * antipode R b := by
   rw [antipode_mul_antidistrib, mul_comm]
@@ -52,6 +60,7 @@ variable (R A) in
 def antipodeAlgHom : A →ₐ[R] A := .ofLinearMap (antipode R) antipode_one antipode_mul
 
 @[simp] lemma toLinearMap_antipodeAlgHom : (antipodeAlgHom R A).toLinearMap = antipode R := rfl
+end commutative
 
 end HopfAlgebra
 
